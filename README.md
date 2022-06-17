@@ -1,4 +1,4 @@
-![Image of MetaCloud](https://i.ibb.co/0qX41qm/Banner.png)
+![Image of MetaCloud](https://i.ibb.co/JssFs2X/Banner.png)
 This is the **MetaCloud** project, it is a modern dynamic Minecraft cloud system
 
 
