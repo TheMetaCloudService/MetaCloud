@@ -7,12 +7,13 @@ This is the **MetaCloud** project, it is a modern dynamic Minecraft cloud system
 
 ## Requirements
  * **Java 8** or **higer**
- * an **Linux** or **Windows** server
- * minimal **2GB Memory**
+ * an **Linux** server
+ * minimal **4GB Memory**
  * minimal **2 virtual cores**
 
 
 ## Features
+- Supports **Mysql**, **ArongoDB**, **MongoDB** or **Files**
 - **Multi-Proxy** & **Multi-Root** able
 - **Powerfull API**
 - **Template-System** to organise your servers
