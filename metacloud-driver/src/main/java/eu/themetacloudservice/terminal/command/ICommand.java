@@ -1,2 +1,4 @@
-package eu.themetacloudservice.terminal.command;public interface ICommand {
+package eu.themetacloudservice.terminal.command;
+
+public interface ICommand {
 }

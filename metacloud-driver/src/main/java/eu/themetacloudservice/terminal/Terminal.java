@@ -1,2 +1,4 @@
-package eu.themetacloudservice.terminal;public class Terminal {
+package eu.themetacloudservice.terminal;
+
+public class Terminal {
 }
