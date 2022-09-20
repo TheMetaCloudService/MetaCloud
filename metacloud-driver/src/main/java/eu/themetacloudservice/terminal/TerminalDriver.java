@@ -1,4 +1,2 @@
-package eu.themetacloudservice.terminal;
-
-public class TerminalDriver {
+package eu.themetacloudservice.terminal;public class TerminalDriver {
 }
