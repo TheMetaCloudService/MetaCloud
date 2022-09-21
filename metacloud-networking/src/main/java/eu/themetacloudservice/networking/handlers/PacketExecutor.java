@@ -1,8 +1,8 @@
-package io.metacloud.handlers;
+package eu.themetacloudservice.networking.handlers;
 
-import io.metacloud.handlers.bin.IEvent;
-import io.metacloud.handlers.bin.PacketListener;
-import io.metacloud.handlers.bin.PacketProvideHandler;
+import eu.themetacloudservice.networking.handlers.bin.IEvent;
+import eu.themetacloudservice.networking.handlers.bin.PacketListener;
+import eu.themetacloudservice.networking.handlers.bin.PacketProvideHandler;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

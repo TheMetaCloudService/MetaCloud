@@ -1,4 +1,4 @@
-package io.metacloud.protocol;
+package eu.themetacloudservice.networking.protocol;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;

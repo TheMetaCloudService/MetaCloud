@@ -1,17 +1,17 @@
-package io.metacloud.channels;
+package eu.themetacloudservice.networking.channels;
 
 
-import io.metacloud.NetworkServer;
-import io.metacloud.NetworkingBootStrap;
-import io.metacloud.worker.Options;
-import io.metacloud.Structure;
-import io.metacloud.handlers.listener.ClientConnectEvent;
-import io.metacloud.handlers.listener.ClientDisconectEvent;
-import io.metacloud.handlers.listener.NetworkExceptionEvent;
-import io.metacloud.handlers.listener.PacketReceivedEvent;
-import io.metacloud.protocol.Buffer;
-import io.metacloud.protocol.IBuffer;
-import io.metacloud.protocol.Packet;
+import eu.themetacloudservice.networking.Networking;
+import eu.themetacloudservice.networking.ServerSession;
+import eu.themetacloudservice.networking.worker.Options;
+import eu.themetacloudservice.networking.Structure;
+import eu.themetacloudservice.networking.handlers.listener.ClientConnectEvent;
+import eu.themetacloudservice.networking.handlers.listener.ClientDisconectEvent;
+import eu.themetacloudservice.networking.handlers.listener.NetworkExceptionEvent;
+import eu.themetacloudservice.networking.handlers.listener.PacketReceivedEvent;
+import eu.themetacloudservice.networking.protocol.Buffer;
+import eu.themetacloudservice.networking.protocol.IBuffer;
+import eu.themetacloudservice.networking.protocol.Packet;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -56,7 +56,7 @@ public class Channel implements IChannel, Runnable {
             connected = true;
             initializer.initChannel(this);
             socket.setKeepAlive(true);
-            NetworkingBootStrap.packetListenerHandler.executeEvent(new ClientConnectEvent(this));
+            Networking.packetListenerHandler.executeEvent(new ClientConnectEvent(this));
         } catch (IOException e) {
 
         }
@@ -65,7 +65,6 @@ public class Channel implements IChannel, Runnable {
 
     public void start() {
         thread.start();
-
     }
 
     @Override
@@ -89,12 +88,12 @@ public class Channel implements IChannel, Runnable {
                     @Override
                     public void read(IBuffer buffer) {}
                 }, new Buffer(array.toByteArray()));
-                NetworkingBootStrap.packetListenerHandler.executeEvent(new PacketReceivedEvent(this, decode));
+                Networking.packetListenerHandler.executeEvent(new PacketReceivedEvent(this, decode));
             } catch (IOException e) {
-                NetworkingBootStrap.packetListenerHandler.executeEvent(new NetworkExceptionEvent(e));
+                Networking.packetListenerHandler.executeEvent(new NetworkExceptionEvent(e));
                 close();
             } catch (Exception exception) {
-                NetworkingBootStrap.packetListenerHandler.executeEvent(new NetworkExceptionEvent(exception));
+                Networking.packetListenerHandler.executeEvent(new NetworkExceptionEvent(exception));
                 close();
             }
         }
@@ -106,12 +105,12 @@ public class Channel implements IChannel, Runnable {
             if (socket != null && connected) {
                 connected = false;
                 socket.close();
-                if (structure instanceof NetworkServer) ((NetworkServer) structure).getChannels().remove(this);
-                NetworkingBootStrap.packetListenerHandler.executeEvent(new ClientDisconectEvent(this));
+                if (structure instanceof ServerSession) ((ServerSession) structure).getChannels().remove(this);
+                Networking.packetListenerHandler.executeEvent(new ClientDisconectEvent(this));
 
             }
         } catch (IOException e) {
-            NetworkingBootStrap.packetListenerHandler.executeEvent(new NetworkExceptionEvent(e));
+            Networking.packetListenerHandler.executeEvent(new NetworkExceptionEvent(e));
             close();
         }
     }

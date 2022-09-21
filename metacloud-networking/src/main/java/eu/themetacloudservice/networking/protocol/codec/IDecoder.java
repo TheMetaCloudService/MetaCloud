@@ -1,9 +1,9 @@
-package io.metacloud.protocol.codec;
+package eu.themetacloudservice.networking.protocol.codec;
 
 
-import io.metacloud.protocol.Buffer;
-import io.metacloud.protocol.IBuffer;
-import io.metacloud.protocol.Packet;
+import eu.themetacloudservice.networking.protocol.Buffer;
+import eu.themetacloudservice.networking.protocol.IBuffer;
+import eu.themetacloudservice.networking.protocol.Packet;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

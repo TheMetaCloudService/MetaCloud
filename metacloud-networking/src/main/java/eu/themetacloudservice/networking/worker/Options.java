@@ -1,4 +1,4 @@
-package io.metacloud.worker;
+package eu.themetacloudservice.networking.worker;
 
 
 public class Options<T> {

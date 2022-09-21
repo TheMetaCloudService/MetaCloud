@@ -1,4 +1,4 @@
-package io.metacloud.protocol;
+package eu.themetacloudservice.networking.protocol;
 
 public abstract class Packet {
 

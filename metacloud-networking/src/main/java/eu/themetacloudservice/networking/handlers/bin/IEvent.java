@@ -1,4 +1,4 @@
-package io.metacloud.handlers.bin;
+package eu.themetacloudservice.networking.handlers.bin;
 
 
 

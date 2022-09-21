@@ -1,7 +1,7 @@
-package io.metacloud.channels;
+package eu.themetacloudservice.networking.channels;
 
-import io.metacloud.protocol.ISender;
-import io.metacloud.protocol.Packet;
+import eu.themetacloudservice.networking.protocol.ISender;
+import eu.themetacloudservice.networking.protocol.Packet;
 
 import java.io.Closeable;
 import java.io.IOException;

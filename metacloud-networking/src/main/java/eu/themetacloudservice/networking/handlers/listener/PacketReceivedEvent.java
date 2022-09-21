@@ -1,8 +1,8 @@
-package io.metacloud.handlers.listener;
+package eu.themetacloudservice.networking.handlers.listener;
 
-import io.metacloud.channels.Channel;
-import io.metacloud.handlers.bin.IEvent;
-import io.metacloud.protocol.Packet;
+import eu.themetacloudservice.networking.channels.Channel;
+import eu.themetacloudservice.networking.handlers.bin.IEvent;
+import eu.themetacloudservice.networking.protocol.Packet;
 
 public class PacketReceivedEvent implements IEvent {
 

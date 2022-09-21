@@ -1,8 +1,8 @@
-package io.metacloud.protocol.codec;
+package eu.themetacloudservice.networking.protocol.codec;
 
-import io.metacloud.worker.Utils;
-import io.metacloud.protocol.IBuffer;
-import io.metacloud.protocol.Packet;
+import eu.themetacloudservice.networking.worker.Utils;
+import eu.themetacloudservice.networking.protocol.IBuffer;
+import eu.themetacloudservice.networking.protocol.Packet;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

@@ -1,16 +1,16 @@
-package io.metacloud.worker;
+package eu.themetacloudservice.networking.worker;
 
 
 
-import io.metacloud.NetworkingBootStrap;
-import io.metacloud.Structure;
-import io.metacloud.channels.Channel;
-import io.metacloud.channels.ChannelPipeline;
-import io.metacloud.channels.IChannel;
-import io.metacloud.channels.IChannelInitializer;
-import io.metacloud.handlers.listener.ClientConnectEvent;
-import io.metacloud.handlers.listener.NetworkExceptionEvent;
-import io.metacloud.protocol.Packet;
+import eu.themetacloudservice.networking.Networking;
+import eu.themetacloudservice.networking.Structure;
+import eu.themetacloudservice.networking.channels.Channel;
+import eu.themetacloudservice.networking.channels.ChannelPipeline;
+import eu.themetacloudservice.networking.channels.IChannel;
+import eu.themetacloudservice.networking.channels.IChannelInitializer;
+import eu.themetacloudservice.networking.handlers.listener.ClientConnectEvent;
+import eu.themetacloudservice.networking.handlers.listener.NetworkExceptionEvent;
+import eu.themetacloudservice.networking.protocol.Packet;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -70,10 +70,10 @@ public class Worker implements Runnable, Structure {
                 channels.add(channel);
                 if (initializer != null) initializer.initChannel(channel);
 
-                NetworkingBootStrap.packetListenerHandler.executeEvent(new ClientConnectEvent(channel));
+                Networking.packetListenerHandler.executeEvent(new ClientConnectEvent(channel));
                 channel.start();
             } catch (IOException e) {
-                NetworkingBootStrap.packetListenerHandler.executeEvent(new NetworkExceptionEvent(e));
+                Networking.packetListenerHandler.executeEvent(new NetworkExceptionEvent(e));
                 close();
             }
         }
@@ -86,7 +86,7 @@ public class Worker implements Runnable, Structure {
             for (int i = channels.size() - 1; i >= 0; i--) channels.get(i).close();
             socket.close();
         } catch (IOException e) {
-            NetworkingBootStrap.packetListenerHandler.executeEvent(new NetworkExceptionEvent(e));
+            Networking.packetListenerHandler.executeEvent(new NetworkExceptionEvent(e));
         }
     }
 

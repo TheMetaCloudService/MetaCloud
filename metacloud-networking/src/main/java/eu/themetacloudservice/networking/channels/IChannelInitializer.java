@@ -1,4 +1,4 @@
-package io.metacloud.channels;
+package eu.themetacloudservice.networking.channels;
 
 public interface IChannelInitializer {
 

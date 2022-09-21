@@ -1,4 +1,4 @@
-package io.metacloud.protocol;
+package eu.themetacloudservice.networking.protocol;
 
 import java.util.List;
 import java.util.Map;

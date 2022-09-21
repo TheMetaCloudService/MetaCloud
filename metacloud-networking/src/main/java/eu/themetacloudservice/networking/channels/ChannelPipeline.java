@@ -1,16 +1,11 @@
-package io.metacloud.channels;
-
-/*
- * Projectname: VapeCloud
- * Created AT: 28.12.2021/17:39
- * Created by Robin B. (RauchigesEtwas)
- */
+package eu.themetacloudservice.networking.channels;
 
 
-import io.metacloud.NetworkingBootStrap;
-import io.metacloud.handlers.bin.PacketListener;
-import io.metacloud.protocol.codec.IDecoder;
-import io.metacloud.protocol.codec.IEncoder;
+
+import eu.themetacloudservice.networking.Networking;
+import eu.themetacloudservice.networking.handlers.bin.PacketListener;
+import eu.themetacloudservice.networking.protocol.codec.IDecoder;
+import eu.themetacloudservice.networking.protocol.codec.IEncoder;
 
 public class ChannelPipeline {
 
@@ -33,7 +28,7 @@ public class ChannelPipeline {
 
 
     public void addLast(PacketListener packetListener){
-        NetworkingBootStrap.packetListenerHandler.registerListener(packetListener);
+        Networking.packetListenerHandler.registerListener(packetListener);
     }
 
     public IEncoder getEncoder() {
