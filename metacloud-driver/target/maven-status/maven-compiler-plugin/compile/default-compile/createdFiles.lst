@@ -3,6 +3,7 @@ eu\themetacloudservice\terminal\TerminalDriver.class
 eu\themetacloudservice\terminal\utils\TerminalStorageLine.class
 eu\themetacloudservice\terminal\utils\TerminalStorage.class
 eu\themetacloudservice\terminal\enums\Color.class
+eu\themetacloudservice\storage\SetupStorage.class
 eu\themetacloudservice\terminal\enums\Type.class
 eu\themetacloudservice\storage\MessageStorage.class
 eu\themetacloudservice\terminal\screens\GroupSetup.class

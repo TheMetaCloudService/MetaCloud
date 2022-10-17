@@ -31,7 +31,7 @@ public class TerminalDriver {
     private LinkedList<TerminalStorage> mainScreenStorage;
     private Queue<TerminalStorageLine> inputs;
     private final Terminal terminal;
-    public SetupStorage setupStorage;
+    private SetupStorage setupStorage;
     private final LineReader lineReader;
     private Thread consoleThread;
 
@@ -73,8 +73,7 @@ public class TerminalDriver {
                         if(this.isInSetup){
                             if (line.equalsIgnoreCase("leave")){
                                 leaveSetup();
-                            }
-                            if (!new File("./service.json").exists()){
+                            }else if (!new File("./service.json").exists()){
                                 new MainSetup(line);
                             }else {
                                 new GroupSetup(line);
@@ -93,9 +92,14 @@ public class TerminalDriver {
         this.consoleThread.start();
     }
 
+    public SetupStorage getSetupStorage() {
+        return setupStorage;
+    }
+
     public void joinSetup(){
         this.isInSetup = true;
         clearScreen();
+        this.setupStorage = new SetupStorage();
         if (Driver.getInstance().getMessageStorage().language.equalsIgnoreCase("DE")){
             log(Type.EMPTY, "               _______ _______ _______ _     _  _____ \n" +
                     "               |______ |______    |    |     | |_____]\n" +
@@ -119,7 +123,6 @@ public class TerminalDriver {
                     "     <§e!§7> the setup has been §astarted§7, please answer all my §equestions §r\n" +
                     "     <§e!§7> you can leave the setup at any time with \"§eleave§7\"\n");
             if (!new File("./service.json").exists()){
-
                 Driver.getInstance().getTerminalDriver().log(Type.SETUP, "What language would you like to have?");
                 Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Possible answers: §eDE §7/ §eEN");
             }
@@ -154,6 +157,17 @@ public class TerminalDriver {
         this.terminal.puts(InfoCmp.Capability.clear_screen);
         this.terminal.flush();
         this.redraw();
+    }
+
+    public void log(Type type, String... messages){
+
+        this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
+        for (int i = 0; i != messages.length ; i++) {
+            this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("dd.MM HH:mm:ss").format(System.currentTimeMillis()) + "§7] §e"+type.toString().toUpperCase()+"§7: §r" + messages[i] +Color.RESET.getAnsiCode()));
+        }
+        this.lineReader.getTerminal().writer().flush();
+        this.lineReader.callWidget(LineReader.REDRAW_LINE);
+        this.lineReader.callWidget(LineReader.REDISPLAY);
     }
 
     public void log(Type type, String message){
@@ -193,7 +207,14 @@ public class TerminalDriver {
                 this.lineReader.callWidget(LineReader.REDRAW_LINE);
                 this.lineReader.callWidget(LineReader.REDISPLAY);
 
-            } else if (type == Type.EMPTY){
+            } else if (type == Type.SETUP_ERROR){
+
+                this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
+                this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("dd.MM HH:mm:ss").format(System.currentTimeMillis()) + "§7] §eINCORRECT§7: §r" + message +Color.RESET.getAnsiCode()));
+                this.lineReader.getTerminal().writer().flush();
+                this.lineReader.callWidget(LineReader.REDRAW_LINE);
+                this.lineReader.callWidget(LineReader.REDISPLAY);
+            }else if (type == Type.EMPTY){
 
                 this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
                 this.terminal.writer().println("\r" + getColoredString(message + Color.RESET.getAnsiCode()));

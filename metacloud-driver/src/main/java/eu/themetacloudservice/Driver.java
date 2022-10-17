@@ -1,6 +1,7 @@
 package eu.themetacloudservice;
 
 
+import com.arangodb.ArangoDB;
 import eu.themetacloudservice.storage.MessageStorage;
 import eu.themetacloudservice.terminal.TerminalDriver;
 
@@ -11,13 +12,10 @@ public class Driver {
     private MessageStorage messageStorage;
 
     public Driver(){
-
-
         /*
          * @FUNCTION: Load all for the Driver.class
          * @Coder: RauchigesEtwas (Robin B.)
          * */
-
         instance = this;
         this.messageStorage = new MessageStorage();
     }
