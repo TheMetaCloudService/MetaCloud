@@ -15,3 +15,8 @@
      ◄
   </p>
 </p>
+
+## Requirements
+ * Java 8
+ * Linux/Windows server with a minimum of 2GB DDR3 Memory and 2 vCores
+ * Internet connection
