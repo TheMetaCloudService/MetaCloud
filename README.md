@@ -17,6 +17,19 @@
 </p>
 
 ## Requirements
+
  * Java 8
  * Linux/Windows server with a minimum of 2GB DDR3 Memory and 2 vCores
  * Internet connection
+
+
+## Features
+
+- Plug & Play with an easy setup
+- **dynamic** and **static** launch of tasks
+- template system with groups
+- **powerful** API
+- Powerful **REST-API**
+- modular system with **comprehensive modules**
+- multi-root system for great **scalability**
+- Multiversion support for bungeecord(Waterfall & Velocity) and spigot(1.16.2 upto 1.19.3)
