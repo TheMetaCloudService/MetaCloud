@@ -1,1 +1,1 @@
-![Image of MetaCloud] (https://i.ibb.co/yn73ScR/banner-metacloud.png)
+![Image of MetaCloud](https://i.ibb.co/w64LZfL/Unbenannt.png)
