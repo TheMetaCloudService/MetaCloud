@@ -7,7 +7,7 @@
     <br>
     ► <a href="https://discord.com/invite/4kKEcaP9WC">Discord</a>
     •
-    <a href="https://ts3server://metacloudservice.eu">Teamspeak</a>
+    <a href="https://invis-cloud.de">Our Partner</a>
     •
     <a href="https://metacloudservice.eu">Website</a>
     •
