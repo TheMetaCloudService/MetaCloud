@@ -3,6 +3,6 @@
 
 <p>
   <p align="center">
-    This is the **Metacloud** project, it is a Minecraft Dynamic CloudSystem based on Nio-Networking.
+   We are Metacloud, an open source Intilligent Minecraft cloud system
   </p>
 </p>
