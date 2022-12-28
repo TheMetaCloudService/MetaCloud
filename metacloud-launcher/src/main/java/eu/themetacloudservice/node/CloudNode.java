@@ -1,2 +1,8 @@
-package eu.themetacloudservice.node;public class CloudNode {
+package eu.themetacloudservice.node;
+
+public class CloudNode {
+
+    public CloudNode() {
+
+    }
 }

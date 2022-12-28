@@ -6,6 +6,9 @@ import org.jline.reader.Candidate;
 import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
 import org.jline.reader.ParsedLine;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,15 +36,85 @@ public class TerminalCompleter  implements Completer {
                     result.add("NODE");
                 }
             }
+            if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 2){
+                if (!input.contains(" ")){
+                    try {
+                        result.add("" + InetAddress.getLocalHost().getHostAddress());
+                    } catch (UnknownHostException e) {
+                        e.printStackTrace();
+                    }
+                    result.add("127.0.0.1");
+                }
+
+            }
 
             if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 4){
                 if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("MANAGER")){
                     if (!input.contains(" ")){
                         result.add("VELOCITY");
                         result.add("WATERFALL");
+                        result.add("BUNGEECORD");
                     }
                 }
             }
+            if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 5){
+                if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("MANAGER")){
+                    if (!input.contains(" ")){
+                        result.add("PAPER-1.19.3");
+                        result.add("PAPER-1.19.2");
+                        result.add("PAPER-1.18.2");
+                        result.add("PAPER-1.17.1");
+                        result.add("PAPER-1.16.5");
+                        result.add("SPIGOT-1.19.3");
+                        result.add("SPIGOT-1.19.2");
+                        result.add("SPIGOT-1.18.2");
+                        result.add("SPIGOT-1.17.1");
+                        result.add("SPIGOT-1.16.5");
+
+                    }
+                }
+            }
+            if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 6){
+                if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("NODE")){
+                    if (!input.contains(" ")){
+                        result.add("VELOCITY");
+                        result.add("WATERFALL");
+                        result.add("BUNGEECORD");
+                    }
+                }
+            }
+            if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 7){
+                if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("NODE")){
+                    if (!input.contains(" ")){
+                        result.add("PAPER-1.19.3");
+                        result.add("PAPER-1.19.2");
+                        result.add("PAPER-1.18.2");
+                        result.add("PAPER-1.17.1");
+                        result.add("PAPER-1.16.5");
+                        result.add("SPIGOT-1.19.3");
+                        result.add("SPIGOT-1.19.2");
+                        result.add("SPIGOT-1.18.2");
+                        result.add("SPIGOT-1.17.1");
+                        result.add("SPIGOT-1.16.5");
+                    }
+                }
+            }
+
+            if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 5){
+                if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("NODE")){
+                    if (!input.contains(" ")){
+                        try {
+                            result.add("" + InetAddress.getLocalHost().getHostAddress());
+                        } catch (UnknownHostException e) {
+                            e.printStackTrace();
+                        }
+                        result.add("127.0.0.1");
+                    }
+                }
+
+            }
+
+
 
 
             suggestions = result;

@@ -1,4 +1,4 @@
-package eu.themetacloudservice.configuration;
+package eu.themetacloudservice.configuration.interfaces;
 
 public interface IConfigAdapter {
 }

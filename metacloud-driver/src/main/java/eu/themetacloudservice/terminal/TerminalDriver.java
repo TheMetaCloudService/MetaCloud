@@ -86,7 +86,7 @@ public class TerminalDriver {
                         if(this.isInSetup){
                             if (line.equalsIgnoreCase("leave")){
                                 leaveSetup();
-                            }else if (!new File("./service.json").exists()){
+                            }else if (!new File("./service.json").exists() && !new File("./nodeservice.json").exists()){
                                 new MainSetup(line);
                             }else {
                                 new GroupSetup(line);
@@ -94,7 +94,7 @@ public class TerminalDriver {
                         } else if (input != null) {
                             input.inputs().accept(line);
                         } else {
-
+                            this.commandDriver.executeCommand(line);
                         }
                     }
                 }catch (Exception e){ }
@@ -119,12 +119,12 @@ public class TerminalDriver {
         if (Driver.getInstance().getMessageStorage().language.equalsIgnoreCase("DE")){
             if (!new File("./service.json").exists()){
                 Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Welche Sprache möchten Sie haben?");
-                Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Mögliche Antworten: §bDE, §bEN");
+                Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Mögliche Antworten: §eDE, §eEN");
             }
         }else {
 
                 Driver.getInstance().getTerminalDriver().log(Type.SETUP, "What language would you like to have?");
-                Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Possible answers: §bDE, §bEN");
+                Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Possible answers: §eDE, §eEN");
             }
         }
 
@@ -168,7 +168,7 @@ public class TerminalDriver {
         this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
         for (int i = 0; i != messages.length ; i++) {
             this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase()+"§7: §r" + messages[i] +Color.RESET.getAnsiCode()));
-            simpleLatestLog.log(getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §v"+type.toString().toUpperCase()+"§7: §r" + messages[i] +Color.RESET.getAnsiCode()));
+            simpleLatestLog.log(getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase()+"§7: §r" + messages[i] +Color.RESET.getAnsiCode()));
             simpleLatestLog.saveLogs();
         }
         this.lineReader.getTerminal().writer().flush();

@@ -1,2 +1,9 @@
-package eu.themetacloudservice.manager;public class CloudManager {
+package eu.themetacloudservice.manager;
+
+public class CloudManager {
+
+
+    public CloudManager(){
+
+    }
 }
