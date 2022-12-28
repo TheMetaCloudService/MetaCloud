@@ -1,0 +1,4 @@
+eu\themetacloudservice\CloudBoot.class
+eu\themetacloudservice\manager\CloudManager.class
+eu\themetacloudservice\node\CloudNode.class
+eu\themetacloudservice\CloudBoot$1.class

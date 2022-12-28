@@ -1,4 +1,4 @@
-package eu.themetacloudservice.configuration.dummys.updateconfig;
+package eu.themetacloudservice.configuration.dummys.restapi;
 
 import eu.themetacloudservice.configuration.interfaces.IConfigAdapter;
 

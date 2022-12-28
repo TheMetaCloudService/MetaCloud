@@ -1,9 +1,9 @@
 package eu.themetacloudservice.storage;
 
-import com.google.gson.JsonObject;
+import com.google.common.io.BaseEncoding;
 import eu.themetacloudservice.Driver;
 import eu.themetacloudservice.configuration.ConfigDriver;
-import eu.themetacloudservice.configuration.dummys.updateconfig.UpdateConfig;
+import eu.themetacloudservice.configuration.dummys.restapi.UpdateConfig;
 import eu.themetacloudservice.terminal.commands.CommandAdapter;
 import lombok.SneakyThrows;
 
@@ -12,12 +12,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class MessageStorage {
     public String version = "SANDSTORM-1.0.0";
     public String language;
+    public PacketLoader packetLoader;
 
-    public MessageStorage() {}
+    public MessageStorage() {
+        packetLoader = new PacketLoader();
+    }
 
     public String getAsciiArt(){
 
@@ -119,9 +123,16 @@ public class MessageStorage {
             bufferedReader.close();
             inputStream.close();
         }
-
-
         return "";
     }
+    @SneakyThrows
+    public  String utf8ToUBase64(String utf8string){
+        String base64String = BaseEncoding.base64().encode(utf8string.getBytes("UTF-8"));
+        return base64String;
+    }
 
+    public  String base64ToUTF8(String base64Sting){
+        byte[] contentInBytes = BaseEncoding.base64().decode(base64Sting);
+        return new String(contentInBytes, StandardCharsets.UTF_8);
+    }
 }
