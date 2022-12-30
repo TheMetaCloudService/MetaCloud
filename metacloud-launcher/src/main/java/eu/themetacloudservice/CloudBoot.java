@@ -10,6 +10,7 @@ import eu.themetacloudservice.terminal.enums.Type;
 import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Logger;
 
 public class CloudBoot {
 

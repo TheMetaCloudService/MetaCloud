@@ -11,6 +11,12 @@ import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
+import io.netty.util.internal.logging.Log4JLoggerFactory;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
+
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 
@@ -27,6 +33,7 @@ public class NettyServer {
     }
 
     public void start() {
+
         (new Thread(() -> {
             EventLoopGroup eventLoopGroup = Epoll.isAvailable() ? (EventLoopGroup)new EpollEventLoopGroup() : (EventLoopGroup)new NioEventLoopGroup();
             try {
@@ -38,7 +45,7 @@ public class NettyServer {
                         pipeline.addLast(new ChannelBound());
                     }
                 }).bind(new InetSocketAddress("0.0.0.0", this.port)).sync().channel();
-            } catch (InterruptedException interruptedException) {}
+            } catch (InterruptedException ignore) {}
         })).start();
     }
 

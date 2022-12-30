@@ -13,7 +13,6 @@ public class Driver {
     private MessageStorage messageStorage;
     private GroupDriver groupDriver;
     private TemplateDriver templateDriver;
-    private WebDriver webDriver;
 
     public Driver(){
         /*
@@ -24,7 +23,6 @@ public class Driver {
         groupDriver = new GroupDriver();
         this.messageStorage = new MessageStorage();
         this.templateDriver = new TemplateDriver();
-        this.webDriver = new WebDriver();
     }
 
 
@@ -46,10 +44,6 @@ public class Driver {
 
     public void setTerminalDriver(TerminalDriver terminalDriver) {
         this.terminalDriver = terminalDriver;
-    }
-
-    public WebDriver getWebDriver() {
-        return webDriver;
     }
 
     public static Driver getInstance() {

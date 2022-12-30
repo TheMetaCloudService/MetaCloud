@@ -1,7 +1,6 @@
 package eu.themetacloudservice.networking.packet;
 
 import io.netty.channel.ChannelHandlerContext;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;

@@ -20,4 +20,5 @@ public class ChannelBound extends SimpleChannelInboundHandler<Packet> {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
     return;
     }
+
 }
