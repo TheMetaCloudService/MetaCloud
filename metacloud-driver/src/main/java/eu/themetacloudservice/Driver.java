@@ -1,7 +1,8 @@
 package eu.themetacloudservice;
 
 
-import com.arangodb.ArangoDB;
+import eu.themetacloudservice.groups.GroupDriver;
+import eu.themetacloudservice.groups.TemplateDriver;
 import eu.themetacloudservice.storage.MessageStorage;
 import eu.themetacloudservice.terminal.TerminalDriver;
 
@@ -10,6 +11,9 @@ public class Driver {
     private static  Driver instance;
     private TerminalDriver terminalDriver;
     private MessageStorage messageStorage;
+    private GroupDriver groupDriver;
+    private TemplateDriver templateDriver;
+    private WebDriver webDriver;
 
     public Driver(){
         /*
@@ -17,7 +21,19 @@ public class Driver {
          * @Coder: RauchigesEtwas (Robin B.)
          * */
         instance = this;
+        groupDriver = new GroupDriver();
         this.messageStorage = new MessageStorage();
+        this.templateDriver = new TemplateDriver();
+        this.webDriver = new WebDriver();
+    }
+
+
+    public TemplateDriver getTemplateDriver() {
+        return templateDriver;
+    }
+
+    public GroupDriver getGroupDriver() {
+        return groupDriver;
     }
 
     public TerminalDriver getTerminalDriver() {
@@ -30,6 +46,10 @@ public class Driver {
 
     public void setTerminalDriver(TerminalDriver terminalDriver) {
         this.terminalDriver = terminalDriver;
+    }
+
+    public WebDriver getWebDriver() {
+        return webDriver;
     }
 
     public static Driver getInstance() {

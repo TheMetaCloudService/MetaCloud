@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class ManagerConfig implements IConfigAdapter {
 
     private String language;
+    private String splitter;
     private String managerAddress;
     private Integer canUsedMemory;
     private String bungeecordVersion;
@@ -25,6 +26,14 @@ public class ManagerConfig implements IConfigAdapter {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public String getSplitter() {
+        return splitter;
+    }
+
+    public void setSplitter(String splitter) {
+        this.splitter = splitter;
     }
 
     public String getManagerAddress() {

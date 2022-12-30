@@ -63,7 +63,7 @@ public class CloudBoot {
                 Driver.getInstance().getTerminalDriver().log(Type.WARNING, "eine neue Version der Metacloud wurde gefunden [§e"+Driver.getInstance().getMessageStorage().version+" >> "+Driver.getInstance().getMessageStorage().getNewVersionName()+"§r]");
                 Driver.getInstance().getTerminalDriver().log(Type.WARNING, "du können es unter '§ehttps://metacloudservice.eu/downloads/Metacloud-latest.zip§r' herunterladen.");
             }else {
-                Driver.getInstance().getTerminalDriver().log(Type.INFORMATION, "es wurde kein Update gefunden, d.h. Du sind auf dem neuesten Stand");
+                Driver.getInstance().getTerminalDriver().log(Type.INFORMATION, "es wurde kein Update gefunden, d.h. die ist auf dem neuesten Stand");
             }
         }else {
             Driver.getInstance().getTerminalDriver().log(Type.INFORMATION, "it is checked if the cloud version is still up to date");

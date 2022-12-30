@@ -18,6 +18,7 @@ public class MessageStorage {
     public String version = "SANDSTORM-1.0.0";
     public String language;
     public PacketLoader packetLoader;
+    public String setuptype;
 
     public MessageStorage() {
         packetLoader = new PacketLoader();

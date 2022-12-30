@@ -11,8 +11,6 @@ import java.nio.charset.Charset;
 import java.util.function.BiConsumer;
 
 public class PacketLoader {
-
-
     public PacketLoader() {}
 
     @SneakyThrows
@@ -112,7 +110,7 @@ public class PacketLoader {
             updateConfig.getBungeecords().forEach((s, s2) -> {
                 if (s.equalsIgnoreCase(bungee)){
                     try (BufferedInputStream in = new BufferedInputStream(new URL(s2).openStream());
-                         FileOutputStream fileOutputStream = new FileOutputStream(  "./local/templates/"+groupname+"/" + s+ ".jar")) {
+                         FileOutputStream fileOutputStream = new FileOutputStream(  "./local/templates/"+groupname+"/" + "server"+ ".jar")) {
                         byte dataBuffer[] = new byte[1024];
 
                         int bytesRead;
@@ -152,7 +150,7 @@ public class PacketLoader {
             updateConfig.getSpigots().forEach((s, s2) -> {
                 if (s.equalsIgnoreCase(Spigot.replace("-",""))){
                     try (BufferedInputStream in = new BufferedInputStream(new URL(s2).openStream());
-                         FileOutputStream fileOutputStream = new FileOutputStream(  "./local/templates/"+groupname+"/" + s+ ".jar")) {
+                         FileOutputStream fileOutputStream = new FileOutputStream(  "./local/templates/"+groupname+"/" + "server"+ ".jar")) {
                         byte dataBuffer[] = new byte[1024];
 
                         int bytesRead;

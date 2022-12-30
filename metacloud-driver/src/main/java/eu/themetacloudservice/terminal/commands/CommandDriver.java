@@ -2,6 +2,7 @@ package eu.themetacloudservice.terminal.commands;
 
 
 import eu.themetacloudservice.Driver;
+import eu.themetacloudservice.terminal.enums.Type;
 import lombok.SneakyThrows;
 
 import java.util.HashSet;
@@ -36,7 +37,11 @@ public class CommandDriver {
         if(command != null){
             command.performCommand(command, args);
         }else {
-
+            if (Driver.getInstance().getMessageStorage().language.equalsIgnoreCase("DE")){
+                Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "der eingegebene Befehl wurde nicht gefunden bitte tippe '§ehelp§r'");
+            }else {
+                Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "the entered command was not found please type '§ehelp§r");
+            }
         }
     }
 

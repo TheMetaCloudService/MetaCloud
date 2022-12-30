@@ -8,6 +8,6 @@ public enum Type {
      * @Coder: RauchigesEtwas (Robin B.)
      * */
 
-    INFORMATION, ERROR, WARNING, CONSOLE, SETUP, SETUP_ERROR, EMPTY
+    INFORMATION, ERROR, WARNING, COMMAND, SETUP, SETUP_ERROR, EMPTY
 
 }

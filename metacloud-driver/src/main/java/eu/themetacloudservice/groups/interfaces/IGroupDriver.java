@@ -1,4 +1,4 @@
-package eu.themetacloudservice.groups;
+package eu.themetacloudservice.groups.interfaces;
 
 import eu.themetacloudservice.groups.dummy.Group;
 
@@ -7,10 +7,10 @@ import java.util.ArrayList;
 public interface IGroupDriver {
 
     Group load(String name);
-    Group find(String name);
+    boolean find(String name);
     void create(Group group);
-    void delete(String string);
-    void handleExecute(String name, Integer amount);
+    void delete(String group);
+    ArrayList<Group> getAll();
     ArrayList<Group> getByNode(String node);
 
 }

@@ -7,7 +7,12 @@ import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
 import org.jline.reader.ParsedLine;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -39,8 +44,13 @@ public class TerminalCompleter  implements Completer {
             if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 2){
                 if (!input.contains(" ")){
                     try {
-                        result.add("" + InetAddress.getLocalHost().getHostAddress());
+                        String ip = new BufferedReader(new InputStreamReader(new URL("https://checkip.amazonaws.com").openConnection().getInputStream())).readLine();
+                        result.add("" + ip);
                     } catch (UnknownHostException e) {
+                        e.printStackTrace();
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                     result.add("127.0.0.1");
@@ -104,8 +114,13 @@ public class TerminalCompleter  implements Completer {
                 if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("NODE")){
                     if (!input.contains(" ")){
                         try {
-                            result.add("" + InetAddress.getLocalHost().getHostAddress());
+                            String ip = new BufferedReader(new InputStreamReader(new URL("https://checkip.amazonaws.com").openConnection().getInputStream())).readLine();
+                            result.add("" + ip);
                         } catch (UnknownHostException e) {
+                            e.printStackTrace();
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
                         result.add("127.0.0.1");
@@ -182,7 +197,7 @@ public class TerminalCompleter  implements Completer {
                     }
                 }else{
                     if (consoleInput != null) return;
-                    final var command =  Driver.getInstance().getTerminalDriver().getCommandDriver().getCommand(arguments[0]);
+                    final var command = Driver.getInstance().getTerminalDriver().getCommandDriver().getCommand(arguments[0]);
                     final var result = new LinkedList<String>();
 
                     if(command == null){
@@ -209,6 +224,7 @@ public class TerminalCompleter  implements Completer {
 
             }
         }
+
     }
 
 

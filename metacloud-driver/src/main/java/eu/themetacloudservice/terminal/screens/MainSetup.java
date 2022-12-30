@@ -1079,7 +1079,7 @@ public class MainSetup {
             if (Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("language").toString().equalsIgnoreCase("DE")){
                 ManagerConfig managerConfig = new ManagerConfig();
                 ManagerConfigNodes managerConfigNodes = new ManagerConfigNodes();
-                managerConfigNodes.setName("internalNode");
+                managerConfigNodes.setName("Node-1");
                 managerConfigNodes.setAddress("127.0.0.1");
 
                 managerConfig.setLanguage("DE");
@@ -1091,6 +1091,7 @@ public class MainSetup {
                 managerConfig.setSpigotVersion( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion").toString());
                 managerConfig.setNetworkingCommunication(7002);
                 managerConfig.setRestApiCommunication(8097);
+                managerConfig.setSplitter("-");
                 managerConfig.setNodes(nodes);
                 new ConfigDriver("./service.json").save(managerConfig);
 
@@ -1100,7 +1101,7 @@ public class MainSetup {
             }else {
                 ManagerConfig managerConfig = new ManagerConfig();
                 ManagerConfigNodes managerConfigNodes = new ManagerConfigNodes();
-                managerConfigNodes.setName("internalNode");
+                managerConfigNodes.setName("Node-1");
                 managerConfigNodes.setAddress("127.0.0.1");
                 managerConfig.setLanguage("EN");
                 ArrayList<ManagerConfigNodes> nodes = new ArrayList<>();
@@ -1110,10 +1111,10 @@ public class MainSetup {
                 managerConfig.setBungeecordVersion(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version").toString());
                 managerConfig.setSpigotVersion( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion").toString());
                 managerConfig.setNetworkingCommunication(7002);
+                managerConfig.setSplitter("-");
                 managerConfig.setRestApiCommunication(8097);
                 managerConfig.setNodes(nodes);
                 new ConfigDriver("./service.json").save(managerConfig);
-
                 Driver.getInstance().getMessageStorage().language = "EN";
                 Driver.getInstance().getTerminalDriver().leaveSetup();
             }

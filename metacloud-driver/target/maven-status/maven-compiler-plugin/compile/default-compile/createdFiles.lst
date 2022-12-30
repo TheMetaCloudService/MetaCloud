@@ -3,6 +3,7 @@ eu\themetacloudservice\terminal\commands\CommandAdapter.class
 eu\themetacloudservice\terminal\screens\MainSetup$21.class
 eu\themetacloudservice\terminal\screens\MainSetup$18.class
 eu\themetacloudservice\terminal\utils\TerminalStorageLine.class
+eu\themetacloudservice\groups\dummy\Group.class
 eu\themetacloudservice\terminal\enums\Color.class
 eu\themetacloudservice\terminal\screens\MainSetup$11.class
 eu\themetacloudservice\terminal\screens\MainSetup$31.class
@@ -18,11 +19,14 @@ eu\themetacloudservice\terminal\screens\MainSetup$6.class
 eu\themetacloudservice\terminal\screens\MainSetup$27.class
 eu\themetacloudservice\terminal\screens\MainSetup$40.class
 eu\themetacloudservice\terminal\TerminalDriver.class
+eu\themetacloudservice\groups\interfaces\IGroupDriver.class
 eu\themetacloudservice\terminal\screens\MainSetup$19.class
 eu\themetacloudservice\terminal\screens\MainSetup$35.class
 eu\themetacloudservice\storage\SetupStorage.class
+eu\themetacloudservice\groups\GroupDriver.class
 eu\themetacloudservice\terminal\screens\MainSetup$39.class
 eu\themetacloudservice\terminal\screens\MainSetup$20.class
+eu\themetacloudservice\groups\TemplateDriver.class
 eu\themetacloudservice\terminal\logging\SimpleLatestLog.class
 eu\themetacloudservice\terminal\screens\MainSetup$24.class
 eu\themetacloudservice\terminal\screens\MainSetup$15.class
@@ -44,6 +48,7 @@ eu\themetacloudservice\terminal\screens\MainSetup$33.class
 eu\themetacloudservice\terminal\screens\MainSetup$13.class
 eu\themetacloudservice\terminal\screens\MainSetup$16.class
 eu\themetacloudservice\terminal\screens\MainSetup$1.class
+eu\themetacloudservice\groups\dummy\GroupStorage.class
 eu\themetacloudservice\terminal\screens\MainSetup$26.class
 eu\themetacloudservice\terminal\screens\MainSetup$36.class
 eu\themetacloudservice\storage\PacketLoader.class
@@ -52,6 +57,7 @@ eu\themetacloudservice\terminal\screens\MainSetup$37.class
 eu\themetacloudservice\terminal\screens\MainSetup$17.class
 eu\themetacloudservice\terminal\utils\TerminalStorage.class
 eu\themetacloudservice\configuration\dummys\restapi\UpdateConfig.class
+eu\themetacloudservice\groups\interfaces\ITemplateDriver.class
 eu\themetacloudservice\terminal\screens\MainSetup$4.class
 eu\themetacloudservice\terminal\screens\MainSetup$10.class
 eu\themetacloudservice\terminal\screens\MainSetup$29.class

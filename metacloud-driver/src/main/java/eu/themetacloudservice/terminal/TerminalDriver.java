@@ -81,18 +81,20 @@ public class TerminalDriver {
                 try {
                     final var line = this.lineReader.readLine(getColoredString("§bMetaCloud§f@"+System.getProperty("user.name") +" §7=> "));
                     if (line != null && !line.isEmpty()) {
-                        final var input = this.getInputs().poll();
+                        final var inputz = this.getInputs().poll();
 
                         if(this.isInSetup){
                             if (line.equalsIgnoreCase("leave")){
                                 leaveSetup();
                             }else if (!new File("./service.json").exists() && !new File("./nodeservice.json").exists()){
                                 new MainSetup(line);
-                            }else {
+                            }else if (Driver.getInstance().getMessageStorage().setuptype.equalsIgnoreCase("GROUP")){
                                 new GroupSetup(line);
+                            }else {
+
                             }
-                        } else if (input != null) {
-                            input.inputs().accept(line);
+                        } else if (inputz != null) {
+                            inputz.inputs().accept(line);
                         } else {
                             this.commandDriver.executeCommand(line);
                         }
@@ -110,23 +112,28 @@ public class TerminalDriver {
     }
 
 
+    public void logSpeed(Type type, String detext, String entext){
+      if (Driver.getInstance().getMessageStorage().language.equalsIgnoreCase("DE")){
+
+          log(type, detext);
+      }else {
+          log(type, entext);
+      }
+    }
+
     public void joinSetup(){
         this.isInSetup = true;
         clearScreen();
         this.setupStorage = new SetupStorage();
 
         log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-        if (Driver.getInstance().getMessageStorage().language.equalsIgnoreCase("DE")){
-            if (!new File("./service.json").exists()){
-                Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Welche Sprache möchten Sie haben?");
-                Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Mögliche Antworten: §eDE, §eEN");
-            }
-        }else {
-
-                Driver.getInstance().getTerminalDriver().log(Type.SETUP, "What language would you like to have?");
-                Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Possible answers: §eDE, §eEN");
-            }
+        if (!new File("./service.json").exists() && !new File("./nodeservice.json").exists()){
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP, "Welche Sprache möchten Sie haben?", "What language would you like to have?");
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP, "Mögliche Antworten: §eDE, §eEN", "Possible answers: §eDE, §eEN");
+        }else if (Driver.getInstance().getMessageStorage().setuptype.equalsIgnoreCase("GROUP")){
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP, "Wie soll die Gruppe heißen?", "What should the group be called?");
         }
+    }
 
     public void leaveSetup(){
         clearScreen();
