@@ -49,22 +49,20 @@ public class CloudManager {
 
 
         //todo: make an autostart for the Groups with an Queue
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.exit(0);
-        }));
+
     }
 
 
     public void initNetty(ManagerConfig config){
         new NettyDriver();
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFORMATION, "der Netty-Server wird vorbereitet und dann gestartet", "the Netty server is prepared and then started");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "der Netty-Server wird vorbereitet und dann gestartet", "the Netty server is prepared and then started");
         NettyDriver.getInstance().nettyServer = new NettyServer();
-        try {
-            NettyDriver.getInstance().nettyServer.bind(config.getNetworkingCommunication()).start();
-        }catch (Exception iException){
+        NettyDriver.getInstance().nettyServer.bind(config.getNetworkingCommunication()).start();
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "der '§fNetty-Server§r' wurde erfolgreich an Port '§f"+config.getNetworkingCommunication()+"§r' angebunden", "the '§fNetty-server§r' was successfully bound on port '§f"+config.getNetworkingCommunication()+"§r'");
 
-        }
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFORMATION, "der '§fNetty-Server§r' wurde erfolgreich an Port '§f"+config.getNetworkingCommunication()+"§r' angebunden", "the '§fNetty-server§r' was successfully bound on port '§f"+config.getNetworkingCommunication()+"§r'");
+    }
 
+    public static void shutdownHook(){
+        System.exit(0);
     }
 }

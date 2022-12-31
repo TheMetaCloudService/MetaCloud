@@ -77,8 +77,7 @@ public class TerminalDriver {
                 .build();
 
         this.consoleThread = new Thread(() -> {
-
-            while (!this.consoleThread.isInterrupted() || allowRunning) {
+            while (allowRunning) {
 
                 try {
                     final var line = this.lineReader.readLine(getColoredString("§bMetaCloud§f@"+System.getProperty("user.name") +" §7=> "));
@@ -101,8 +100,12 @@ public class TerminalDriver {
                             this.commandDriver.executeCommand(line);
                         }
                     }
-                }catch (Exception e){ }
+                }catch (Exception e){
+                    Thread.currentThread().stop();
+                }
             }
+
+
         });
         this.consoleThread.setPriority(Thread.MAX_PRIORITY);
         this.consoleThread.setName("METACLOUD_CONSOLE");
@@ -116,9 +119,7 @@ public class TerminalDriver {
 
     @SneakyThrows
     public void close(){
-        this.terminal.close();
         allowRunning = false;
-        this.consoleThread.stop();
         System.exit(0);
     }
     public void logSpeed(Type type, String detext, String entext){

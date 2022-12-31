@@ -1,12 +1,14 @@
 package eu.themetacloudservice.manager.commands;
 
 import eu.themetacloudservice.Driver;
+import eu.themetacloudservice.groups.dummy.Group;
 import eu.themetacloudservice.terminal.commands.CommandAdapter;
 import eu.themetacloudservice.terminal.commands.CommandInfo;
 import eu.themetacloudservice.terminal.enums.Type;
 import eu.themetacloudservice.terminal.utils.TerminalStorageLine;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 @CommandInfo(command = "group", aliases = {"g"}, ENdescription = "here you can manage your groups", DEdescription = "hier kannst du deine Gruppen verwalten")
 public class GroupCommand extends CommandAdapter {
@@ -20,6 +22,16 @@ public class GroupCommand extends CommandAdapter {
             if (args[0].equalsIgnoreCase("create")){
                 Driver.getInstance().getMessageStorage().setuptype= "GROUP";
                 Driver.getInstance().getTerminalDriver().joinSetup();
+            }else if (args[0].equalsIgnoreCase("list")){
+                if ( Driver.getInstance().getGroupDriver().getAll().isEmpty()){
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND, "es wurde keine gruppe gefunden [§egroup create§r]", "no group was found [§egroup create§7]");
+                    return false;
+                }
+                Driver.getInstance().getGroupDriver().getAll().forEach(group -> {
+                    Driver.getInstance().getTerminalDriver().log(Type.COMMAND, group.getGroup() +"~" + group.getGroupType() + " | "+ group.getStorage().getRunningNode());
+                });
+            }else {
+                sendHelp();
             }
         }else {
             //todo: make the hole command
@@ -30,10 +42,18 @@ public class GroupCommand extends CommandAdapter {
 
     @Override
     public ArrayList<String> tabComplete(TerminalStorageLine consoleInput, String[] args) {
+        ArrayList<String> commands = new ArrayList<>();
+        if (args.length == 0){
+            commands.add("create");
+            commands.add("list");
+        }
+        if (args.length == 1){
+            commands.add("delete");
+            commands.add("info");
+            commands.add("switchmaintenance");
+        }
 
-        //todo: make the tab abele
-
-        return null;
+        return commands;
     }
 
     private void sendHelp(){
