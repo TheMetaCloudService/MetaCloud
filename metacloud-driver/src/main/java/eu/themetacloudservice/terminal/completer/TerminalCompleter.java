@@ -1,6 +1,9 @@
 package eu.themetacloudservice.terminal.completer;
 
 import eu.themetacloudservice.Driver;
+import eu.themetacloudservice.configuration.ConfigDriver;
+import eu.themetacloudservice.configuration.dummys.managerconfig.ManagerConfig;
+import eu.themetacloudservice.configuration.dummys.managerconfig.ManagerConfigNodes;
 import lombok.var;
 import org.jline.reader.Candidate;
 import org.jline.reader.Completer;
@@ -17,6 +20,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class TerminalCompleter  implements Completer {
 
@@ -29,89 +33,47 @@ public class TerminalCompleter  implements Completer {
 
         if (Driver.getInstance().getTerminalDriver().isInSetup()){
             final var result = new LinkedList<String>();
-            if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 0){
-                if (!input.contains(" ")){
-                    result.add("DE");
-                    result.add("EN");
-                }
-            }
-            if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 1){
-                if (!input.contains(" ")){
-                    result.add("MANAGER");
-                    result.add("NODE");
-                }
-            }
-            if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 2){
-                if (!input.contains(" ")){
-                    try {
-                        String ip = new BufferedReader(new InputStreamReader(new URL("https://checkip.amazonaws.com").openConnection().getInputStream())).readLine();
-                        result.add("" + ip);
-                    } catch (UnknownHostException e) {
-                        e.printStackTrace();
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    result.add("127.0.0.1");
+
+            if (Driver.getInstance().getMessageStorage().setuptype.equalsIgnoreCase("GROUP")){
+
+                if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 1){
+                    result.add("LOBBY");
+                    result.add("BUNGEE");
+                    result.add("GAME");
+                }if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 3){
+                    result.add("y");
+                    result.add("n");
+                }if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 10){
+                    ArrayList<String> rawtemplates = Driver.getInstance().getTemplateDriver().get();
+                    rawtemplates.forEach(s -> {
+                        result.add(s);
+                    });
+                    result.add("CREATE");
+                }if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 11){
+                    ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+                    ArrayList<ManagerConfigNodes> configNodes = config.getNodes();
+                    configNodes.forEach(managerConfigNodes -> {
+                        result.add(managerConfigNodes.getName());
+                    });
                 }
 
-            }
 
-            if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 4){
-                if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("MANAGER")){
+                suggestions = result;
+                suggestions.stream().map(Candidate::new).forEach(list::add);
+            }else if (Driver.getInstance().getMessageStorage().setuptype.equalsIgnoreCase("MAINSETUP")){
+                if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 0){
                     if (!input.contains(" ")){
-                        result.add("VELOCITY");
-                        result.add("WATERFALL");
-                        result.add("BUNGEECORD");
+                        result.add("DE");
+                        result.add("EN");
                     }
                 }
-            }
-            if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 5){
-                if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("MANAGER")){
+                if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 1){
                     if (!input.contains(" ")){
-                        result.add("PAPER-1.19.3");
-                        result.add("PAPER-1.19.2");
-                        result.add("PAPER-1.18.2");
-                        result.add("PAPER-1.17.1");
-                        result.add("PAPER-1.16.5");
-                        result.add("SPIGOT-1.19.3");
-                        result.add("SPIGOT-1.19.2");
-                        result.add("SPIGOT-1.18.2");
-                        result.add("SPIGOT-1.17.1");
-                        result.add("SPIGOT-1.16.5");
-
+                        result.add("MANAGER");
+                        result.add("NODE");
                     }
                 }
-            }
-            if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 6){
-                if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("NODE")){
-                    if (!input.contains(" ")){
-                        result.add("VELOCITY");
-                        result.add("WATERFALL");
-                        result.add("BUNGEECORD");
-                    }
-                }
-            }
-            if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 7){
-                if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("NODE")){
-                    if (!input.contains(" ")){
-                        result.add("PAPER-1.19.3");
-                        result.add("PAPER-1.19.2");
-                        result.add("PAPER-1.18.2");
-                        result.add("PAPER-1.17.1");
-                        result.add("PAPER-1.16.5");
-                        result.add("SPIGOT-1.19.3");
-                        result.add("SPIGOT-1.19.2");
-                        result.add("SPIGOT-1.18.2");
-                        result.add("SPIGOT-1.17.1");
-                        result.add("SPIGOT-1.16.5");
-                    }
-                }
-            }
-
-            if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 5){
-                if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("NODE")){
+                if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 2){
                     if (!input.contains(" ")){
                         try {
                             String ip = new BufferedReader(new InputStreamReader(new URL("https://checkip.amazonaws.com").openConnection().getInputStream())).readLine();
@@ -125,15 +87,85 @@ public class TerminalCompleter  implements Completer {
                         }
                         result.add("127.0.0.1");
                     }
+
                 }
 
+                if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 4){
+                    if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("MANAGER")){
+                        if (!input.contains(" ")){
+                            result.add("VELOCITY");
+                            result.add("WATERFALL");
+                            result.add("BUNGEECORD");
+                        }
+                    }
+                }
+                if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 5){
+                    if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("MANAGER")){
+                        if (!input.contains(" ")){
+                            result.add("PAPER-1.19.3");
+                            result.add("PAPER-1.19.2");
+                            result.add("PAPER-1.18.2");
+                            result.add("PAPER-1.17.1");
+                            result.add("PAPER-1.16.5");
+                            result.add("SPIGOT-1.19.3");
+                            result.add("SPIGOT-1.19.2");
+                            result.add("SPIGOT-1.18.2");
+                            result.add("SPIGOT-1.17.1");
+                            result.add("SPIGOT-1.16.5");
+
+                        }
+                    }
+                }
+                if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 6){
+                    if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("NODE")){
+                        if (!input.contains(" ")){
+                            result.add("VELOCITY");
+                            result.add("WATERFALL");
+                            result.add("BUNGEECORD");
+                        }
+                    }
+                }
+                if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 7){
+                    if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("NODE")){
+                        if (!input.contains(" ")){
+                            result.add("PAPER-1.19.3");
+                            result.add("PAPER-1.19.2");
+                            result.add("PAPER-1.18.2");
+                            result.add("PAPER-1.17.1");
+                            result.add("PAPER-1.16.5");
+                            result.add("SPIGOT-1.19.3");
+                            result.add("SPIGOT-1.19.2");
+                            result.add("SPIGOT-1.18.2");
+                            result.add("SPIGOT-1.17.1");
+                            result.add("SPIGOT-1.16.5");
+                        }
+                    }
+                }
+
+                if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 5){
+                    if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("NODE")){
+                        if (!input.contains(" ")){
+                            try {
+                                String ip = new BufferedReader(new InputStreamReader(new URL("https://checkip.amazonaws.com").openConnection().getInputStream())).readLine();
+                                result.add("" + ip);
+                            } catch (UnknownHostException e) {
+                                e.printStackTrace();
+                            } catch (MalformedURLException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            result.add("127.0.0.1");
+                        }
+                    }
+
+                }
+
+
+
+                suggestions = result;
+                suggestions.stream().map(Candidate::new).forEach(list::add);
             }
-
-
-
-
-            suggestions = result;
-            suggestions.stream().map(Candidate::new).forEach(list::add);
         }else {
             if (input.isEmpty() || input.equalsIgnoreCase("")){
                 final var result = new LinkedList<String>();

@@ -1,0 +1,9 @@
+eu\themetacloudservice\CloudBoot.class
+eu\themetacloudservice\manager\commands\StopCommand.class
+eu\themetacloudservice\node\CloudNode.class
+eu\themetacloudservice\manager\CloudManager.class
+eu\themetacloudservice\manager\commands\GroupCommand.class
+eu\themetacloudservice\manager\commands\HelpCommand.class
+eu\themetacloudservice\CloudBoot$1.class
+eu\themetacloudservice\manager\commands\ClearCommand.class
+eu\themetacloudservice\manager\commands\StopCommand$1.class

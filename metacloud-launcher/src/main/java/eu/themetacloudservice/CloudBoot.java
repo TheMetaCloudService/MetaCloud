@@ -34,6 +34,7 @@ public class CloudBoot {
         if (Driver.getInstance().getMessageStorage().language.equalsIgnoreCase("DE")){
             Driver.getInstance().getTerminalDriver().log(Type.INFORMATION, "es wird geprüft, ob die Cloud bereits eingerichtet ist");
             if (!new File("./service.json").exists() && !new File("./nodeservice.json").exists()){
+                Driver.getInstance().getMessageStorage().setuptype = "MAINSETUP";
                 Driver.getInstance().getTerminalDriver().log(Type.INFORMATION, "Oh, Sie sind wohl neu hier, dann fangen wir mit der Einrichtung an...");
                 try {Thread.sleep(2000);} catch (InterruptedException ignored) {}
                 waitForFinishSetup();

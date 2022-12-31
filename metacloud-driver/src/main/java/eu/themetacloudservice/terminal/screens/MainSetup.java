@@ -1079,7 +1079,7 @@ public class MainSetup {
             if (Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("language").toString().equalsIgnoreCase("DE")){
                 ManagerConfig managerConfig = new ManagerConfig();
                 ManagerConfigNodes managerConfigNodes = new ManagerConfigNodes();
-                managerConfigNodes.setName("Node-1");
+                managerConfigNodes.setName("InternalNode");
                 managerConfigNodes.setAddress("127.0.0.1");
 
                 managerConfig.setLanguage("DE");
@@ -1101,7 +1101,7 @@ public class MainSetup {
             }else {
                 ManagerConfig managerConfig = new ManagerConfig();
                 ManagerConfigNodes managerConfigNodes = new ManagerConfigNodes();
-                managerConfigNodes.setName("Node-1");
+                managerConfigNodes.setName("InternalNode");
                 managerConfigNodes.setAddress("127.0.0.1");
                 managerConfig.setLanguage("EN");
                 ArrayList<ManagerConfigNodes> nodes = new ArrayList<>();

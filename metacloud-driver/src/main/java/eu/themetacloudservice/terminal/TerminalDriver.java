@@ -92,7 +92,6 @@ public class TerminalDriver {
                             }else if (Driver.getInstance().getMessageStorage().setuptype.equalsIgnoreCase("GROUP")){
                                 new GroupSetup(line);
                             }else {
-
                             }
                         } else if (inputz != null) {
                             inputz.inputs().accept(line);
@@ -101,7 +100,6 @@ public class TerminalDriver {
                         }
                     }
                 }catch (Exception e){
-                    Thread.currentThread().stop();
                 }
             }
 
@@ -117,11 +115,6 @@ public class TerminalDriver {
     }
 
 
-    @SneakyThrows
-    public void close(){
-        allowRunning = false;
-        System.exit(0);
-    }
     public void logSpeed(Type type, String detext, String entext){
       if (Driver.getInstance().getMessageStorage().language.equalsIgnoreCase("DE")){
           log(type, detext);
@@ -134,7 +127,6 @@ public class TerminalDriver {
         this.isInSetup = true;
         clearScreen();
         this.setupStorage = new SetupStorage();
-
         log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
         if (!new File("./service.json").exists() && !new File("./nodeservice.json").exists()){
             Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP, "Welche Sprache möchten Sie haben?", "What language would you like to have?");

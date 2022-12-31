@@ -10,6 +10,8 @@ public class Group implements IConfigAdapter {
     private boolean maintenance;
     private boolean runStatic;
     private Integer maxPlayers;
+    private Integer minimalOnline;
+    private Integer  maximalOnline;
     private Integer startNewPercent;
     private Integer over100AtGroup;
     private Integer over100AtNetwork;
@@ -18,17 +20,27 @@ public class Group implements IConfigAdapter {
 
     public Group() {}
 
-    public Group(String group, String groupType, Integer usedMemory, boolean maintenance, boolean runStatic, Integer maxPlayers, Integer startNewPercent, Integer over100AtGroup, Integer over100AtNetwork, GroupStorage storage) {
+    public Group(String group, String groupType, Integer usedMemory, boolean maintenance, boolean runStatic, Integer maxPlayers, Integer minimalOnline, Integer maximalOnline, Integer startNewPercent, Integer over100AtGroup, Integer over100AtNetwork, GroupStorage storage) {
         this.group = group;
         this.groupType = groupType;
         this.usedMemory = usedMemory;
         this.maintenance = maintenance;
         this.runStatic = runStatic;
         this.maxPlayers = maxPlayers;
+        this.minimalOnline = minimalOnline;
+        this.maximalOnline = maximalOnline;
         this.startNewPercent = startNewPercent;
         this.over100AtGroup = over100AtGroup;
         this.over100AtNetwork = over100AtNetwork;
         this.storage = storage;
+    }
+
+    public Integer getMinimalOnline() {
+        return minimalOnline;
+    }
+
+    public Integer getMaximalOnline() {
+        return maximalOnline;
     }
 
     public String getGroup() {
