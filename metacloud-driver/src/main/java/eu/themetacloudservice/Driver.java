@@ -3,6 +3,7 @@ package eu.themetacloudservice;
 
 import eu.themetacloudservice.groups.GroupDriver;
 import eu.themetacloudservice.groups.TemplateDriver;
+import eu.themetacloudservice.module.ModuleDriver;
 import eu.themetacloudservice.storage.MessageStorage;
 import eu.themetacloudservice.terminal.TerminalDriver;
 
@@ -13,6 +14,7 @@ public class Driver {
     private MessageStorage messageStorage;
     private GroupDriver groupDriver;
     private TemplateDriver templateDriver;
+    private ModuleDriver moduleDriver;
 
     public Driver(){
         /*
@@ -21,10 +23,14 @@ public class Driver {
          * */
         instance = this;
         groupDriver = new GroupDriver();
+        this.moduleDriver = new ModuleDriver();
         this.messageStorage = new MessageStorage();
         this.templateDriver = new TemplateDriver();
     }
 
+    public ModuleDriver getModuleDriver() {
+        return moduleDriver;
+    }
 
     public TemplateDriver getTemplateDriver() {
         return templateDriver;

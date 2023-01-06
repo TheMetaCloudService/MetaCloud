@@ -1,7 +1,10 @@
 package eu.themetacloudservice.manager.commands;
 
+import com.sun.org.apache.bcel.internal.generic.DCMPG;
 import eu.themetacloudservice.Driver;
+import eu.themetacloudservice.configuration.ConfigDriver;
 import eu.themetacloudservice.groups.dummy.Group;
+import eu.themetacloudservice.manager.CloudManager;
 import eu.themetacloudservice.terminal.commands.CommandAdapter;
 import eu.themetacloudservice.terminal.commands.CommandInfo;
 import eu.themetacloudservice.terminal.enums.Type;
@@ -10,7 +13,7 @@ import eu.themetacloudservice.terminal.utils.TerminalStorageLine;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-@CommandInfo(command = "group", aliases = {"g"}, ENdescription = "here you can manage your groups", DEdescription = "hier kannst du deine Gruppen verwalten")
+@CommandInfo(command = "group", aliases = {"g", "template", "temp"}, ENdescription = "here you can manage your groups", DEdescription = "hier kannst du deine Gruppen verwalten")
 public class GroupCommand extends CommandAdapter {
     @Override
     public boolean performCommand(CommandAdapter command, String[] args) {
@@ -24,17 +27,98 @@ public class GroupCommand extends CommandAdapter {
                 Driver.getInstance().getTerminalDriver().joinSetup();
             }else if (args[0].equalsIgnoreCase("list")){
                 if ( Driver.getInstance().getGroupDriver().getAll().isEmpty()){
-                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND, "es wurde keine gruppe gefunden [§egroup create§r]", "no group was found [§egroup create§7]");
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND, "es wurde keine gruppe gefunden '§fgroup create§r'", "no group was found '§fgroup create§7'");
                     return false;
                 }
-                Driver.getInstance().getGroupDriver().getAll().forEach(group -> {
+
+              ArrayList<Group> groups =   Driver.getInstance().getGroupDriver().getAll();
+
+                for (int i = 0; i != groups.size() ; i++) {
+                    Group group =  groups.get(i);
                     Driver.getInstance().getTerminalDriver().log(Type.COMMAND, group.getGroup() +"~" + group.getGroupType() + " | "+ group.getStorage().getRunningNode());
-                });
+                }
             }else {
                 sendHelp();
             }
         }else {
-            //todo: make the hole command
+            if (args.length== 2){
+                if (args[1].equalsIgnoreCase("delete")){
+                    String group = args[0];
+                    if (Driver.getInstance().getGroupDriver().find(group)){
+                        Driver.getInstance().getGroupDriver().delete(group);
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "die angegebene Gruppe '§f"+group+"§r' wurde erfolgreich gelöscht",
+                                "the specified group '§f"+group+"§r' was successfully deleted");
+                    }else {
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "die Gruppe '§f"+group+"§r' wurde nicht gefunden",
+                                "the group '§f"+group+"§r' was not found");
+                    }
+
+
+                }else  if (args[1].equalsIgnoreCase("info")){
+                    String group = args[0];
+                    if (Driver.getInstance().getGroupDriver().find(group)){
+                        Group raw = Driver.getInstance().getGroupDriver().load(group);
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "Dies ist die Konfiguration von §b" + group + "§r:§f\n" +new ConfigDriver().convert(raw),
+                                "this is the config from §b" + group + "§r:§f\n" + new ConfigDriver().convert(raw));
+                    }else {
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "die Gruppe '§f"+group+"§r' wurde nicht gefunden",
+                                "the group '§f"+group+"§r' was not found");
+                    }
+
+                }else {
+                    sendHelp();
+                }
+            }else  if (args.length== 3) {
+                if (args[1].equalsIgnoreCase("setmaintenace")){
+                    String group = args[0];
+                    if (Driver.getInstance().getGroupDriver().find(group)){
+                        Group raw = Driver.getInstance().getGroupDriver().load(group);
+                        if (args[2].equalsIgnoreCase("true")){
+                            raw.setMaintenance(true);
+                        }else {
+                            raw.setMaintenance(false);
+                        }
+                        Driver.getInstance().getGroupDriver().update(group, raw);
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "die Wartungsarbeiten der Gruppe '§f"+group+"§r' wurden geändert",
+                                "the maintenance of the '§f"+group+"§r' group has been changed");
+                    }else {
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "die Gruppe '§f"+group+"§r' wurde nicht gefunden",
+                                "the group '§f"+group+"§r' was not found");
+                    }
+                }else  if (args[1].equalsIgnoreCase("settemplate")){
+                    String group = args[0];
+                    if (Driver.getInstance().getGroupDriver().find(group)){
+                        if (Driver.getInstance().getTemplateDriver().get().contains(args[2].replace(" ", ""))){
+
+                            Group raw = Driver.getInstance().getGroupDriver().load(group);
+                            raw.getStorage().setTemplate(args[2].replace(" ", ""));
+                            Driver.getInstance().getGroupDriver().update(group, raw);
+                            Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                    "Die Vorlage wurde erfolgreich geändert",
+                                    "The template was successfully modified");
+                        }else {
+                            Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                    "das Template wurde nicht gefunden",
+                                    "the template was not found");
+                        }
+                    }else {
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "die Gruppe '§f"+group+"§r' wurde nicht gefunden",
+                                "the group '§f"+group+"§r' was not found");
+                    }
+                }else {
+                    sendHelp();
+                }
+
+            }else {
+                sendHelp();
+            }
         }
 
         return false;
@@ -50,7 +134,19 @@ public class GroupCommand extends CommandAdapter {
         if (args.length == 1){
             commands.add("delete");
             commands.add("info");
-            commands.add("switchmaintenance");
+            commands.add("setmaintenace");
+            commands.add("settemplate");
+        }
+        if (args.length == 3){
+            if (args[1].equalsIgnoreCase("setmaintenace")) {
+                commands.add("true");
+                commands.add("false");
+            }   if (args[1].equalsIgnoreCase("settemplate")) {
+                ArrayList<String> rawtemplates = Driver.getInstance().getTemplateDriver().get();
+                rawtemplates.forEach(s -> {
+                    commands.add(s);
+                });
+            }
         }
 
         return commands;
@@ -58,19 +154,22 @@ public class GroupCommand extends CommandAdapter {
 
     private void sendHelp(){
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §egroup create §7~ um eine neue Gruppe zu erstellen",
-                " >> §egroup create §7~ to create a new group");
+                " >> §fgroup create §7~ um eine neue Gruppe zu erstellen",
+                " >> §fgroup create §7~ to create a new group");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §egroup list §7~ zeigt Ihnen alle derzeit verfügbaren Gruppen an",
-                " >> §egroup list §7~ shows you all groups that are currently available");
+                " >> §fgroup list §7~ zeigt Ihnen alle derzeit verfügbaren Gruppen an",
+                " >> §fgroup list §7~ shows you all groups that are currently available");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §egroup <group> delete §7~ eine bestehende Gruppe löschen",
-                " >> §egroup <group> delete §7~ delete an existing group");
+                " >> §fgroup <group> delete §7~ eine bestehende Gruppe löschen",
+                " >> §fgroup <group> delete §7~ delete an existing group");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §egroup <group> switchmaintenance §7~ um die Wartung ein- und wieder auszuschalten",
-                " >> §egroup <group> switchmaintenance §7~ to switch the maintenance on and off again");
+                " >> §fgroup <group> info §7~ um die Wartung ein- und wieder auszuschalten",
+                " >> §fgroup <group> info §7~ to switch the maintenance on and off again");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §egroup <group> info §7~ um die Wartung ein- und wieder auszuschalten",
-                " >> §egroup <group> info §7~ to switch the maintenance on and off again");
+                " >> §fgroup <group> setmaintenace <true/false> §7~ um die Wartung ein- und wieder auszuschalten",
+                " >> §fgroup <group> setmaintenace <true/false> §7~ to switch the maintenance on and off again");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                " >> §fgroup <group> settemplate <template> §7~ um die Wartung ein- und wieder auszuschalten",
+                " >> §fgroup <group> settemplate <template> §7~ to switch the maintenance on and off again");
     }
 }

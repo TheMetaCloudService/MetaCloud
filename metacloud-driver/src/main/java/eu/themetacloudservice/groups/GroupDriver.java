@@ -4,6 +4,8 @@ import eu.themetacloudservice.Driver;
 import eu.themetacloudservice.configuration.ConfigDriver;
 import eu.themetacloudservice.groups.dummy.Group;
 import eu.themetacloudservice.groups.interfaces.IGroupDriver;
+import eu.themetacloudservice.terminal.enums.Type;
+import lombok.SneakyThrows;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -39,6 +41,9 @@ public class GroupDriver implements IGroupDriver {
                 Driver.getInstance().getTemplateDriver().create(group.getGroup(), isProxyes);
             }
             new ConfigDriver("./local/groups/" + group.getGroup()+ ".json").save(group);
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFORMATION, "die Gruppe '§f"+group.getGroup()+"§r' wurde erfolgreich erstellt", "the group '§f"+group.getGroup()+"§r' was successfully created");
+
+            //todo: start group
         }
     }
 
@@ -50,14 +55,27 @@ public class GroupDriver implements IGroupDriver {
         }
     }
 
+    public String getVersionByTemplate(String template){
+        ArrayList<Group> g = getAll();
+        for (int i = 0; i !=g.size(); i++) {
+            Group group = g.get(i);
+            if (group.getStorage().getTemplate().equalsIgnoreCase(template)){
+                return group.getGroupType();
+            }
+        }
+
+        return null;
+    }
+
     @Override
     public ArrayList<Group> getAll() {
         ArrayList<Group> groups = new ArrayList<>();
         File file = new File("./local/groups/");
         File[] files = file.listFiles();
         for (int i = 0; i != files.length; i++) {
-            String Group = files[i].getName();
-            groups.add(load(Group));
+            String first = files[i].getName();
+            String group = first.split(".json")[0];
+            groups.add(load(group));
         }
         return groups;
     }
@@ -72,5 +90,13 @@ public class GroupDriver implements IGroupDriver {
             }
         });
         return groups;
+    }
+
+    @SneakyThrows
+    @Override
+    public void update(String name, Group group) {
+        if (find(name)){
+            new ConfigDriver("./local/groups/" + name+ ".json").save(group);
+        }
     }
 }

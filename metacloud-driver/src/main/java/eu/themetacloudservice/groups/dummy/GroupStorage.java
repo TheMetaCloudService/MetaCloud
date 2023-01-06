@@ -21,4 +21,12 @@ public class GroupStorage {
     public String getRunningNode() {
         return runningNode;
     }
+
+    public void setTemplate(String template) {
+        this.template = template;
+    }
+
+    public void setRunningNode(String runningNode) {
+        this.runningNode = runningNode;
+    }
 }

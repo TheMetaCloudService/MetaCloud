@@ -38,7 +38,7 @@ public class TerminalCompleter  implements Completer {
 
                 if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 1){
                     result.add("LOBBY");
-                    result.add("BUNGEE");
+                    result.add("PROXY");
                     result.add("GAME");
                 }if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 3){
                     result.add("y");
@@ -93,7 +93,6 @@ public class TerminalCompleter  implements Completer {
                 if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 4){
                     if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("MANAGER")){
                         if (!input.contains(" ")){
-                            result.add("VELOCITY");
                             result.add("WATERFALL");
                             result.add("BUNGEECORD");
                         }

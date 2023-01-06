@@ -38,9 +38,9 @@ public class CommandDriver {
             command.performCommand(command, args);
         }else {
             if (Driver.getInstance().getMessageStorage().language.equalsIgnoreCase("DE")){
-                Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "der eingegebene Befehl wurde nicht gefunden bitte tippe '§ehelp§r'");
+                Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "der eingegebene Befehl wurde nicht gefunden bitte tippe '§fhelp§r'");
             }else {
-                Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "the entered command was not found please type '§ehelp§r");
+                Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "the entered command was not found please type '§fhelp§r");
             }
         }
     }

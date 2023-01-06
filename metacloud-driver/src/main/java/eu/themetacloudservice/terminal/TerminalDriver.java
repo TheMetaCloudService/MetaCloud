@@ -7,12 +7,10 @@ import eu.themetacloudservice.terminal.completer.TerminalCompleter;
 import eu.themetacloudservice.terminal.enums.Color;
 import eu.themetacloudservice.terminal.enums.Type;
 import eu.themetacloudservice.terminal.logging.SimpleLatestLog;
-import eu.themetacloudservice.terminal.screens.GroupSetup;
-import eu.themetacloudservice.terminal.screens.MainSetup;
+import eu.themetacloudservice.terminal.utils.TerminalERROR;
 import eu.themetacloudservice.terminal.utils.TerminalStorage;
 import eu.themetacloudservice.terminal.utils.TerminalStorageLine;
 import lombok.SneakyThrows;
-import lombok.var;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.terminal.Terminal;
@@ -20,6 +18,7 @@ import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.InfoCmp;
 
 import java.io.File;
+import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
@@ -31,13 +30,12 @@ public class TerminalDriver {
 
 
     private boolean isInSetup;
-    private boolean allowRunning;
     private LinkedList<TerminalStorage> mainScreenStorage;
     private Queue<TerminalStorageLine> inputs;
     private final Terminal terminal;
     private SetupStorage setupStorage;
     private final LineReader lineReader;
-    private Thread consoleThread;
+    private Thread consoleReadingThread;
     private SimpleLatestLog simpleLatestLog;
     private CommandDriver commandDriver;
 
@@ -49,10 +47,9 @@ public class TerminalDriver {
     public TerminalDriver() {
 
         /*
-        * @FUNCTION: Terminal and reader with tapping in Jline3
-        * @Coder: RauchigesEtwas (Robin B.)
-        * */
-        allowRunning = true;
+         * @FUNCTION: Terminal and reader with tapping in Jline3
+         * @Coder: RauchigesEtwas (Robin B.)
+         * */
         this.setupStorage = new SetupStorage();
         this.commandDriver = new CommandDriver();
         this.mainScreenStorage = new LinkedList<>();
@@ -76,44 +73,21 @@ public class TerminalDriver {
                 .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
                 .build();
 
-        this.consoleThread = new Thread(() -> {
-            while (allowRunning) {
 
-                try {
-                    final var line = this.lineReader.readLine(getColoredString("§bMetaCloud§f@"+System.getProperty("user.name") +" §7=> "));
-                    if (line != null && !line.isEmpty()) {
-                        final var inputz = this.getInputs().poll();
+        this.consoleReadingThread = new TerminalReader(this);
+        this.consoleReadingThread.setUncaughtExceptionHandler((t, e) -> e.printStackTrace());
+        this.consoleReadingThread.start();
 
-                        if(this.isInSetup){
-                            if (line.equalsIgnoreCase("leave")){
-                                leaveSetup();
-                            }else if (!new File("./service.json").exists() && !new File("./nodeservice.json").exists()){
-                                new MainSetup(line);
-                            }else if (Driver.getInstance().getMessageStorage().setuptype.equalsIgnoreCase("GROUP")){
-                                new GroupSetup(line);
-                            }else {
-                            }
-                        } else if (inputz != null) {
-                            inputz.inputs().accept(line);
-                        } else {
-                            this.commandDriver.executeCommand(line);
-                        }
-                    }
-                }catch (Exception e){
-                }
-            }
-
-
-        });
-        this.consoleThread.setPriority(Thread.MAX_PRIORITY);
-        this.consoleThread.setName("METACLOUD_CONSOLE");
-        this.consoleThread.start();
     }
 
     public SetupStorage getSetupStorage() {
         return setupStorage;
     }
 
+
+    public LineReader getLineReader() {
+        return lineReader;
+    }
 
     public void logSpeed(Type type, String detext, String entext){
       if (Driver.getInstance().getMessageStorage().language.equalsIgnoreCase("DE")){
@@ -177,18 +151,15 @@ public class TerminalDriver {
             this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
             for (int i = 0; i != en.length; i++){
                 this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase()+"§7: §r" + de[i] +Color.RESET.getAnsiCode()));
+                this.lineReader.getTerminal().writer().flush();
             }
-            this.lineReader.getTerminal().writer().flush();
-            this.lineReader.callWidget(LineReader.REDRAW_LINE);
-            this.lineReader.callWidget(LineReader.REDISPLAY);
         }else {
             this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
             for (int i = 0; i != en.length; i++){
                 this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase()+"§7: §r" + en[i] +Color.RESET.getAnsiCode()));
+
+                this.lineReader.getTerminal().writer().flush();
             }
-            this.lineReader.getTerminal().writer().flush();
-            this.lineReader.callWidget(LineReader.REDRAW_LINE);
-            this.lineReader.callWidget(LineReader.REDISPLAY);
         }
     }
 
@@ -199,10 +170,9 @@ public class TerminalDriver {
             this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase()+"§7: §r" + messages[i] +Color.RESET.getAnsiCode()));
             simpleLatestLog.log(getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase()+"§7: §r" + messages[i] +Color.RESET.getAnsiCode()));
             simpleLatestLog.saveLogs();
+            this.lineReader.getTerminal().writer().flush();
+
         }
-        this.lineReader.getTerminal().writer().flush();
-        this.lineReader.callWidget(LineReader.REDRAW_LINE);
-        this.lineReader.callWidget(LineReader.REDISPLAY);
     }
 
     public void log(Type type, String message){
@@ -223,14 +193,21 @@ public class TerminalDriver {
                 simpleLatestLog.saveLogs();
                 this.lineReader.getTerminal().writer().flush();
                 if (!this.lineReader.isReading()) return;
-                this.lineReader.callWidget(LineReader.REDRAW_LINE);
-                this.lineReader.callWidget(LineReader.REDISPLAY);
 
-            }else {
+            }else if (type == Type.ERROR){
 
                 this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
                 this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase()+"§7: §r" + message + Color.RESET.getAnsiCode()));
-                simpleLatestLog.log(getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §v"+type.toString().toUpperCase()+"§7: §r" + message +Color.RESET.getAnsiCode()));
+                simpleLatestLog.log(getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §C"+type.toString().toUpperCase()+"§7: §r" + message +Color.RESET.getAnsiCode()));
+                simpleLatestLog.saveLogs();
+                this.lineReader.getTerminal().writer().flush();
+                if (!this.lineReader.isReading()) return;
+                this.lineReader.callWidget(LineReader.REDRAW_LINE);
+                this.lineReader.callWidget(LineReader.REDISPLAY);
+            }else {
+                this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
+                this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase()+"§7: §r" + message + Color.RESET.getAnsiCode()));
+                simpleLatestLog.log(getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase()+"§7: §r" + message +Color.RESET.getAnsiCode()));
                 simpleLatestLog.saveLogs();
                 this.lineReader.getTerminal().writer().flush();
                 if (!this.lineReader.isReading()) return;
@@ -245,6 +222,8 @@ public class TerminalDriver {
                 simpleLatestLog.log(getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §bSETUP§7: §r" + message +Color.RESET.getAnsiCode()));
                 simpleLatestLog.saveLogs();
                 this.lineReader.getTerminal().writer().flush();
+
+                if (!this.lineReader.isReading()) return;
                 this.lineReader.callWidget(LineReader.REDRAW_LINE);
                 this.lineReader.callWidget(LineReader.REDISPLAY);
 
@@ -255,6 +234,8 @@ public class TerminalDriver {
                 simpleLatestLog.log(getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §bINCORRECT§7: §r" + message +Color.RESET.getAnsiCode()));
                 simpleLatestLog.saveLogs();
                this.lineReader.getTerminal().writer().flush();
+
+                if (!this.lineReader.isReading()) return;
                 this.lineReader.callWidget(LineReader.REDRAW_LINE);
                 this.lineReader.callWidget(LineReader.REDISPLAY);
             }else if (type == Type.EMPTY){

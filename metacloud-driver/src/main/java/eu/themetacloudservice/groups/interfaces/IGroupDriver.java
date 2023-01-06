@@ -12,5 +12,6 @@ public interface IGroupDriver {
     void delete(String group);
     ArrayList<Group> getAll();
     ArrayList<Group> getByNode(String node);
+    void update(String name, Group group);
 
 }

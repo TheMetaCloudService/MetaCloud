@@ -11,27 +11,29 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class TemplateDriver implements ITemplateDriver {
 
 
     @Override
     public void create(String template, boolean bungee) {
-        if (!new File("./loval/templates/"+ template+ "/").exists()){
-            new File("./loval/templates/"+ template+ "/").mkdirs();
+        if (!new File("./local/templates/"+ template+ "/").exists()){
+            new File("./local/templates/"+ template+ "/").mkdirs();
             if (new File("./service.json").exists()){
                 ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
                 if (bungee){
                     Driver.getInstance().getMessageStorage().packetLoader.loadBungee(config.getBungeecordVersion(), template);
+
                 }else {
-                    Driver.getInstance().getMessageStorage().packetLoader.loadBungee(config.getSpigotVersion(), template);
+                    Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion().replace("-", "").replace(".", ""), template);
                 }
             }else {
                 NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
                 if (bungee){
                     Driver.getInstance().getMessageStorage().packetLoader.loadBungee(config.getBungeecordVersion(), template);
                 }else {
-                    Driver.getInstance().getMessageStorage().packetLoader.loadBungee(config.getSpigotVersion(), template);
+                    Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion().replace("-", "").replace(".", ""), template);
                 }
             }
         }
@@ -41,8 +43,8 @@ public class TemplateDriver implements ITemplateDriver {
     @SneakyThrows
     @Override
     public void copy(String template, String directory) {
-       if (new File("./loval/templates/"+ template+ "/").exists()){
-           FileUtils.copyDirectory(new File("./loval/templates/"+ template+ "/"), new File(directory));
+       if (new File("./local/templates/"+ template+ "/").exists()){
+           FileUtils.copyDirectory(new File("./local/templates/"+ template+ "/"), new File(directory));
        }
     }
 
@@ -51,6 +53,40 @@ public class TemplateDriver implements ITemplateDriver {
         if (new File("./local/templates/"+ template+"/").exists()){
             new File("./local/templates/"+ template+"/").delete();
         }
+    }
+
+    @Override
+    public void install(String template, boolean bungee) {
+        if (new File("./service.json").exists()){
+            ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+            if (bungee){
+                Driver.getInstance().getMessageStorage().packetLoader.loadBungee(config.getBungeecordVersion(), template);
+
+            }else {
+                Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion().replace("-", "").replace(".", ""), template);
+            }
+        }else {
+            NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
+            if (bungee){
+                Driver.getInstance().getMessageStorage().packetLoader.loadBungee(config.getBungeecordVersion(), template);
+            }else {
+                Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion().replace("-", "").replace(".", ""), template);
+            }
+        }
+    }
+
+
+    public void installAll(){
+        get().forEach(s -> {
+            if (!isInstalled(s)){
+                install(s, Driver.getInstance().getGroupDriver().getVersionByTemplate(s).equalsIgnoreCase("PROXY"));
+            }
+        });
+    }
+
+
+    private boolean isInstalled(String template){
+        return  new File("./local/templates/" + template + "/server.jar").exists();
     }
 
     @Override

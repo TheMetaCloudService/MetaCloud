@@ -9,6 +9,9 @@ public class Group implements IConfigAdapter {
     private Integer usedMemory;
     private boolean maintenance;
     private boolean runStatic;
+
+    private Integer priority;
+    private String permission;
     private Integer maxPlayers;
     private Integer minimalOnline;
     private Integer  maximalOnline;
@@ -20,12 +23,14 @@ public class Group implements IConfigAdapter {
 
     public Group() {}
 
-    public Group(String group, String groupType, Integer usedMemory, boolean maintenance, boolean runStatic, Integer maxPlayers, Integer minimalOnline, Integer maximalOnline, Integer startNewPercent, Integer over100AtGroup, Integer over100AtNetwork, GroupStorage storage) {
+    public Group(String group, String groupType, Integer usedMemory, boolean maintenance, boolean runStatic, Integer priority, String permission, Integer maxPlayers, Integer minimalOnline, Integer maximalOnline, Integer startNewPercent, Integer over100AtGroup, Integer over100AtNetwork, GroupStorage storage) {
         this.group = group;
         this.groupType = groupType;
         this.usedMemory = usedMemory;
         this.maintenance = maintenance;
         this.runStatic = runStatic;
+        this.priority = priority;
+        this.permission = permission;
         this.maxPlayers = maxPlayers;
         this.minimalOnline = minimalOnline;
         this.maximalOnline = maximalOnline;
@@ -33,6 +38,26 @@ public class Group implements IConfigAdapter {
         this.over100AtGroup = over100AtGroup;
         this.over100AtNetwork = over100AtNetwork;
         this.storage = storage;
+    }
+
+    public void setMaintenance(boolean maintenance) {
+        this.maintenance = maintenance;
+    }
+
+    public void setMaxPlayers(Integer maxPlayers) {
+        this.maxPlayers = maxPlayers;
+    }
+
+    public void setMinimalOnline(Integer minimalOnline) {
+        this.minimalOnline = minimalOnline;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public String getPermission() {
+        return permission;
     }
 
     public Integer getMinimalOnline() {
@@ -81,5 +106,9 @@ public class Group implements IConfigAdapter {
 
     public GroupStorage getStorage() {
         return storage;
+    }
+
+    public void setStorage(GroupStorage storage) {
+        this.storage = storage;
     }
 }

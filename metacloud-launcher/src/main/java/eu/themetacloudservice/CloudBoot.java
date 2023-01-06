@@ -46,6 +46,7 @@ public class CloudBoot {
         }else {
             Driver.getInstance().getTerminalDriver().log(Type.INFORMATION, "it will be checked if the cloud is already set up");
                 if (!new File("./service.json").exists() && !new File("./nodeservice.json").exists()){
+                    Driver.getInstance().getMessageStorage().setuptype = "MAINSETUP";
                     Driver.getInstance().getTerminalDriver().log(Type.INFORMATION, "oh it seems you are new here, we will start the setup then...");
                     try {Thread.sleep(2000);} catch (InterruptedException ignored) {}
                     waitForFinishSetup();
@@ -62,16 +63,16 @@ public class CloudBoot {
         if ( Driver.getInstance().getMessageStorage().language.equalsIgnoreCase("DE")){
             Driver.getInstance().getTerminalDriver().log(Type.INFORMATION, "es wird geschaut ob die Cloud version noch aktuell ist");
             if (Driver.getInstance().getMessageStorage().checkAvailableUpdate()){
-                Driver.getInstance().getTerminalDriver().log(Type.WARNING, "eine neue Version der Metacloud wurde gefunden [§e"+Driver.getInstance().getMessageStorage().version+" >> "+Driver.getInstance().getMessageStorage().getNewVersionName()+"§r]");
-                Driver.getInstance().getTerminalDriver().log(Type.WARNING, "du können es unter '§ehttps://metacloudservice.eu/downloads/Metacloud-latest.zip§r' herunterladen.");
+                Driver.getInstance().getTerminalDriver().log(Type.WARNING, "eine neue Version der Metacloud wurde gefunden '§f"+Driver.getInstance().getMessageStorage().version+" >> "+Driver.getInstance().getMessageStorage().getNewVersionName()+"§r'");
+                Driver.getInstance().getTerminalDriver().log(Type.WARNING, "du können es unter '§fhttps://metacloudservice.eu/downloads/Metacloud-latest.zip§r' herunterladen.");
             }else {
                 Driver.getInstance().getTerminalDriver().log(Type.INFORMATION, "es wurde kein Update gefunden, d.h. die ist auf dem neuesten Stand");
             }
         }else {
             Driver.getInstance().getTerminalDriver().log(Type.INFORMATION, "it is checked if the cloud version is still up to date");
             if (Driver.getInstance().getMessageStorage().checkAvailableUpdate()){
-                Driver.getInstance().getTerminalDriver().log(Type.WARNING, "a new version of the Metacloud was found [§e"+Driver.getInstance().getMessageStorage().version+" >> "+Driver.getInstance().getMessageStorage().getNewVersionName()+"§r]");
-                Driver.getInstance().getTerminalDriver().log(Type.WARNING, "you can download it at '§ehttps://metacloudservice.eu/downloads/Metacloud-latest.zip§r'");
+                Driver.getInstance().getTerminalDriver().log(Type.WARNING, "a new version of the Metacloud was found '§f"+Driver.getInstance().getMessageStorage().version+" >> "+Driver.getInstance().getMessageStorage().getNewVersionName()+"§r'");
+                Driver.getInstance().getTerminalDriver().log(Type.WARNING, "you can download it at '§fhttps://metacloudservice.eu/downloads/Metacloud-latest.zip§r'");
             }else {
                 Driver.getInstance().getTerminalDriver().log(Type.INFORMATION, "no update was found, that means you are up to date");
             }

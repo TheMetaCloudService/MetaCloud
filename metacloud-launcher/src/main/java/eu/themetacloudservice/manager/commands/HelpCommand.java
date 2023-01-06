@@ -28,8 +28,8 @@ public class HelpCommand extends CommandAdapter {
                 }
             }
             Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                    " >> §e" + commandAdapter.getCommand() + "  §7[§f"+aliases+"§7] ~ " + commandAdapter.getDEdescription(),
-                    " >> §e" + commandAdapter.getCommand() + "  §7[§f"+aliases+"§7] ~ " + commandAdapter.getENdescription());
+                    " >> §f" + commandAdapter.getCommand() + "  §7'§f"+aliases+"§7' ~ " + commandAdapter.getDEdescription(),
+                    " >> §f" + commandAdapter.getCommand() + "  §7'§f"+aliases+"§7' ~ " + commandAdapter.getENdescription());
         });
         return false;
     }

@@ -15,23 +15,26 @@ public class ConfigDriver {
 
     protected static final Gson GSON = (new GsonBuilder()).serializeNulls().setPrettyPrinting().disableHtmlEscaping().create();
     private String location;
-    private final Gson gson;
 
 
     public ConfigDriver(String location) {
-        this.gson = new Gson();
         this.location = location;
     }
 
     public ConfigDriver() {
-        this.gson = new Gson();
     }
 
     @SneakyThrows
     public IConfigAdapter read(Class<? extends IConfigAdapter> tClass){
 
-        return gson.fromJson(new FileReader(this.location), tClass);
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(new File(this.location), tClass);
+        }catch (Throwable e){
+            throw e;
+        }
     }
+
 
     public boolean exists(){
         if(new File(this.location).exists()){

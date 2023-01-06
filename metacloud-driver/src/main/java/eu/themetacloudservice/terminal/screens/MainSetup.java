@@ -22,7 +22,7 @@ public class MainSetup {
                 Driver.getInstance().getTerminalDriver().clearScreen();
                 Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
 
-                Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §bDE", "Bitte geben Sie an, was Sie einrichten möchten?", "Mögliche Antworten: §eMANAGER, §eNODE");
+                Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §bDE", "Bitte geben Sie an, was Sie einrichten möchten?", "Mögliche Antworten: §fMANAGER, §fNODE");
 
             }else if (line.equalsIgnoreCase("EN") || line.equalsIgnoreCase("EN ")){
                 Driver.getInstance().getMessageStorage().language = "EN";
@@ -30,7 +30,7 @@ public class MainSetup {
                 Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("language", "EN");
                 Driver.getInstance().getTerminalDriver().clearScreen();
                 Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                Driver.getInstance().getTerminalDriver().log(Type.SETUP, "selected language: §bEN", "please specify what you would like to setup?", "Possible answers: §eMANAGER, §eNODE");
+                Driver.getInstance().getTerminalDriver().log(Type.SETUP, "selected language: §bEN", "please specify what you would like to setup?", "Possible answers: §fMANAGER, §fNODE");
             }else {
                 Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "pleas chose §bDE §7or §bEN");
             }
@@ -112,7 +112,7 @@ public class MainSetup {
                     Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
                     Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §bDE", "Gewählte setup: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
                             "Gewählte Address: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §b"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Welche Bungeecord version möchtest du verwenden?", "mögliche antworten: §eBUNGEECORD, WATERFALL, VELOCITY");
+                            "Welche Bungeecord version möchtest du verwenden?", "mögliche antworten: §fBUNGEECORD, WATERFALL");
 
                 }else {
                     Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "bitte gebe eine Ram anzahl an z.b. 512");
@@ -128,19 +128,8 @@ public class MainSetup {
                             "Gewählte Address: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §b"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
                             "Gewählte Version: §b"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
                             "Welche spigot version möchtest du benutzen?",
-                            "mögliche antworten: §eSPIGOT-1.16.5, SPIGOT-1.17.1, SPIGOT-1.18.2, SPIGOT-1.19.2, SPIGOT-1.19.3, PAPER-1.16.5, PAPER-1.17.1, PAPER-1.18.2, PAPER-1.19.2, PAPER-1.19.3");
+                            "mögliche antworten: §fSPIGOT-1.16.5, SPIGOT-1.17.1, SPIGOT-1.18.2, SPIGOT-1.19.2, SPIGOT-1.19.3, PAPER-1.16.5, PAPER-1.17.1, PAPER-1.18.2, PAPER-1.19.2, PAPER-1.19.3");
 
-
-                }else if (line.equalsIgnoreCase("Velocity") || line.equalsIgnoreCase("Velocity ")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "VELOCITY");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §bDE", "Gewählte setup: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Gewählte Address: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §b"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Gewählte Version: §b"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "Welche spigot version möchtest du benutzen?",
-                            "mögliche antworten: §eSPIGOT-1.16.5, SPIGOT-1.17.1, SPIGOT-1.18.2, SPIGOT-1.19.2, SPIGOT-1.19.3, PAPER-1.16.5, PAPER-1.17.1, PAPER-1.18.2, PAPER-1.19.2, PAPER-1.19.3");
 
                 }else if (line.equalsIgnoreCase("BUNGEECORD") || line.equalsIgnoreCase("BUNGEECORD ")){
 
@@ -152,7 +141,7 @@ public class MainSetup {
                             "Gewählte Address: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §b"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
                             "Gewählte Version: §b"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
                             "Welche spigot version möchtest du benutzen?",
-                            "mögliche antworten: §eSPIGOT-1.16.5, SPIGOT-1.17.1, SPIGOT-1.18.2, SPIGOT-1.19.2, SPIGOT-1.19.3, PAPER-1.16.5, PAPER-1.17.1, PAPER-1.18.2, PAPER-1.19.2, PAPER-1.19.3");
+                            "mögliche antworten: §fSPIGOT-1.16.5, SPIGOT-1.17.1, SPIGOT-1.18.2, SPIGOT-1.19.2, SPIGOT-1.19.3, PAPER-1.16.5, PAPER-1.17.1, PAPER-1.18.2, PAPER-1.19.2, PAPER-1.19.3");
                 }else {
                     Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "Die version wurde nicht gefunden");
                 }
@@ -323,7 +312,7 @@ public class MainSetup {
                     Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
                     Driver.getInstance().getTerminalDriver().log(Type.SETUP, "selected language: §bEN", "selected setup: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
                             "selected address: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "selected memory: §b"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB" ,
-                            "Which bungeecord version do you want to use?", "possible answers: §eBUNGEECORD, WATERFALL, VELOCITY");
+                            "Which bungeecord version do you want to use?", "possible answers: §fBUNGEECORD, WATERFALL");
 
                 }else {
                     Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "please enter a Ram number e.g. 512");
@@ -340,18 +329,7 @@ public class MainSetup {
                             "selected address: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "selected memory: §b"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
                             "selected Version: §b" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
                             "which spigot version do you want to use?",
-                            "possible answers: §eSPIGOT-1.16.5, SPIGOT-1.17.1, SPIGOT-1.18.2, SPIGOT-1.19.2, SPIGOT-1.19.3, PAPER-1.16.5, PAPER-1.17.1, PAPER-1.18.2, PAPER-1.19.2, PAPER-1.19.3");
-
-                }else if (line.equalsIgnoreCase("Velocity") || line.equalsIgnoreCase("Velocity ")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "VELOCITY");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "selected language: §bEN", "selected setup: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "selected address: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "selected memory: §b"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "selected Version: §b" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "which spigot version do you want to use?",
-                            "possible answers: §eSPIGOT-1.16.5, SPIGOT-1.17.1, SPIGOT-1.18.2, SPIGOT-1.19.2, SPIGOT-1.19.3, PAPER-1.16.5, PAPER-1.17.1, PAPER-1.18.2, PAPER-1.19.2, PAPER-1.19.3");
+                            "possible answers: §fSPIGOT-1.16.5, SPIGOT-1.17.1, SPIGOT-1.18.2, SPIGOT-1.19.2, SPIGOT-1.19.3, PAPER-1.16.5, PAPER-1.17.1, PAPER-1.18.2, PAPER-1.19.2, PAPER-1.19.3");
 
                 }else if (line.equalsIgnoreCase("BUNGEECORD") || line.equalsIgnoreCase("BUNGEECORD ")){
 
@@ -363,7 +341,7 @@ public class MainSetup {
                             "selected address: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "selected memory: §b"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
                             "selected Version: §b" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
                             "which spigot version do you want to use?",
-                            "possible answers:  §eSPIGOT-1.16.5, SPIGOT-1.17.1, SPIGOT-1.18.2, SPIGOT-1.19.2, SPIGOT-1.19.3, PAPER-1.16.5, PAPER-1.17.1, PAPER-1.18.2, PAPER-1.19.2, PAPER-1.19.3");
+                            "possible answers:  §fSPIGOT-1.16.5, SPIGOT-1.17.1, SPIGOT-1.18.2, SPIGOT-1.19.2, SPIGOT-1.19.3, PAPER-1.16.5, PAPER-1.17.1, PAPER-1.18.2, PAPER-1.19.2, PAPER-1.19.3");
 
                 }else {
                     Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "The version was not found");
@@ -567,7 +545,7 @@ public class MainSetup {
                             "Gewählte Address: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §b"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
                             "Gewählte Node Name: §b"  + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
                             "Gewählte Node Address: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
-                            "Welche Bungeecord version möchtest du verwenden?", "mögliche antworten: §bBUNGEECORD, WATERFALL, VELOCITY");
+                            "Welche Bungeecord version möchtest du verwenden?", "mögliche antworten: §bBUNGEECORD, WATERFALL");
                 }else {
                     Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "Ihre IP-Adresse muss Punkte beinhalten");
                 }
@@ -585,19 +563,6 @@ public class MainSetup {
                             "Welche spigot version möchtest du benutzen?",
                             "mögliche antworten: §bSPIGOT-1.16.5, SPIGOT-1.17.1, SPIGOT-1.18.2, SPIGOT-1.19.2, SPIGOT-1.19.3, PAPER-1.16.5, PAPER-1.17.1, PAPER-1.18.2, PAPER-1.19.2, PAPER-1.19.3");
 
-
-                }else if (line.equalsIgnoreCase("Velocity") || line.equalsIgnoreCase("Velocity ")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "VELOCITY");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §bDE", "Gewählte setup: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Gewählte Address: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §b"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Gewählte Node Name: §b"  + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
-                            "Gewählte Node Address: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
-                            "Gewählte Version: §b"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "Welche spigot version möchtest du benutzen?",
-                            "mögliche antworten: §bSPIGOT-1.16.5, SPIGOT-1.17.1, SPIGOT-1.18.2, SPIGOT-1.19.2, SPIGOT-1.19.3, PAPER-1.16.5, PAPER-1.17.1, PAPER-1.18.2, PAPER-1.19.2, PAPER-1.19.3");
 
                 }else if (line.equalsIgnoreCase("BUNGEECORD") || line.equalsIgnoreCase("BUNGEECORD ")){
 
@@ -832,7 +797,7 @@ public class MainSetup {
                             "selected address: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "selected memory: §b"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
                             "selected node name: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
                             "selected node address: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
-                            "Which bungeecord version do you want to use?", "possible answers: §bBUNGEECORD, WATERFALL, VELOCITY");
+                            "Which bungeecord version do you want to use?", "possible answers: §bBUNGEECORD, WATERFALL");
                 }else {
                     Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "your IP address must contain dots");
                 }
@@ -852,21 +817,7 @@ public class MainSetup {
                             "which spigot version do you want to use?",
                             "possible answers: §bSPIGOT-1.16.5, SPIGOT-1.17.1, SPIGOT-1.18.2, SPIGOT-1.19.2, SPIGOT-1.19.3, PAPER-1.16.5, PAPER-1.17.1, PAPER-1.18.2, PAPER-1.19.2, PAPER-1.19.3");
 
-                }else if (line.equalsIgnoreCase("Velocity") || line.equalsIgnoreCase("Velocity ")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "VELOCITY");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "selected language: §bEN", "selected setup: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "selected address: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "selected memory: §b"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "selected node name: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
-                            "selected node address: §b" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
-                            "selected Version: §b" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "which spigot version do you want to use?",
-                            "possible answers: §bSPIGOT-1.16.5, SPIGOT-1.17.1, SPIGOT-1.18.2, SPIGOT-1.19.2, SPIGOT-1.19.3, PAPER-1.16.5, PAPER-1.17.1, PAPER-1.18.2, PAPER-1.19.2, PAPER-1.19.3");
-
-                }else if (line.equalsIgnoreCase("BUNGEECORD") || line.equalsIgnoreCase("BUNGEECORD ")){
+                }else  if (line.equalsIgnoreCase("BUNGEECORD") || line.equalsIgnoreCase("BUNGEECORD ")){
 
                     Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
                     Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "BUNGEECORD");

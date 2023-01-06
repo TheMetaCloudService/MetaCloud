@@ -4,17 +4,21 @@ import eu.themetacloudservice.Driver;
 import eu.themetacloudservice.configuration.ConfigDriver;
 import eu.themetacloudservice.configuration.dummys.authenticator.AuthenticatorKey;
 import eu.themetacloudservice.configuration.dummys.managerconfig.ManagerConfig;
+import eu.themetacloudservice.groups.dummy.Group;
 import eu.themetacloudservice.manager.commands.ClearCommand;
 import eu.themetacloudservice.manager.commands.GroupCommand;
 import eu.themetacloudservice.manager.commands.HelpCommand;
 import eu.themetacloudservice.manager.commands.StopCommand;
 import eu.themetacloudservice.networking.NettyDriver;
 import eu.themetacloudservice.networking.server.NettyServer;
+import eu.themetacloudservice.process.CloudProcess;
 import eu.themetacloudservice.terminal.enums.Type;
 import io.netty.util.ResourceLeakDetector;
 
 
 import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,7 +50,12 @@ public class CloudManager {
         new File("./local/GLOBAL/").mkdirs();
         new File("./local/groups/").mkdirs();
         new File("./local/templates/").mkdirs();
+        Driver.getInstance().getModuleDriver().loadAllModules();
 
+
+
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "die Cloud erfolgreich gestartet ist, können Sie sie von nun an mit '§fhelp§r' nutzen.",
+                "the cloud is successfully started, you can use it from now on with '§fhelp§r'.");
 
         //todo: make an autostart for the Groups with an Queue
 
@@ -61,6 +70,7 @@ public class CloudManager {
         Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "der '§fNetty-Server§r' wurde erfolgreich an Port '§f"+config.getNetworkingCommunication()+"§r' angebunden", "the '§fNetty-server§r' was successfully bound on port '§f"+config.getNetworkingCommunication()+"§r'");
 
     }
+
 
     public static void shutdownHook(){
         System.exit(0);
