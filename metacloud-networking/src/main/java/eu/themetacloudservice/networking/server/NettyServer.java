@@ -54,6 +54,13 @@ public class NettyServer {
             this.channels.put(receiver, channel);
     }
 
+    public boolean isChannelFound(String receiver){
+        if (this.channels.containsKey(receiver)){
+            return true;
+        }
+        return false;
+    }
+
     public void removeChannel(String receiver) {
         if (this.channels.containsKey(receiver))
             this.channels.remove(receiver);

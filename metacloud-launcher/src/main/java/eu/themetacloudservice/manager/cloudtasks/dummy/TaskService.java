@@ -1,4 +1,4 @@
-package eu.themetacloudservice.manager.cloudtasks;
+package eu.themetacloudservice.manager.cloudtasks.dummy;
 
 import eu.themetacloudservice.process.CloudProcess;
 import eu.themetacloudservice.process.enums.ServiceStatus;

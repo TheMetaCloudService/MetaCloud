@@ -28,6 +28,10 @@ public class CloudProcess implements ICloudProcess {
         this.group = group;
     }
 
+    public Group getGroup() {
+        return group;
+    }
+
     @SneakyThrows
     @Override
     public CloudProcess build() {

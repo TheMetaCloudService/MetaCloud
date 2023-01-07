@@ -23,6 +23,15 @@ public class GroupDriver implements IGroupDriver {
         return null;
     }
 
+    @Override
+    public String loadJson(String name) {
+
+        if (find(name)){
+            return new ConfigDriver().convert(load(name));
+        }
+        return null;
+    }
+
 
     @Override
     public boolean find(String name) {

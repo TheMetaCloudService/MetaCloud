@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public interface IGroupDriver {
 
     Group load(String name);
+    String loadJson(String name);
     boolean find(String name);
     void create(Group group);
     void delete(String group);
