@@ -1,5 +1,7 @@
 package eu.themetacloudservice.networking.packet;
 
+import eu.themetacloudservice.networking.packet.listeners.IPacketListener;
+import eu.themetacloudservice.networking.packet.listeners.ListenerType;
 import io.netty.channel.ChannelHandlerContext;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,11 +29,12 @@ public class PacketDriver {
     }
 
 
-    public void registerPacketListener(IPacketListener ipl) {
+    public PacketDriver handelListener(IPacketListener ipl) {
         this.listeners.add(ipl);
+        return this;
     }
 
-    public void registerPacket(Class<? extends Packet> pc) {
+    public PacketDriver handelPacket(Class<? extends Packet> pc) {
         try {
             this.packets.put(pc.newInstance().getPacketUUID(), pc);
         } catch (InstantiationException e) {
@@ -39,6 +42,7 @@ public class PacketDriver {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+        return this;
     }
 
     public Integer getIDFromPacket(Packet packet) {

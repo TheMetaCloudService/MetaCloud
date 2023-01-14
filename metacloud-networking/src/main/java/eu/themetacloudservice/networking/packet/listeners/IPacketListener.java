@@ -1,5 +1,6 @@
-package eu.themetacloudservice.networking.packet;
+package eu.themetacloudservice.networking.packet.listeners;
 
+import eu.themetacloudservice.networking.packet.Packet;
 import io.netty.channel.ChannelHandlerContext;
 
 public interface IPacketListener {

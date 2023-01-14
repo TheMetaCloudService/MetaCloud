@@ -8,7 +8,9 @@ public class NodeConfig implements IConfigAdapter {
     private String managerAddress;
     private Integer canUsedMemory;
     private String bungeecordVersion;
+    private Integer bungeecordPort;
     private String spigotVersion;
+    private Integer spigotPort;
     private Integer networkingCommunication;
     private Integer restApiCommunication;
     private String nodeName;
@@ -17,6 +19,22 @@ public class NodeConfig implements IConfigAdapter {
 
     public NodeConfig(){
 
+    }
+
+    public Integer getBungeecordPort() {
+        return bungeecordPort;
+    }
+
+    public void setBungeecordPort(Integer bungeecordPort) {
+        this.bungeecordPort = bungeecordPort;
+    }
+
+    public Integer getSpigotPort() {
+        return spigotPort;
+    }
+
+    public void setSpigotPort(Integer spigotPort) {
+        this.spigotPort = spigotPort;
     }
 
     public String getLanguage() {

@@ -47,7 +47,9 @@ public class GroupDriver implements IGroupDriver {
             if (!Driver.getInstance().getTemplateDriver().get().contains(group.getStorage().getTemplate())){
                 boolean isProxyes = group.getGroupType().equalsIgnoreCase("PROXY");
 
-                Driver.getInstance().getTemplateDriver().create(group.getGroup(), isProxyes);
+                if (group.getStorage().getRunningNode().equals("InternalNode")){
+                    Driver.getInstance().getTemplateDriver().create(group.getGroup(), isProxyes);
+                }
             }
             new ConfigDriver("./local/groups/" + group.getGroup()+ ".json").save(group);
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFORMATION, "die Gruppe '§f"+group.getGroup()+"§r' wurde erfolgreich erstellt", "the group '§f"+group.getGroup()+"§r' was successfully created");

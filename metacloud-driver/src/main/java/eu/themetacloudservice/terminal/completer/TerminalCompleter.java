@@ -118,7 +118,6 @@ public class TerminalCompleter  implements Completer {
                 if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 6){
                     if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("NODE")){
                         if (!input.contains(" ")){
-                            result.add("VELOCITY");
                             result.add("WATERFALL");
                             result.add("BUNGEECORD");
                         }

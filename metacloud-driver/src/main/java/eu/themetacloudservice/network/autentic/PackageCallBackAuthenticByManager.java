@@ -1,4 +1,4 @@
-package eu.themetacloudservice.network;
+package eu.themetacloudservice.network.autentic;
 
 import eu.themetacloudservice.networking.packet.NettyBuffer;
 import eu.themetacloudservice.networking.packet.Packet;
@@ -9,13 +9,7 @@ public class PackageCallBackAuthenticByManager extends Packet {
     private boolean accepted;
     private String reason;
 
-    public PackageCallBackAuthenticByManager(PacketSender packetSender) {
-        setSender(packetSender);
-        setPacketUUID(4992390);
-    }
-
     public PackageCallBackAuthenticByManager() {
-        setSender(PacketSender.OTHER);
         setPacketUUID(4992390);
     }
 

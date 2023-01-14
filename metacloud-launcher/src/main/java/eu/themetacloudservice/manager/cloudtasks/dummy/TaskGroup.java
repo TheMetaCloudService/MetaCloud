@@ -17,6 +17,14 @@ public class TaskGroup {
     private ArrayList<TaskService> tasks;
     private Integer currentPlayers;
 
+    public Integer getCurrentPlayers() {
+        return currentPlayers;
+    }
+
+    public void setCurrentPlayers(Integer currentPlayers) {
+        this.currentPlayers = currentPlayers;
+    }
+
     public TaskGroup(String taskGroup) {
         this.taskGroup = taskGroup;
         this.tasks = new ArrayList<>();

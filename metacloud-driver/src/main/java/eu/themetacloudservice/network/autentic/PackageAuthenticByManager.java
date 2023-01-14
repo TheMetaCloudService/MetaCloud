@@ -1,37 +1,38 @@
-package eu.themetacloudservice.network;
+package eu.themetacloudservice.network.autentic;
 
 import eu.themetacloudservice.networking.packet.NettyBuffer;
 import eu.themetacloudservice.networking.packet.Packet;
-import eu.themetacloudservice.networking.packet.enums.PacketSender;
 
 public class PackageAuthenticByManager extends Packet {
 
     private String authenticName;
     private String connectionKey;
-
-    public PackageAuthenticByManager(PacketSender packetSender) {
-        setSender(packetSender);
-        setPacketUUID(9234123);
-    }
+    private boolean isNode;
 
     public PackageAuthenticByManager() {
-        setSender(PacketSender.OTHER);
         setPacketUUID(9234123);
     }
 
     @Override
     public void readPacket(NettyBuffer buffer) {
-
-            authenticName = buffer.readString();
-            connectionKey = buffer.readString();
+        authenticName = buffer.readString();
+        connectionKey = buffer.readString();
+        isNode = buffer.readBoolean();
     }
 
     @Override
     public void writePacket(NettyBuffer buffer) {
-
-        buffer.writeString(connectionKey);
         buffer.writeString(authenticName);
+        buffer.writeString(connectionKey);
+        buffer.writeBoolean(isNode);
+    }
 
+    public boolean isNode() {
+        return isNode;
+    }
+
+    public void setNode(boolean node) {
+        isNode = node;
     }
 
     public String getAuthenticName() {

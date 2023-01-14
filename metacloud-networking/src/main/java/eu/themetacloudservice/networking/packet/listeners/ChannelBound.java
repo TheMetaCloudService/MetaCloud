@@ -1,6 +1,7 @@
-package eu.themetacloudservice.networking.packet;
+package eu.themetacloudservice.networking.packet.listeners;
 
 import eu.themetacloudservice.networking.NettyDriver;
+import eu.themetacloudservice.networking.packet.Packet;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 

@@ -32,6 +32,10 @@ public class CloudProcess implements ICloudProcess {
         return group;
     }
 
+    public Integer getPort() {
+        return port;
+    }
+
     @SneakyThrows
     @Override
     public CloudProcess build() {
@@ -122,9 +126,25 @@ public class CloudProcess implements ICloudProcess {
     @Override
     public void run() {
         if (group.getGroupType().equalsIgnoreCase("PROXY")){
-            this.service = Runtime.getRuntime().exec("java -Xmx" + group.getUsedMemory() + "M -jar server.jar", null , new File(System.getProperty("user.dir") + livePath));
+            new Thread(() -> {
+                try {
+                    this.service = Runtime.getRuntime().exec("java -Xmx" + group.getUsedMemory() + "M -jar server.jar", null , new File(System.getProperty("user.dir") + livePath));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }).start();
         }else {
-            this.service = Runtime.getRuntime().exec("java -Xmx" + group.getUsedMemory() + "M -Dcom.mojang.eula.agree=true  -jar server.jar  -org.spigotmc.netty.disabled=true --port " + port + " --max-players " + group.getMaxPlayers(), null , new File(System.getProperty("user.dir") + livePath));
+            new Thread(() -> {
+                try {
+
+                    this.service = Runtime.getRuntime().exec("java -Xmx" + group.getUsedMemory() + "M -Dcom.mojang.eula.agree=true  -jar server.jar  -org.spigotmc.netty.disabled=true --port " + port + " --max-players " + group.getMaxPlayers(), null , new File(System.getProperty("user.dir") + livePath));
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }).start();
         }
 
 

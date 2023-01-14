@@ -1,4 +1,4 @@
-package eu.themetacloudservice.manager.commands;
+package eu.themetacloudservice.node.commands;
 
 import eu.themetacloudservice.Driver;
 import eu.themetacloudservice.terminal.commands.CommandAdapter;

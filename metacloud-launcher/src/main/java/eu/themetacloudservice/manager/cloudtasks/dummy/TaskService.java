@@ -19,9 +19,9 @@ public class TaskService {
         this.status = ServiceStatus.STATUS_STARTING;
     }
 
-    public TaskService(String task, String node, CloudProcess cloudProcess) {
+    public TaskService(String task, CloudProcess cloudProcess) {
         this.task = task;
-        this.node = node;
+        this.node = "InternalNode";
         this.cloudProcess = cloudProcess;
         this.currentPlayers = 0;
         this.status = ServiceStatus.STATUS_STARTING;

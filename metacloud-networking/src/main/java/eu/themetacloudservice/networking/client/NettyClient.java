@@ -2,7 +2,8 @@ package eu.themetacloudservice.networking.client;
 
 import eu.themetacloudservice.networking.codec.PacketDecoder;
 import eu.themetacloudservice.networking.codec.PacketEncoder;
-import eu.themetacloudservice.networking.packet.ChannelBound;
+import eu.themetacloudservice.networking.packet.listeners.ChannelBound;
+import eu.themetacloudservice.networking.packet.Packet;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.epoll.Epoll;
@@ -30,7 +31,6 @@ public class NettyClient {
                 this.channel = ((Bootstrap)((Bootstrap)((Bootstrap)((Bootstrap)((Bootstrap)(new Bootstrap()).group(eventLoopGroup)).option(ChannelOption.SO_SNDBUF, Integer.valueOf(2147483647))).option(ChannelOption.SO_RCVBUF, Integer.valueOf(2147483647))).channel(Epoll.isAvailable() ? EpollSocketChannel.class : NioSocketChannel.class)).handler((ChannelHandler)new ChannelInitializer<Channel>() {
                     protected void initChannel(Channel channel) {
                         ChannelPipeline pipeline = channel.pipeline();
-                        NettyClient.this.manager = channel;
                         pipeline.addLast(new PacketDecoder());
                         pipeline.addLast(new PacketEncoder());
                         pipeline.addLast(new ChannelBound());
@@ -43,5 +43,13 @@ public class NettyClient {
         })).start();
     }
 
+
+    public void setManager(Channel manager) {
+        this.manager = manager;
+    }
+
+    public void sendPacket(Packet packet){
+        manager.writeAndFlush(packet);
+    }
 
 }

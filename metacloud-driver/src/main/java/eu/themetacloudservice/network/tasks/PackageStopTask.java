@@ -1,4 +1,4 @@
-package eu.themetacloudservice.network;
+package eu.themetacloudservice.network.tasks;
 
 import eu.themetacloudservice.networking.packet.NettyBuffer;
 import eu.themetacloudservice.networking.packet.Packet;
@@ -8,14 +8,7 @@ public class PackageStopTask extends Packet {
 
     private String taskProcessName;
 
-
-    public PackageStopTask(PacketSender sender) {
-        setSender(sender);
-        setPacketUUID(8921234);
-    }
-
     public PackageStopTask() {
-        setSender(PacketSender.OTHER);
         setPacketUUID(8921234);
     }
 

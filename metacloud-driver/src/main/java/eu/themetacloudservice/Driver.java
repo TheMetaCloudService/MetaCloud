@@ -4,6 +4,8 @@ package eu.themetacloudservice;
 import eu.themetacloudservice.groups.GroupDriver;
 import eu.themetacloudservice.groups.TemplateDriver;
 import eu.themetacloudservice.module.ModuleDriver;
+import eu.themetacloudservice.queue.QueueDriver;
+import eu.themetacloudservice.queue.dummy.QueueTask;
 import eu.themetacloudservice.storage.MessageStorage;
 import eu.themetacloudservice.terminal.TerminalDriver;
 
@@ -15,6 +17,7 @@ public class Driver {
     private GroupDriver groupDriver;
     private TemplateDriver templateDriver;
     private ModuleDriver moduleDriver;
+    private QueueDriver queueDriver;
 
     public Driver(){
         /*
@@ -26,6 +29,14 @@ public class Driver {
         this.moduleDriver = new ModuleDriver();
         this.messageStorage = new MessageStorage();
         this.templateDriver = new TemplateDriver();
+    }
+
+
+    public void createQueue(){
+        queueDriver = new QueueDriver();
+    }
+    public QueueDriver getQueueDriver() {
+        return queueDriver;
     }
 
     public ModuleDriver getModuleDriver() {

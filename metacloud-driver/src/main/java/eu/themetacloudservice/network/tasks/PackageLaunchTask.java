@@ -1,4 +1,4 @@
-package eu.themetacloudservice.network;
+package eu.themetacloudservice.network.tasks;
 
 import eu.themetacloudservice.networking.packet.NettyBuffer;
 import eu.themetacloudservice.networking.packet.Packet;
@@ -9,13 +9,7 @@ public class PackageLaunchTask extends Packet {
     private String taskProcessName;
     private String jsonGroup;
 
-    public PackageLaunchTask(PacketSender sender) {
-        setSender(sender);
-        setPacketUUID(98032980);
-    }
-
     public PackageLaunchTask() {
-        setSender(PacketSender.OTHER);
         setPacketUUID(98032980);
     }
 
@@ -27,8 +21,9 @@ public class PackageLaunchTask extends Packet {
 
     @Override
     public void writePacket(NettyBuffer buffer) {
-        buffer.writeString(jsonGroup);
         buffer.writeString(taskProcessName);
+        buffer.writeString(jsonGroup);
+
     }
 
     public String getTaskProcessName() {

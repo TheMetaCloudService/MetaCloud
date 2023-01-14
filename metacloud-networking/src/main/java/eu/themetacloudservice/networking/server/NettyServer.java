@@ -2,7 +2,7 @@ package eu.themetacloudservice.networking.server;
 
 import eu.themetacloudservice.networking.codec.PacketDecoder;
 import eu.themetacloudservice.networking.codec.PacketEncoder;
-import eu.themetacloudservice.networking.packet.ChannelBound;
+import eu.themetacloudservice.networking.packet.listeners.ChannelBound;
 import eu.themetacloudservice.networking.packet.Packet;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -11,11 +11,6 @@ import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
-import io.netty.util.internal.logging.Log4JLoggerFactory;
-import lombok.extern.log4j.Log4j;
-import lombok.extern.log4j.Log4j2;
 
 import java.net.InetSocketAddress;
 import java.util.HashMap;

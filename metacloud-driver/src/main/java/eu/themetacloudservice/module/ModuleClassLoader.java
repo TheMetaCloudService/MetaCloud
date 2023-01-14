@@ -1,5 +1,7 @@
 package eu.themetacloudservice.module;
 
+import eu.themetacloudservice.Driver;
+import eu.themetacloudservice.terminal.enums.Type;
 import lombok.SneakyThrows;
 
 import java.io.File;
@@ -44,7 +46,9 @@ public class ModuleClassLoader {
                     }
 
                 } else {
-                    //todo: IMPORTENT_LVL: 1 | Create a reterned message that says that the Module is not found!!
+
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.MODULES, "die '§fmodule.config§r' wurde in der File '§f"+file+"§r nicht gefunden", "the '§fmodule.config§r' was not found in the file '§f "+file+"§r");
+
                 }
 
             } catch (Exception ignored) {
@@ -71,21 +75,22 @@ public class ModuleClassLoader {
                         properties.load(reader);
 
 
-                        Class classtoLoad = Class.forName(properties.getProperty("mainclass"), true, classLoader);
+                        Class classtoLoad = Class.forName(properties.getProperty("module_main_class"), true, classLoader);
 
                         Method method = classtoLoad.getDeclaredMethod("reloadModule");
 
                         Object instance = classtoLoad.newInstance();
                         Object resuls = method.invoke(instance);
 
-                        //todo:  IMPORTENT_LVL: 1 | Create a reterned message that says that the Module is loaded
 
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.MODULES, "Das Module '§f"+properties.getProperty("module_name")+"§r' wurde geladen 'dev's: §f"+properties.getProperty("module_authors")+"§r, version: §f"+properties.getProperty("module_current_version")+"§r'", "the module '§f"+properties.getProperty("module_name")+"§r' was loaded 'dev's: §f"+properties.getProperty("module_authors")+"§r, version: §f"+properties.getProperty("module_current_version")+"§r'");
                     }catch (Exception ee) {
 
                     }
 
                 }else{
-                    //todo: IMPORTENT_LVL: 1 | Create a reterned message that says that the Module is not found!!
+
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.MODULES, "die '§fmodule.config§r' wurde in der File '§f"+file+"§r nicht gefunden", "the '§fmodule.config§r' was not found in the file '§f "+file+"§r");
                 }
             }catch (IOException ignored){}
         }catch (MalformedURLException ignored) {}
@@ -117,13 +122,14 @@ public class ModuleClassLoader {
                         Object instance = classtoLoad.newInstance();
                         Object resuls = method.invoke(instance);
 
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.MODULES, "Das Module '§f"+properties.getProperty("module_name")+"§r' wurde geladen 'dev's: §f"+properties.getProperty("module_authors")+"§r, version: §f"+properties.getProperty("module_current_version")+"§r'", "the module '§f"+properties.getProperty("module_name")+"§r' was loaded 'dev's: §f"+properties.getProperty("module_authors")+"§r, version: §f"+properties.getProperty("module_current_version")+"§r'");
 
                     }catch (Exception ee) {
 
                     }
 
                 }else{
-                    //todo: IMPORTENT_LVL: 1 | Create a reterned message that says that the Module is not found!!
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.MODULES, "die '§fmodule.config§r' wurde in der File '§f"+file+"§r nicht gefunden", "the '§fmodule.config§r' was not found in the file '§f "+file+"§r");
                 }
             }catch (IOException ignored){}
         }catch (MalformedURLException ignored) {}
@@ -153,13 +159,16 @@ public class ModuleClassLoader {
                         Object instance = classtoLoad.newInstance();
                         Object resuls = method.invoke(instance);
 
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.MODULES, "Das Module '§f"+properties.getProperty("module_name")+"§r' wurde deaktiviert", "the module '§f"+properties.getProperty("module_name")+"§r' was disabled");
 
                     }catch (Exception ee) {
 
                     }
 
                 }else{
-                    //todo: IMPORTENT_LVL: 1 | Create a reterned message that says that the Module is not found!!
+
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.MODULES, "die '§fmodule.config§r' wurde in der File '§f"+file+"§r nicht gefunden", "the '§fmodule.config§r' was not found in the file '§f "+file+"§r");
+
                 }
             }catch (IOException ignored){}
         }catch (MalformedURLException ignored) {}

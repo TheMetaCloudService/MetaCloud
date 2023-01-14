@@ -10,14 +10,32 @@ public class ManagerConfig implements IConfigAdapter {
     private String splitter;
     private String managerAddress;
     private Integer canUsedMemory;
+    private Integer bungeecordPort;
     private String bungeecordVersion;
     private String spigotVersion;
+    private Integer spigotPort;
     private Integer networkingCommunication;
     private Integer restApiCommunication;
     private ArrayList<ManagerConfigNodes> nodes;
 
     public ManagerConfig(){
 
+    }
+
+    public Integer getBungeecordPort() {
+        return bungeecordPort;
+    }
+
+    public void setBungeecordPort(Integer bungeecordPort) {
+        this.bungeecordPort = bungeecordPort;
+    }
+
+    public Integer getSpigotPort() {
+        return spigotPort;
+    }
+
+    public void setSpigotPort(Integer spigotPort) {
+        this.spigotPort = spigotPort;
     }
 
     public String getLanguage() {
