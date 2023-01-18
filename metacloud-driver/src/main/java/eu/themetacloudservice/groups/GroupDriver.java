@@ -6,10 +6,8 @@ import eu.themetacloudservice.groups.dummy.Group;
 import eu.themetacloudservice.groups.interfaces.IGroupDriver;
 import eu.themetacloudservice.terminal.enums.Type;
 import lombok.SneakyThrows;
-
 import java.io.File;
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
 public class GroupDriver implements IGroupDriver {
 
@@ -35,11 +33,9 @@ public class GroupDriver implements IGroupDriver {
 
     @Override
     public boolean find(String name) {
-        if (new File("./local/groups/" + name + ".json").exists()) {
-            return true;
-        }
-        return false;
+        return new File("./local/groups/" + name + ".json").exists();
     }
+
 
     @Override
     public void create(Group group) {
@@ -83,7 +79,7 @@ public class GroupDriver implements IGroupDriver {
         ArrayList<Group> groups = new ArrayList<>();
         File file = new File("./local/groups/");
         File[] files = file.listFiles();
-        for (int i = 0; i != files.length; i++) {
+        for (int i = 0; i != (files != null ? files.length : 0); i++) {
             String first = files[i].getName();
             String group = first.split(".json")[0];
             groups.add(load(group));

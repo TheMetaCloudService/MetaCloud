@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class CommandDriver {
 
-    private Set<CommandAdapter> commands;
+    private final Set<CommandAdapter> commands;
 
     public CommandDriver() {
         this.commands = new HashSet<>();
@@ -22,10 +22,6 @@ public class CommandDriver {
 
     public void registerCommand(CommandAdapter command){
         this.commands.add(command);
-    }
-
-    public void unregisterCommand(CommandAdapter command){
-        this.commands.remove(command);
     }
 
 

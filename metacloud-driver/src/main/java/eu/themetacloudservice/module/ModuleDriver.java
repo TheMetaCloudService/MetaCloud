@@ -2,7 +2,6 @@ package eu.themetacloudservice.module;
 
 import eu.themetacloudservice.Driver;
 import eu.themetacloudservice.terminal.enums.Type;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;

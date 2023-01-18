@@ -20,8 +20,6 @@ public class PacketDecoder extends ByteToMessageDecoder  {
             Packet packet = packetClass.newInstance();
             packet.readPacket(new NettyBuffer(byteBuf));
             list.add(packet);
-        } else {
-            System.out.println("Invalid packet: " + id);
         }
     }
 }

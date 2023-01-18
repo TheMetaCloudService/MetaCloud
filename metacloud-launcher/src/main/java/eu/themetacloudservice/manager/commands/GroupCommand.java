@@ -1,22 +1,18 @@
 package eu.themetacloudservice.manager.commands;
 
-import com.sun.org.apache.bcel.internal.generic.DCMPG;
 import eu.themetacloudservice.Driver;
 import eu.themetacloudservice.configuration.ConfigDriver;
 import eu.themetacloudservice.groups.dummy.Group;
-import eu.themetacloudservice.manager.CloudManager;
 import eu.themetacloudservice.terminal.commands.CommandAdapter;
 import eu.themetacloudservice.terminal.commands.CommandInfo;
 import eu.themetacloudservice.terminal.enums.Type;
 import eu.themetacloudservice.terminal.utils.TerminalStorageLine;
-
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
 @CommandInfo(command = "group", aliases = {"g", "template", "temp"}, ENdescription = "here you can manage your groups", DEdescription = "hier kannst du deine Gruppen verwalten")
 public class GroupCommand extends CommandAdapter {
     @Override
-    public boolean performCommand(CommandAdapter command, String[] args) {
+    public void performCommand(CommandAdapter command, String[] args) {
 
 
         if (args.length == 0){
@@ -28,7 +24,7 @@ public class GroupCommand extends CommandAdapter {
             }else if (args[0].equalsIgnoreCase("list")){
                 if ( Driver.getInstance().getGroupDriver().getAll().isEmpty()){
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND, "es wurde keine gruppe gefunden '§fgroup create§r'", "no group was found '§fgroup create§7'");
-                    return false;
+                    return;
                 }
 
               ArrayList<Group> groups =   Driver.getInstance().getGroupDriver().getAll();
@@ -77,11 +73,7 @@ public class GroupCommand extends CommandAdapter {
                     String group = args[0];
                     if (Driver.getInstance().getGroupDriver().find(group)){
                         Group raw = Driver.getInstance().getGroupDriver().load(group);
-                        if (args[2].equalsIgnoreCase("true")){
-                            raw.setMaintenance(true);
-                        }else {
-                            raw.setMaintenance(false);
-                        }
+                        raw.setMaintenance(args[2].equalsIgnoreCase("true"));
                         Driver.getInstance().getGroupDriver().update(group, raw);
                         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                                 "die Wartungsarbeiten der Gruppe '§f"+group+"§r' wurden geändert",
@@ -121,7 +113,6 @@ public class GroupCommand extends CommandAdapter {
             }
         }
 
-        return false;
     }
 
     @Override
@@ -143,9 +134,7 @@ public class GroupCommand extends CommandAdapter {
                 commands.add("false");
             }   if (args[1].equalsIgnoreCase("settemplate")) {
                 ArrayList<String> rawtemplates = Driver.getInstance().getTemplateDriver().get();
-                rawtemplates.forEach(s -> {
-                    commands.add(s);
-                });
+                commands.addAll(rawtemplates);
             }
         }
 

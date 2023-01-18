@@ -4,13 +4,14 @@ import eu.themetacloudservice.terminal.utils.TerminalStorageLine;
 import lombok.var;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public abstract class CommandAdapter {
 
-    private String command;
-    private String[] aliases;
-    private String DEdescription;
-    private String ENdescription;
+    private final String command;
+    private final String[] aliases;
+    private final String DEdescription;
+    private final String ENdescription;
 
 
     public CommandAdapter(){
@@ -22,7 +23,7 @@ public abstract class CommandAdapter {
         this.DEdescription = annotation.DEdescription();
     }
 
-    public abstract boolean performCommand(CommandAdapter command, String[] args);
+    public abstract void performCommand(CommandAdapter command, String[] args);
     public abstract ArrayList<String> tabComplete(TerminalStorageLine consoleInput, String[] args);
 
 
@@ -40,9 +41,7 @@ public abstract class CommandAdapter {
 
     public ArrayList<String> getAliases() {
         ArrayList<String> resuls = new ArrayList<>();
-        for (String al : aliases){
-            resuls.add(al);
-        }
+        Collections.addAll(resuls, aliases);
         return resuls;
     }
 

@@ -13,14 +13,10 @@ import org.jline.reader.ParsedLine;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class TerminalCompleter  implements Completer {
 
@@ -45,16 +41,12 @@ public class TerminalCompleter  implements Completer {
                     result.add("n");
                 }if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 10){
                     ArrayList<String> rawtemplates = Driver.getInstance().getTemplateDriver().get();
-                    rawtemplates.forEach(s -> {
-                        result.add(s);
-                    });
+                    result.addAll(rawtemplates);
                     result.add("CREATE");
                 }if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 11){
                     ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
                     ArrayList<ManagerConfigNodes> configNodes = config.getNodes();
-                    configNodes.forEach(managerConfigNodes -> {
-                        result.add(managerConfigNodes.getName());
-                    });
+                    configNodes.forEach(managerConfigNodes -> result.add(managerConfigNodes.getName()));
                 }
 
 
@@ -78,10 +70,6 @@ public class TerminalCompleter  implements Completer {
                         try {
                             String ip = new BufferedReader(new InputStreamReader(new URL("https://checkip.amazonaws.com").openConnection().getInputStream())).readLine();
                             result.add("" + ip);
-                        } catch (UnknownHostException e) {
-                            e.printStackTrace();
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -146,10 +134,6 @@ public class TerminalCompleter  implements Completer {
                             try {
                                 String ip = new BufferedReader(new InputStreamReader(new URL("https://checkip.amazonaws.com").openConnection().getInputStream())).readLine();
                                 result.add("" + ip);
-                            } catch (UnknownHostException e) {
-                                e.printStackTrace();
-                            } catch (MalformedURLException e) {
-                                e.printStackTrace();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -165,14 +149,12 @@ public class TerminalCompleter  implements Completer {
                 suggestions.stream().map(Candidate::new).forEach(list::add);
             }
         }else {
-            if (input.isEmpty() || input.equalsIgnoreCase("")){
+            if (input.isEmpty()){
                 final var result = new LinkedList<String>();
                 Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().forEach(command -> {
                     result.add(command.getCommand());
 
-                    command.getAliases().forEach(s -> {
-                        result.add(s);
-                    });
+                    result.addAll(command.getAliases());
                 });
                 suggestions = result;
                 suggestions.stream().map(Candidate::new).forEach(list::add);
@@ -181,16 +163,14 @@ public class TerminalCompleter  implements Completer {
                 Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().forEach(command -> {
                     result.add(command.getCommand());
 
-                    command.getAliases().forEach(s -> {
-                        result.add(s);
-                    });
+                    result.addAll(command.getAliases());
                 });
                 suggestions = result;
                 suggestions.stream().map(Candidate::new).forEach(list::add);
             }else {
                 var arguments = input.split(" ");
                 final var consoleInput = Driver.getInstance().getTerminalDriver().getInputs().peek();
-                if (input.isEmpty() || input.indexOf(' ') == -1) {
+                if (input.indexOf(' ') == -1) {
                     if (consoleInput == null) {
                         final var result = new LinkedList<String>();
                         final var toTest = arguments[arguments.length - 1];
@@ -212,9 +192,7 @@ public class TerminalCompleter  implements Completer {
                             Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().forEach(command -> {
                                 result.add(command.getCommand());
 
-                                command.getAliases().forEach(s -> {
-                                    result.add(s);
-                                });
+                                result.addAll(command.getAliases());
                             });
 
 
@@ -234,15 +212,11 @@ public class TerminalCompleter  implements Completer {
                         Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().forEach(command1 -> {
                             result.add(command1.getCommand());
 
-                            command1.getAliases().forEach(s -> {
-                                result.add(s);
-                            });
+                            result.addAll(command1.getAliases());
                         });
                     }else{
                         if (command.tabComplete(consoleInput, arguments) != null){
-                            command.tabComplete(consoleInput, Driver.getInstance().getMessageStorage().dropFirstString(arguments)).forEach(s -> {
-                                result.add(s);
-                            });
+                            result.addAll(command.tabComplete(consoleInput, Driver.getInstance().getMessageStorage().dropFirstString(arguments)));
                             suggestions = result;
                         }
                     }
@@ -270,13 +244,11 @@ public class TerminalCompleter  implements Completer {
         Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().forEach(command -> {
             commandsAndAliases.add(command.getCommand());
 
-            command.getAliases().forEach(s -> {
-                commandsAndAliases.add(s);
-            });
+            commandsAndAliases.addAll(command.getAliases());
         });
 
         commandsAndAliases.forEach(command -> {
-            if (command.startsWith(line) || command.equals(line)){
+            if (command.startsWith(line)){
                 exeists = true;
             }
         });

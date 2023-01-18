@@ -8,12 +8,10 @@ import eu.themetacloudservice.groups.dummy.Group;
 import eu.themetacloudservice.network.autentic.PackageAuthenticByManager;
 import eu.themetacloudservice.network.autentic.PackageAuthenticRequestFromManager;
 import eu.themetacloudservice.network.autentic.PackageCallBackAuthenticByManager;
-import eu.themetacloudservice.network.tasks.PackageLaunchTask;
 import eu.themetacloudservice.network.tasks.PackageStopNodes;
 import eu.themetacloudservice.networking.NettyDriver;
-import eu.themetacloudservice.networking.packet.enums.PacketSender;
-import eu.themetacloudservice.networking.packet.listeners.IPacketListener;
 import eu.themetacloudservice.networking.packet.Packet;
+import eu.themetacloudservice.networking.packet.listeners.IPacketListener;
 import eu.themetacloudservice.terminal.enums.Type;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -27,7 +25,6 @@ public class NodeNetworkChannel implements IPacketListener {
 
             NettyDriver.getInstance().nettyClient.setManager(paramChannelHandlerContext.channel());
             Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "der Manager benötigt eine Authentifizierung, um diesem Client zu vertrauen", "the mannager requires authentication to trust this client");
-
             AuthenticatorKey authConfig = (AuthenticatorKey) new ConfigDriver("./connection.key").read(AuthenticatorKey.class);
             NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
             PackageAuthenticByManager packet = new PackageAuthenticByManager();
@@ -35,8 +32,7 @@ public class NodeNetworkChannel implements IPacketListener {
             packet.setConnectionKey(Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey()));
             packet.setNode(true);
             NettyDriver.getInstance().nettyClient.sendPacket(packet);
-        }
-        else if (paramPacket instanceof PackageCallBackAuthenticByManager){
+        } else if (paramPacket instanceof PackageCallBackAuthenticByManager){
             PackageCallBackAuthenticByManager packet = (PackageCallBackAuthenticByManager) paramPacket;
             if (packet.isAccepted()){
                 Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Authentifizierung war erfolgreich, Warten auf neue Aufgaben",
@@ -45,13 +41,7 @@ public class NodeNetworkChannel implements IPacketListener {
                 System.exit(0);
             }
         }
-        else if (paramPacket instanceof PackageLaunchTask){
-            PackageLaunchTask packet = (PackageLaunchTask) paramPacket;
-            Group group = (Group) new ConfigDriver().convert(packet.getJsonGroup(), Group.class);
-            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFORMATION, "test: " + packet.getJsonGroup(), "test: " + packet.getJsonGroup());
-        }else if (paramPacket instanceof PackageStopNodes){
-            System.exit(0);
-        }
+
     }
 
     @Override

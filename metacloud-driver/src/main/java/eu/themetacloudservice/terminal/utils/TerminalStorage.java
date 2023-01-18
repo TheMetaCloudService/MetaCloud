@@ -4,8 +4,8 @@ import eu.themetacloudservice.terminal.enums.Type;
 
 public class TerminalStorage {
 
-    private Type type;
-    private String message;
+    private final Type type;
+    private final String message;
 
     public TerminalStorage(Type type, String message) {
         this.type = type;

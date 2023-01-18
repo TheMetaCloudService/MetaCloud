@@ -4,7 +4,6 @@ import com.google.common.io.BaseEncoding;
 import eu.themetacloudservice.Driver;
 import eu.themetacloudservice.configuration.ConfigDriver;
 import eu.themetacloudservice.configuration.dummys.restapi.UpdateConfig;
-import eu.themetacloudservice.terminal.commands.CommandAdapter;
 import lombok.SneakyThrows;
 
 import java.io.BufferedReader;
@@ -13,6 +12,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 public class MessageStorage {
     public String version = "SANDSTORM-1.0.0";
@@ -64,28 +64,21 @@ public class MessageStorage {
     }
 
 
-    public CommandAdapter fromFirstArgument(String commandLine) {
-        String[] split = commandLine.split(" ");
-        return Driver.getInstance().getTerminalDriver().getCommandDriver().getCommand(split[0]);
-    }
-
     public String[] dropFirstString(String[] input){
-        String[] astring = new String[input.length - 1];
-        System.arraycopy(input, 1, astring, 0, input.length - 1);
-        return astring;
+        String[] string = new String[input.length - 1];
+        System.arraycopy(input, 1, string, 0, input.length - 1);
+        return string;
     }
 
 
     @SneakyThrows
     public boolean checkAvailableUpdate() {
 
-        final InputStream inputStream = new URL("https://metacloudservice.eu/rest/cloudversion.php").openStream();
-        final StringBuilder builder = new StringBuilder();
+        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/cloudversion.php").openStream()) {
+            final StringBuilder builder = new StringBuilder();
+            BufferedReader bufferedReader;
 
-        BufferedReader bufferedReader = null;
-        try {
-
-            bufferedReader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
+            bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
             int counter;
             while ((counter = bufferedReader.read()) != -1) {
                 builder.append((char) counter);
@@ -95,9 +88,6 @@ public class MessageStorage {
             if (!updateConfig.getLatestReleasedVersion().equalsIgnoreCase(version)) {
                 return true;
             }
-        } finally {
-            bufferedReader.close();
-            inputStream.close();
         }
 
 
@@ -107,13 +97,11 @@ public class MessageStorage {
     @SneakyThrows
     public String  getNewVersionName() {
 
-        final InputStream inputStream = new URL("https://metacloudservice.eu/rest/cloudversion.php").openStream();
-        final StringBuilder builder = new StringBuilder();
+        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/cloudversion.php").openStream()) {
+            final StringBuilder builder = new StringBuilder();
+            BufferedReader bufferedReader;
 
-        BufferedReader bufferedReader = null;
-        try {
-
-            bufferedReader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
+            bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
             int counter;
             while ((counter = bufferedReader.read()) != -1) {
                 builder.append((char) counter);
@@ -123,16 +111,12 @@ public class MessageStorage {
             if (!updateConfig.getLatestReleasedVersion().equalsIgnoreCase(version)) {
                 return updateConfig.getLatestReleasedVersion();
             }
-        } finally {
-            bufferedReader.close();
-            inputStream.close();
         }
         return "";
     }
     @SneakyThrows
     public  String utf8ToUBase64(String utf8string){
-        String base64String = BaseEncoding.base64().encode(utf8string.getBytes("UTF-8"));
-        return base64String;
+        return BaseEncoding.base64().encode(utf8string.getBytes(StandardCharsets.UTF_8));
     }
 
     public  String base64ToUTF8(String base64Sting){
@@ -174,7 +158,7 @@ public class MessageStorage {
                 "  url: jdbc:sqlite:{DIR}{NAME}.db\n";
     }
 
-    public String getSpigotProperty(){
+    public String getSpigotProperty(int Port){
         return "#Minecraft server properties\n" +
                 "#Mon Jan 25 10:33:48 CET 2021\n" +
                 "spawn-protection=0\n" +
@@ -198,7 +182,7 @@ public class MessageStorage {
                 "max-players=\n" +
                 "network-compression-threshold=256\n" +
                 "max-world-size=29999984\n" +
-                "server-port=\n" +
+                "server-port="+Port+"\n" +
                 "debug=false\n" +
                 "server-ip=\n" +
                 "spawn-npcs=true\n" +

@@ -11,7 +11,6 @@ import eu.themetacloudservice.terminal.enums.Type;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.function.Consumer;
 
 public class GroupSetup {
 
@@ -95,12 +94,11 @@ public class GroupSetup {
                                 "selected Memory: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory"),
                                 "should the group run on static? §fy / n"});
 
-                return;
             }else {
                 Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP_ERROR, "bitte gebe eine zahl an z.b. 512", "please enter a number e.g. 512");
 
-                return;
             }
+            return;
         }if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 3){
             if (line.equalsIgnoreCase("Y") || line.equalsIgnoreCase("Y ")){
                 Driver.getInstance().getTerminalDriver().clearScreen();
@@ -166,13 +164,12 @@ public class GroupSetup {
                                 "selected player count: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("players"),
                                 "how many servers should always be online?"});
 
-                return;
             }else {
                 Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP_ERROR, "bitte gebe eine zahl ein",
                         "please enter a number");
 
-                return;
             }
+            return;
         }if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 5){
             if(line.matches("[0-9]+")){
                 Driver.getInstance().getTerminalDriver().clearScreen();
@@ -195,13 +192,12 @@ public class GroupSetup {
                                 "selected server count: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("ninonline"),
                                 "What is the maximum number of servers that should be online? (§funlimited = -1§r)"});
 
-                return;
             }else {
                 Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP_ERROR, "bitte gebe eine zahl ein",
                         "please enter a number");
 
-                return;
             }
+            return;
         }if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 6){
             if(line.matches("[0-9]+") || line.equalsIgnoreCase("-1")){
                 Driver.getInstance().getTerminalDriver().clearScreen();
@@ -226,15 +222,14 @@ public class GroupSetup {
                                 "selected max server count: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("maxoneline"),
                                 "from what percentage of players should a new server start?"});
 
-                return;
             }else {
                 Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP_ERROR, "bitte gebe eine zahl ein",
                         "please enter a number");
 
-                return;
             }
+            return;
         }if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 7){
-            if(line.matches("[0-9]+") && Integer.valueOf(line) <= 100){
+            if(line.matches("[0-9]+") && Integer.parseInt(line) <= 100){
                 Driver.getInstance().getTerminalDriver().clearScreen();
                 Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
                 Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("startnew", Integer.valueOf(line));
@@ -260,15 +255,14 @@ public class GroupSetup {
                                 "how many servers should be online when 100 players are in this group?"});
 
 
-                return;
             }else {
                 Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP_ERROR, "bitte gebe eine zahl zwischen 1 und 100 ein",
                         "please enter a number between 1 and 100");
 
-                return;
             }
+            return;
 
-            }if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 8){
+        }if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 8){
             if(line.matches("[0-9]+")){
                 Driver.getInstance().getTerminalDriver().clearScreen();
                 Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
@@ -296,13 +290,12 @@ public class GroupSetup {
                                 "selected start new Group: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("group100"),
                                 "how many servers should be online when there are 100 players on the network?"});
 
-                return;
             }else {
                 Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP_ERROR, "bitte gebe eine zahl ein",
                         "please enter a number");
 
-                return;
             }
+            return;
         }if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 9){
             if(line.matches("[0-9]+")){
                 Driver.getInstance().getTerminalDriver().clearScreen();
@@ -313,14 +306,16 @@ public class GroupSetup {
                 //template liste
                 ArrayList<String> templates = Driver.getInstance().getTemplateDriver().get();
 
-                String templateList = "";
+                String templateList;
                 if (templates.isEmpty()){
                     templateList = "CREATE";
                 }else {
+                    StringBuilder templateListBuilder = new StringBuilder();
                     for (int i = 0; i != templates.size() ; i++) {
                         String temp = templates.get(i);
-                        templateList = templateList + temp.replace("null", "")+ ", ";
+                        templateListBuilder.append(temp.replace("null", "")).append(", ");
                     }
+                    templateList = templateListBuilder.toString();
                     templateList = templateList + "CREATE";
                 }
 
@@ -349,13 +344,12 @@ public class GroupSetup {
                                 "selected start new Network: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("network100"),
                                 "which template should be used for the group? §f" + templateList});
 
-                return;
             }else {
                 Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP_ERROR, "bitte gebe eine zahl ein",
                         "please enter a number");
 
-                return;
             }
+            return;
         }if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 10){
             ArrayList<String> rawtemplates = Driver.getInstance().getTemplateDriver().get();
             ArrayList<String> templates = new ArrayList<>();
@@ -369,20 +363,16 @@ public class GroupSetup {
                 Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("template", line.replace(" ", "").replace("CREATE", Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("group").toString()));
                 ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
                 ArrayList<ManagerConfigNodes> configNodes = config.getNodes();
-                String nodes = null;
-                if (configNodes.size()== 1){
-                    nodes = configNodes.get(0).getName();
-                }else {
-                    for (int i = 0; i != configNodes.size() ; i++) {
-                        if (i == configNodes.size()-1){
-                            nodes = nodes +configNodes.get(i).getName();
-                        }else {
-                            nodes = nodes +configNodes.get(i).getName() + ", ";
-                        }
-
+                StringBuilder templateListBuilder = new StringBuilder();
+                for (int i = 0; i != configNodes.size() ; i++) {
+                    String temp = configNodes.get(i).getName();
+                    if (i == configNodes.size()-1){
+                        templateListBuilder.append(temp);
+                    }else {
+                        templateListBuilder.append(temp).append(", ");
                     }
-                }
 
+                }
 
                 Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
                 Driver.getInstance().getTerminalDriver().log(Type.SETUP,
@@ -397,7 +387,7 @@ public class GroupSetup {
                                 "Gewählt start new Group: §f" +Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("group100"),
                                 "Gewählt start new Network: §f" +Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("network100"),
                                 "Gewähltes Template: §f" +Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("template"),
-                                "welchen Node soll diese Gruppe gestartet werden? §f" + nodes},
+                                "welchen Node soll diese Gruppe gestartet werden? §f" + templateListBuilder},
                         new String[] {"selected GroupName: §f" +Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("group"),
                                 "selected GroupType. §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("groupType"),
                                 "selected Memory: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory"),
@@ -409,16 +399,15 @@ public class GroupSetup {
                                 "selected start new Group: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("group100"),
                                 "selected start new Network: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("network100"),
                                 "selected template: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("template"),
-                                "which node should this group be started? §f" + nodes});
+                                "which node should this group be started? §f" + templateListBuilder});
 
 
-                return;
             }else {
                 Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP_ERROR, "bitte gebe ein richtiges Template ein",
                         "please enter a correct template");
 
-                return;
             }
+            return;
         }if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 11){
             Driver.getInstance().getTerminalDriver().clearScreen();
             Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("node", line.replace(" ", ""));
@@ -430,7 +419,7 @@ public class GroupSetup {
                     Driver.getInstance().getGroupDriver().create(new Group(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("group").toString(),
                             Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("groupType").toString(),
                             Integer.valueOf( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory").toString()),
-                            true, Boolean.valueOf(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("static").toString()),
+                            true, Boolean.parseBoolean(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("static").toString()),
                             0,
                             "",
                             Integer.valueOf(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("players").toString()),

@@ -1,7 +1,5 @@
 package eu.themetacloudservice.networking.packet;
 
-import eu.themetacloudservice.networking.packet.enums.PacketSender;
-
 public abstract class Packet {
 
     private int packetUUID;

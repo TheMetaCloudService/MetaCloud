@@ -9,9 +9,7 @@ import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
 public class TemplateDriver implements ITemplateDriver {
 
@@ -95,7 +93,7 @@ public class TemplateDriver implements ITemplateDriver {
         File file = new File("./local/templates/");
         File[] files = file.listFiles();
         ArrayList<String> templates = new ArrayList<>();
-        for (int i = 0; i != files.length; i++) {
+        for (int i = 0; i != (files != null ? files.length : 0); i++) {
             String template = files[i].getName();
             templates.add(template);
         }

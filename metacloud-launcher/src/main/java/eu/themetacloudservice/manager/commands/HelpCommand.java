@@ -13,25 +13,24 @@ public class HelpCommand extends CommandAdapter {
 
 
     @Override
-    public boolean performCommand(CommandAdapter command, String[] args) {
+    public void performCommand(CommandAdapter command, String[] args) {
 
 
         Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().forEach(commandAdapter -> {
 
-            String aliases;
+            StringBuilder aliases;
             if (commandAdapter.getAliases().size() == 1){
-                aliases = commandAdapter.getAliases().get(0);
+                aliases = new StringBuilder(commandAdapter.getAliases().get(0));
             }else {
-                aliases = commandAdapter.getAliases().get(0) ;
+                aliases = new StringBuilder(commandAdapter.getAliases().get(0));
                 for (int i = 1; i != commandAdapter.getAliases().size() ; i++) {
-                    aliases = aliases + ", " + commandAdapter.getAliases().get(i);
+                    aliases.append(", ").append(commandAdapter.getAliases().get(i));
                 }
             }
             Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                     " >> §f" + commandAdapter.getCommand() + "  §7'§f"+aliases+"§7' ~ " + commandAdapter.getDEdescription(),
                     " >> §f" + commandAdapter.getCommand() + "  §7'§f"+aliases+"§7' ~ " + commandAdapter.getENdescription());
         });
-        return false;
     }
 
     @Override

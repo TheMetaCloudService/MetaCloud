@@ -12,6 +12,12 @@ public class PackageLaunchService extends Packet {
         setPacketUUID(98032980);
     }
 
+    public PackageLaunchService(String taskProcessName, String jsonGroup) {
+        setPacketUUID(98032980);
+        this.taskProcessName = taskProcessName;
+        this.jsonGroup = jsonGroup;
+    }
+
     @Override
     public void readPacket(NettyBuffer buffer) {
         taskProcessName = buffer.readString();

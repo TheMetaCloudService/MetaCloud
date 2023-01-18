@@ -13,12 +13,11 @@ public class ClearCommand extends CommandAdapter {
 
 
     @Override
-    public boolean performCommand(CommandAdapter command, String[] args) {
+    public void performCommand(CommandAdapter command, String[] args) {
         Driver.getInstance().getTerminalDriver().clearScreen();
         Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND, "die Konsole ist jetzt gereinigt worden", "the console has now been cleaned");
 
-        return false;
     }
 
     @Override

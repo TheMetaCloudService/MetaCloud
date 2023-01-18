@@ -27,20 +27,13 @@ public class ConfigDriver {
     @SneakyThrows
     public IConfigAdapter read(Class<? extends IConfigAdapter> tClass){
 
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(new File(this.location), tClass);
-        }catch (Throwable e){
-            throw e;
-        }
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(new File(this.location), tClass);
     }
 
 
     public boolean exists(){
-        if(new File(this.location).exists()){
-            return true;
-        }
-        return false;
+        return new File(this.location).exists();
     }
 
 
@@ -63,20 +56,15 @@ public class ConfigDriver {
             if(!exists()){
                 try {
                     new File(this.location).createNewFile();
-                } catch (IOException ignored) {
-
-                    ignored.printStackTrace();
-                }
+                } catch (IOException ignored) {}
             }
 
             try {
                 try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(this.location), StandardCharsets.UTF_8)) {
                     GSON.toJson(IConfigAdapter, writer);
-                } catch (IOException e) {
+                } catch (IOException ignored) {
                 }
-            }catch (Exception ignored){
-                ignored.printStackTrace();
-            }
+            }catch (Exception ignored){}
         }else{
             Driver.getInstance().getTerminalDriver().log(Type.ERROR, "not found");
         }

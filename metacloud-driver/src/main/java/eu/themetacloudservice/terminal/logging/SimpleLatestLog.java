@@ -10,13 +10,11 @@ import java.util.*;
 
 public class SimpleLatestLog {
 
-    private File latestLog;
-    private  List<String> header;
-    private  LinkedList<String> logs;
+    private final File latestLog;
+    private final LinkedList<String> logs;
 
     @SneakyThrows
     public SimpleLatestLog(){
-        this.header = new ArrayList<>();
         this.logs = new LinkedList<>();
 
         if (!new File("./local/logs/").exists()){
@@ -30,20 +28,13 @@ public class SimpleLatestLog {
                 }
             });
 
-            InputStream is = null;
-            OutputStream os = null;
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-            try {
-                is = new FileInputStream(new File("./local/logs/latest.log"));
-                os = new FileOutputStream(new File("./local/logs/Log_"+dtf.format(LocalDateTime.now())+".log"));
+            try (InputStream is = new FileInputStream(new File("./local/logs/latest.log")); OutputStream os = new FileOutputStream(new File("./local/logs/Log_" + dtf.format(LocalDateTime.now()) + ".log"))) {
                 byte[] buffer = new byte[1024];
                 int length;
                 while ((length = is.read(buffer)) > 0) {
                     os.write(buffer, 0, length);
                 }
-            } finally {
-                is.close();
-                os.close();
             }
             new File("./local/logs/latest.log").delete();
         }
@@ -78,20 +69,17 @@ public class SimpleLatestLog {
         Thread execute = new Thread(() -> {
 
             try (PrintWriter w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(this.latestLog), StandardCharsets.UTF_8), true)) {
-                for (String s : this.header)
-                    w.println(s);
                 for (String loggedLine :this.logs) {
                     if (loggedLine == null)
                         continue;
                     w.println(loggedLine);
                 }
                 w.flush();
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception ignored) {
             }
         });
         execute.setPriority(Thread.MIN_PRIORITY);
-        execute.run();
+        execute.start();
     }
 
 
@@ -100,8 +88,8 @@ public class SimpleLatestLog {
         File file = new File("./local/logs/");
         File[] files = file.listFiles();
         ArrayList<String> logs = new ArrayList<>();
-        for (int i = 0; i < files.length; i++) {
-            String FirstFilter = files[i].getName();
+        for (File value : files != null ? files : new File[0]) {
+            String FirstFilter = value.getName();
             logs.add(FirstFilter);
         }
         return logs;

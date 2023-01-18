@@ -10,15 +10,15 @@ import java.util.Iterator;
 public class PacketDriver {
 
 
-    private HashMap<Integer, Class<? extends Packet>> packets;
+    private final HashMap<Integer, Class<? extends Packet>> packets;
 
-    private ArrayList<IPacketListener> listeners ;
+    private final ArrayList<IPacketListener> listeners ;
 
     public PacketDriver() {
-
         listeners = new ArrayList<>();
         packets = new HashMap<>();
     }
+
     public void executeListeners(ListenerType type, ChannelHandlerContext chx, Packet packet) {
         if (type == ListenerType.CONNECT)
             this.listeners.forEach(iPacketListener -> iPacketListener.onConnect(chx));
@@ -37,9 +37,7 @@ public class PacketDriver {
     public PacketDriver handelPacket(Class<? extends Packet> pc) {
         try {
             this.packets.put(pc.newInstance().getPacketUUID(), pc);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
         return this;
@@ -47,15 +45,15 @@ public class PacketDriver {
 
     public Integer getIDFromPacket(Packet packet) {
         for (Iterator<Integer> iterator = this.packets.keySet().iterator(); iterator.hasNext(); ) {
-            int id = ((Integer)iterator.next()).intValue();
-            if (packet.getClass().equals(this.packets.get(Integer.valueOf(id))))
-                return Integer.valueOf(id);
+            int id = iterator.next();
+            if (packet.getClass().equals(this.packets.get(id)))
+                return id;
         }
-        return Integer.valueOf(-1);
+        return -1;
     }
 
     public Class<? extends Packet> getPacketFromId(int id) {
-        return this.packets.get(Integer.valueOf(id));
+        return this.packets.get(id);
     }
 
 }

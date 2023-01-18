@@ -2,7 +2,6 @@ package eu.themetacloudservice.network.tasks;
 
 import eu.themetacloudservice.networking.packet.NettyBuffer;
 import eu.themetacloudservice.networking.packet.Packet;
-import eu.themetacloudservice.networking.packet.enums.PacketSender;
 
 public class PackageStopTask extends Packet {
 

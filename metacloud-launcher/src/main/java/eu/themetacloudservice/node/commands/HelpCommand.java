@@ -13,7 +13,7 @@ public class HelpCommand extends CommandAdapter {
 
 
     @Override
-    public boolean performCommand(CommandAdapter command, String[] args) {
+    public void performCommand(CommandAdapter command, String[] args) {
 
 
         Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().forEach(commandAdapter -> {
@@ -31,7 +31,6 @@ public class HelpCommand extends CommandAdapter {
                     " >> §f" + commandAdapter.getCommand() + "  §7'§f"+aliases+"§7' ~ " + commandAdapter.getDEdescription(),
                     " >> §f" + commandAdapter.getCommand() + "  §7'§f"+aliases+"§7' ~ " + commandAdapter.getENdescription());
         });
-        return false;
     }
 
     @Override

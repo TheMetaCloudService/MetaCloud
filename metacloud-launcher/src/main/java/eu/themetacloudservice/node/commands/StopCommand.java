@@ -15,7 +15,7 @@ import java.util.TimerTask;
 @CommandInfo(command = "stop", DEdescription = "Mit diesem Befehl fahren Sie die Cloud herunter", ENdescription = "with this command you shut down the cloud", aliases = {"shutdown", "end"})
 public class StopCommand extends CommandAdapter {
     @Override
-    public boolean performCommand(CommandAdapter command, String[] args) {
+    public void performCommand(CommandAdapter command, String[] args) {
 
         if (Driver.getInstance().getMessageStorage().shutdownAccept){
             CloudManager.shutdownHook();
@@ -29,7 +29,6 @@ public class StopCommand extends CommandAdapter {
                 }
             }, 15*1000);
         }
-        return false;
     }
 
     @Override

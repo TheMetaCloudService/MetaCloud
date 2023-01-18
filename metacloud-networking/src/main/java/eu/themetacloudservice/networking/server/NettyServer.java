@@ -20,7 +20,7 @@ public class NettyServer {
 
     private Channel channel;
 
-    private HashMap<String, Channel> channels = new HashMap<>();
+    private final HashMap<String, Channel> channels = new HashMap<>();
 
     public NettyServer bind(int port) {
         this.port = port;
@@ -30,9 +30,13 @@ public class NettyServer {
     public void start() {
 
         (new Thread(() -> {
-            EventLoopGroup eventLoopGroup = Epoll.isAvailable() ? (EventLoopGroup)new EpollEventLoopGroup() : (EventLoopGroup)new NioEventLoopGroup();
+            EventLoopGroup eventLoopGroup = Epoll.isAvailable() ? new EpollEventLoopGroup() : new NioEventLoopGroup();
             try {
-                this.channel = ((ServerBootstrap)((ServerBootstrap)(new ServerBootstrap()).group(eventLoopGroup).option(ChannelOption.SO_RCVBUF, Integer.valueOf(2147483647))).channel(Epoll.isAvailable() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)).childHandler((ChannelHandler)new ChannelInitializer<Channel>() {
+                this.channel = (new ServerBootstrap())
+                        .group(eventLoopGroup)
+                        .option(ChannelOption.SO_RCVBUF, 2147483647)
+                        .channel(Epoll.isAvailable() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
+                        .childHandler(new ChannelInitializer<Channel>() {
                     protected void initChannel(Channel channel) {
                         ChannelPipeline pipeline = channel.pipeline();
                         pipeline.addLast(new PacketDecoder());
@@ -50,15 +54,11 @@ public class NettyServer {
     }
 
     public boolean isChannelFound(String receiver){
-        if (this.channels.containsKey(receiver)){
-            return true;
-        }
-        return false;
+        return this.channels.containsKey(receiver);
     }
 
     public void removeChannel(String receiver) {
-        if (this.channels.containsKey(receiver))
-            this.channels.remove(receiver);
+        this.channels.remove(receiver);
     }
 
     public void close() {
@@ -77,6 +77,6 @@ public class NettyServer {
     }
 
     public void sendPacket(String receiver, Packet packet) {
-        ((Channel)this.channels.get(receiver)).writeAndFlush(packet);
+        this.channels.get(receiver).writeAndFlush(packet);
     }
 }

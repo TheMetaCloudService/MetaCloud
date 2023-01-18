@@ -3,11 +3,10 @@ package eu.themetacloudservice.node;
 import eu.themetacloudservice.Driver;
 import eu.themetacloudservice.configuration.ConfigDriver;
 import eu.themetacloudservice.configuration.dummys.nodeconfig.NodeConfig;
-import eu.themetacloudservice.manager.commands.GroupCommand;
 import eu.themetacloudservice.network.autentic.PackageAuthenticByManager;
 import eu.themetacloudservice.network.autentic.PackageAuthenticRequestFromManager;
 import eu.themetacloudservice.network.autentic.PackageCallBackAuthenticByManager;
-import eu.themetacloudservice.network.tasks.PackageLaunchTask;
+import eu.themetacloudservice.network.tasks.PackageLaunchService;
 import eu.themetacloudservice.network.tasks.PackageStopNodes;
 import eu.themetacloudservice.network.tasks.PackageStopTask;
 import eu.themetacloudservice.networking.NettyDriver;
@@ -41,7 +40,6 @@ public class CloudNode {
         new File("./local/GLOBAL/").mkdirs();
         new File("./local/templates/").mkdirs();
 
-        Driver.getInstance().createQueue();
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFORMATION, "die Cloud erfolgreich gestartet ist, können Sie sie von nun an mit '§fhelp§r' nutzen.",
                 "the cloud is successfully started, you can use it from now on with '§fhelp§r'.");
 
@@ -57,7 +55,7 @@ public class CloudNode {
         NettyDriver.getInstance().nettyClient.bind(config.getManagerAddress(), config.getNetworkingCommunication()).connect();
 
         NettyDriver.getInstance().packetDriver
-                .handelPacket(PackageLaunchTask.class)
+                .handelPacket(PackageLaunchService.class)
                 .handelPacket(PackageStopTask.class)
                 .handelPacket(PackageAuthenticByManager.class)
                 .handelPacket(PackageCallBackAuthenticByManager.class)

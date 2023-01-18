@@ -1,7 +1,6 @@
 package eu.themetacloudservice.configuration.dummys.restapi;
 
 import eu.themetacloudservice.configuration.interfaces.IConfigAdapter;
-
 import java.util.HashMap;
 
 public class PacketConfig implements IConfigAdapter {

@@ -19,7 +19,7 @@ import java.util.jar.JarFile;
 
 public class ModuleClassLoader {
 
-    private File file;
+    private final File file;
     public String modulename;
     private Properties properties;
 
@@ -31,38 +31,27 @@ public class ModuleClassLoader {
 
 
     public Properties readProperties(){
-        if (this.file == null) {
-            return null;
-        }
-        try {
-            URLClassLoader classLoader = new URLClassLoader(new URL[]{file.toURI().toURL()}, this.getClass().getClassLoader());
-            try (JarFile jarFile = new JarFile(file)) {
-                JarEntry jarEntry = jarFile.getJarEntry("module.properties");
-                if (jarEntry != null) {
-                    try (InputStreamReader reader = new InputStreamReader(jarFile.getInputStream(jarEntry), StandardCharsets.UTF_8)) {
-                        properties = new Properties();
-                        return properties;
-                    } catch (Exception ignored) {
-                    }
-
-                } else {
-
-                    Driver.getInstance().getTerminalDriver().logSpeed(Type.MODULES, "die '§fmodule.config§r' wurde in der File '§f"+file+"§r nicht gefunden", "the '§fmodule.config§r' was not found in the file '§f "+file+"§r");
-
+        try (JarFile jarFile = new JarFile(file)) {
+            JarEntry jarEntry = jarFile.getJarEntry("module.properties");
+            if (jarEntry != null) {
+                try (InputStreamReader reader = new InputStreamReader(jarFile.getInputStream(jarEntry), StandardCharsets.UTF_8)) {
+                    properties = new Properties();
+                    return properties;
+                } catch (Exception ignored) {
                 }
 
-            } catch (Exception ignored) {
-            }
-        } catch (Exception e) {
+            } else {
 
+                Driver.getInstance().getTerminalDriver().logSpeed(Type.MODULES, "die '§fmodule.config§r' wurde in der File '§f" + file + "§r nicht gefunden", "the '§fmodule.config§r' was not found in the file '§f " + file + "§r");
+
+            }
+
+        } catch (Exception ignored) {
         }
         return null;
     }
 
     public void reloadModule(){
-        if(file == null){
-            return;
-        }
         try {
             URLClassLoader classLoader = new URLClassLoader(new URL[]{file.toURI().toURL()}, this.getClass().getClassLoader());
             try (JarFile jarFile = new JarFile(file)) {

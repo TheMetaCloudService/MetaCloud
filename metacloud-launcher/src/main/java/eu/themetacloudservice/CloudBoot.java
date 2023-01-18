@@ -7,10 +7,11 @@ import eu.themetacloudservice.manager.CloudManager;
 import eu.themetacloudservice.node.CloudNode;
 import eu.themetacloudservice.terminal.TerminalDriver;
 import eu.themetacloudservice.terminal.enums.Type;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Logger;
 
 public class CloudBoot {
 
@@ -79,6 +80,7 @@ public class CloudBoot {
         }
 
         if (new File("./service.json").exists()){
+
             new CloudManager();
         }else {
             new CloudNode();

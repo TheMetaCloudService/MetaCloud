@@ -2,12 +2,10 @@ package eu.themetacloudservice.manager.commands;
 
 import eu.themetacloudservice.Driver;
 import eu.themetacloudservice.manager.CloudManager;
-import eu.themetacloudservice.networking.NettyDriver;
 import eu.themetacloudservice.terminal.commands.CommandAdapter;
 import eu.themetacloudservice.terminal.commands.CommandInfo;
 import eu.themetacloudservice.terminal.enums.Type;
 import eu.themetacloudservice.terminal.utils.TerminalStorageLine;
-
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -16,7 +14,7 @@ import java.util.TimerTask;
 @CommandInfo(command = "stop", DEdescription = "Mit diesem Befehl fahren Sie die Cloud herunter", ENdescription = "with this command you shut down the cloud", aliases = {"shutdown", "end"})
 public class StopCommand extends CommandAdapter {
     @Override
-    public boolean performCommand(CommandAdapter command, String[] args) {
+    public void performCommand(CommandAdapter command, String[] args) {
 
         if (Driver.getInstance().getMessageStorage().shutdownAccept){
             CloudManager.shutdownHook();
@@ -31,7 +29,6 @@ public class StopCommand extends CommandAdapter {
                 }
             }, 15*1000);
         }
-        return false;
     }
 
     @Override

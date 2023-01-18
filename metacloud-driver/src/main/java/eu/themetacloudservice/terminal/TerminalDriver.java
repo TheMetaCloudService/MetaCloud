@@ -7,7 +7,6 @@ import eu.themetacloudservice.terminal.completer.TerminalCompleter;
 import eu.themetacloudservice.terminal.enums.Color;
 import eu.themetacloudservice.terminal.enums.Type;
 import eu.themetacloudservice.terminal.logging.SimpleLatestLog;
-import eu.themetacloudservice.terminal.utils.TerminalERROR;
 import eu.themetacloudservice.terminal.utils.TerminalStorage;
 import eu.themetacloudservice.terminal.utils.TerminalStorageLine;
 import lombok.SneakyThrows;
@@ -16,28 +15,23 @@ import org.jline.reader.LineReaderBuilder;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.InfoCmp;
-
 import java.io.File;
-import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
-import java.util.function.Consumer;
 
 public class TerminalDriver {
 
 
     private boolean isInSetup;
-    private LinkedList<TerminalStorage> mainScreenStorage;
-    private Queue<TerminalStorageLine> inputs;
+    private final LinkedList<TerminalStorage> mainScreenStorage;
+    private final Queue<TerminalStorageLine> inputs;
     private final Terminal terminal;
     private SetupStorage setupStorage;
     private final LineReader lineReader;
-    private Thread consoleReadingThread;
-    private SimpleLatestLog simpleLatestLog;
-    private CommandDriver commandDriver;
+    private final SimpleLatestLog simpleLatestLog;
+    private final CommandDriver commandDriver;
 
     public boolean isInSetup(){
         return isInSetup;
@@ -74,9 +68,9 @@ public class TerminalDriver {
                 .build();
 
 
-        this.consoleReadingThread = new TerminalReader(this);
-        this.consoleReadingThread.setUncaughtExceptionHandler((t, e) -> e.printStackTrace());
-        this.consoleReadingThread.start();
+        Thread consoleReadingThread = new TerminalReader(this);
+        consoleReadingThread.setUncaughtExceptionHandler((t, e) -> e.printStackTrace());
+        consoleReadingThread.start();
 
     }
 
@@ -195,7 +189,7 @@ public class TerminalDriver {
                 simpleLatestLog.log(getColoredString("\r" + getColoredString(message + Color.RESET.getAnsiCode())));
                 simpleLatestLog.saveLogs();
                 this.lineReader.getTerminal().writer().flush();
-                if (!this.lineReader.isReading()) return;
+                this.lineReader.isReading();
 
             }else if (type == Type.ERROR){
 
@@ -300,10 +294,6 @@ public class TerminalDriver {
             this.lineReader.callWidget(LineReader.REDRAW_LINE);
             this.lineReader.callWidget(LineReader.REDISPLAY);
         }
-    }
-
-    public void addInput(final Consumer<String> input, final List<String> tabCompletions) {
-        this.inputs.add(new TerminalStorageLine(input, tabCompletions));
     }
 
     public Queue<TerminalStorageLine> getInputs() {
