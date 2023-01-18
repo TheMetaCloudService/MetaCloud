@@ -2,14 +2,13 @@ package eu.themetacloudservice.network.tasks;
 
 import eu.themetacloudservice.networking.packet.NettyBuffer;
 import eu.themetacloudservice.networking.packet.Packet;
-import eu.themetacloudservice.networking.packet.enums.PacketSender;
 
-public class PackageLaunchTask extends Packet {
+public class PackageLaunchService extends Packet {
 
     private String taskProcessName;
     private String jsonGroup;
 
-    public PackageLaunchTask() {
+    public PackageLaunchService() {
         setPacketUUID(98032980);
     }
 
@@ -30,15 +29,9 @@ public class PackageLaunchTask extends Packet {
         return taskProcessName;
     }
 
-    public void setTaskProcessName(String taskProcessName) {
-        this.taskProcessName = taskProcessName;
-    }
 
     public String getJsonGroup() {
         return jsonGroup;
     }
 
-    public void setJsonGroup(String jsonGroup) {
-        this.jsonGroup = jsonGroup;
-    }
 }
