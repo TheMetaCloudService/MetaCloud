@@ -1,12 +1,12 @@
-package eu.themetacloudservice.manager.cloudtasks.interfaces;
+package eu.themetacloudservice.manager.cloudservices.interfaces;
 
-import eu.themetacloudservice.manager.cloudtasks.entry.TaskedEntry;
-import eu.themetacloudservice.manager.cloudtasks.entry.TaskedService;
+import eu.themetacloudservice.manager.cloudservices.entry.TaskedEntry;
+import eu.themetacloudservice.manager.cloudservices.entry.TaskedService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public interface ICloudTaskDriver {
+public interface ICloudServiceDriver {
 
     TaskedService register(TaskedEntry entry);
     void unregister(String service);
@@ -14,6 +14,7 @@ public interface ICloudTaskDriver {
     Integer getActiveServices(String group);
     Integer getFreePort(boolean proxy);
     void shutdown(ArrayList<String> tasks);
+    void shutdownNode(String node);
     void handelServices();
     void updatePlayers(String service, boolean connect);
     TaskedService getService(String service);

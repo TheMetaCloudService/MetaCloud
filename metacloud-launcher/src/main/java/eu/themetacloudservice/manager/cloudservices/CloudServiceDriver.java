@@ -1,33 +1,31 @@
-package eu.themetacloudservice.manager.cloudtasks;
+package eu.themetacloudservice.manager.cloudservices;
 
 import eu.themetacloudservice.Driver;
 import eu.themetacloudservice.configuration.ConfigDriver;
 import eu.themetacloudservice.configuration.dummys.managerconfig.ManagerConfig;
 import eu.themetacloudservice.groups.dummy.Group;
 import eu.themetacloudservice.manager.CloudManager;
-import eu.themetacloudservice.manager.cloudtasks.entry.NetworkEntry;
-import eu.themetacloudservice.manager.cloudtasks.entry.TaskedEntry;
-import eu.themetacloudservice.manager.cloudtasks.entry.TaskedService;
-import eu.themetacloudservice.manager.cloudtasks.enums.TaskedServiceStatus;
-import eu.themetacloudservice.manager.cloudtasks.interfaces.ICloudTaskDriver;
+import eu.themetacloudservice.manager.cloudservices.entry.NetworkEntry;
+import eu.themetacloudservice.manager.cloudservices.entry.TaskedEntry;
+import eu.themetacloudservice.manager.cloudservices.entry.TaskedService;
+import eu.themetacloudservice.manager.cloudservices.enums.TaskedServiceStatus;
+import eu.themetacloudservice.manager.cloudservices.interfaces.ICloudTaskDriver;
 import eu.themetacloudservice.networking.NettyDriver;
 import eu.themetacloudservice.timebaser.TimerBase;
 import eu.themetacloudservice.timebaser.utils.TimeUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class CloudTaskDriver implements ICloudTaskDriver {
+public class CloudServiceDriver implements ICloudTaskDriver {
 
 
     private final ArrayList<TaskedService> services;
     public final NetworkEntry entry;
 
 
-    public CloudTaskDriver() {
+    public CloudServiceDriver() {
         entry = new NetworkEntry();
         services = new ArrayList<>();
         handelServices();
@@ -118,6 +116,11 @@ public class CloudTaskDriver implements ICloudTaskDriver {
     }
 
     @Override
+    public void shutdownNode(String node) {
+        this.services.removeIf(service -> service.getEntry().getNode().equals(node));
+    }
+
+    @Override
     public void handelServices() {
         TimerBase base = new TimerBase();
         base.schedule(new TimerTask() {
@@ -149,28 +152,28 @@ public class CloudTaskDriver implements ICloudTaskDriver {
             public void run() {
 
 
-                if (CloudManager.taskDriver.entry.global_players < 100){
+                if (CloudManager.serviceDriver.entry.global_players < 100){
                     Driver.getInstance().getGroupDriver().getAll().forEach(group -> {
                         if (!NettyDriver.getInstance().nettyServer.isChannelFound(group.getStorage().getRunningNode()) && !group.getStorage().getRunningNode().equals("InternalNode")) return;
 
-                        Integer minimal = group.getOver100AtNetwork() * (CloudManager.taskDriver.entry.global_player_potency +1);
+                        Integer minimal = group.getOver100AtNetwork() * (CloudManager.serviceDriver.entry.global_player_potency +1);
                         if (minimal < getActiveServices(group.getGroup())){
                             int newMinimal = minimal - getActiveServices(group.getGroup());
                             ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
                             for (int i = 0; i != newMinimal; i++) {
                                 if (group.getStorage().getRunningNode().equals("InternalNode")){
-                                    TaskedService taskedService = CloudManager.taskDriver.register(new TaskedEntry(
+                                    TaskedService taskedService = CloudManager.serviceDriver.register(new TaskedEntry(
                                             getFreePort(group.getGroupType().equalsIgnoreCase("PROXY")),
                                             group.getGroup(),
-                                            group.getGroup() + config.getSplitter() + CloudManager.taskDriver.getFreeUUID( group.getGroup()),
+                                            group.getGroup() + config.getSplitter() + CloudManager.serviceDriver.getFreeUUID( group.getGroup()),
                                             group.getStorage().getRunningNode()));
 
                                     taskedService.handelLaunch();
                                 }else {
-                                    TaskedService taskedService = CloudManager.taskDriver.register(new TaskedEntry(
+                                    TaskedService taskedService = CloudManager.serviceDriver.register(new TaskedEntry(
                                             -1,
                                             group.getGroup(),
-                                            group.getGroup() + config.getSplitter() + CloudManager.taskDriver.getFreeUUID( group.getGroup()),
+                                            group.getGroup() + config.getSplitter() + CloudManager.serviceDriver.getFreeUUID( group.getGroup()),
                                             group.getStorage().getRunningNode()));
 
                                     taskedService.handelLaunch();
