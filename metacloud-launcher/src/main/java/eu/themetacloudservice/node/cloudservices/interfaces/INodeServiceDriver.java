@@ -1,2 +1,4 @@
-package eu.themetacloudservice.node.cloudservices.interfaces;public interface INodeServiceDriver {
+package eu.themetacloudservice.node.cloudservices.interfaces;
+
+public interface INodeServiceDriver {
 }

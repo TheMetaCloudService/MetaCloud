@@ -1,6 +1,6 @@
-package eu.themetacloudservice.manager.cloudtasks.entry;
+package eu.themetacloudservice.manager.cloudservices.entry;
 
-import eu.themetacloudservice.manager.cloudtasks.enums.TaskedServiceStatus;
+import eu.themetacloudservice.manager.cloudservices.enums.TaskedServiceStatus;
 
 public class TaskedEntry {
 

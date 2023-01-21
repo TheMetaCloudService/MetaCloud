@@ -4,7 +4,7 @@ import eu.themetacloudservice.Driver;
 import eu.themetacloudservice.configuration.ConfigDriver;
 import eu.themetacloudservice.configuration.dummys.authenticator.AuthenticatorKey;
 import eu.themetacloudservice.configuration.dummys.managerconfig.ManagerConfig;
-import eu.themetacloudservice.manager.cloudtasks.CloudTaskDriver;
+import eu.themetacloudservice.manager.cloudservices.CloudServiceDriver;
 import eu.themetacloudservice.manager.commands.ClearCommand;
 import eu.themetacloudservice.manager.commands.GroupCommand;
 import eu.themetacloudservice.manager.commands.HelpCommand;
@@ -19,15 +19,19 @@ import eu.themetacloudservice.network.tasks.PackageStopTask;
 import eu.themetacloudservice.networking.NettyDriver;
 import eu.themetacloudservice.networking.server.NettyServer;
 import eu.themetacloudservice.terminal.enums.Type;
+import eu.themetacloudservice.webserver.RestDriver;
+import eu.themetacloudservice.webserver.WebServer;
+import eu.themetacloudservice.webserver.entry.RouteEntry;
+
 import java.io.File;
 import java.util.UUID;
 
 public class CloudManager {
 
-    public static CloudTaskDriver taskDriver;
+    public static CloudServiceDriver serviceDriver;
 
     public CloudManager() {
-        taskDriver = new CloudTaskDriver();
+        serviceDriver = new CloudServiceDriver();
         ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
         System.setProperty("log4j.configurationFile", "log4j2.properties");
         initNetty(config);
@@ -40,6 +44,8 @@ public class CloudManager {
         if (!new File("./local/server-icon.png").exists()){
             Driver.getInstance().getMessageStorage().packetLoader.loadLogo();
         }
+
+
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new HelpCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new GroupCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new ClearCommand());
@@ -49,11 +55,13 @@ public class CloudManager {
         Boolean groups = new File("./local/groups/").mkdirs();
         Boolean templates = new File("./local/templates/").mkdirs();
         Driver.getInstance().getModuleDriver().loadAllModules();
-
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFORMATION, "die Cloud erfolgreich gestartet ist, können Sie sie von nun an mit '§fhelp§r' nutzen.",
                 "the cloud is successfully started, you can use it from now on with '§fhelp§r'.");
+        Driver.getInstance().runWebServer();
+        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/test", "{\"test\":\"dies ist ein Test um zuschauen ob alles geht\"}"));
+        new RestDriver().put("/test", "{\"test\":\"dies ist das update\"}");
 
-
+        Driver.getInstance().getTerminalDriver().log(Type.INFORMATION, new RestDriver().get("/test"));
     }
 
 
@@ -73,9 +81,6 @@ public class CloudManager {
                 .handelPacket(PackageStopNodes.class)
                 .handelListener(new ManagerNetworkChannel());
         Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "der '§fNetty-Server§r' wurde erfolgreich an Port '§f"+config.getNetworkingCommunication()+"§r' angebunden", "the '§fNetty-server§r' was successfully bound on port '§f"+config.getNetworkingCommunication()+"§r'");
-
-
-
     }
 
 

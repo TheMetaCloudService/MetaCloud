@@ -6,6 +6,7 @@ import eu.themetacloudservice.groups.TemplateDriver;
 import eu.themetacloudservice.module.ModuleDriver;
 import eu.themetacloudservice.storage.MessageStorage;
 import eu.themetacloudservice.terminal.TerminalDriver;
+import eu.themetacloudservice.webserver.WebServer;
 
 public class Driver {
 
@@ -15,6 +16,7 @@ public class Driver {
     private final GroupDriver groupDriver;
     private final TemplateDriver templateDriver;
     private final ModuleDriver moduleDriver;
+    private WebServer webServer;
 
     public Driver(){
         /*
@@ -26,6 +28,7 @@ public class Driver {
         this.moduleDriver = new ModuleDriver();
         this.messageStorage = new MessageStorage();
         this.templateDriver = new TemplateDriver();
+
     }
 
 
@@ -40,6 +43,14 @@ public class Driver {
 
     public GroupDriver getGroupDriver() {
         return groupDriver;
+    }
+
+    public void runWebServer(){
+        this.webServer = new WebServer();
+    }
+
+    public WebServer getWebServer() {
+        return webServer;
     }
 
     public TerminalDriver getTerminalDriver() {

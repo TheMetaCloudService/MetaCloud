@@ -1,12 +1,12 @@
-package eu.themetacloudservice.manager.cloudtasks.entry;
+package eu.themetacloudservice.manager.cloudservices.entry;
 
 import eu.themetacloudservice.Driver;
 import eu.themetacloudservice.configuration.ConfigDriver;
 import eu.themetacloudservice.configuration.dummys.managerconfig.ManagerConfig;
 import eu.themetacloudservice.groups.dummy.Group;
 import eu.themetacloudservice.manager.CloudManager;
-import eu.themetacloudservice.manager.cloudtasks.enums.TaskedServiceStatus;
-import eu.themetacloudservice.manager.cloudtasks.interfaces.ITaskedService;
+import eu.themetacloudservice.manager.cloudservices.enums.TaskedServiceStatus;
+import eu.themetacloudservice.manager.cloudservices.interfaces.ITaskedService;
 import eu.themetacloudservice.network.tasks.PackageHandelCommand;
 import eu.themetacloudservice.networking.NettyDriver;
 import eu.themetacloudservice.process.ServiceProcess;
@@ -16,7 +16,7 @@ import eu.themetacloudservice.timebaser.utils.TimeUtil;
 import java.util.List;
 import java.util.TimerTask;
 
-public class TaskedService extends ITaskedService {
+public class TaskedService implements ITaskedService {
 
 
     private TaskedEntry entry;
@@ -39,7 +39,6 @@ public class TaskedService extends ITaskedService {
     @Override
     public void handelLaunch() {
         interrupted = false;
-
         if (this.getEntry().getNode().equals("InternalNode")){
 
         }else {
@@ -66,7 +65,7 @@ public class TaskedService extends ITaskedService {
                     cancel();
                 }
 
-                if (entry.getCurrentPlayers() <= need_players){
+                if (entry.getCurrentPlayers() >= need_players){
                     if (entry.getCheckInterval() == 6){
                         if (hasStartedNew) {
                            return;
@@ -75,18 +74,18 @@ public class TaskedService extends ITaskedService {
                         hasStartedNew = true;
                         if (entry.getNode().equals("InternalNode")){
 
-                            TaskedService taskedService = CloudManager.taskDriver.register(new TaskedEntry(
-                                    CloudManager.taskDriver.getFreePort(Driver.getInstance().getGroupDriver().load(entry.getGroupName()).getGroupType().equalsIgnoreCase("PROXY")),
+                            TaskedService taskedService = CloudManager.serviceDriver.register(new TaskedEntry(
+                                    CloudManager.serviceDriver.getFreePort(Driver.getInstance().getGroupDriver().load(entry.getGroupName()).getGroupType().equalsIgnoreCase("PROXY")),
                                     getEntry().getGroupName(),
-                                    getEntry().getGroupName() + config.getSplitter() + CloudManager.taskDriver.getFreeUUID(entry.getGroupName()),
+                                    getEntry().getGroupName() + config.getSplitter() + CloudManager.serviceDriver.getFreeUUID(entry.getGroupName()),
                                     "InternalNode"));
 
                             taskedService.handelLaunch();
                         }else {
-                            TaskedService taskedService = CloudManager.taskDriver.register(new TaskedEntry(
+                            TaskedService taskedService = CloudManager.serviceDriver.register(new TaskedEntry(
                                    -1,
                                     getEntry().getGroupName(),
-                                    getEntry().getGroupName() + config.getSplitter() + CloudManager.taskDriver.getFreeUUID(entry.getGroupName()),
+                                    getEntry().getGroupName() + config.getSplitter() + CloudManager.serviceDriver.getFreeUUID(entry.getGroupName()),
                                     getEntry().getNode()));
 
                             taskedService.handelLaunch();
@@ -100,27 +99,27 @@ public class TaskedService extends ITaskedService {
                         entry.setCheckIntervalPlayers(entry.getCheckIntervalPlayers()+1);
                     }else {
                         int players = 0;
-                        List<TaskedService> services = CloudManager.taskDriver.getServices(group.getGroup());
+                        List<TaskedService> services = CloudManager.serviceDriver.getServices(group.getGroup());
                         for (int j = 0; j != services.size() ; j++) {
                             TaskedService taskedService = services.get(j);
                             players = players + taskedService.getEntry().getCurrentPlayers();
                         }
 
-                        if (CloudManager.taskDriver.entry.global_players < 100){
-                            Integer minimal = group.getOver100AtNetwork() * (CloudManager.taskDriver.entry.global_player_potency +1);
+                        if (CloudManager.serviceDriver.entry.global_players > 100){
+                            int minimal = group.getOver100AtNetwork() * (CloudManager.serviceDriver.entry.global_player_potency +1);
 
-                            if (minimal > CloudManager.taskDriver.getActiveServices(group.getGroup())){
-                                CloudManager.taskDriver.unregister(entry.getServiceName());
+                            if (minimal < CloudManager.serviceDriver.getActiveServices(group.getGroup())){
+                                CloudManager.serviceDriver.unregister(entry.getServiceName());
                             }
-                        }else if (players < 100){
+                        }else if (players > 100){
 
-                            Integer minimal = group.getOver100AtGroup() * (CloudManager.taskDriver.entry.group_player_potency.get(entry.getGroupName()) +1);
+                            int minimal = group.getOver100AtGroup() * (CloudManager.serviceDriver.entry.group_player_potency.get(entry.getGroupName()) +1);
 
-                            if (minimal > CloudManager.taskDriver.getActiveServices(group.getGroup())){
-                                CloudManager.taskDriver.unregister(entry.getServiceName());
+                            if (minimal > CloudManager.serviceDriver.getActiveServices(group.getGroup())){
+                                CloudManager.serviceDriver.unregister(entry.getServiceName());
                             }
-                        }else if (group.getMinimalOnline() > CloudManager.taskDriver.getActiveServices(group.getGroup())){
-                            CloudManager.taskDriver.unregister(entry.getServiceName());
+                        }else if (group.getMinimalOnline() > CloudManager.serviceDriver.getActiveServices(group.getGroup())){
+                            CloudManager.serviceDriver.unregister(entry.getServiceName());
                         }
                     }
 
@@ -137,18 +136,18 @@ public class TaskedService extends ITaskedService {
             hasStartedNew = true;
             if (entry.getNode().equals("InternalNode")){
 
-                TaskedService taskedService = CloudManager.taskDriver.register(new TaskedEntry(
-                        CloudManager.taskDriver.getFreePort(Driver.getInstance().getGroupDriver().load(entry.getGroupName()).getGroupType().equalsIgnoreCase("PROXY")),
+                TaskedService taskedService = CloudManager.serviceDriver.register(new TaskedEntry(
+                        CloudManager.serviceDriver.getFreePort(Driver.getInstance().getGroupDriver().load(entry.getGroupName()).getGroupType().equalsIgnoreCase("PROXY")),
                         getEntry().getGroupName(),
-                        getEntry().getGroupName() + config.getSplitter() + CloudManager.taskDriver.getFreeUUID(entry.getGroupName()),
+                        getEntry().getGroupName() + config.getSplitter() + CloudManager.serviceDriver.getFreeUUID(entry.getGroupName()),
                         "InternalNode"));
 
                 taskedService.handelLaunch();
             }else {
-                TaskedService taskedService = CloudManager.taskDriver.register(new TaskedEntry(
+                TaskedService taskedService = CloudManager.serviceDriver.register(new TaskedEntry(
                         -1,
                         getEntry().getGroupName(),
-                        getEntry().getGroupName() + config.getSplitter() + CloudManager.taskDriver.getFreeUUID(entry.getGroupName()),
+                        getEntry().getGroupName() + config.getSplitter() + CloudManager.serviceDriver.getFreeUUID(entry.getGroupName()),
                         getEntry().getNode()));
 
                 taskedService.handelLaunch();

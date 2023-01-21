@@ -1,14 +1,14 @@
-package eu.themetacloudservice.manager.cloudtasks.interfaces;
+package eu.themetacloudservice.manager.cloudservices.interfaces;
 
-import eu.themetacloudservice.manager.cloudtasks.enums.TaskedServiceStatus;
+import eu.themetacloudservice.manager.cloudservices.enums.TaskedServiceStatus;
 
-public abstract class ITaskedService {
+public interface ITaskedService {
 
-    public abstract void handelExecute(String line);
-    public abstract void handelLaunch();
-    public abstract void handelQuit();
-    public abstract void handelPlayers();
-    public abstract void handelStatusChange(TaskedServiceStatus status);
-    public abstract void handelCloudPlayerConnection(boolean connect);
+  void handelExecute(String line);
+  void handelLaunch();
+  void handelQuit();
+  void handelPlayers();
+  void handelStatusChange(TaskedServiceStatus status);
+  void handelCloudPlayerConnection(boolean connect);
 
 }

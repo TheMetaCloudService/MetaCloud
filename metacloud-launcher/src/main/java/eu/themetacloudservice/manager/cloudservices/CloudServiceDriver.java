@@ -9,7 +9,7 @@ import eu.themetacloudservice.manager.cloudservices.entry.NetworkEntry;
 import eu.themetacloudservice.manager.cloudservices.entry.TaskedEntry;
 import eu.themetacloudservice.manager.cloudservices.entry.TaskedService;
 import eu.themetacloudservice.manager.cloudservices.enums.TaskedServiceStatus;
-import eu.themetacloudservice.manager.cloudservices.interfaces.ICloudTaskDriver;
+import eu.themetacloudservice.manager.cloudservices.interfaces.ICloudServiceDriver;
 import eu.themetacloudservice.networking.NettyDriver;
 import eu.themetacloudservice.timebaser.TimerBase;
 import eu.themetacloudservice.timebaser.utils.TimeUtil;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
 
-public class CloudServiceDriver implements ICloudTaskDriver {
+public class CloudServiceDriver implements ICloudServiceDriver {
 
 
     private final ArrayList<TaskedService> services;
@@ -152,12 +152,12 @@ public class CloudServiceDriver implements ICloudTaskDriver {
             public void run() {
 
 
-                if (CloudManager.serviceDriver.entry.global_players < 100){
+                if (CloudManager.serviceDriver.entry.global_players > 100){
                     Driver.getInstance().getGroupDriver().getAll().forEach(group -> {
                         if (!NettyDriver.getInstance().nettyServer.isChannelFound(group.getStorage().getRunningNode()) && !group.getStorage().getRunningNode().equals("InternalNode")) return;
 
                         Integer minimal = group.getOver100AtNetwork() * (CloudManager.serviceDriver.entry.global_player_potency +1);
-                        if (minimal < getActiveServices(group.getGroup())){
+                        if (minimal > getActiveServices(group.getGroup())){
                             int newMinimal = minimal - getActiveServices(group.getGroup());
                             ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
                             for (int i = 0; i != newMinimal; i++) {
@@ -188,31 +188,30 @@ public class CloudServiceDriver implements ICloudTaskDriver {
 
                         if (!NettyDriver.getInstance().nettyServer.isChannelFound(group.getStorage().getRunningNode()) && !group.getStorage().getRunningNode().equals("InternalNode")) return;
                         int players = 0;
-                        List<TaskedService> services = CloudManager.taskDriver.getServices(group.getGroup());
+                        List<TaskedService> services = CloudManager.serviceDriver.getServices(group.getGroup());
                         for (int j = 0; j != services.size() ; j++) {
                             TaskedService taskedService = services.get(j);
                             players = players + taskedService.getEntry().getCurrentPlayers();
                         }
-
-                        if (players < 100){
-                            Integer minimal = group.getOver100AtGroup() * (CloudManager.taskDriver.entry.group_player_potency.get(group.getGroup()) +1);
+                        if (players > 100){
+                            Integer minimal = group.getOver100AtGroup() * (CloudManager.serviceDriver.entry.group_player_potency.get(group.getGroup()) +1);
                             if (minimal < getActiveServices(group.getGroup())){
                                 Integer newMinimal = minimal - getActiveServices(group.getGroup());
                                 ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
                                 for (int i = 0; i != newMinimal; i++) {
                                     if (group.getStorage().getRunningNode().equals("InternalNode")){
-                                        TaskedService taskedService = CloudManager.taskDriver.register(new TaskedEntry(
+                                        TaskedService taskedService = CloudManager.serviceDriver.register(new TaskedEntry(
                                                 getFreePort(group.getGroupType().equalsIgnoreCase("PROXY")),
                                                 group.getGroup(),
-                                                group.getGroup() + config.getSplitter() + CloudManager.taskDriver.getFreeUUID( group.getGroup()),
+                                                group.getGroup() + config.getSplitter() + CloudManager.serviceDriver.getFreeUUID( group.getGroup()),
                                                 group.getStorage().getRunningNode()));
 
                                         taskedService.handelLaunch();
                                     }else {
-                                        TaskedService taskedService = CloudManager.taskDriver.register(new TaskedEntry(
+                                        TaskedService taskedService = CloudManager.serviceDriver.register(new TaskedEntry(
                                                 -1,
                                                 group.getGroup(),
-                                                group.getGroup() + config.getSplitter() + CloudManager.taskDriver.getFreeUUID( group.getGroup()),
+                                                group.getGroup() + config.getSplitter() + CloudManager.serviceDriver.getFreeUUID( group.getGroup()),
                                                 group.getStorage().getRunningNode()));
 
                                         taskedService.handelLaunch();

@@ -1,4 +1,4 @@
-package eu.themetacloudservice.manager.cloudtasks.enums;
+package eu.themetacloudservice.manager.cloudservices.enums;
 
 public enum TaskedServiceStatus {
 

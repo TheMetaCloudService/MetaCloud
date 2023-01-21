@@ -1,4 +1,4 @@
-package eu.themetacloudservice.manager.cloudtasks.entry;
+package eu.themetacloudservice.manager.cloudservices.entry;
 
 import java.util.HashMap;
 
