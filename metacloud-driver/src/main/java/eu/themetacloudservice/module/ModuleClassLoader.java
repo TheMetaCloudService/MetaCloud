@@ -24,7 +24,7 @@ public class ModuleClassLoader {
     private Properties properties;
 
     public ModuleClassLoader(String moduleName){
-        this.file = new File("./modules/" + moduleName + ".jar");
+        this.file = new File("./INFO/" + moduleName + ".jar");
         this.modulename = moduleName;
     }
 
@@ -40,7 +40,7 @@ public class ModuleClassLoader {
                 } catch (Exception ignored) {}
             } else {
 
-                Driver.getInstance().getTerminalDriver().logSpeed(Type.MODULES, "die '§fmodule.config§r' wurde in der File '§f" + file + "§r nicht gefunden", "the '§fmodule.config§r' was not found in the file '§f " + file + "§r");
+                Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "die '§fmodule.config§r' wurde in der File '§f" + file + "§r nicht gefunden", "the '§fmodule.config§r' was not found in the file '§f " + file + "§r");
 
             }
 
@@ -62,14 +62,14 @@ public class ModuleClassLoader {
                         Method method = classtoLoad.getDeclaredMethod("reloadModule");
                         Object instance = classtoLoad.newInstance();
                         Object resuls = method.invoke(instance);
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.MODULES, "Das Module '§f"+properties.getProperty("module_name")+"§r' wurde geladen 'dev's: §f"+properties.getProperty("module_authors")+"§r, version: §f"+properties.getProperty("module_current_version")+"§r'", "the module '§f"+properties.getProperty("module_name")+"§r' was loaded 'dev's: §f"+properties.getProperty("module_authors")+"§r, version: §f"+properties.getProperty("module_current_version")+"§r'");
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Das Module '§f"+properties.getProperty("module_name")+"§r' wurde geladen 'dev's: §f"+properties.getProperty("module_authors")+"§r, version: §f"+properties.getProperty("module_current_version")+"§r'", "the module '§f"+properties.getProperty("module_name")+"§r' was loaded 'dev's: §f"+properties.getProperty("module_authors")+"§r, version: §f"+properties.getProperty("module_current_version")+"§r'");
                     }catch (Exception ee) {
 
                     }
 
                 }else{
 
-                    Driver.getInstance().getTerminalDriver().logSpeed(Type.MODULES, "die '§fmodule.config§r' wurde in der File '§f"+file+"§r nicht gefunden", "the '§fmodule.config§r' was not found in the file '§f "+file+"§r");
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "die '§fmodule.config§r' wurde in der File '§f"+file+"§r nicht gefunden", "the '§fmodule.config§r' was not found in the file '§f "+file+"§r");
                 }
             }catch (IOException ignored){}
         }catch (MalformedURLException ignored) {}
@@ -101,14 +101,14 @@ public class ModuleClassLoader {
                         Object instance = classtoLoad.newInstance();
                         Object resuls = method.invoke(instance);
 
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.MODULES, "Das Module '§f"+properties.getProperty("module_name")+"§r' wurde geladen 'dev's: §f"+properties.getProperty("module_authors")+"§r, version: §f"+properties.getProperty("module_current_version")+"§r'", "the module '§f"+properties.getProperty("module_name")+"§r' was loaded 'dev's: §f"+properties.getProperty("module_authors")+"§r, version: §f"+properties.getProperty("module_current_version")+"§r'");
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Das Module '§f"+properties.getProperty("module_name")+"§r' wurde geladen 'dev's: §f"+properties.getProperty("module_authors")+"§r, version: §f"+properties.getProperty("module_current_version")+"§r'", "the module '§f"+properties.getProperty("module_name")+"§r' was loaded 'dev's: §f"+properties.getProperty("module_authors")+"§r, version: §f"+properties.getProperty("module_current_version")+"§r'");
 
                     }catch (Exception ee) {
 
                     }
 
                 }else{
-                    Driver.getInstance().getTerminalDriver().logSpeed(Type.MODULES, "die '§fmodule.config§r' wurde in der File '§f"+file+"§r nicht gefunden", "the '§fmodule.config§r' was not found in the file '§f "+file+"§r");
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "die '§fmodule.config§r' wurde in der File '§f"+file+"§r nicht gefunden", "the '§fmodule.config§r' was not found in the file '§f "+file+"§r");
                 }
             }catch (IOException ignored){}
         }catch (MalformedURLException ignored) {}
@@ -133,13 +133,13 @@ public class ModuleClassLoader {
                         Method method = classtoLoad.getDeclaredMethod("disableModule");
                         Object instance = classtoLoad.newInstance();
                         Object resuls = method.invoke(instance);
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.MODULES, "Das Module '§f"+properties.getProperty("module_name")+"§r' wurde deaktiviert", "the module '§f"+properties.getProperty("module_name")+"§r' was disabled");
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Das Module '§f"+properties.getProperty("module_name")+"§r' wurde deaktiviert", "the module '§f"+properties.getProperty("module_name")+"§r' was disabled");
                     }catch (Exception ee) {
 
                     }
 
                 }else{
-                    Driver.getInstance().getTerminalDriver().logSpeed(Type.MODULES, "die '§fmodule.config§r' wurde in der File '§f"+file+"§r nicht gefunden", "the '§fmodule.config§r' was not found in the file '§f "+file+"§r");
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "die '§fmodule.config§r' wurde in der File '§f"+file+"§r nicht gefunden", "the '§fmodule.config§r' was not found in the file '§f "+file+"§r");
                 }
             }catch (IOException ignored){}
         }catch (MalformedURLException ignored) {}

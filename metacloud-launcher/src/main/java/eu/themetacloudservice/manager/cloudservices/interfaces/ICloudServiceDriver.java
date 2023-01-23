@@ -10,7 +10,9 @@ public interface ICloudServiceDriver {
 
     TaskedService register(TaskedEntry entry);
     void unregister(String service);
+    void unregistered(String service);
     Integer getFreeUUID(String group);
+    String getFreeUUID();
     Integer getActiveServices(String group);
     Integer getFreePort(boolean proxy);
     void shutdown(ArrayList<String> tasks);

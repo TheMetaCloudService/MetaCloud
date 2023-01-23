@@ -12,30 +12,27 @@ public class TimerBase {
     public TimerBase() {}
 
     public void schedule(TimerTask runnable, Integer time, TimeUtil timeUtil){
+        Timer timer = new Timer();
         if (timeUtil == TimeUtil.SECONDS){
-            timer =  new Timer();
             timer.schedule(runnable, time*1000);
         }
-        if (timeUtil == TimeUtil.MINUTES){
-            Timer timer = new Timer();
+        else if (timeUtil == TimeUtil.MINUTES){
             timer.schedule(runnable, time*60*1000);
-        }    if (timeUtil == TimeUtil.HOURS){
-            Timer timer = new Timer();
+        }
+        else if (timeUtil == TimeUtil.HOURS){
             timer.schedule(runnable, time*60*60*1000);
         }
 
     }
 
     public void schedule(TimerTask runnable, Integer time, Integer secondTime, TimeUtil timeUtil){
+        timer = new Timer();
         if (timeUtil == TimeUtil.SECONDS){
-            timer = new Timer();
             timer.schedule(runnable, time*1000, secondTime*1000);
-        }
+        }else
         if (timeUtil == TimeUtil.MINUTES){
-            Timer timer = new Timer();
             timer.schedule(runnable, time*60*1000, secondTime*60*1000);
-        }    if (timeUtil == TimeUtil.HOURS){
-            Timer timer = new Timer();
+        }  else  if (timeUtil == TimeUtil.HOURS){
             timer.schedule(runnable, time*60*60*1000, secondTime*60*60*1000);
         }
 

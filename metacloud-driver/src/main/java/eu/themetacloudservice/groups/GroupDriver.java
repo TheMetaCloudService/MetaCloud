@@ -42,15 +42,15 @@ public class GroupDriver implements IGroupDriver {
         if (!find(group.getGroup())){
             if (!Driver.getInstance().getTemplateDriver().get().contains(group.getStorage().getTemplate())){
                 boolean isProxyes = group.getGroupType().equalsIgnoreCase("PROXY");
+                boolean isStatic = group.isRunStatic();
 
                 if (group.getStorage().getRunningNode().equals("InternalNode")){
-                    Driver.getInstance().getTemplateDriver().create(group.getGroup(), isProxyes);
+                    Driver.getInstance().getTemplateDriver().create(group.getGroup(), isProxyes, isStatic);
                 }
             }
             new ConfigDriver("./local/groups/" + group.getGroup()+ ".json").save(group);
-            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFORMATION, "die Gruppe '§f"+group.getGroup()+"§r' wurde erfolgreich erstellt", "the group '§f"+group.getGroup()+"§r' was successfully created");
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS, "die Gruppe '§f"+group.getGroup()+"§r' wurde erfolgreich erstellt", "the group '§f"+group.getGroup()+"§r' was successfully created");
 
-            //todo: start group
         }
     }
 
@@ -58,7 +58,6 @@ public class GroupDriver implements IGroupDriver {
     public void delete(String group) {
         if (find(group)){
             new File("./local/groups/" + group+ ".json").delete();
-            //todo: shutdown all running processes
         }
     }
 

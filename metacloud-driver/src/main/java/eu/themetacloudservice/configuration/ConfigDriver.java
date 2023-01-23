@@ -37,14 +37,15 @@ public class ConfigDriver {
     }
 
 
+    @SneakyThrows
     public IConfigAdapter convert(String json, Class<? extends IConfigAdapter> tClass){
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.readValue(json, tClass);
         } catch (IOException e) {
             e.printStackTrace();
+            throw e;
         }
-        return null;
     }
 
     public String convert(IConfigAdapter IConfigAdapter){
@@ -52,21 +53,15 @@ public class ConfigDriver {
     }
 
     public void save(IConfigAdapter IConfigAdapter){
-        if(IConfigAdapter != null && this.location != null){
-            if(!exists()){
-                try {
-                    new File(this.location).createNewFile();
-                } catch (IOException ignored) {}
+        try {
+            if (!exists()) {
+                new File(this.location).createNewFile();
             }
-
-            try {
-                try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(this.location), StandardCharsets.UTF_8)) {
-                    GSON.toJson(IConfigAdapter, writer);
-                } catch (IOException ignored) {
-                }
-            }catch (Exception ignored){}
-        }else{
-            Driver.getInstance().getTerminalDriver().log(Type.ERROR, "not found");
+            try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(this.location), StandardCharsets.UTF_8)) {
+                GSON.toJson(IConfigAdapter, writer);
+            }
+        } catch (IOException e) {
+            Driver.getInstance().getTerminalDriver().log(Type.ERROR, e.getMessage());
         }
     }
 

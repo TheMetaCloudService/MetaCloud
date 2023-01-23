@@ -4,11 +4,17 @@ import eu.themetacloudservice.manager.cloudservices.enums.TaskedServiceStatus;
 
 public class TaskedEntry {
 
-    private int current_players, check_interval, check_interval_players, used_port;
-    private String group_name, service_name, task_node;
+    private int current_players;
+    private int check_interval;
+    private int check_interval_players;
+    private final int used_port;
+    private final String group_name;
+    private final String service_name;
+    private final String task_node;
     private TaskedServiceStatus status;
+    private final boolean use_protocol;
 
-    public TaskedEntry(int used_port, String group_name, String service_name, String task_node) {
+    public TaskedEntry(int used_port, String group_name, String service_name, String task_node, boolean use_protocol) {
         this.current_players = 0;
         this.check_interval = 0;
         this.check_interval_players = 0;
@@ -17,6 +23,12 @@ public class TaskedEntry {
         this.service_name = service_name;
         this.task_node = task_node;
         this.status = TaskedServiceStatus.QUEUED;
+        this.use_protocol = use_protocol;
+    }
+
+
+    public boolean isUseProtocol() {
+        return use_protocol;
     }
 
     public int getCheckInterval() {

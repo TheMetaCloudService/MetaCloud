@@ -38,15 +38,9 @@ public final class TerminalReader extends Thread{
                         this.consoleDriver.getCommandDriver().executeCommand(line);
                     }
                 }else {
-                    if (Driver.getInstance().getMessageStorage().language.equalsIgnoreCase("DE")){
-                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "der eingegebene Befehl wurde nicht gefunden bitte tippe '§fhelp§r'");
-                    }else {
-                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "the entered command was not found please type '§fhelp§r");
-                    }
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND, "der eingegebene Befehl wurde nicht gefunden bitte tippe '§fhelp§r'", "the entered command was not found please type '§fhelp§r");
                 }
-            }catch (Exception e){
-                System.exit(0);
-            }
+            }catch (Exception e){}
         }
     }
 }

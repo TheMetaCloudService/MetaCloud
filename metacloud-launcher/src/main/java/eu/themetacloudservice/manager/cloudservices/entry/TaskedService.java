@@ -3,130 +3,74 @@ package eu.themetacloudservice.manager.cloudservices.entry;
 import eu.themetacloudservice.Driver;
 import eu.themetacloudservice.configuration.ConfigDriver;
 import eu.themetacloudservice.configuration.dummys.managerconfig.ManagerConfig;
-import eu.themetacloudservice.groups.dummy.Group;
 import eu.themetacloudservice.manager.CloudManager;
 import eu.themetacloudservice.manager.cloudservices.enums.TaskedServiceStatus;
 import eu.themetacloudservice.manager.cloudservices.interfaces.ITaskedService;
-import eu.themetacloudservice.network.tasks.PackageHandelCommand;
+import eu.themetacloudservice.network.nodes.to.PackageToNodeHandelServiceExit;
+import eu.themetacloudservice.network.nodes.to.PackageToNodeHandelServiceLaunch;
+import eu.themetacloudservice.network.nodes.to.PackageToNodeHandelSync;
 import eu.themetacloudservice.networking.NettyDriver;
 import eu.themetacloudservice.process.ServiceProcess;
-import eu.themetacloudservice.timebaser.TimerBase;
-import eu.themetacloudservice.timebaser.utils.TimeUtil;
-
-import java.util.List;
-import java.util.TimerTask;
+import eu.themetacloudservice.terminal.enums.Type;
 
 public class TaskedService implements ITaskedService {
 
 
-    private TaskedEntry entry;
+    private final TaskedEntry entry;
     private ServiceProcess process;
-    private boolean interrupted;
-    private boolean hasStartedNew;
+    public boolean hasStartedNew;
 
     public TaskedService(TaskedEntry entry) {
         this.entry = entry;
         hasStartedNew = false;
-        handelPlayers();
+    }
+
+
+    public ServiceProcess getProcess() {
+        return process;
     }
 
     @Override
     public void handelExecute(String line) {
-        if (interrupted && entry.getStatus() == TaskedServiceStatus.QUEUED) return;
-        NettyDriver.getInstance().nettyServer.sendPacket(entry.getServiceName(), new PackageHandelCommand(line));
+    }
+
+    @Override
+    public void handelSync() {
+        if (this.getEntry().getNode().equals("InternalNode")){
+            this.process.sync();
+           }else {
+            PackageToNodeHandelSync sync = new PackageToNodeHandelSync(getEntry().getServiceName());
+            NettyDriver.getInstance().nettyServer.sendPacket(getEntry().getNode(), sync);
+        }
     }
 
     @Override
     public void handelLaunch() {
-        interrupted = false;
         if (this.getEntry().getNode().equals("InternalNode")){
-
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+getEntry().getServiceName()+"§r' wird gestartet 'node: §f"+entry.getNode()+"§r, port: §f"+entry.getUsedPort()+"§r'",
+                    "The service '§f"+getEntry().getServiceName()+"§r' is starting 'node: §f"+entry.getNode()+"§r, port: §f"+entry.getUsedPort()+"§r'");
+            process = new ServiceProcess(Driver.getInstance().getGroupDriver().load(getEntry().getGroupName()), getEntry().getServiceName(), entry.getUsedPort(), entry.isUseProtocol());
+            process.handelLaunch();
         }else {
-
+            PackageToNodeHandelServiceLaunch launch = new PackageToNodeHandelServiceLaunch(entry.getServiceName(), entry.getGroupName(), entry.isUseProtocol());
+            NettyDriver.getInstance().nettyServer.sendPacket(getEntry().getNode(), launch);
         }
-
     }
 
     @Override
     public void handelQuit() {
-        this.interrupted = true;
-    }
-
-    @Override
-    public void handelPlayers() {
-        Group group = Driver.getInstance().getGroupDriver().load(entry.getGroupName());
-        final Integer need_players = (group.getMaxPlayers()/100) * group.getStartNewPercent();
-        TimerBase timerBase = new TimerBase();
-        timerBase.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (interrupted){
-                    timerBase.cancel();
-                    cancel();
-                }
-
-                if (entry.getCurrentPlayers() >= need_players){
-                    if (entry.getCheckInterval() == 6){
-                        if (hasStartedNew) {
-                           return;
-                        }
-                        ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
-                        hasStartedNew = true;
-                        if (entry.getNode().equals("InternalNode")){
-
-                            TaskedService taskedService = CloudManager.serviceDriver.register(new TaskedEntry(
-                                    CloudManager.serviceDriver.getFreePort(Driver.getInstance().getGroupDriver().load(entry.getGroupName()).getGroupType().equalsIgnoreCase("PROXY")),
-                                    getEntry().getGroupName(),
-                                    getEntry().getGroupName() + config.getSplitter() + CloudManager.serviceDriver.getFreeUUID(entry.getGroupName()),
-                                    "InternalNode"));
-
-                            taskedService.handelLaunch();
-                        }else {
-                            TaskedService taskedService = CloudManager.serviceDriver.register(new TaskedEntry(
-                                   -1,
-                                    getEntry().getGroupName(),
-                                    getEntry().getGroupName() + config.getSplitter() + CloudManager.serviceDriver.getFreeUUID(entry.getGroupName()),
-                                    getEntry().getNode()));
-
-                            taskedService.handelLaunch();
-                        }
-                    }else {
-                        entry.setCheckInterval(entry.getCheckInterval() +1);
-                    }
-                }if (entry.getCurrentPlayers() == 0 && entry.getStatus() == TaskedServiceStatus.LOBBY){
-
-                    if (entry.getCheckIntervalPlayers() != 12){
-                        entry.setCheckIntervalPlayers(entry.getCheckIntervalPlayers()+1);
-                    }else {
-                        int players = 0;
-                        List<TaskedService> services = CloudManager.serviceDriver.getServices(group.getGroup());
-                        for (int j = 0; j != services.size() ; j++) {
-                            TaskedService taskedService = services.get(j);
-                            players = players + taskedService.getEntry().getCurrentPlayers();
-                        }
-
-                        if (CloudManager.serviceDriver.entry.global_players > 100){
-                            int minimal = group.getOver100AtNetwork() * (CloudManager.serviceDriver.entry.global_player_potency +1);
-
-                            if (minimal < CloudManager.serviceDriver.getActiveServices(group.getGroup())){
-                                CloudManager.serviceDriver.unregister(entry.getServiceName());
-                            }
-                        }else if (players > 100){
-
-                            int minimal = group.getOver100AtGroup() * (CloudManager.serviceDriver.entry.group_player_potency.get(entry.getGroupName()) +1);
-
-                            if (minimal > CloudManager.serviceDriver.getActiveServices(group.getGroup())){
-                                CloudManager.serviceDriver.unregister(entry.getServiceName());
-                            }
-                        }else if (group.getMinimalOnline() > CloudManager.serviceDriver.getActiveServices(group.getGroup())){
-                            CloudManager.serviceDriver.unregister(entry.getServiceName());
-                        }
-                    }
-
-                }
+        if (this.getEntry().getNode().equals("InternalNode")){
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+getEntry().getServiceName()+"§r' wird angehalten",
+                    "The service '§f"+getEntry().getServiceName()+"§r' is stopping");
+            process.handelShutdown();
+        }else {
+            PackageToNodeHandelServiceExit exit = new PackageToNodeHandelServiceExit(entry.getServiceName());
+            if (  NettyDriver.getInstance().nettyServer.isChannelFound(entry.getNode())){
+                NettyDriver.getInstance().nettyServer.sendPacket(getEntry().getNode(), exit);
             }
-        }, 10, 10, TimeUtil.SECONDS);
+        }
     }
+
 
     @Override
     public void handelStatusChange(TaskedServiceStatus status) {
@@ -135,20 +79,24 @@ public class TaskedService implements ITaskedService {
             ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
             hasStartedNew = true;
             if (entry.getNode().equals("InternalNode")){
+                int freeMemory = Driver.getInstance().getMessageStorage().canUseMemory;
+                int memoryAfter = freeMemory- Driver.getInstance().getGroupDriver().load(entry.getGroupName()).getUsedMemory();
 
-                TaskedService taskedService = CloudManager.serviceDriver.register(new TaskedEntry(
-                        CloudManager.serviceDriver.getFreePort(Driver.getInstance().getGroupDriver().load(entry.getGroupName()).getGroupType().equalsIgnoreCase("PROXY")),
-                        getEntry().getGroupName(),
-                        getEntry().getGroupName() + config.getSplitter() + CloudManager.serviceDriver.getFreeUUID(entry.getGroupName()),
-                        "InternalNode"));
-
-                taskedService.handelLaunch();
+                if (memoryAfter >= 0){
+                    TaskedService taskedService = CloudManager.serviceDriver.register(new TaskedEntry(
+                            CloudManager.serviceDriver.getFreePort(Driver.getInstance().getGroupDriver().load(entry.getGroupName()).getGroupType().equalsIgnoreCase("PROXY")),
+                            getEntry().getGroupName(),
+                            getEntry().getGroupName() + config.getSplitter() + CloudManager.serviceDriver.getFreeUUID(entry.getGroupName()),
+                            "InternalNode", getEntry().isUseProtocol()));
+                    Driver.getInstance().getMessageStorage().canUseMemory  =Driver.getInstance().getMessageStorage().canUseMemory -  Driver.getInstance().getGroupDriver().load(entry.getGroupName()).getUsedMemory();
+                    taskedService.handelLaunch();
+                }
             }else {
                 TaskedService taskedService = CloudManager.serviceDriver.register(new TaskedEntry(
                         -1,
                         getEntry().getGroupName(),
                         getEntry().getGroupName() + config.getSplitter() + CloudManager.serviceDriver.getFreeUUID(entry.getGroupName()),
-                        getEntry().getNode()));
+                        getEntry().getNode(), getEntry().isUseProtocol()));
 
                 taskedService.handelLaunch();
             }

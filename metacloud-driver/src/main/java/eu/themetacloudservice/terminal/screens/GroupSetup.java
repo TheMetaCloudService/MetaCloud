@@ -432,12 +432,6 @@ public class GroupSetup {
                     ));
 
                     ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
-                    if (            Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("groupType").toString().equalsIgnoreCase("PROXY")){
-
-                        Driver.getInstance().getMessageStorage().packetLoader.loadBungee(config.getBungeecordVersion(),  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("template").toString());
-                    }else {
-                        Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion(),  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("template").toString());
-                    }
 
                     Driver.getInstance().getTerminalDriver().leaveSetup();
                 }

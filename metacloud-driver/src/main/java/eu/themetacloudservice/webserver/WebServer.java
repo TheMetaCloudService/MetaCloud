@@ -1,10 +1,10 @@
 package eu.themetacloudservice.webserver;
 
+import com.sun.net.httpserver.HttpServer;
 import eu.themetacloudservice.Driver;
 import eu.themetacloudservice.configuration.ConfigDriver;
 import eu.themetacloudservice.configuration.dummys.authenticator.AuthenticatorKey;
 import eu.themetacloudservice.configuration.dummys.managerconfig.ManagerConfig;
-import eu.themetacloudservice.configuration.dummys.nodeconfig.NodeConfig;
 import eu.themetacloudservice.webserver.entry.RouteEntry;
 import lombok.SneakyThrows;
 
@@ -12,15 +12,14 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class WebServer {
 
 
-    private ArrayList<RouteEntry> routes;
+    private final ArrayList<RouteEntry> routes;
     private ServerSocket webServer;
-    private boolean interrupted;
+    private Thread current;
+    private final boolean interrupted;
 
     public WebServer() {
         interrupted = false;
@@ -51,104 +50,73 @@ public class WebServer {
 
     @SneakyThrows
     private void HandelConnections(){
-
-        int port = 8090;
         AuthenticatorKey authConfig = (AuthenticatorKey) new ConfigDriver("./connection.key").read(AuthenticatorKey.class);
         String authCheckKey = Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey());
-        if (new File("./service.json").exists()){
-            ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
-            port = config.getRestApiCommunication();
-        }else {
-            NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
-            port = config.getRestApiCommunication();
-        }
-        
+        ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+        int port = config.getRestApiCommunication();
         this.webServer = new ServerSocket(port);
-        this.webServer.setPerformancePreferences(0, 2, 10);
-
-            new Thread(() -> {
-                    while (!interrupted){
-                        Socket connection = null;
-                        try {
-                            connection = this.webServer.accept();
-                        } catch (IOException e) {
-
-                        }
-                        try {
-
-                            connection.setPerformancePreferences(0, 2, 10);
-                            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                            String[] tokens = reader.readLine().split(" ");
-
-                            String method = tokens[0];
-                            String rawroute = tokens[1];
-
-                            if (rawroute.contains("/")){
-
-                             try {
-                                 String key = rawroute.split("/")[1];
-                                 String route = rawroute.replace("/"+key, "");
-
-                                 if (!key.equals(authCheckKey)){
-                                     sendResponse(connection, "error 404", "application/json", "{\"reason\":\"please enter your auth-key\"}");
-
-                                 }else {
-                                     if (method.equals("GET")) {
-                                         if (getRoute(route) != null) {
-                                             sendResponse(connection, "200 OK", "application/json", getRoute(route).GET());
-                                         } else {
-                                             sendResponse(connection, "error 404", "application/json", "{\"reason\":\"no data found\"}");
-                                         }
-                                     } else if (method.equals("PUT")) {
-                                         if (getRoute(route) != null) {
-                                             handlePut(route, connection, reader);
-                                         } else {
-                                             sendResponse(connection, "error 404", "application/json", "{\"reason\":\"no data found\"}");
-                                         }
-                                     } else {
-                                         sendResponse(connection, "error 404", "application/json", "{\"reason\":\"please enter GET ore PUT\"}");
-                                     }
-                                 }
-                             }catch (Exception e){
-                                 sendResponse(connection, "error 404", "application/json", "{\"reason\":\"please enter your auth-key\"}");
-                             }
-                            }else {
-                                sendResponse(connection, "error 404", "application/json", "{\"reason\":\"please enter your auth-key\"}");
-
+        current = new Thread(() -> {
+            while (!interrupted) {
+                Socket connection = null;
+                try {
+                    connection = webServer.accept();
+                    Socket finalConnection = connection;
+                    try {
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(finalConnection.getInputStream()));
+                        String[] tokens = reader.readLine().split(" ");
+                        String method = tokens[0];
+                        String rawroute = tokens[1];
+                        if (rawroute.contains("/") && rawroute.split("/")[1].equals(authCheckKey)) {
+                            String route = rawroute.replace("/" + rawroute.split("/")[1], "");
+                            if (method.equals("GET")) {
+                                sendResponse(finalConnection, "200 OK", getRoute(route).GET());
+                            } else if (method.equals("PUT")) {
+                                handlePut(route, finalConnection, reader);
+                            } else {
+                                sendResponse(finalConnection, "error 404", "{\"reason\":\"please enter GET ore PUT\"}");
                             }
-                        } catch (IOException e) {
-                        }finally {
-                            try {
-                                connection.close();
-                            } catch (IOException e) {
-                            }
+                        } else {
+                            sendResponse(finalConnection, "error 404", "{\"reason\":\"please enter your auth-key\"}");
                         }
+                        finalConnection.close();
+
+                    } catch (Exception e) {
+                        sendResponse(finalConnection, "error 404", "{\"reason\":\"please enter your auth-key\"}");
+
+                    }
+                } catch (IOException e) {
                 }
-            }).start();
 
+            }
+        });
+        current.setPriority(Thread.MIN_PRIORITY);
+        current.start();
+    }
+
+    public void close(){
+        current.stop();
     }
 
     private void handlePut(String path, Socket clientSocket, BufferedReader in) throws IOException {
-        // Beispiel für die Verarbeitung einer PUT-Anfrage
         String headerLine;
         int contentLength = 0;
         while ((headerLine = in.readLine()).length() != 0) {
             if (headerLine.startsWith("Content-Length:")) {
-                contentLength = Integer.parseInt(headerLine.split(" ")[1]);
+                contentLength = Integer.parseInt(headerLine.trim().split(":")[1]);
             }
         }
         char[] body = new char[contentLength];
         in.read(body, 0, contentLength);
         String data = new String(body);
         getRoute(path).PUT(data);
-        sendResponse(clientSocket, "200 OK", "application/json", "{\"reason\":\"data received\"}");
+        sendResponse(clientSocket, "200 OK", "{\"reason\":\"data received\"}");
     }
 
     @SneakyThrows
-    private void sendResponse(Socket connection, String status, String contentType, String response){
+    private void sendResponse(Socket connection, String status, String response){
         PrintWriter out = new PrintWriter(connection.getOutputStream(), true);
         out.println("HTTP/1.1 " + status);
-        out.println("Content-Type: " + contentType);
+        out.println("Content-Type: " + "application/json");
         out.println("Content-Length: " + response.length());
         out.println();
         out.println(response);

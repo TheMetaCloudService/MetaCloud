@@ -5,6 +5,7 @@ import eu.themetacloudservice.terminal.enums.Type;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Properties;
 
 public class ModuleDriver {
@@ -14,8 +15,12 @@ public class ModuleDriver {
 
     public void loadAllModules(){
         ArrayList<String> paths = getModules();
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Es wird versucht, die Module aus dem '§fModulverzeichnis§r' zu laden.",
+                "An attempt is made to load the modules in the '§fmodule directory§r'.");
+
         if (paths.isEmpty()) {
-            Driver.getInstance().getTerminalDriver().logSpeed(Type.MODULES, "es wurden keine §fModule§r gefunden", "no §fmodules§r were found");
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Das '§fModulverzeichnis§r' ist leer oder nicht vorhanden. Es können keine Module geladen werden",
+                    "The '§fmodule directory§r' is empty or does not exist. No modules can be loaded");
         return;
         }
 
@@ -64,9 +69,12 @@ public class ModuleDriver {
 
     private ArrayList<String> getModules() {
         File file = new File("./modules/");
+        if (!file.exists()){
+            return new ArrayList<>();
+        }
         File[] files = file.listFiles();
         ArrayList<String> modules = new ArrayList<>();
-        for (int i = 0; i < files.length; i++) {
+        for (int i = 0; i < Objects.requireNonNull(files).length; i++) {
             String FirstFilter = files[i].getName();
             String group = FirstFilter.split(".jar")[0];
             modules.add(group);

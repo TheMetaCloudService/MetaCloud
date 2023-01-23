@@ -1,20 +1,24 @@
-package eu.themetacloudservice.manager.queue;
+package eu.themetacloudservice.manager.cloudservices.queue;
 
+import eu.themetacloudservice.Driver;
 import eu.themetacloudservice.manager.CloudManager;
+import eu.themetacloudservice.manager.cloudservices.enums.TaskedServiceStatus;
+import eu.themetacloudservice.terminal.enums.Type;
 import eu.themetacloudservice.timebaser.TimerBase;
 import eu.themetacloudservice.timebaser.utils.TimeUtil;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.LinkedList;
+import java.util.TimerTask;
 
 public class QueueDriver {
 
-    private Queue<String> queue_startup;
-    private Queue<String> queue_shutdown;
+    private final LinkedList<String> queue_startup;
+    private final LinkedList<String> queue_shutdown;
 
     public QueueDriver() {
         this.queue_startup = new LinkedList<>();
         this.queue_shutdown = new LinkedList<>();
+        //Todo: fix the howl QueueSystem because they crashed the system
 
     }
 
@@ -26,45 +30,27 @@ public class QueueDriver {
         this.queue_shutdown.add(service);
     }
 
-    public List<String> getServicesInStartQueue(){
-        return  queue_startup.stream().collect(Collectors.toList());
-    }
-
-
-    public List<String> getServicesInStartQueue(String group){
-        return  queue_startup.stream().filter(s -> s.startsWith(group)).collect(Collectors.toList());
-    }
-
-
-    public List<String> getServicesInStopQueue(){
-        return  queue_shutdown.stream().collect(Collectors.toList());
-    }
-
-
-    public List<String> getServicesInStopQueue(String group){
-        return  queue_shutdown.stream().filter(s -> s.startsWith(group)).collect(Collectors.toList());
-    }
-
-
 
     public void handler(){
         TimerBase base = new TimerBase();
          base.schedule(new TimerTask() {
              @Override
              public void run() {
+                try {
 
-                 if (!queue_startup.isEmpty()){
-                     String service = queue_startup.poll();
-                     CloudManager.serviceDriver.getService(service).handelLaunch();
-                 }
-                 if (!queue_shutdown.isEmpty()){
-                     String service = queue_shutdown.poll();
-                     CloudManager.serviceDriver.getService(service).handelQuit();
-                     CloudManager.serviceDriver.unregister(service);
-                 }
+                    if (!queue_startup.isEmpty()){
+                        String service = queue_startup.removeFirst();
+                        CloudManager.serviceDriver.getService(service).handelStatusChange(TaskedServiceStatus.STARTED);
+                        CloudManager.serviceDriver.getService(service).handelLaunch();
+                    }else if (!queue_shutdown.isEmpty()){
+                        String service = queue_shutdown.removeFirst();
+                        CloudManager.serviceDriver.getService(service).handelQuit();
+                        CloudManager.serviceDriver.unregistered(service);
+                    }
+                }catch (Exception ignored){}
 
              }
-         }, 0, 10, TimeUtil.SECONDS);
+         }, 0, 1, TimeUtil.SECONDS);
     }
 
 }

@@ -13,7 +13,7 @@ import eu.themetacloudservice.networking.packet.listeners.IPacketListener;
 import eu.themetacloudservice.terminal.enums.Type;
 import io.netty.channel.ChannelHandlerContext;
 
-public class NodeNetworkChannel implements IPacketListener {
+public class NodeAuthChannel implements IPacketListener {
 
     @Override
     public void onReceive(ChannelHandlerContext paramChannelHandlerContext, Packet paramPacket) {

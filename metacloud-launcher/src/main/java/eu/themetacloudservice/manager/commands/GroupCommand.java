@@ -3,10 +3,12 @@ package eu.themetacloudservice.manager.commands;
 import eu.themetacloudservice.Driver;
 import eu.themetacloudservice.configuration.ConfigDriver;
 import eu.themetacloudservice.groups.dummy.Group;
+import eu.themetacloudservice.manager.CloudManager;
 import eu.themetacloudservice.terminal.commands.CommandAdapter;
 import eu.themetacloudservice.terminal.commands.CommandInfo;
 import eu.themetacloudservice.terminal.enums.Type;
 import eu.themetacloudservice.terminal.utils.TerminalStorageLine;
+
 import java.util.ArrayList;
 
 @CommandInfo(command = "group", aliases = {"g", "template", "temp"}, ENdescription = "here you can manage your groups", DEdescription = "hier kannst du deine Gruppen verwalten")
@@ -42,9 +44,10 @@ public class GroupCommand extends CommandAdapter {
                     String group = args[0];
                     if (Driver.getInstance().getGroupDriver().find(group)){
                         Driver.getInstance().getGroupDriver().delete(group);
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS,
                                 "die angegebene Gruppe '§f"+group+"§r' wurde erfolgreich gelöscht",
                                 "the specified group '§f"+group+"§r' was successfully deleted");
+                        CloudManager.serviceDriver.getServices(group).forEach(taskedService -> CloudManager.serviceDriver.unregister(taskedService.getEntry().getServiceName()));
                     }else {
                         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                                 "die Gruppe '§f"+group+"§r' wurde nicht gefunden",
@@ -56,7 +59,7 @@ public class GroupCommand extends CommandAdapter {
                     String group = args[0];
                     if (Driver.getInstance().getGroupDriver().find(group)){
                         Group raw = Driver.getInstance().getGroupDriver().load(group);
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS,
                                 "Dies ist die Konfiguration von §b" + group + "§r:§f\n" +new ConfigDriver().convert(raw),
                                 "this is the config from §b" + group + "§r:§f\n" + new ConfigDriver().convert(raw));
                     }else {
@@ -75,7 +78,7 @@ public class GroupCommand extends CommandAdapter {
                         Group raw = Driver.getInstance().getGroupDriver().load(group);
                         raw.setMaintenance(args[2].equalsIgnoreCase("true"));
                         Driver.getInstance().getGroupDriver().update(group, raw);
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS,
                                 "die Wartungsarbeiten der Gruppe '§f"+group+"§r' wurden geändert",
                                 "the maintenance of the '§f"+group+"§r' group has been changed");
                     }else {
@@ -91,7 +94,7 @@ public class GroupCommand extends CommandAdapter {
                             Group raw = Driver.getInstance().getGroupDriver().load(group);
                             raw.getStorage().setTemplate(args[2].replace(" ", ""));
                             Driver.getInstance().getGroupDriver().update(group, raw);
-                            Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                            Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS,
                                     "Die Vorlage wurde erfolgreich geändert",
                                     "The template was successfully modified");
                         }else {
@@ -104,10 +107,29 @@ public class GroupCommand extends CommandAdapter {
                                 "die Gruppe '§f"+group+"§r' wurde nicht gefunden",
                                 "the group '§f"+group+"§r' was not found");
                     }
+                }else if (args[1].equalsIgnoreCase("setminamount")) {
+                    String group = args[0];
+                    if (Driver.getInstance().getGroupDriver().find(group)){
+                        if(args[2].matches("[0-9]+")){
+                            Group raw = Driver.getInstance().getGroupDriver().load(group);
+                            raw.setMinimalOnline(Integer.valueOf(args[2]));
+                            Driver.getInstance().getGroupDriver().update(group, raw);
+                            Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS,
+                                    "Die Vorlage wurde erfolgreich geändert",
+                                    "The template was successfully modified");
+                        }else {
+                            Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                    "du kannst nur eine zahl angeben",
+                                    "you can only specify one number");
+                        }
+                    }else {
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "die Gruppe '§f"+group+"§r' wurde nicht gefunden",
+                                "the group '§f"+group+"§r' was not found");
+                    }
                 }else {
                     sendHelp();
                 }
-
             }else {
                 sendHelp();
             }
@@ -127,12 +149,13 @@ public class GroupCommand extends CommandAdapter {
             commands.add("info");
             commands.add("setmaintenace");
             commands.add("settemplate");
+            commands.add("setminamount");
         }
         if (args.length == 3){
             if (args[1].equalsIgnoreCase("setmaintenace")) {
                 commands.add("true");
                 commands.add("false");
-            }   if (args[1].equalsIgnoreCase("settemplate")) {
+            }  if (args[1].equalsIgnoreCase("settemplate")) {
                 ArrayList<String> rawtemplates = Driver.getInstance().getTemplateDriver().get();
                 commands.addAll(rawtemplates);
             }
@@ -157,6 +180,9 @@ public class GroupCommand extends CommandAdapter {
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fgroup <group> setmaintenace <true/false> §7~ um die Wartung ein- und wieder auszuschalten",
                 " >> §fgroup <group> setmaintenace <true/false> §7~ to switch the maintenance on and off again");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                " >> §fgroup <group> setminamount <count> §7~ die Anzahl der Server festlegen, die immer online sein sollen",
+                " >> §fgroup <group> setminamount <count> §7~ set the number of servers that should always be online");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fgroup <group> settemplate <template> §7~ um die Wartung ein- und wieder auszuschalten",
                 " >> §fgroup <group> settemplate <template> §7~ to switch the maintenance on and off again");

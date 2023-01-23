@@ -17,6 +17,7 @@ import java.util.Objects;
 public class MessageStorage {
     public String version = "SANDSTORM-1.0.0";
     public String language;
+    public Integer canUseMemory = 0;
     public PacketLoader packetLoader;
     public boolean shutdownAccept;
     public boolean finishSetup;
@@ -199,7 +200,7 @@ public class MessageStorage {
                 "enable-rcon=false\n" +
                 "motd=\"§8| §bMetaCloud §8- §7Server Service\"\n";
     }
-    public String getBungeeCordConfiguration(int port, int players){
+    public String getBungeeCordConfiguration(int port, int players, boolean useProtocol){
         return "server_connect_timeout: 5000\n" +
                 "remote_ping_cache: -1\n" +
                 "forge_support: true\n" +
@@ -227,7 +228,7 @@ public class MessageStorage {
                 "    restricted: false\n" +
                 "listeners:\n" +
                 "- query_port: "+port+"\n" +
-                "  motd: '&bMetaCloud &7- ProxyServer'\n" +
+                "  motd: '&bMetaCloud &7- proxy service'\n" +
                 "  tab_list: GLOBAL_PING\n" +
                 "  query_enabled: false\n" +
                 "  proxy_protocol: false\n" +

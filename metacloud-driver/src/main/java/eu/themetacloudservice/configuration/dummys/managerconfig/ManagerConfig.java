@@ -6,20 +6,38 @@ import java.util.ArrayList;
 
 public class ManagerConfig implements IConfigAdapter {
 
+    private String managerAddress;
     private String language;
     private String splitter;
-    private String managerAddress;
+    private String uuid;
+    private boolean useProtocol;
     private Integer canUsedMemory;
     private Integer bungeecordPort;
+    private Integer spigotPort;
     private String bungeecordVersion;
     private String spigotVersion;
-    private Integer spigotPort;
     private Integer networkingCommunication;
     private Integer restApiCommunication;
     private ArrayList<ManagerConfigNodes> nodes;
 
     public ManagerConfig(){
+    }
 
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public boolean getUseProtocol() {
+        return useProtocol;
+    }
+
+    public void setUseProtocol(boolean userProtocol) {
+        this.useProtocol = userProtocol;
     }
 
     public Integer getBungeecordPort() {

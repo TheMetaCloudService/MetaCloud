@@ -43,6 +43,9 @@ public class NettyClient {
         })).start();
     }
 
+    public void close(){
+        channel.close();
+    }
 
     public void setManager(Channel manager) {
         this.manager = manager;

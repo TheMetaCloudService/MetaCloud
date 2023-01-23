@@ -15,26 +15,49 @@ public class TemplateDriver implements ITemplateDriver {
 
 
     @Override
-    public void create(String template, boolean bungee) {
-        if (!new File("./local/templates/"+ template+ "/").exists()){
-            new File("./local/templates/"+ template+ "/").mkdirs();
-            if (new File("./service.json").exists()){
-                ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
-                if (bungee){
-                    Driver.getInstance().getMessageStorage().packetLoader.loadBungee(config.getBungeecordVersion(), template);
+    public void create(String template, boolean bungee, boolean isstatic) {
+        if (isstatic){
+            if (!new File("./local/templates/"+ template+ "/default/").exists()){
+                new File("./local/templates/"+ template+ "/default/").mkdirs();
+                if (new File("./service.json").exists()){
+                    ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+                    if (bungee){
+                        Driver.getInstance().getMessageStorage().packetLoader.loadBungee(config.getBungeecordVersion(), template+ "/default");
 
+                    }else {
+                        Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion().replace("-", "").replace(".", ""), template+ "/default");
+                    }
                 }else {
-                    Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion().replace("-", "").replace(".", ""), template);
+                    NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
+                    if (bungee){
+                        Driver.getInstance().getMessageStorage().packetLoader.loadBungee(config.getBungeecordVersion(), template + "/default");
+                    }else {
+                        Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion().replace("-", "").replace(".", ""), template+ "/default");
+                    }
                 }
-            }else {
-                NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
-                if (bungee){
-                    Driver.getInstance().getMessageStorage().packetLoader.loadBungee(config.getBungeecordVersion(), template);
+            }
+        }else {
+            if (!new File("./local/templates/"+ template+ "/").exists()){
+                new File("./local/templates/"+ template+ "/").mkdirs();
+                if (new File("./service.json").exists()){
+                    ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+                    if (bungee){
+                        Driver.getInstance().getMessageStorage().packetLoader.loadBungee(config.getBungeecordVersion(), template);
+
+                    }else {
+                        Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion().replace("-", "").replace(".", ""), template);
+                    }
                 }else {
-                    Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion().replace("-", "").replace(".", ""), template);
+                    NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
+                    if (bungee){
+                        Driver.getInstance().getMessageStorage().packetLoader.loadBungee(config.getBungeecordVersion(), template);
+                    }else {
+                        Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion().replace("-", "").replace(".", ""), template);
+                    }
                 }
             }
         }
+
 
     }
 

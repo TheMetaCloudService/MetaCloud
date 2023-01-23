@@ -1039,6 +1039,7 @@ public class MainSetup {
                 ManagerConfigNodes managerConfigNodes = new ManagerConfigNodes();
                 managerConfigNodes.setName("InternalNode");
                 managerConfigNodes.setAddress("127.0.0.1");
+                managerConfig.setUseProtocol(false);
 
                 managerConfig.setLanguage("DE");
                 ArrayList<ManagerConfigNodes> nodes = new ArrayList<>();
@@ -1051,6 +1052,7 @@ public class MainSetup {
                 managerConfig.setRestApiCommunication(8097);
                 managerConfig.setBungeecordPort(25565);
                 managerConfig.setSpigotPort(5000);
+                managerConfig.setUuid("INT");
                 managerConfig.setSplitter("-");
                 managerConfig.setNodes(nodes);
                 new ConfigDriver("./service.json").save(managerConfig);
@@ -1072,7 +1074,9 @@ public class MainSetup {
                 managerConfig.setSpigotVersion( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion").toString());
                 managerConfig.setNetworkingCommunication(7002);
                 managerConfig.setSplitter("-");
+                managerConfig.setUseProtocol(false);
                 managerConfig.setRestApiCommunication(8097);
+                managerConfig.setUuid("INT");
                 managerConfig.setBungeecordPort(25565);
                 managerConfig.setSpigotPort(5000);
                 managerConfig.setNodes(nodes);

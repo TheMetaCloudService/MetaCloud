@@ -7,6 +7,7 @@ import eu.themetacloudservice.terminal.completer.TerminalCompleter;
 import eu.themetacloudservice.terminal.enums.Color;
 import eu.themetacloudservice.terminal.enums.Type;
 import eu.themetacloudservice.terminal.logging.SimpleLatestLog;
+import eu.themetacloudservice.terminal.streams.TerminalError;
 import eu.themetacloudservice.terminal.utils.TerminalStorage;
 import eu.themetacloudservice.terminal.utils.TerminalStorageLine;
 import lombok.SneakyThrows;
@@ -16,6 +17,7 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.InfoCmp;
 import java.io.File;
+import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
@@ -44,19 +46,22 @@ public class TerminalDriver {
          * @FUNCTION: Terminal and reader with tapping in Jline3
          * @Coder: RauchigesEtwas (Robin B.)
          * */
+
+
+        System.setOut(new PrintStream(new TerminalError(Type.INFO), true));
+        System.setErr(new PrintStream(new TerminalError(Type.ERROR), true));
         this.setupStorage = new SetupStorage();
         this.commandDriver = new CommandDriver();
         this.mainScreenStorage = new LinkedList<>();
         this.inputs = new LinkedList<>();
         this.simpleLatestLog = new SimpleLatestLog();
-
-
         this.isInSetup = false;
         this.terminal = TerminalBuilder.builder()
                 .system(true)
                 .streams(System.in, System.out)
                 .encoding(StandardCharsets.UTF_8)
                 .dumb(true)
+                .name("META-CONSOLE")
                 .build();
 
         this.lineReader = LineReaderBuilder.builder()
@@ -65,11 +70,12 @@ public class TerminalDriver {
                 .option(LineReader.Option.AUTO_REMOVE_SLASH, false)
                 .option(LineReader.Option.INSERT_TAB, false)
                 .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
+                .appName("META-READER")
                 .build();
 
 
         Thread consoleReadingThread = new TerminalReader(this);
-        consoleReadingThread.setUncaughtExceptionHandler((t, e) -> e.printStackTrace());
+        consoleReadingThread.setPriority(Thread.MAX_PRIORITY);
         consoleReadingThread.start();
 
     }
@@ -144,15 +150,15 @@ public class TerminalDriver {
 
             this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
             for (int i = 0; i != en.length; i++){
-                this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase().replace("INFORMATION", "§aINFORMATION")
-                        .replace("ERROR", "§cERROR").replace("WARNING", "§eWARNING")+"§7: §r" + de[i] +Color.RESET.getAnsiCode()));
+                this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase().replace("INFORMATION", "§bINFORMATION")
+                        .replace("ERROR", "§cERROR").replace("WARNING", "§eWARN")+"§7: §r" + de[i] +Color.RESET.getAnsiCode()));
                 this.lineReader.getTerminal().writer().flush();
             }
         }else {
             this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
             for (int i = 0; i != en.length; i++){
-                this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase().replace("INFORMATION", "§aINFORMATION")
-                        .replace("ERROR", "§cERROR").replace("WARNING", "§eWARNING")+"§7: §r" + en[i] +Color.RESET.getAnsiCode()));
+                this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase().replace("INFORMATION", "§bINFORMATION")
+                        .replace("ERROR", "§cERROR").replace("WARNING", "§eWARN")+"§7: §r" + en[i] +Color.RESET.getAnsiCode()));
 
                 this.lineReader.getTerminal().writer().flush();
             }
@@ -163,8 +169,8 @@ public class TerminalDriver {
 
         this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
         for (int i = 0; i != messages.length ; i++) {
-            this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase().replace("INFORMATION", "§aINFORMATION")
-                    .replace("ERROR", "§cERROR").replace("WARNING", "§eWARNING")+"§7: §r" + messages[i] +Color.RESET.getAnsiCode()));
+            this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase().replace("INFORMATION", "§bINFORMATION")
+                    .replace("ERROR", "§cERROR").replace("WARNING", "§eWARN")+"§7: §r" + messages[i] +Color.RESET.getAnsiCode()));
             simpleLatestLog.log(getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase()+"§7: §r" + messages[i] +Color.RESET.getAnsiCode()));
             simpleLatestLog.saveLogs();
             this.lineReader.getTerminal().writer().flush();
@@ -194,24 +200,24 @@ public class TerminalDriver {
             }else if (type == Type.ERROR){
 
                 this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
-                this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §C"+type.toString().toUpperCase()+"§7: §r" + message + Color.RESET.getAnsiCode()));
-                simpleLatestLog.log(getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §C"+type.toString().toUpperCase()+"§7: §r" + message +Color.RESET.getAnsiCode()));
+                this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §c"+type.toString().toUpperCase()+"§7: §r" + message + Color.RESET.getAnsiCode()));
+                simpleLatestLog.log(getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §c"+type.toString().toUpperCase()+"§7: §r" + message +Color.RESET.getAnsiCode()));
                 simpleLatestLog.saveLogs();
                 this.lineReader.getTerminal().writer().flush();
                 if (!this.lineReader.isReading()) return;
                 this.lineReader.callWidget(LineReader.REDRAW_LINE);
                 this.lineReader.callWidget(LineReader.REDISPLAY);
-            }else if (type == Type.INFORMATION){
+            }else if (type == Type.INFO){
 
                 this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
-                this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §a"+type.toString().toUpperCase()+"§7: §r" + message + Color.RESET.getAnsiCode()));
-                simpleLatestLog.log(getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §a"+type.toString().toUpperCase()+"§7: §r" + message +Color.RESET.getAnsiCode()));
+                this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase()+"§7: §r" + message + Color.RESET.getAnsiCode()));
+                simpleLatestLog.log(getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase()+"§7: §r" + message +Color.RESET.getAnsiCode()));
                 simpleLatestLog.saveLogs();
                 this.lineReader.getTerminal().writer().flush();
                 if (!this.lineReader.isReading()) return;
                 this.lineReader.callWidget(LineReader.REDRAW_LINE);
                 this.lineReader.callWidget(LineReader.REDISPLAY);
-            }else if (type == Type.WARNING){
+            }else if (type == Type.WARN){
 
                 this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
                 this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase()+"§7: §r" + message + Color.RESET.getAnsiCode()));
