@@ -16,6 +16,9 @@
   </p>
 </p>
 
+
+<!!> The CloudSystem is still in Developeing
+
 ## Requirements
 
  * Java 8
@@ -28,7 +31,7 @@
 
 - Plug & Play with an easy setup
 - Language-System (German & English)
-- **Dynamic** and **static** launch of tasks
+- **Dynamic** and **static** launch of Services
 - Template system with groups
 - Powerful **API**
 - Powerful **REST-API**
