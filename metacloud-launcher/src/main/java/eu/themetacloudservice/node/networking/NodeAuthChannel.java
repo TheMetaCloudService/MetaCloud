@@ -46,12 +46,9 @@ public class NodeAuthChannel implements IPacketListener {
 
     @Override
     public void onConnect(ChannelHandlerContext paramChannelHandlerContext) {
-        if (paramChannelHandlerContext == null) return;
-
     }
 
     @Override
     public void onDisconnect(ChannelHandlerContext paramChannelHandlerContext) {
-        if (paramChannelHandlerContext == null) return;
     }
 }

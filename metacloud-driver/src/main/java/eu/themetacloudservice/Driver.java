@@ -1,6 +1,7 @@
 package eu.themetacloudservice;
 
 
+import eu.themetacloudservice.events.EventDriver;
 import eu.themetacloudservice.groups.GroupDriver;
 import eu.themetacloudservice.groups.TemplateDriver;
 import eu.themetacloudservice.module.ModuleDriver;
@@ -16,7 +17,9 @@ public class Driver {
     private final GroupDriver groupDriver;
     private final TemplateDriver templateDriver;
     private final ModuleDriver moduleDriver;
+    private final EventDriver eventDriver;
     private WebServer webServer;
+
 
     public Driver(){
         /*
@@ -28,7 +31,12 @@ public class Driver {
         this.moduleDriver = new ModuleDriver();
         this.messageStorage = new MessageStorage();
         this.templateDriver = new TemplateDriver();
+        this.eventDriver = new EventDriver();
 
+    }
+
+    public EventDriver getEventDriver() {
+        return eventDriver;
     }
 
     public ModuleDriver getModuleDriver() {

@@ -3,16 +3,19 @@ package eu.themetacloudservice.manager.commands;
 import eu.themetacloudservice.Driver;
 import eu.themetacloudservice.configuration.ConfigDriver;
 import eu.themetacloudservice.configuration.dummys.managerconfig.ManagerConfig;
+import eu.themetacloudservice.configuration.dummys.managerconfig.ManagerConfigNodes;
 import eu.themetacloudservice.groups.dummy.Group;
 import eu.themetacloudservice.manager.CloudManager;
 import eu.themetacloudservice.manager.cloudservices.entry.TaskedEntry;
 import eu.themetacloudservice.manager.cloudservices.entry.TaskedService;
+import eu.themetacloudservice.networking.NettyDriver;
 import eu.themetacloudservice.terminal.commands.CommandAdapter;
 import eu.themetacloudservice.terminal.commands.CommandInfo;
 import eu.themetacloudservice.terminal.enums.Type;
 import eu.themetacloudservice.terminal.utils.TerminalStorageLine;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 @CommandInfo(command = "service", DEdescription = "verwalte alle Services", ENdescription = "manage all services", aliases = {"serv", "task"})
 public class ServiceCommand extends CommandAdapter {
@@ -29,7 +32,13 @@ public class ServiceCommand extends CommandAdapter {
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND, "Es wurden keine Services gefunden", "no services were found");
                     return;
                 }
-                CloudManager.serviceDriver.getServices().forEach(taskedService -> Driver.getInstance().getTerminalDriver().log(Type.COMMAND, taskedService.getEntry().getServiceName() + "~" + taskedService.getEntry().getStatus().toString() + "-" + taskedService.getEntry().getNode()));
+                ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+                config.getNodes().stream().filter(managerConfigNodes -> managerConfigNodes.getName().equalsIgnoreCase("InternalNode") || NettyDriver.getInstance().nettyServer.isChannelFound(managerConfigNodes.getName())).forEach(managerConfigNodes -> {
+                    Driver.getInstance().getTerminalDriver().log(Type.COMMAND, managerConfigNodes.getName()+": ");
+                    CloudManager.serviceDriver.getServices().stream().filter(taskedService -> taskedService.getEntry().getNode().equalsIgnoreCase(managerConfigNodes.getName())).forEach(taskedService -> {
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, " > "+taskedService.getEntry().getServiceName() + "~" + taskedService.getEntry().getStatus().toString() + "-" + taskedService.getEntry().getUsedPort());
+                    });
+                });
             }else {
                 sendHelp();
             }

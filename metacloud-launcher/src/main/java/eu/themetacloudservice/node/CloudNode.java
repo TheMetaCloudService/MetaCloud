@@ -15,8 +15,7 @@ import eu.themetacloudservice.network.nodes.to.PackageToNodeHandelServiceLaunch;
 import eu.themetacloudservice.network.nodes.to.PackageToNodeHandelSync;
 import eu.themetacloudservice.networking.NettyDriver;
 import eu.themetacloudservice.networking.client.NettyClient;
-import eu.themetacloudservice.networking.packet.Packet;
-import eu.themetacloudservice.node.cloudservices.NodeServiceDriver;
+import eu.themetacloudservice.node.cloudservices.CloudServiceDriver;
 import eu.themetacloudservice.node.commands.HelpCommand;
 import eu.themetacloudservice.node.commands.StopCommand;
 import eu.themetacloudservice.node.networking.NodeAuthChannel;
@@ -28,14 +27,13 @@ import java.io.File;
 
 public class CloudNode {
 
-    public static NodeServiceDriver serviceDriver;
+    public  static  CloudServiceDriver cloudServiceDriver;
 
     public CloudNode() {
         new File("./modules/").mkdirs();
         new File("./local/GLOBAL/").mkdirs();
         new File("./local/templates/").mkdirs();
-
-        serviceDriver = new NodeServiceDriver();
+        cloudServiceDriver = new CloudServiceDriver();
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Es wird versucht, den '§fCloud Node§r' zu starten",
                 "an attempt is made to start the '§fcloud node§r'");
         NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
@@ -73,6 +71,10 @@ public class CloudNode {
     public static void shutdownHook(){
 
         NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
+
+
+        cloudServiceDriver.shutdownALLFORCE();
+
         NettyDriver.getInstance().nettyClient.sendPacket(new PackageToManagerHandelNodeShutdown(config.getNodeName()));
         NettyDriver.getInstance().nettyClient.close();
 

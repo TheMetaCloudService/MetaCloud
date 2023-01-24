@@ -1,2 +1,4 @@
-package eu.themetacloudservice.events.dummys.nodebased;public class NodeDisconnectEvent {
+package eu.themetacloudservice.events.dummys.nodebased;
+
+public class NodeDisconnectEvent {
 }

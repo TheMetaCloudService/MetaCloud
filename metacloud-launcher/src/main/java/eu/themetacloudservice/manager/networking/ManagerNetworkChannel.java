@@ -84,6 +84,7 @@ public class ManagerNetworkChannel implements IPacketListener {
             PackageToManagerCallBackServiceLaunch launch = (PackageToManagerCallBackServiceLaunch)paramPacket;
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+launch.getService()+"§r' wird gestartet 'node: §f"+launch.getNode()+"§r, port: §f"+launch.getPort()+"§r'",
                     "The service '§f"+launch.getService()+"§r' is starting 'node: §f"+launch.getNode()+"§r, port: §f"+launch.getPort()+"§r'");
+            CloudManager.serviceDriver.getService(launch.getService()).getEntry().setUsedPort(launch.getPort());
 
         }if (paramPacket instanceof PackageToManagerCallBackServiceExit){
             PackageToManagerCallBackServiceExit launch = (PackageToManagerCallBackServiceExit)paramPacket;

@@ -377,6 +377,11 @@ public class CloudServiceDriver implements ICloudServiceDriver {
 
                                             }
                                         }else {
+                                            try {
+                                                Thread.sleep(1000);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
                                             String id = "";
                                             if (config.getUuid().equals("INT")){
                                                 id = String.valueOf(CloudManager.serviceDriver.getFreeUUID( group.getGroup()));
@@ -398,7 +403,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                                 });
                     }catch (Exception ignored){}
                 }
-            }, 0, 20, TimeUtil.SECONDS);
+            }, 0, 10, TimeUtil.SECONDS);
         });
         current.setPriority(1);
         current.start();

@@ -40,7 +40,7 @@ public final class TerminalReader extends Thread{
                 }else {
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND, "der eingegebene Befehl wurde nicht gefunden bitte tippe '§fhelp§r'", "the entered command was not found please type '§fhelp§r");
                 }
-            }catch (Exception e){}
+            }catch (Exception ignored){}
         }
     }
 }

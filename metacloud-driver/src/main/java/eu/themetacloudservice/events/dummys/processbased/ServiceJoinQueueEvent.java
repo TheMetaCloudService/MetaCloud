@@ -1,2 +1,8 @@
-package eu.themetacloudservice.events.dummys;public class ServiceJoinQueueEvent {
+package eu.themetacloudservice.events.dummys.processbased;
+
+import eu.themetacloudservice.events.entry.IEventAdapter;
+
+public class ServiceJoinQueueEvent extends IEventAdapter {
+
+
 }

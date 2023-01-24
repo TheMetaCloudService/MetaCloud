@@ -8,13 +8,13 @@ eu\themetacloudservice\node\commands\HelpCommand.class
 eu\themetacloudservice\manager\commands\NodeCommand.class
 eu\themetacloudservice\node\CloudNode.class
 eu\themetacloudservice\manager\commands\MetaCloudCommand.class
-eu\themetacloudservice\node\cloudservices\NodeServiceDriver.class
 eu\themetacloudservice\manager\cloudservices\CloudServiceDriver.class
 eu\themetacloudservice\CloudBoot$1.class
 eu\themetacloudservice\manager\cloudservices\CloudServiceDriver$3.class
 eu\themetacloudservice\node\commands\StopCommand.class
 eu\themetacloudservice\CloudBoot.class
 eu\themetacloudservice\manager\cloudservices\queue\QueueDriver.class
+eu\themetacloudservice\node\cloudservices\CloudServiceDriver$1.class
 eu\themetacloudservice\manager\cloudservices\CloudServiceDriver$2.class
 eu\themetacloudservice\node\commands\StopCommand$1.class
 eu\themetacloudservice\manager\cloudservices\entry\TaskedEntry.class
@@ -25,9 +25,10 @@ eu\themetacloudservice\manager\commands\ClearCommand.class
 eu\themetacloudservice\manager\commands\StopCommand$1.class
 eu\themetacloudservice\manager\cloudservices\entry\TaskedService.class
 eu\themetacloudservice\manager\commands\StopCommand.class
+eu\themetacloudservice\node\cloudservices\CloudServiceDriver.class
 eu\themetacloudservice\manager\cloudservices\interfaces\ITaskedService.class
-eu\themetacloudservice\node\cloudservices\interfaces\INodeServiceDriver.class
 eu\themetacloudservice\manager\networking\ManagerNetworkChannel.class
 eu\themetacloudservice\manager\commands\GroupCommand.class
+eu\themetacloudservice\node\cloudservices\entry\QueueEntry.class
 eu\themetacloudservice\manager\cloudservices\entry\NetworkEntry.class
 eu\themetacloudservice\manager\commands\ServiceCommand.class

@@ -120,17 +120,20 @@ public class ServiceProcess {
 
         LiveService liveService = new LiveService();
         liveService.setService(service);
+
         liveService.setGroup(group.getGroup());
         liveService.setPort(port);
         if (new File("./service.json").exists()){
             ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
             liveService.setManagerAddress(config.getManagerAddress());
+            liveService.setRunningNode("InternalNode");
             liveService.setRestPort(config.getRestApiCommunication());
             liveService.setNetworkPort(config.getNetworkingCommunication());
         }else {
             NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
             liveService.setManagerAddress(config.getManagerAddress());
             liveService.setRestPort(config.getRestApiCommunication());
+            liveService.setRunningNode(config.getNodeName());
             liveService.setNetworkPort(config.getNetworkingCommunication());
         }
         new ConfigDriver("./live/" + group.getGroup() + "/" + service + "/CLOUDSERVICE.json").save(liveService);
@@ -147,12 +150,25 @@ public class ServiceProcess {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        try {
+            FileUtils.copyFile(new File("./connection.key"), new File("./live/" + group.getGroup() + "/" + service+ "/connection.key"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.directory(new File("./live/" + group.getGroup() + "/" + service + "/"));
         if (group.getGroupType().equals("PROXY")) {
             String[] command = new String[]{
                     "java",
+                    "-XX:+UseG1GC",
+                    "-XX:MaxGCPauseMillis=50",
+                    "-XX:-UseAdaptiveSizePolicy",
+                    "-XX:CompileThreshold=100",
+                    "-Dcom.mojang.eula.agree=true",
+                    "-Dio.netty.recycler.maxCapacity=0",
+                    "-Dio.netty.recycler.maxCapacity.default=0",
+                    "-Djline.terminal=jline.UnsupportedTerminal",
                     "-Xmx" + group.getUsedMemory() + "M",
                     "-jar",
                     "server.jar"

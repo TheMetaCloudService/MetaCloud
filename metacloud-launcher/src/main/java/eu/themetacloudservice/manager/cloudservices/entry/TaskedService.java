@@ -52,7 +52,7 @@ public class TaskedService implements ITaskedService {
             process = new ServiceProcess(Driver.getInstance().getGroupDriver().load(getEntry().getGroupName()), getEntry().getServiceName(), entry.getUsedPort(), entry.isUseProtocol());
             process.handelLaunch();
         }else {
-            PackageToNodeHandelServiceLaunch launch = new PackageToNodeHandelServiceLaunch(entry.getServiceName(), entry.getGroupName(), entry.isUseProtocol());
+            PackageToNodeHandelServiceLaunch launch = new PackageToNodeHandelServiceLaunch(entry.getServiceName(), new ConfigDriver().convert(Driver.getInstance().getGroupDriver().load(getEntry().getGroupName())), entry.isUseProtocol());
             NettyDriver.getInstance().nettyServer.sendPacket(getEntry().getNode(), launch);
         }
     }

@@ -7,7 +7,7 @@ public class TaskedEntry {
     private int current_players;
     private int check_interval;
     private int check_interval_players;
-    private final int used_port;
+    private int used_port;
     private final String group_name;
     private final String service_name;
     private final String task_node;
@@ -26,6 +26,10 @@ public class TaskedEntry {
         this.use_protocol = use_protocol;
     }
 
+
+    public void setUsedPort(int used_port) {
+        this.used_port = used_port;
+    }
 
     public boolean isUseProtocol() {
         return use_protocol;

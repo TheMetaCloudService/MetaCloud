@@ -1,2 +1,4 @@
-package eu.themetacloudservice.events.dummys.processbased;public class ServiceConnectedEvent {
+package eu.themetacloudservice.events.dummys.processbased;
+
+public class ServiceConnectedEvent {
 }

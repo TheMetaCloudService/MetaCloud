@@ -1,4 +1,4 @@
-package io.metacloud.events.bin;
+package eu.themetacloudservice.events.entry;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

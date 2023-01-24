@@ -1,2 +1,4 @@
-package eu.themetacloudservice.events.dummys.cloudplayer;public class CloudPlayerConnectEvent {
+package eu.themetacloudservice.events.dummys.cloudplayerbased;
+
+public class CloudPlayerConnectEvent {
 }
