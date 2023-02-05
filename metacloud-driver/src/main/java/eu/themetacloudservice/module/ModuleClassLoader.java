@@ -29,7 +29,6 @@ public class ModuleClassLoader {
     }
 
 
-
     public Properties readProperties(){
         try (JarFile jarFile = new JarFile(file)) {
             JarEntry jarEntry = jarFile.getJarEntry("module.properties");

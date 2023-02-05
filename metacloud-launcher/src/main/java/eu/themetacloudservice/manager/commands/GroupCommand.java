@@ -23,6 +23,7 @@ public class GroupCommand extends CommandAdapter {
             if (args[0].equalsIgnoreCase("create")){
                 Driver.getInstance().getMessageStorage().setuptype= "GROUP";
                 Driver.getInstance().getTerminalDriver().joinSetup();
+
             }else if (args[0].equalsIgnoreCase("list")){
                 if ( Driver.getInstance().getGroupDriver().getAll().isEmpty()){
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND, "es wurde keine gruppe gefunden '§fgroup create§r'", "no group was found '§fgroup create§7'");

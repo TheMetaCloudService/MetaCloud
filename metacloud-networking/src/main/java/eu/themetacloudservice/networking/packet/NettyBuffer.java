@@ -1,19 +1,27 @@
 package eu.themetacloudservice.networking.packet;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.netty.buffer.ByteBuf;
+import lombok.SneakyThrows;
 
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class NettyBuffer {
 
     private ByteBuf byteBuf;
+    protected static final Gson GSON = (new GsonBuilder()).serializeNulls().setPrettyPrinting().disableHtmlEscaping().create();
 
     public NettyBuffer(ByteBuf byteBuf) {
         this.byteBuf = byteBuf;
     }
-
 
     public void writeString(String message){
         byteBuf.writeInt(message.length());
@@ -45,6 +53,16 @@ public class NettyBuffer {
         byteBuf.writeDouble(dub);
     }
 
+    public void writeClass(Object o){
+        writeString( GSON.toJson(o));
+    }
+
+    @SneakyThrows
+    public Object readClass(Class<?> c){
+        String read = readString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(read, c);
+    }
 
     public void writeFloat(float fla){
         byteBuf.writeFloat(fla);
@@ -62,7 +80,6 @@ public class NettyBuffer {
         return byteBuf.readChar();
     }
 
-
     public Double readDouble(){
         return byteBuf.readDouble();
     }
@@ -74,6 +91,27 @@ public class NettyBuffer {
         return byteBuf.readBoolean();
     }
 
+
+    @SneakyThrows
+    public void writeMap(HashMap map){
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(map);
+        byte[] bytes = baos.toByteArray();
+        byteBuf.writeBytes(bytes);
+
+    }
+
+    @SneakyThrows
+    public HashMap readMap(){
+        byte[] bytes = new byte[byteBuf.readableBytes()];
+        byteBuf.readBytes(bytes);
+
+        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+        ObjectInputStream ois = new ObjectInputStream(bais);
+        return (HashMap) ois.readObject();
+    }
 
     public void writeList(ArrayList list){
         byteBuf.writeInt(list.size()*2);

@@ -1,6 +1,7 @@
 package eu.themetacloudservice.terminal;
 
 import eu.themetacloudservice.Driver;
+import eu.themetacloudservice.configuration.ConfigDriver;
 import eu.themetacloudservice.storage.SetupStorage;
 import eu.themetacloudservice.terminal.commands.CommandDriver;
 import eu.themetacloudservice.terminal.completer.TerminalCompleter;
@@ -10,6 +11,7 @@ import eu.themetacloudservice.terminal.logging.SimpleLatestLog;
 import eu.themetacloudservice.terminal.streams.TerminalError;
 import eu.themetacloudservice.terminal.utils.TerminalStorage;
 import eu.themetacloudservice.terminal.utils.TerminalStorageLine;
+import eu.themetacloudservice.webserver.entry.RouteEntry;
 import lombok.SneakyThrows;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -106,6 +108,7 @@ public class TerminalDriver {
             Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP, "Welche Sprache möchten Sie haben?", "What language would you like to have?");
             Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP, "Mögliche Antworten: §fDE, §fEN", "Possible answers: §fDE, §fEN");
         }else if (Driver.getInstance().getMessageStorage().setuptype.equalsIgnoreCase("GROUP")){
+
             Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP, "Wie soll die Gruppe heißen?", "What should the group be called?");
         }
     }
@@ -113,7 +116,15 @@ public class TerminalDriver {
     public void leaveSetup(){
         clearScreen();
         this.isInSetup = false;
-
+        if (Driver.getInstance().getMessageStorage().setuptype.equalsIgnoreCase("GROUP")){
+            Driver.getInstance().getGroupDriver().getAll().forEach(group -> {
+                if (Driver.getInstance().getWebServer().getRoute("/"+group.getGroup()) == null){
+                    Driver.getInstance().getWebServer().addRoute(new RouteEntry("/" + group.getGroup(), new ConfigDriver().convert(group)));
+                }else {
+                    Driver.getInstance().getWebServer().updateRoute("/" + group.getGroup(), new ConfigDriver().convert(group));
+                }
+            });
+        }
         this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
         for (int i = 0; i != this.mainScreenStorage.size(); i++) {
                 TerminalStorage storage = this.mainScreenStorage.get(i);

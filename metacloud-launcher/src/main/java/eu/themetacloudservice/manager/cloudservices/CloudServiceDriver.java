@@ -3,6 +3,9 @@ package eu.themetacloudservice.manager.cloudservices;
 import eu.themetacloudservice.Driver;
 import eu.themetacloudservice.configuration.ConfigDriver;
 import eu.themetacloudservice.configuration.dummys.managerconfig.ManagerConfig;
+import eu.themetacloudservice.configuration.dummys.message.Messages;
+import eu.themetacloudservice.events.dummys.processbased.ServiceDisconnectedEvent;
+import eu.themetacloudservice.events.dummys.processbased.ServiceJoinQueueEvent;
 import eu.themetacloudservice.groups.dummy.Group;
 import eu.themetacloudservice.manager.CloudManager;
 import eu.themetacloudservice.manager.cloudservices.entry.NetworkEntry;
@@ -10,12 +13,17 @@ import eu.themetacloudservice.manager.cloudservices.entry.TaskedEntry;
 import eu.themetacloudservice.manager.cloudservices.entry.TaskedService;
 import eu.themetacloudservice.manager.cloudservices.enums.TaskedServiceStatus;
 import eu.themetacloudservice.manager.cloudservices.interfaces.ICloudServiceDriver;
+import eu.themetacloudservice.network.service.PackageRegisterServiceToALL;
+import eu.themetacloudservice.network.service.PackageShutdownServiceToALL;
 import eu.themetacloudservice.networking.NettyDriver;
 import eu.themetacloudservice.terminal.enums.Type;
 import eu.themetacloudservice.timebaser.TimerBase;
 import eu.themetacloudservice.timebaser.utils.TimeUtil;
+import eu.themetacloudservice.webserver.entry.RouteEntry;
 
+import java.awt.dnd.DropTarget;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -40,22 +48,37 @@ public class CloudServiceDriver implements ICloudServiceDriver {
             this.entry.group_player_potency.put(entry.getGroupName(), 0);
         }
         this.services.add(new TaskedService(entry));
+        NettyDriver.getInstance().nettyServer.sendToAllPackets(new PackageRegisterServiceToALL(entry.getServiceName(), entry.getNode()));
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+entry.getServiceName()+"§r' wurde zur Queue '§fSTART-SERVICES§r' hinzugefügt",
                 "the service '"+entry.getServiceName()+"' was added to the queue '§fSTART-SERVICES§r'");
+        Driver.getInstance().getEventDriver().executeEvent(new ServiceJoinQueueEvent(entry.getServiceName(), entry.getNode()));
         CloudManager.queueDriver.addQueuedObjectToStart(entry.getServiceName());
         return getService(entry.getServiceName());
     }
 
     @Override
     public void unregister(String service) {
+        if (getService(service) == null) return;
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+service+"§r' wurde zur Queue '§fSTOP-SERVICES§r' hinzugefügt",
                 "the service '"+service+"' was added to the queue '§fSTOP-SERVICES§r'");
-        CloudManager.queueDriver.addQueuedObjectToShutdown(service);
 
+        Driver.getInstance().getEventDriver().executeEvent(new ServiceDisconnectedEvent(service));
+        if (NettyDriver.getInstance().nettyServer.isChannelFound(service)) {
+            NettyDriver.getInstance().nettyServer.removeChannel(service);
+        }
+        NettyDriver.getInstance().nettyServer.sendToAllPackets(new PackageShutdownServiceToALL(service));
+        CloudManager.queueDriver.addQueuedObjectToShutdown(service);
     }
 
     @Override
     public void unregistered(String service) {
+        if (NettyDriver.getInstance().nettyServer.isChannelFound(service)) {
+            NettyDriver.getInstance().nettyServer.removeChannel(service);
+        }
+
+        Driver.getInstance().getEventDriver().executeEvent(new ServiceDisconnectedEvent(service));
+
+        NettyDriver.getInstance().nettyServer.sendToAllPackets(new PackageShutdownServiceToALL(service));
         services.removeIf(taskedService -> taskedService.getEntry().getServiceName().equals(service));
     }
 
@@ -63,7 +86,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
     public Integer getFreeUUID(String group) {
         Group gs = Driver.getInstance().getGroupDriver().load(group);
         if (gs == null) return 0;
-        int maximalTasks = gs.getMaximalOnline() == -1 ? Integer.MAX_VALUE : gs.getMaximalOnline();
+        int maximalTasks = gs.getMaximalOnline() == -1 ? Integer.MAX_VALUE : gs.getMaximalOnline() +1;
         return IntStream.range(1, maximalTasks)
                 .filter(i -> !getServices(group).stream()
                         .map(s -> Integer.parseInt(s.getEntry().getServiceName().replace(group, "").replace(config.getSplitter(), "")))
@@ -139,206 +162,10 @@ public class CloudServiceDriver implements ICloudServiceDriver {
 
                     }
                 }
-            }, 40, 40, TimeUtil.SECONDS);
+            }, 20, 20, TimeUtil.SECONDS);
 
             //packet 2
-            new TimerBase().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    if (CloudManager.shutdown){
-                        cancel();
-                    }
-                    try {
-                        Driver.getInstance().getGroupDriver().getAll().parallelStream()
-                                .filter(group -> {
-                                    int players = getServices(group.getGroup()).stream()
-                                            .mapToInt(value -> value.getEntry().getCurrentPlayers()).sum();
-                                    return players > 100;
-                                })
-                                .filter(group -> (group.getOver100AtGroup() * (CloudManager.serviceDriver.entry.group_player_potency.get(group.getGroup()) +1)) < getActiveServices(group.getGroup()))
-                                .forEach(group -> {
-                                    int newMinimal = (group.getOver100AtGroup() * (CloudManager.serviceDriver.entry.group_player_potency.get(group.getGroup()) +1))- getActiveServices(group.getGroup());
-                                    for (int i = 0; i != newMinimal ; i++) {
-                                        if (group.getStorage().getRunningNode().equals("InternalNode")){
-                                            int memoryAfter = Driver.getInstance().getMessageStorage().canUseMemory- group.getUsedMemory();
-                                            if (memoryAfter >= 0){
 
-                                                String id = "";
-                                                if (config.getUuid().equals("INT")){
-                                                    id = String.valueOf(CloudManager.serviceDriver.getFreeUUID( group.getGroup()));
-                                                }else if (config.getUuid().equals("RANDOM")){
-                                                    id = getFreeUUID();
-                                                }
-
-                                                CloudManager.serviceDriver.register(new TaskedEntry(
-                                                        getFreePort(group.getGroupType().equalsIgnoreCase("PROXY")),
-                                                        group.getGroup(),
-                                                        group.getGroup() + config.getSplitter() + id,
-                                                        group.getStorage().getRunningNode(), config.getUseProtocol()));
-                                                Driver.getInstance().getMessageStorage().canUseMemory  =Driver.getInstance().getMessageStorage().canUseMemory - group.getUsedMemory();
-                                            }else return;
-                                        }else {
-                                            String id = "";
-                                            if (config.getUuid().equals("INT")){
-                                                id = String.valueOf(CloudManager.serviceDriver.getFreeUUID( group.getGroup()));
-                                            }else if (config.getUuid().equals("RANDOM")){
-                                                id = getFreeUUID();
-                                            }
-
-                                            CloudManager.serviceDriver.register(new TaskedEntry(
-                                                    -1,
-                                                    group.getGroup(),
-                                                    group.getGroup() + config.getSplitter() + id,
-                                                    group.getStorage().getRunningNode(), config.getUseProtocol()));
-                                        }
-                                    }
-
-                                });
-
-                    }catch (Exception ignored){}
-                    if (entry.global_players < 100) return;
-                    try {
-                        Driver.getInstance().getGroupDriver().getAll()
-                                .parallelStream()
-                                .filter(group -> NettyDriver.getInstance().nettyServer.isChannelFound(group.getStorage().getRunningNode()) || group.getStorage().getRunningNode().equals("InternalNode"))
-                                .filter(group ->  ( group.getOver100AtNetwork() * (CloudManager.serviceDriver.entry.global_player_potency +1)) > getActiveServices(group.getGroup()))
-                                .collect(Collectors.toList()).forEach(group -> {
-                                    if (group.getStorage().getRunningNode().equals("InternalNode")) {
-                                        int freeMemory = Driver.getInstance().getMessageStorage().canUseMemory;
-                                        int memoryAfter = freeMemory - group.getUsedMemory();
-                                        if (memoryAfter >= 0) {
-                                            try {
-                                                Thread.sleep(1000);
-                                            } catch (InterruptedException e) {
-                                                e.printStackTrace();
-                                            }
-                                            Driver.getInstance().getMessageStorage().canUseMemory = memoryAfter;
-                                            int port = getFreePort(group.getGroupType().equalsIgnoreCase("PROXY"));
-                                            String id = "";
-                                            if (config.getUuid().equals("INT")){
-                                                id = String.valueOf(CloudManager.serviceDriver.getFreeUUID( group.getGroup()));
-                                            }else if (config.getUuid().equals("RANDOM")){
-                                                id = getFreeUUID();
-                                            }
-                                            CloudManager.serviceDriver.register(new TaskedEntry(port, group.getGroup(), group.getGroup() + config.getSplitter() +id, group.getStorage().getRunningNode(), config.getUseProtocol()));
-
-                                        }
-                                    }else {
-                                        String id = "";
-                                        if (config.getUuid().equals("INT")){
-                                            id = String.valueOf(CloudManager.serviceDriver.getFreeUUID( group.getGroup()));
-                                        }else if (config.getUuid().equals("RANDOM")){
-                                            id = getFreeUUID();
-                                        }
-                                        CloudManager.serviceDriver.register(new TaskedEntry(0, group.getGroup(), group.getGroup() + config.getSplitter() + id, group.getStorage().getRunningNode(), config.getUseProtocol()));
-                                    }
-                                    try {
-                                        Thread.sleep(500);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                });
-
-
-                    }catch (Exception ignored){ }
-                    try {
-                        getServices().parallelStream()
-                                .filter(taskedService -> {
-                                    Group group = Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName());
-                                    final double need_players = ((double) group.getMaxPlayers() / (double) 100) * (double) group.getStartNewPercent();
-
-                                    if (taskedService.getEntry().getCurrentPlayers() >= (int) need_players) {
-                                        return !taskedService.hasStartedNew;
-                                    }else {
-                                        return false;
-                                    }
-                                }).forEach(taskedService -> {
-                                    if (taskedService.getEntry().getCheckInterval() == 6) {
-
-                                        taskedService.hasStartedNew = true;
-                                        if (taskedService.getEntry().getNode().equals("InternalNode")) {
-                                            try {
-                                                Thread.sleep(1000);
-                                            } catch (InterruptedException e) {
-                                                e.printStackTrace();
-                                            }
-                                            String id = "";
-                                            if (config.getUuid().equals("INT")){
-                                                id = String.valueOf(CloudManager.serviceDriver.getFreeUUID( taskedService.getEntry().getGroupName()));
-                                            }else if (config.getUuid().equals("RANDOM")){
-                                                id = getFreeUUID();
-                                            }
-                                            CloudManager.serviceDriver.register(new TaskedEntry(
-                                                    CloudManager.serviceDriver.getFreePort(Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName()).getGroupType().equalsIgnoreCase("PROXY")),
-                                                    taskedService.getEntry().getGroupName(),
-                                                    taskedService.getEntry().getGroupName() + config.getSplitter() + id,
-                                                    "InternalNode", taskedService.getEntry().isUseProtocol()));
-                                        } else {
-                                            String id = "";
-                                            if (config.getUuid().equals("INT")){
-                                                id = String.valueOf(CloudManager.serviceDriver.getFreeUUID( taskedService.getEntry().getGroupName()));
-                                            }else if (config.getUuid().equals("RANDOM")){
-                                                id = getFreeUUID();
-                                            }
-                                            CloudManager.serviceDriver.register(new TaskedEntry(
-                                                    -1,
-                                                    taskedService.getEntry().getGroupName(),
-                                                    taskedService.getEntry().getGroupName() + config.getSplitter() + id,
-                                                    taskedService.getEntry().getNode(), taskedService.getEntry().isUseProtocol()));
-
-                                        }
-
-                                    }else {
-                                        taskedService.getEntry().setCheckInterval(taskedService.getEntry().getCheckInterval() + 1);
-                                    }
-                                    try {
-                                        Thread.sleep(200);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                });
-
-
-                    }catch (Exception ignored){}
-                  try {
-                      getServices().parallelStream()
-                              .filter(taskedService -> taskedService.getEntry().getCurrentPlayers() == 0 && taskedService.getEntry().getStatus() == TaskedServiceStatus.LOBBY)
-                              .forEach(taskedService -> {
-                                  if (taskedService.getEntry().getCheckIntervalPlayers() != 12){
-                                      taskedService.getEntry().setCheckIntervalPlayers(taskedService.getEntry().getCheckIntervalPlayers()+1);
-                                  }else {
-
-                                      Group group = Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName());
-                                      int players = getServices(taskedService.getEntry().getGroupName()).stream()
-                                              .mapToInt(value -> value.getEntry().getCurrentPlayers()).sum();
-
-                                      if (CloudManager.serviceDriver.entry.global_players > 100){
-                                          int minimal = group.getOver100AtNetwork() * (CloudManager.serviceDriver.entry.global_player_potency +1);
-
-                                          if (minimal < CloudManager.serviceDriver.getActiveServices(group.getGroup())){
-                                              CloudManager.serviceDriver.unregister(taskedService.getEntry().getServiceName());
-                                          }
-                                      }else if (players > 100){
-
-
-                                          if ((group.getOver100AtGroup() * (CloudManager.serviceDriver.entry.group_player_potency.get(taskedService.getEntry().getGroupName()) +1)) > CloudManager.serviceDriver.getActiveServices(group.getGroup())){
-                                              CloudManager.serviceDriver.unregister(taskedService.getEntry().getServiceName());
-                                          }
-                                      }else if (group.getMinimalOnline() > CloudManager.serviceDriver.getActiveServices(group.getGroup())){
-                                          CloudManager.serviceDriver.unregister(taskedService.getEntry().getServiceName());
-                                      }
-
-                                      try {
-                                          Thread.sleep(200);
-                                      } catch (InterruptedException e) {
-                                          e.printStackTrace();
-                                      }
-                                  }
-                              });
-                  }catch (Exception ignored){}
-                }
-            }, 5, 2, TimeUtil.MINUTES);
 
 
             new TimerBase().schedule(new TimerTask() {
@@ -347,6 +174,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                     if (CloudManager.shutdown){
                         cancel();
                     }
+
                     try {
                         Driver.getInstance().getGroupDriver().getAll().stream()
                                 .filter(group -> getActiveServices(group.getGroup()) < group.getMinimalOnline())
@@ -403,7 +231,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                                 });
                     }catch (Exception ignored){}
                 }
-            }, 0, 10, TimeUtil.SECONDS);
+            }, 0, 3, TimeUtil.SECONDS);
         });
         current.setPriority(1);
         current.start();

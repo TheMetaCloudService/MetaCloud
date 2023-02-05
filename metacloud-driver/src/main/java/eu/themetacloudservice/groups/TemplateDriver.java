@@ -5,6 +5,7 @@ import eu.themetacloudservice.configuration.ConfigDriver;
 import eu.themetacloudservice.configuration.dummys.managerconfig.ManagerConfig;
 import eu.themetacloudservice.configuration.dummys.nodeconfig.NodeConfig;
 import eu.themetacloudservice.groups.interfaces.ITemplateDriver;
+import eu.themetacloudservice.terminal.enums.Type;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 
@@ -25,14 +26,24 @@ public class TemplateDriver implements ITemplateDriver {
                         Driver.getInstance().getMessageStorage().packetLoader.loadBungee(config.getBungeecordVersion(), template+ "/default");
 
                     }else {
-                        Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion().replace("-", "").replace(".", ""), template+ "/default");
+                        if (!config.getSpigotVersion().equals("MINESTOM")){
+                            Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion().replace("-", "").replace(".", ""), template+ "/default");
+
+                        }else {
+                            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "bitte ziehe deine Minestom version mit den namen server.jar in den template ordner", "please drag your Minestom version with the name server.jar into the template folder");
+                        }
                     }
                 }else {
                     NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
                     if (bungee){
                         Driver.getInstance().getMessageStorage().packetLoader.loadBungee(config.getBungeecordVersion(), template + "/default");
                     }else {
-                        Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion().replace("-", "").replace(".", ""), template+ "/default");
+                        if (!config.getSpigotVersion().equals("MINESTOM")){
+                            Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion().replace("-", "").replace(".", ""), template+ "/default");
+
+                        }else {
+                            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "bitte ziehe deine Minestom version mit den namen server.jar in den template ordner", "please drag your Minestom version with the name server.jar into the template folder");
+                        }
                     }
                 }
             }

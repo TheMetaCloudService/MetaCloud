@@ -1,6 +1,6 @@
-package io.metacloud.bungeecord.utilities.serverhelper;
+package eu.themetacloudservice.bungeecord.utils.server;
 
-import io.metacloud.bungeecord.BungeeBridge;
+import eu.themetacloudservice.bungeecord.CloudPlugin;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -20,7 +20,7 @@ public class ServerConfig {
     static {
         setupConfig();
         if (locked) {
-            ProxyServer.getInstance().getScheduler().schedule(BungeeBridge.getInstance(), ServerConfig::setupConfig, 5L, TimeUnit.SECONDS);
+            ProxyServer.getInstance().getScheduler().schedule(CloudPlugin.getInstance(), ServerConfig::setupConfig, 5L, TimeUnit.SECONDS);
         }
     }
 

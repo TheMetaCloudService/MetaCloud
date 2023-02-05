@@ -1,4 +1,4 @@
-package io.metacloud.bungeecord.utilities.serverhelper;
+package eu.themetacloudservice.bungeecord.utils.server;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -6,6 +6,8 @@ import net.md_5.bungee.api.config.ServerInfo;
 import java.util.Map;
 
 public class ServerDriver {
+
+    public ServerDriver() {}
 
     public  boolean serverExists(String name) {
         return getServerInfo(name) != null;

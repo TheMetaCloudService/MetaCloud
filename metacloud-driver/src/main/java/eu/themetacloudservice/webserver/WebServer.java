@@ -11,6 +11,7 @@ import lombok.SneakyThrows;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class WebServer {
@@ -43,6 +44,10 @@ public class WebServer {
         return this;
     }
 
+    public void updateRoute(String route, String json){
+        this.routes.parallelStream().filter(routeEntry -> routeEntry.route.equalsIgnoreCase(route)).findFirst().get().UPDATE(json);
+    }
+
     public void removeRoute(String route){
         this.routes.removeIf(entry -> entry.GET_ROUTE().equals(route));
     }
@@ -62,11 +67,11 @@ public class WebServer {
                     connection = webServer.accept();
                     Socket finalConnection = connection;
                     try {
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(finalConnection.getInputStream()));
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(finalConnection.getInputStream(), StandardCharsets.UTF_8));
                         String[] tokens = reader.readLine().split(" ");
                         String method = tokens[0];
                         String rawroute = tokens[1];
-                        if (rawroute.contains("/") && rawroute.split("/")[1].equals(authCheckKey)) {
+                        if (rawroute.contains("/") && rawroute.split("/")[1].equals(authCheckKey) || rawroute.contains("/") && rawroute.split("/")[1].equals("debug")) {
                             String route = rawroute.replace("/" + rawroute.split("/")[1], "");
                             if (method.equals("GET")) {
                                 sendResponse(finalConnection, "200 OK", getRoute(route).GET());

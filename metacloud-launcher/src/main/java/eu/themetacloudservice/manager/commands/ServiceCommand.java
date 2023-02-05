@@ -142,7 +142,7 @@ public class ServiceCommand extends CommandAdapter {
                     msg.append(args[i]).append(" ");
                 }
 
-                if (CloudManager.serviceDriver.getService(service) != null) {
+                if (CloudManager.serviceDriver.getService(service) != null && NettyDriver.getInstance().nettyServer.isChannelFound(service)) {
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                             "der Befehl wurde an den Service gesendet",
                             "the command was sent to the service");
@@ -201,6 +201,9 @@ public class ServiceCommand extends CommandAdapter {
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fservice execute <service> <command> §7~ um einen Befehl auf dem Server auszuführen",
                 " >> §fservice execute <service> <command> §7~ to execute a command on the server");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                " >> §fservice whitelist <add/remove> <name> §7~ um Spieler zur Whitelist hinzuzufügen oder von ihr zu entfernen",
+                " >> §fservice whitelist <add/remove> <name> §7~ to add players to the whitelist or to remove them from it");
     }
 
 }

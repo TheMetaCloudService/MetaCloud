@@ -6,5 +6,6 @@ public interface IRouteEntry {
     String GET();
     void PUT(String option);
     String GET_ROUTE();
+    void UPDATE(String update);
 
 }

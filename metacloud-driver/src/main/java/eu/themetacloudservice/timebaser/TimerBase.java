@@ -21,6 +21,8 @@ public class TimerBase {
         }
         else if (timeUtil == TimeUtil.HOURS){
             timer.schedule(runnable, time*60*60*1000);
+        }else if (timeUtil == TimeUtil.MILLISECONDS){
+            timer.schedule(runnable, time);
         }
 
     }
@@ -29,11 +31,12 @@ public class TimerBase {
         timer = new Timer();
         if (timeUtil == TimeUtil.SECONDS){
             timer.schedule(runnable, time*1000, secondTime*1000);
-        }else
-        if (timeUtil == TimeUtil.MINUTES){
+        }else if (timeUtil == TimeUtil.MINUTES){
             timer.schedule(runnable, time*60*1000, secondTime*60*1000);
         }  else  if (timeUtil == TimeUtil.HOURS){
             timer.schedule(runnable, time*60*60*1000, secondTime*60*60*1000);
+        }else if (timeUtil == TimeUtil.MILLISECONDS){
+            timer.schedule(runnable, time, secondTime);
         }
 
     }

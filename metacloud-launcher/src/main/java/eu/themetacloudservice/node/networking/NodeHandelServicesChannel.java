@@ -8,6 +8,7 @@ import eu.themetacloudservice.network.nodes.from.PackageToManagerCallBackService
 import eu.themetacloudservice.network.nodes.to.PackageToNodeHandelServiceExit;
 import eu.themetacloudservice.network.nodes.to.PackageToNodeHandelServiceLaunch;
 import eu.themetacloudservice.network.nodes.to.PackageToNodeHandelSync;
+import eu.themetacloudservice.network.service.PackageRunCommand;
 import eu.themetacloudservice.networking.packet.Packet;
 import eu.themetacloudservice.networking.packet.listeners.IPacketListener;
 import eu.themetacloudservice.node.CloudNode;
@@ -36,6 +37,10 @@ public class NodeHandelServicesChannel implements IPacketListener {
             Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Neue Aufgabe, den Service '§f"+packet.getService()+"§r' synchronisieren",
                     "New task, synchronize the '§f"+packet.getService()+"§r' service");
             CloudNode.cloudServiceDriver.sync(packet.getService());
+        }
+
+        if (paramPacket instanceof PackageRunCommand){
+            CloudNode.cloudServiceDriver.execute(((PackageRunCommand) paramPacket).getService(), ((PackageRunCommand) paramPacket).getCommand());
         }
     }
 

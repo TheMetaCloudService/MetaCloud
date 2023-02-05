@@ -12,6 +12,7 @@ import eu.themetacloudservice.node.cloudservices.entry.QueueEntry;
 import eu.themetacloudservice.process.ServiceProcess;
 import eu.themetacloudservice.timebaser.TimerBase;
 import eu.themetacloudservice.timebaser.utils.TimeUtil;
+import lombok.SneakyThrows;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -51,6 +52,13 @@ public class CloudServiceDriver {
         processes.clear();
     }
 
+    @SneakyThrows
+    public void execute(String service, String line){
+       ServiceProcess process = processes.stream().filter(serviceProcess -> serviceProcess.getService().equalsIgnoreCase(service)).findFirst().get();
+        process.getProcess().getOutputStream().write((line + "\n").getBytes());
+        process.getProcess().getOutputStream().flush();
+    }
+
     public void addQueue(QueueEntry queueEntry){
         queue.add(queueEntry);
     }
@@ -68,7 +76,7 @@ public class CloudServiceDriver {
                             String  service = entry.getService();
                             if (processes.stream().noneMatch(serviceProcess -> serviceProcess.getService().equalsIgnoreCase(service))){
                                 int port = getFreePort(group.getGroupType().equalsIgnoreCase("PROXY"));
-                                processes.add(new ServiceProcess(group, service, port , entry.isUseProtocol()));
+                                processes.add(new ServiceProcess(group, service, port , entry.isUseProtocol(), config.getSpigotVersion().equalsIgnoreCase("MINESTOM")));
                                 processes.stream().filter(serviceProcess -> serviceProcess.getService().equalsIgnoreCase(service)).findFirst().get().handelLaunch();
 
                                 NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);

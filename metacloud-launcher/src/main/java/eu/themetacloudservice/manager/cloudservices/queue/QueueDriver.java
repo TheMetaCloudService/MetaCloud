@@ -1,6 +1,8 @@
 package eu.themetacloudservice.manager.cloudservices.queue;
 
 import eu.themetacloudservice.Driver;
+import eu.themetacloudservice.events.dummys.processbased.ServiceDisconnectedEvent;
+import eu.themetacloudservice.events.dummys.processbased.ServiceLaunchEvent;
 import eu.themetacloudservice.manager.CloudManager;
 import eu.themetacloudservice.manager.cloudservices.enums.TaskedServiceStatus;
 import eu.themetacloudservice.terminal.enums.Type;
@@ -42,6 +44,7 @@ public class QueueDriver {
                         String service = queue_startup.removeFirst();
                         CloudManager.serviceDriver.getService(service).handelStatusChange(TaskedServiceStatus.STARTED);
                         CloudManager.serviceDriver.getService(service).handelLaunch();
+                        Driver.getInstance().getEventDriver().executeEvent(new ServiceLaunchEvent(service,   CloudManager.serviceDriver.getService(service).getEntry().getNode()));
                     }else if (!queue_shutdown.isEmpty()){
                         String service = queue_shutdown.removeFirst();
                         CloudManager.serviceDriver.getService(service).handelQuit();
@@ -50,7 +53,7 @@ public class QueueDriver {
                 }catch (Exception ignored){}
 
              }
-         }, 0, 1, TimeUtil.SECONDS);
+         }, 0, 1, TimeUtil.MILLISECONDS);
     }
 
 }

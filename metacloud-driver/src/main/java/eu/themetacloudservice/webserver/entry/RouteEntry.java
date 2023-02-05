@@ -5,7 +5,7 @@ import eu.themetacloudservice.webserver.interfaces.IRouteEntry;
 public class RouteEntry implements IRouteEntry {
 
 
-    private String route;
+    public String route;
     private String json_option;
 
 
@@ -30,6 +30,11 @@ public class RouteEntry implements IRouteEntry {
     @Override
     public String GET_ROUTE() {
         return this.route;
+    }
+
+    @Override
+    public void UPDATE(String update) {
+        this.json_option = update;
     }
 
 

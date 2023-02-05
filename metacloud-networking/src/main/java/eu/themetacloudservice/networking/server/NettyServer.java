@@ -19,16 +19,13 @@ public class NettyServer {
     private int port;
 
     private Channel channel;
-
     private final HashMap<String, Channel> channels = new HashMap<>();
-
     public NettyServer bind(int port) {
         this.port = port;
         return this;
     }
 
     public void start() {
-
         (new Thread(() -> {
             EventLoopGroup eventLoopGroup = Epoll.isAvailable() ? new EpollEventLoopGroup() : new NioEventLoopGroup();
             try {

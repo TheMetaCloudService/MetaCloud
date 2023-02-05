@@ -1,2 +1,4 @@
-package eu.themetacloudservice.webserver.interfaces;public class IRest {
+package eu.themetacloudservice.webserver.interfaces;
+
+public interface IRest {
 }

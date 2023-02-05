@@ -1,4 +1,4 @@
-package eu.themetacloudservice.velocity.utils;
+package eu.themetacloudservice.bungeecord.utils;
 
 public class LobbyEntry {
     private final String name;
@@ -38,4 +38,6 @@ public class LobbyEntry {
     public String getGroup() {
         return group;
     }
+
+
 }

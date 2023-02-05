@@ -18,11 +18,21 @@ public class ManagerConfig implements IConfigAdapter {
     private String spigotVersion;
     private Integer networkingCommunication;
     private Integer restApiCommunication;
+
+    private ArrayList<String> whitelist;
     private ArrayList<ManagerConfigNodes> nodes;
 
     public ManagerConfig(){
     }
 
+
+    public ArrayList<String> getWhitelist() {
+        return whitelist;
+    }
+
+    public void setWhitelist(ArrayList<String> whitelist) {
+        this.whitelist = whitelist;
+    }
 
     public String getUuid() {
         return uuid;

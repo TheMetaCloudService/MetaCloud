@@ -1,6 +1,5 @@
-package eu.themetacloudservice.network.service;
+package eu.themetacloudservice.network.service.proxyconnect;
 
-import eu.themetacloudservice.network.service.proxyconnect.Service;
 
 import java.util.ArrayList;
 

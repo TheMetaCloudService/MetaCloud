@@ -1,7 +1,7 @@
 package eu.themetacloudservice.configuration.dummys.serviceconfig;
 
 import eu.themetacloudservice.configuration.interfaces.IConfigAdapter;
-import jdk.nashorn.internal.objects.annotations.Getter;
+
 
 public class LiveService implements IConfigAdapter {
 

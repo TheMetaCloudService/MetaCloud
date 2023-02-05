@@ -4,18 +4,30 @@ import eu.themetacloudservice.Driver;
 import eu.themetacloudservice.configuration.ConfigDriver;
 import eu.themetacloudservice.configuration.dummys.authenticator.AuthenticatorKey;
 import eu.themetacloudservice.configuration.dummys.managerconfig.ManagerConfig;
+import eu.themetacloudservice.events.dummys.processbased.ServiceConnectedEvent;
+import eu.themetacloudservice.events.dummys.processbased.ServiceLaunchEvent;
+import eu.themetacloudservice.groups.dummy.Group;
 import eu.themetacloudservice.manager.CloudManager;
+import eu.themetacloudservice.manager.cloudservices.entry.TaskedService;
+import eu.themetacloudservice.manager.cloudservices.enums.TaskedServiceStatus;
 import eu.themetacloudservice.network.autentic.PackageAuthenticByManager;
 import eu.themetacloudservice.network.autentic.PackageAuthenticRequestFromManager;
 import eu.themetacloudservice.network.autentic.PackageCallBackAuthenticByManager;
 import eu.themetacloudservice.network.nodes.from.PackageToManagerCallBackServiceExit;
 import eu.themetacloudservice.network.nodes.from.PackageToManagerCallBackServiceLaunch;
 import eu.themetacloudservice.network.nodes.from.PackageToManagerHandelNodeShutdown;
+import eu.themetacloudservice.network.service.PackageConnectedServiceToALL;
+import eu.themetacloudservice.network.service.proxyconnect.PackageConnectedProxyCallBack;
+import eu.themetacloudservice.network.service.proxyconnect.PackageConnectedProxyCallBackData;
+import eu.themetacloudservice.network.service.proxyconnect.Service;
 import eu.themetacloudservice.networking.NettyDriver;
 import eu.themetacloudservice.networking.packet.Packet;
 import eu.themetacloudservice.networking.packet.listeners.IPacketListener;
 import eu.themetacloudservice.terminal.enums.Type;
 import io.netty.channel.ChannelHandlerContext;
+
+import java.util.ArrayList;
+import java.util.function.Consumer;
 
 
 public class ManagerNetworkChannel implements IPacketListener {
@@ -71,6 +83,87 @@ public class ManagerNetworkChannel implements IPacketListener {
                 packet.setAccepted(true);
                 NettyDriver.getInstance().nettyServer.sendPacket(pack.getAuthenticName(), packet);
 
+            }else {
+                if (!Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey()).equals(pack.getConnectionKey())){
+                    PackageCallBackAuthenticByManager packet = new PackageCallBackAuthenticByManager();
+                    packet.setAccepted(false);
+                    packet.setReason("the connectionkey is not correct, please check it error: '405'");
+                    paramChannelHandlerContext.channel().writeAndFlush(packet);
+                    return;
+                }else if ( CloudManager.serviceDriver.getService(pack.getAuthenticName()) == null){
+                    PackageCallBackAuthenticByManager packet = new PackageCallBackAuthenticByManager();
+                    packet.setAccepted(false);
+                    packet.setReason("Not found '404'");
+                    paramChannelHandlerContext.channel().writeAndFlush(packet);
+                }
+                else if (NettyDriver.getInstance().nettyServer.isChannelFound(pack.getAuthenticName())){
+                    PackageCallBackAuthenticByManager packet = new PackageCallBackAuthenticByManager();
+                    packet.setAccepted(false);
+                    packet.setReason("Already connected to Cloud '407'");
+                    paramChannelHandlerContext.channel().writeAndFlush(packet);
+                    return;
+                }else {
+                    NettyDriver.getInstance().nettyServer.registerChannel(pack.getAuthenticName(), paramChannelHandlerContext.channel());
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der Service '§f"+pack.getAuthenticName()+"§r' ist nun erfolgreich verbunden",
+                            "the service '§f"+pack.getAuthenticName()+"§r' is now successfully connected");
+                    CloudManager.serviceDriver.getService(pack.getAuthenticName()).handelStatusChange(TaskedServiceStatus.LOBBY);
+
+                    if (Driver.getInstance().getGroupDriver().load(pack.getAuthenticName().split(config.getSplitter())[0]).getGroupType().equals("PROXY")){
+
+
+
+                        CloudManager.serviceDriver.getServices().forEach(taskedService -> {
+
+                            if (taskedService.getEntry().getStatus() != TaskedServiceStatus.IN_GAME || taskedService.getEntry().getStatus() != TaskedServiceStatus.LOBBY) return;
+                            Group group = Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName());
+                            String address = "";
+                            if (group.getStorage().getRunningNode().equals("InternalNode")){
+                                address = "127.0.0.1";
+                            }else {
+                                address = config.getNodes().stream().filter(managerConfigNodes -> managerConfigNodes.getName().equals(group.getStorage().getRunningNode())).findFirst().get().getAddress();
+                            }
+
+                                    PackageConnectedServiceToALL packageConnectedServiceToALL = new PackageConnectedServiceToALL(taskedService.getEntry().getServiceName(),
+                            taskedService.getEntry().getGroupName(),taskedService.getEntry().getUsedPort(), taskedService.getEntry().getNode(), address, group.getGroupType(), new ConfigDriver().convert(group));
+
+                            NettyDriver.getInstance().nettyServer.sendToAllPackets(packageConnectedServiceToALL);
+                        });
+
+                        Group group = Driver.getInstance().getGroupDriver().load(pack.getAuthenticName().split(config.getSplitter())[0]);
+
+                        String address = "";
+                        if (group.getStorage().getRunningNode().equals("InternalNode")){
+                            address = "127.0.0.1";
+                        }else {
+                            address = config.getNodes().stream().filter(managerConfigNodes -> managerConfigNodes.getName().equals(group.getStorage().getRunningNode())).findFirst().get().getAddress();
+                        }
+
+
+                        Driver.getInstance().getEventDriver().executeEvent(new ServiceConnectedEvent(pack.getAuthenticName(), group.getStorage().getRunningNode(), CloudManager.serviceDriver.getService(pack.getAuthenticName()).getEntry().getUsedPort(), address, group.getGroup()));
+                        PackageConnectedServiceToALL packageConnectedServiceToALL = new PackageConnectedServiceToALL(pack.getAuthenticName(), CloudManager.serviceDriver.getService(pack.getAuthenticName()).getEntry().getGroupName(), CloudManager.serviceDriver.getService(pack.getAuthenticName()).getEntry().getUsedPort(), CloudManager.serviceDriver.getService(pack.getAuthenticName()).getEntry().getNode(), address, group.getGroupType(), new ConfigDriver().convert(group));
+
+                        NettyDriver.getInstance().nettyServer.sendToAllPackets(packageConnectedServiceToALL);
+
+                    }else {
+                        Group group = Driver.getInstance().getGroupDriver().load(pack.getAuthenticName().split(config.getSplitter())[0]);
+                        String address = "";
+                        if (group.getStorage().getRunningNode().equals("InternalNode")){
+                            address = "127.0.0.1";
+                        }else {
+                            address = config.getNodes().stream().filter(managerConfigNodes -> managerConfigNodes.getName().equals(group.getStorage().getRunningNode())).findFirst().get().getAddress();
+                        }
+
+                        Driver.getInstance().getEventDriver().executeEvent(new ServiceConnectedEvent(pack.getAuthenticName(), group.getStorage().getRunningNode(), CloudManager.serviceDriver.getService(pack.getAuthenticName()).getEntry().getUsedPort(), address, group.getGroup()));
+
+                        PackageConnectedServiceToALL packageConnectedServiceToALL = new PackageConnectedServiceToALL(pack.getAuthenticName(), CloudManager.serviceDriver.getService(pack.getAuthenticName()).getEntry().getGroupName(), CloudManager.serviceDriver.getService(pack.getAuthenticName()).getEntry().getUsedPort(), CloudManager.serviceDriver.getService(pack.getAuthenticName()).getEntry().getNode(), address, group.getGroupType(), new ConfigDriver().convert(group));
+
+                        NettyDriver.getInstance().nettyServer.sendToAllPackets(packageConnectedServiceToALL);
+                    }
+
+                    PackageCallBackAuthenticByManager packet = new PackageCallBackAuthenticByManager();
+                    packet.setAccepted(true);
+                    paramChannelHandlerContext.channel().writeAndFlush(packet);
+                }
             }
 
         }if (paramPacket instanceof PackageToManagerHandelNodeShutdown){

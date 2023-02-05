@@ -108,6 +108,7 @@ public class TerminalCompleter  implements Completer {
                         if (!input.contains(" ")){
                             result.add("WATERFALL");
                             result.add("BUNGEECORD");
+
                         }
                     }
                 }

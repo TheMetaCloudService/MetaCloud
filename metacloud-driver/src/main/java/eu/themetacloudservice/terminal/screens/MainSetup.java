@@ -148,7 +148,7 @@ public class MainSetup {
 
             }else if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 5){
 
-                if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5 ")){
+          if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5 ")){
                     Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.16.5");
                     new Timer().schedule(new TimerTask() {
                         @Override
@@ -349,8 +349,7 @@ public class MainSetup {
 
             }else if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 5){
 
-
-                if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5 ")){
+if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5 ")){
                     Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.16.5");
                     new Timer().schedule(new TimerTask() {
                         @Override
@@ -585,7 +584,7 @@ public class MainSetup {
                     Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "Die version wurde nicht gefunden");
                 }
             } if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 7){
-                if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5 ")){
+      if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5 ")){
                     Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.16.5");
                     new Timer().schedule(new TimerTask() {
                         @Override
@@ -837,11 +836,11 @@ public class MainSetup {
                             "which spigot version do you want to use?",
                             "possible answers: §fSPIGOT-1.16.5, SPIGOT-1.17.1, SPIGOT-1.18.2, SPIGOT-1.19.2, SPIGOT-1.19.3, PAPER-1.16.5, PAPER-1.17.1, PAPER-1.18.2, PAPER-1.19.2, PAPER-1.19.3");
                     return;
-                }else {
+                }else  {
                     Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "The version was not found");
                 }
             }if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 7){
-                if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5 ")){
+if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5 ")){
                     Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.16.5");
                     new Timer().schedule(new TimerTask() {
                         @Override
@@ -1054,6 +1053,7 @@ public class MainSetup {
                 managerConfig.setSpigotPort(5000);
                 managerConfig.setUuid("INT");
                 managerConfig.setSplitter("-");
+                managerConfig.setWhitelist(new ArrayList<>());
                 managerConfig.setNodes(nodes);
                 new ConfigDriver("./service.json").save(managerConfig);
 
@@ -1079,6 +1079,7 @@ public class MainSetup {
                 managerConfig.setUuid("INT");
                 managerConfig.setBungeecordPort(25565);
                 managerConfig.setSpigotPort(5000);
+                managerConfig.setWhitelist(new ArrayList<>());
                 managerConfig.setNodes(nodes);
                 new ConfigDriver("./service.json").save(managerConfig);
                 Driver.getInstance().getMessageStorage().language = "EN";

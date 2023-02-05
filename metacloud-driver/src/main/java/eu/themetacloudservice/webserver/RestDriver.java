@@ -1,29 +1,48 @@
 package eu.themetacloudservice.webserver;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import eu.themetacloudservice.Driver;
 import eu.themetacloudservice.configuration.ConfigDriver;
 import eu.themetacloudservice.configuration.dummys.authenticator.AuthenticatorKey;
 import eu.themetacloudservice.configuration.dummys.managerconfig.ManagerConfig;
 import eu.themetacloudservice.configuration.dummys.nodeconfig.NodeConfig;
 import eu.themetacloudservice.configuration.interfaces.IConfigAdapter;
+import eu.themetacloudservice.webserver.interfaces.IRest;
 import lombok.SneakyThrows;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class RestDriver {
 
-
+    protected static final Gson GSON = (new GsonBuilder()).serializeNulls().setPrettyPrinting().disableHtmlEscaping().create();
     private String ip;
     private int port;
 
     public RestDriver(String ip, int port) {
         this.ip = ip;
         this.port = port;
+    }
+
+    public RestDriver() {
+    }
+
+    @SneakyThrows
+    public IRest convert(String json, Class<? extends IRest> tClass){
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(json, tClass);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public String convert(IRest IConfigAdapter){
+        return GSON.toJson(IConfigAdapter);
     }
 
     @SneakyThrows

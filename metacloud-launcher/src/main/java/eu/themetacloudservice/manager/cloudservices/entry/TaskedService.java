@@ -9,9 +9,13 @@ import eu.themetacloudservice.manager.cloudservices.interfaces.ITaskedService;
 import eu.themetacloudservice.network.nodes.to.PackageToNodeHandelServiceExit;
 import eu.themetacloudservice.network.nodes.to.PackageToNodeHandelServiceLaunch;
 import eu.themetacloudservice.network.nodes.to.PackageToNodeHandelSync;
+import eu.themetacloudservice.network.service.PackageRunCommand;
 import eu.themetacloudservice.networking.NettyDriver;
 import eu.themetacloudservice.process.ServiceProcess;
 import eu.themetacloudservice.terminal.enums.Type;
+import eu.themetacloudservice.webserver.dummys.CloudService;
+import eu.themetacloudservice.webserver.entry.RouteEntry;
+import lombok.SneakyThrows;
 
 public class TaskedService implements ITaskedService {
 
@@ -20,9 +24,12 @@ public class TaskedService implements ITaskedService {
     private ServiceProcess process;
     public boolean hasStartedNew;
 
+    public String restKey;
+
     public TaskedService(TaskedEntry entry) {
         this.entry = entry;
         hasStartedNew = false;
+        restKey = "/" +entry.getServiceName();
     }
 
 
@@ -30,9 +37,19 @@ public class TaskedService implements ITaskedService {
         return process;
     }
 
+    @SneakyThrows
     @Override
     public void handelExecute(String line) {
+
+       if (entry.getNode().equalsIgnoreCase("InternalNode")){
+           process.getProcess().getOutputStream().write((line + "\n").getBytes());
+           process.getProcess().getOutputStream().flush();
+       }else {
+           NettyDriver.getInstance().nettyServer.sendPacket(entry.getNode(), new PackageRunCommand(line, entry.getServiceName()));
+       }
+
     }
+
 
     @Override
     public void handelSync() {
@@ -46,10 +63,17 @@ public class TaskedService implements ITaskedService {
 
     @Override
     public void handelLaunch() {
+
+
+        CloudService service = new CloudService(entry.getServiceName(), entry.getCurrentPlayers(), entry.getStatus().toString());
+
+        Driver.getInstance().getWebServer().addRoute(new RouteEntry(this.restKey, new ConfigDriver().convert(service)));
+
         if (this.getEntry().getNode().equals("InternalNode")){
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+getEntry().getServiceName()+"§r' wird gestartet 'node: §f"+entry.getNode()+"§r, port: §f"+entry.getUsedPort()+"§r'",
                     "The service '§f"+getEntry().getServiceName()+"§r' is starting 'node: §f"+entry.getNode()+"§r, port: §f"+entry.getUsedPort()+"§r'");
-            process = new ServiceProcess(Driver.getInstance().getGroupDriver().load(getEntry().getGroupName()), getEntry().getServiceName(), entry.getUsedPort(), entry.isUseProtocol());
+            ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+            process = new ServiceProcess(Driver.getInstance().getGroupDriver().load(getEntry().getGroupName()), getEntry().getServiceName(), entry.getUsedPort(), entry.isUseProtocol(), config.getSpigotVersion().equals("MINESTOM"));
             process.handelLaunch();
         }else {
             PackageToNodeHandelServiceLaunch launch = new PackageToNodeHandelServiceLaunch(entry.getServiceName(), new ConfigDriver().convert(Driver.getInstance().getGroupDriver().load(getEntry().getGroupName())), entry.isUseProtocol());
@@ -58,7 +82,15 @@ public class TaskedService implements ITaskedService {
     }
 
     @Override
+    public void handelScreen() {
+
+    }
+
+    @Override
     public void handelQuit() {
+
+        Driver.getInstance().getWebServer().removeRoute(this.restKey);
+
         if (this.getEntry().getNode().equals("InternalNode")){
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+getEntry().getServiceName()+"§r' wird angehalten",
                     "The service '§f"+getEntry().getServiceName()+"§r' is stopping");
@@ -75,6 +107,14 @@ public class TaskedService implements ITaskedService {
     @Override
     public void handelStatusChange(TaskedServiceStatus status) {
         this.entry.setStatus(status);
+
+        CloudService service = (CloudService) new ConfigDriver().convert(CloudManager.restDriver.get(this.restKey), CloudService.class);
+
+        service.setStatus(status.toString());
+
+        Driver.getInstance().getWebServer().updateRoute(this.restKey, new ConfigDriver().convert(service));
+
+
         if (status == TaskedServiceStatus.IN_GAME){
             ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
             hasStartedNew = true;
@@ -110,6 +150,12 @@ public class TaskedService implements ITaskedService {
         }else {
             entry.setCurrentPlayers(entry.getCurrentPlayers()-1);
         }
+
+        CloudService service = (CloudService) new ConfigDriver().convert(CloudManager.restDriver.get(this.restKey), CloudService.class);
+
+        service.setPlayers(entry.getCurrentPlayers());
+
+        Driver.getInstance().getWebServer().updateRoute(this.restKey, new ConfigDriver().convert(service));
     }
 
     public TaskedEntry getEntry() {

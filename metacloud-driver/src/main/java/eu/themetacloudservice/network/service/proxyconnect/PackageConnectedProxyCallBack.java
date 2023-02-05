@@ -1,4 +1,4 @@
-package eu.themetacloudservice.network.service;
+package eu.themetacloudservice.network.service.proxyconnect;
 
 import eu.themetacloudservice.networking.packet.NettyBuffer;
 import eu.themetacloudservice.networking.packet.Packet;

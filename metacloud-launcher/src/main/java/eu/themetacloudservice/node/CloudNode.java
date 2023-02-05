@@ -6,6 +6,10 @@ import eu.themetacloudservice.configuration.dummys.nodeconfig.NodeConfig;
 import eu.themetacloudservice.network.autentic.PackageAuthenticByManager;
 import eu.themetacloudservice.network.autentic.PackageAuthenticRequestFromManager;
 import eu.themetacloudservice.network.autentic.PackageCallBackAuthenticByManager;
+import eu.themetacloudservice.network.cloudcommand.*;
+import eu.themetacloudservice.network.cloudplayer.PackageCloudPlayerChangeService;
+import eu.themetacloudservice.network.cloudplayer.PackageCloudPlayerConnect;
+import eu.themetacloudservice.network.cloudplayer.PackageCloudPlayerDisconnect;
 import eu.themetacloudservice.network.nodes.from.PackageToManagerCallBackServiceExit;
 import eu.themetacloudservice.network.nodes.from.PackageToManagerCallBackServiceLaunch;
 import eu.themetacloudservice.network.nodes.from.PackageToManagerHandelNodeShutdown;
@@ -13,6 +17,8 @@ import eu.themetacloudservice.network.nodes.to.PackageToNodeHandelKillNode;
 import eu.themetacloudservice.network.nodes.to.PackageToNodeHandelServiceExit;
 import eu.themetacloudservice.network.nodes.to.PackageToNodeHandelServiceLaunch;
 import eu.themetacloudservice.network.nodes.to.PackageToNodeHandelSync;
+import eu.themetacloudservice.network.service.*;
+import eu.themetacloudservice.network.service.proxyconnect.PackageConnectedProxyCallBack;
 import eu.themetacloudservice.networking.NettyDriver;
 import eu.themetacloudservice.networking.client.NettyClient;
 import eu.themetacloudservice.node.cloudservices.CloudServiceDriver;
@@ -91,16 +97,38 @@ public class CloudNode {
         NettyDriver.getInstance().nettyClient.bind(config.getManagerAddress(), config.getNetworkingCommunication()).connect();
 
         NettyDriver.getInstance().packetDriver
+                //NODE PACKAGE
                 .handelPacket(PackageAuthenticByManager.class)
                 .handelPacket(PackageCallBackAuthenticByManager.class)
                 .handelPacket(PackageAuthenticRequestFromManager.class)
-                .handelPacket(PackageToNodeHandelKillNode.class)
                 .handelPacket(PackageToNodeHandelSync.class)
                 .handelPacket(PackageToNodeHandelServiceExit.class)
                 .handelPacket(PackageToNodeHandelServiceLaunch.class)
                 .handelPacket(PackageToManagerHandelNodeShutdown.class)
                 .handelPacket(PackageToManagerCallBackServiceExit.class)
+                //EVENT PACKET
+                .handelPacket(PackageConnectedServiceToALL.class)
+                .handelPacket(PackageRegisterServiceToALL.class)
+                .handelPacket(PackageShutdownServiceToALL.class)
+                .handelPacket(PackageLaunchServiceToALL.class)
+                .handelPacket(PackageConnectedProxyCallBack.class)
+                //SERVICE PACKAGE
+                .handelPacket(PackageRunCommand.class)
+                .handelPacket(PackageServiceShutdown.class)
                 .handelPacket(PackageToManagerCallBackServiceLaunch.class)
+                .handelPacket(PackageCloudPlayerConnect.class)
+                .handelPacket(PackageCloudPlayerChangeService.class)
+                .handelPacket(PackageCloudPlayerDisconnect.class)
+                // CLOUD COMMAND PACKETS
+                .handelPacket(PackageCloudCommandEXIT.class)
+                .handelPacket(PackageCloudCommandMAINTENANCE.class)
+                .handelPacket(PackageCloudCommandPLAYERS.class)
+                .handelPacket(PackageCloudCommandRELOAD.class)
+                .handelPacket(PackageCloudCommandRUN.class)
+                .handelPacket(PackageCloudCommandSTOP.class)
+                .handelPacket(PackageCloudCommandSTOPGROUP.class)
+                .handelPacket(PackageCloudCommandSYNC.class)
+                .handelPacket(PackageCloudCommandWITELIST.class)
                 .handelListener(new NodeHandelServicesChannel())
                 .handelListener(new NodeHandelKillChannel())
                 .handelListener(new NodeAuthChannel());
