@@ -104,8 +104,8 @@ public class ManagerNetworkChannel implements IPacketListener {
                     return;
                 }else {
                     NettyDriver.getInstance().nettyServer.registerChannel(pack.getAuthenticName(), paramChannelHandlerContext.channel());
-                    Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der Service '§f"+pack.getAuthenticName()+"§r' ist nun erfolgreich verbunden",
-                            "the service '§f"+pack.getAuthenticName()+"§r' is now successfully connected");
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der Service '§f"+pack.getAuthenticName()+"§r' ist nun §ferfolgreich§r verbunden",
+                            "the service '§f"+pack.getAuthenticName()+"§r' is now §fsuccessfully§r connected");
                     CloudManager.serviceDriver.getService(pack.getAuthenticName()).handelStatusChange(TaskedServiceStatus.LOBBY);
 
                     if (Driver.getInstance().getGroupDriver().load(pack.getAuthenticName().split(config.getSplitter())[0]).getGroupType().equals("PROXY")){

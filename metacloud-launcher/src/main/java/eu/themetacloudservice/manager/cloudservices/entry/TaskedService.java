@@ -63,12 +63,6 @@ public class TaskedService implements ITaskedService {
 
     @Override
     public void handelLaunch() {
-
-
-        CloudService service = new CloudService(entry.getServiceName(), entry.getCurrentPlayers(), entry.getStatus().toString());
-
-        Driver.getInstance().getWebServer().addRoute(new RouteEntry(this.restKey, new ConfigDriver().convert(service)));
-
         if (this.getEntry().getNode().equals("InternalNode")){
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+getEntry().getServiceName()+"§r' wird gestartet 'node: §f"+entry.getNode()+"§r, port: §f"+entry.getUsedPort()+"§r'",
                     "The service '§f"+getEntry().getServiceName()+"§r' is starting 'node: §f"+entry.getNode()+"§r, port: §f"+entry.getUsedPort()+"§r'");
@@ -88,9 +82,6 @@ public class TaskedService implements ITaskedService {
 
     @Override
     public void handelQuit() {
-
-        Driver.getInstance().getWebServer().removeRoute(this.restKey);
-
         if (this.getEntry().getNode().equals("InternalNode")){
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+getEntry().getServiceName()+"§r' wird angehalten",
                     "The service '§f"+getEntry().getServiceName()+"§r' is stopping");
@@ -107,14 +98,6 @@ public class TaskedService implements ITaskedService {
     @Override
     public void handelStatusChange(TaskedServiceStatus status) {
         this.entry.setStatus(status);
-
-        CloudService service = (CloudService) new ConfigDriver().convert(CloudManager.restDriver.get(this.restKey), CloudService.class);
-
-        service.setStatus(status.toString());
-
-        Driver.getInstance().getWebServer().updateRoute(this.restKey, new ConfigDriver().convert(service));
-
-
         if (status == TaskedServiceStatus.IN_GAME){
             ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
             hasStartedNew = true;
@@ -151,11 +134,6 @@ public class TaskedService implements ITaskedService {
             entry.setCurrentPlayers(entry.getCurrentPlayers()-1);
         }
 
-        CloudService service = (CloudService) new ConfigDriver().convert(CloudManager.restDriver.get(this.restKey), CloudService.class);
-
-        service.setPlayers(entry.getCurrentPlayers());
-
-        Driver.getInstance().getWebServer().updateRoute(this.restKey, new ConfigDriver().convert(service));
     }
 
     public TaskedEntry getEntry() {

@@ -16,16 +16,7 @@ import eu.themetacloudservice.network.cloudplayer.PackageCloudPlayerDisconnect;
 import eu.themetacloudservice.network.service.*;
 import eu.themetacloudservice.networking.packet.Packet;
 import eu.themetacloudservice.networking.packet.listeners.IPacketListener;
-import eu.themetacloudservice.webserver.RestDriver;
-import eu.themetacloudservice.webserver.dummys.CloudPlayer;
 import io.netty.channel.ChannelHandlerContext;
-import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.ProxyServer;
-import org.bukkit.Bukkit;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
-
-import java.util.function.Consumer;
 
 public class ServiceConnectedHandler implements IPacketListener {
     @Override

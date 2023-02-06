@@ -16,12 +16,9 @@ import eu.themetacloudservice.network.cloudplayer.PackageCloudPlayerChangeServic
 import eu.themetacloudservice.network.cloudplayer.PackageCloudPlayerConnect;
 import eu.themetacloudservice.network.cloudplayer.PackageCloudPlayerDisconnect;
 import eu.themetacloudservice.network.service.*;
-import eu.themetacloudservice.network.service.proxyconnect.PackageConnectedProxyCallBack;
 import eu.themetacloudservice.networking.packet.Packet;
 import eu.themetacloudservice.networking.packet.listeners.IPacketListener;
-import eu.themetacloudservice.webserver.dummys.CloudPlayer;
 import io.netty.channel.ChannelHandlerContext;
-import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 
 import java.net.InetSocketAddress;

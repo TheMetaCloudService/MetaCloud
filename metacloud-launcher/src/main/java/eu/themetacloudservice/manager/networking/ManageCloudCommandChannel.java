@@ -84,7 +84,11 @@ public class ManageCloudCommandChannel implements IPacketListener {
             Driver.getInstance().getTerminalDriver().getCommandDriver().executeCommand("service stopgroup " + ((PackageCloudCommandSTOPGROUP) paramPacket).getGroup());
         }if (paramPacket instanceof PackageCloudCommandPLAYERS){
 
-            Driver.getInstance().getTerminalDriver().getCommandDriver().executeCommand("group "+((PackageCloudCommandPLAYERS) paramPacket).getGroup()+" setminamount " + ((PackageCloudCommandPLAYERS) paramPacket).getPlayers());
+            Group group = Driver.getInstance().getGroupDriver().load(((PackageCloudCommandPLAYERS) paramPacket).getGroup());
+
+            group.setMaxPlayers(((PackageCloudCommandPLAYERS) paramPacket).getPlayers());
+
+            Driver.getInstance().getGroupDriver().update(group.getGroup(), group);
 
         }if (paramPacket instanceof PackageCloudCommandSYNC){
             CloudManager.serviceDriver.getService(((PackageCloudCommandSYNC) paramPacket).getService()).handelSync();

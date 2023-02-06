@@ -8,11 +8,6 @@ public class CloudService implements IConfigAdapter {
     private Integer players;
     private String status;
 
-    public CloudService(String name, Integer players, String status) {
-        this.name = name;
-        this.players = players;
-        this.status = status;
-    }
 
     public CloudService() {}
 

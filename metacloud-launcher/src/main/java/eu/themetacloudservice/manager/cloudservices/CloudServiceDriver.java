@@ -49,8 +49,8 @@ public class CloudServiceDriver implements ICloudServiceDriver {
         }
         this.services.add(new TaskedService(entry));
         NettyDriver.getInstance().nettyServer.sendToAllPackets(new PackageRegisterServiceToALL(entry.getServiceName(), entry.getNode()));
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+entry.getServiceName()+"§r' wurde zur Queue '§fSTART-SERVICES§r' hinzugefügt",
-                "the service '"+entry.getServiceName()+"' was added to the queue '§fSTART-SERVICES§r'");
+       // Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+entry.getServiceName()+"§r' wurde zur Queue '§fSTART-SERVICES§r' hinzugefügt",
+         //       "the service '"+entry.getServiceName()+"' was added to the queue '§fSTART-SERVICES§r'");
         Driver.getInstance().getEventDriver().executeEvent(new ServiceJoinQueueEvent(entry.getServiceName(), entry.getNode()));
         CloudManager.queueDriver.addQueuedObjectToStart(entry.getServiceName());
         return getService(entry.getServiceName());
@@ -59,8 +59,8 @@ public class CloudServiceDriver implements ICloudServiceDriver {
     @Override
     public void unregister(String service) {
         if (getService(service) == null) return;
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+service+"§r' wurde zur Queue '§fSTOP-SERVICES§r' hinzugefügt",
-                "the service '"+service+"' was added to the queue '§fSTOP-SERVICES§r'");
+       // Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+service+"§r' wurde zur Queue '§fSTOP-SERVICES§r' hinzugefügt",
+         //       "the service '"+service+"' was added to the queue '§fSTOP-SERVICES§r'");
 
         Driver.getInstance().getEventDriver().executeEvent(new ServiceDisconnectedEvent(service));
         if (NettyDriver.getInstance().nettyServer.isChannelFound(service)) {

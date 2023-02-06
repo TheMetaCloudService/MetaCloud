@@ -22,12 +22,11 @@ public class CloudConnectListener implements Listener {
 
     private boolean bypassMaintenance;
     private boolean bypassFullNetwork;
-    private boolean disconnected;
+
 
 
     @EventHandler
     public void  handle(final PostLoginEvent event){
-        if (disconnected) return;
         WhitelistConfig whitelistConfig = (WhitelistConfig)(new ConfigDriver()).convert(CloudPlugin.getInstance().getRestDriver().get("/whitelist"), WhitelistConfig.class);
 
 
@@ -72,7 +71,7 @@ public class CloudConnectListener implements Listener {
     @EventHandler
     public void handle(ServerConnectEvent event) {
         if (event.isCancelled()) return;
-        if (disconnected) return;
+
         if (event.getPlayer().getServer() == null){
             LobbyEntry target = CloudPlugin.getInstance().getLobbyDriver().findMatchingLobby(event.getPlayer());
 
@@ -100,7 +99,7 @@ public class CloudConnectListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void handle(final PlayerDisconnectEvent event) {
-        disconnected = true;
+
         PackageCloudPlayerDisconnect disconnect = new PackageCloudPlayerDisconnect(event.getPlayer().getUUID(), event.getPlayer().getName());
         NettyDriver.getInstance().nettyClient.sendPacket(disconnect);
 
@@ -109,7 +108,6 @@ public class CloudConnectListener implements Listener {
 
     @EventHandler
     public void handle(final ServerKickEvent event) {
-        if (disconnected) return;
         LobbyEntry lobby = CloudPlugin.getInstance().getLobbyDriver().findMatchingLobby(event.getPlayer(), event.getKickedFrom().getName());
 
         if (lobby != null){
