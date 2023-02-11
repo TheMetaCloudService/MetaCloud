@@ -22,6 +22,7 @@ public class CloudConnectListener implements Listener {
 
     private boolean bypassMaintenance;
     private boolean bypassFullNetwork;
+    private boolean connected;
 
 
 
@@ -102,6 +103,11 @@ public class CloudConnectListener implements Listener {
 
         PackageCloudPlayerDisconnect disconnect = new PackageCloudPlayerDisconnect(event.getPlayer().getUUID(), event.getPlayer().getName());
         NettyDriver.getInstance().nettyClient.sendPacket(disconnect);
+
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void handle(final ServerSwitchEvent event){
 
     }
 

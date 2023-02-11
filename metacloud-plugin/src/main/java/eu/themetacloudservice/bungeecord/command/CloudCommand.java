@@ -6,7 +6,6 @@ import eu.themetacloudservice.configuration.ConfigDriver;
 import eu.themetacloudservice.configuration.dummys.message.Messages;
 import eu.themetacloudservice.network.cloudcommand.*;
 import eu.themetacloudservice.networking.NettyDriver;
-import eu.themetacloudservice.webserver.dummys.CloudService;
 import eu.themetacloudservice.webserver.dummys.WhitelistConfig;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;

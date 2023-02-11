@@ -10,10 +10,4 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class ServiceConnectListener implements Listener {
 
-    @EventHandler
-    public void handle(PlayerJoinEvent event){
-        LiveService liveService = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
-        PackageCloudPlayerChangeService service = new PackageCloudPlayerChangeService(event.getPlayer().getName(), liveService.getService());
-        NettyDriver.getInstance().nettyClient.sendPacket(service);
-    }
 }
