@@ -5,7 +5,6 @@ import eu.themetacloudservice.configuration.ConfigDriver;
 import eu.themetacloudservice.configuration.dummys.authenticator.AuthenticatorKey;
 import eu.themetacloudservice.configuration.dummys.managerconfig.ManagerConfig;
 import eu.themetacloudservice.configuration.dummys.message.Messages;
-import eu.themetacloudservice.groups.dummy.Group;
 import eu.themetacloudservice.manager.cloudservices.CloudServiceDriver;
 import eu.themetacloudservice.manager.cloudservices.entry.TaskedService;
 import eu.themetacloudservice.manager.cloudservices.queue.QueueDriver;
@@ -39,7 +38,6 @@ import eu.themetacloudservice.webserver.entry.RouteEntry;
 
 import java.io.File;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 public class CloudManager {
 

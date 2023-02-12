@@ -41,8 +41,8 @@ public class RestDriver {
         }
     }
 
-    public String convert(IRest IConfigAdapter){
-        return GSON.toJson(IConfigAdapter);
+    public String convert(IRest IRest){
+        return GSON.toJson(IRest);
     }
 
     @SneakyThrows

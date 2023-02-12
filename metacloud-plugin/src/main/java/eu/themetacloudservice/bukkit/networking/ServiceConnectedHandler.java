@@ -35,12 +35,6 @@ public class ServiceConnectedHandler implements IPacketListener {
 
 
 
-
-        if (paramPacket instanceof PackageCloudPlayerChangeService){
-            CloudPlayer cloudPlayer = (CloudPlayer) new ConfigDriver().convert(CloudPlugin.getInstance().getRestDriver().get("cloudplayer~" + ((PackageCloudPlayerChangeService) paramPacket).getName()), CloudPlayer.class);
-            Driver.getInstance().getEventDriver().executeEvent(new CloudPlayerSwitchServiceEvent(((PackageCloudPlayerChangeService) paramPacket).getName(), cloudPlayer.getCurrentServer(), ((PackageCloudPlayerChangeService) paramPacket).getServer()));
-
-        }
         if (paramPacket instanceof PackageCloudPlayerDisconnect){
             Driver.getInstance().getEventDriver().executeEvent(new CloudPlayerDisconnectEvent(((PackageCloudPlayerDisconnect) paramPacket).getName(), ((PackageCloudPlayerDisconnect) paramPacket).getUuid()));
         }

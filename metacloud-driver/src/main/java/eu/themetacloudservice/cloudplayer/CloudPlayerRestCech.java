@@ -1,10 +1,10 @@
 package eu.themetacloudservice.cloudplayer;
 
-import eu.themetacloudservice.cloudplayer.intefaces.ICloudPlayer;
+import eu.themetacloudservice.cloudplayer.intefaces.ICloudPlayerRestCech;
 import eu.themetacloudservice.configuration.interfaces.IConfigAdapter;
 import eu.themetacloudservice.webserver.interfaces.IRest;
 
-public class CloudPlayerRestCech implements ICloudPlayer, IConfigAdapter, IRest {
+public class CloudPlayerRestCech implements ICloudPlayerRestCech, IConfigAdapter, IRest {
 
     private  String  name;
     private  String  uuid;

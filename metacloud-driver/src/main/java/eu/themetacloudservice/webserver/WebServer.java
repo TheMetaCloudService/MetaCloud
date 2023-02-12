@@ -1,6 +1,5 @@
 package eu.themetacloudservice.webserver;
 
-import com.sun.net.httpserver.HttpServer;
 import eu.themetacloudservice.Driver;
 import eu.themetacloudservice.configuration.ConfigDriver;
 import eu.themetacloudservice.configuration.dummys.authenticator.AuthenticatorKey;
@@ -39,9 +38,8 @@ public class WebServer {
         return null;
     }
 
-    public WebServer addRoute(RouteEntry entry){
+    public void addRoute(RouteEntry entry){
         routes.add(entry);
-        return this;
     }
 
     public void updateRoute(String route, String json){
