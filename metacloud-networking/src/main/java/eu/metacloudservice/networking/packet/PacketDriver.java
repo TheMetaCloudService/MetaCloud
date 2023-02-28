@@ -17,6 +17,10 @@ public class PacketDriver {
     }
 
 
+    public Map<Integer, NettyAdaptor> getAdaptor() {
+        return adaptor;
+    }
+
     public boolean handle(Integer id, Channel channelFuture, Packet packet){
         if (adaptor.containsKey(id)){
             adaptor.get(id).handle(channelFuture, packet);
@@ -25,7 +29,6 @@ public class PacketDriver {
             return false;
         }
     }
-
     public PacketDriver registerHandler(Integer id, NettyAdaptor nettyAdaptor, Class<? extends Packet> pc){
         this.adaptor.put(id, nettyAdaptor);
         try {
@@ -36,7 +39,6 @@ public class PacketDriver {
         return this;
 
     }
-
     public PacketDriver registerPacket(Class<? extends Packet> pc) {
         try {
             this.packets.put(pc.newInstance().getPacketUUID(), pc);
@@ -45,7 +47,6 @@ public class PacketDriver {
         }
         return this;
     }
-
     public Class<? extends Packet> getPacket(int id) {
         return this.packets.get(id);
     }

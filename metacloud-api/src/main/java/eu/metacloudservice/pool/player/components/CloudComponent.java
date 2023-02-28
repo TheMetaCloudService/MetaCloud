@@ -1,63 +1,52 @@
-package eu.metacloudservice.cloudplayer.components;
+package eu.metacloudservice.pool.player.components;
 
-import eu.metacloudservice.cloudplayer.components.actions.ClickEventAction;
-import eu.metacloudservice.cloudplayer.components.actions.HoverEventAction;
+import eu.metacloudservice.pool.player.components.actions.ClickEventAction;
+import eu.metacloudservice.pool.player.components.actions.HoverEventAction;
+import lombok.Getter;
+import lombok.NonNull;
 
 import java.util.ArrayList;
 
 public class CloudComponent {
 
-    private String component;
-    private String clickEventAction;
-    private String clickResul;
-    private String hoverEventAction;
-    private String hoverResul;
-    private ArrayList<String> extras;
+    @Getter
+    private final String component;
 
-    public CloudComponent(String text) {
-        this.component = text;
+    @Getter
+    private String clickEventAction;
+
+    @Getter
+    private String clickResul;
+
+    @Getter
+    private String hoverEventAction;
+
+    @Getter
+    private String hoverResul;
+
+    @Getter
+    private final ArrayList<String> extras;
+
+    public CloudComponent(String component) {
+        this.component = component;
         extras = new ArrayList<>();
 
     }
 
-    public CloudComponent setClickEvent(ClickEventAction action, String object){
+    public CloudComponent setClickEvent(@NonNull ClickEventAction action, @NonNull String object){
         this.clickEventAction =action.toString();
         this.clickResul = object;
         return this;
     }
 
-    public CloudComponent setHoverEvent(HoverEventAction action, String object){
+    public CloudComponent setHoverEvent(@NonNull HoverEventAction action, @NonNull String object){
         this.hoverEventAction =action.toString();
         this.hoverResul = object;
         return this;
     }
-    public CloudComponent addExtra(String message){
+    public CloudComponent addExtra(@NonNull String message){
         extras.add(message);
         return this;
     }
 
-
-    public String getComponent() {
-        return component;
-    }
-
-    public String getClickEventAction() {
-        return clickEventAction;
-    }
-
-    public String getClickResul() {
-        return clickResul;
-    }
-
-    public String getHoverEventAction() {
-        return hoverEventAction;
-    }
-
-    public String getHoverResul() {
-        return hoverResul;
-    }
-
-    public ArrayList<String> getExtras() {
-        return extras;
-    }
 }

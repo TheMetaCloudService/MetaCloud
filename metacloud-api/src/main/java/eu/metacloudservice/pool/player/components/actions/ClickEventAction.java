@@ -1,4 +1,4 @@
-package eu.metacloudservice.cloudplayer.components.actions;
+package eu.metacloudservice.pool.player.components.actions;
 
 public enum ClickEventAction {
     OPEN_URL,

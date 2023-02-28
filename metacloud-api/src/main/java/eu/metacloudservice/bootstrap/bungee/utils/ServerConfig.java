@@ -1,6 +1,6 @@
-package eu.themetacloudservice.bungeecord.utils.server;
+package eu.metacloudservice.bootstrap.bungee.utils;
 
-import eu.themetacloudservice.bungeecord.CloudPlugin;
+import eu.metacloudservice.bootstrap.bungee.BungeeBootstrap;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -20,7 +20,7 @@ public class ServerConfig {
     static {
         setupConfig();
         if (locked) {
-            ProxyServer.getInstance().getScheduler().schedule(CloudPlugin.getInstance(), ServerConfig::setupConfig, 5L, TimeUnit.SECONDS);
+            ProxyServer.getInstance().getScheduler().schedule(BungeeBootstrap.getInstance(), ServerConfig::setupConfig, 5L, TimeUnit.SECONDS);
         }
     }
 

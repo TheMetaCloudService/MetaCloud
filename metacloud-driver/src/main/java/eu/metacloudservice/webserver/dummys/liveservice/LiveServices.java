@@ -1,6 +1,7 @@
 package eu.metacloudservice.webserver.dummys.liveservice;
 
 import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
+import eu.metacloudservice.process.ServiceState;
 
 public class LiveServices implements IConfigAdapter {
 
@@ -8,8 +9,12 @@ public class LiveServices implements IConfigAdapter {
     private String name;
     private String group;
     private int players;
+    private String host;
 
-    private boolean isInGame;
+    private String node;
+    private int port;
+
+    private ServiceState state;
 
     public LiveServices() {
     }
@@ -22,6 +27,31 @@ public class LiveServices implements IConfigAdapter {
         this.name = name;
     }
 
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getNode() {
+        return node;
+    }
+
+    public void setNode(String node) {
+        this.node = node;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
     public int getPlayers() {
         return players;
     }
@@ -31,12 +61,12 @@ public class LiveServices implements IConfigAdapter {
     }
 
 
-    public boolean isInGame() {
-        return isInGame;
+    public ServiceState getState() {
+        return state;
     }
 
-    public void setInGame(boolean inGame) {
-        isInGame = inGame;
+    public void setState(ServiceState state) {
+        this.state = state;
     }
 
     public String getGroup() {

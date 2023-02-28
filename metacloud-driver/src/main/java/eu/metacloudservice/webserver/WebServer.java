@@ -106,7 +106,7 @@ public class WebServer implements IWebServer {
 
                         if (rawroute.contains("/")){
                             String key = rawroute.split("/")[1];
-                            if (key.contains(AUTH_KEY) || key.contains("debug")){
+                            if (key.contains(AUTH_KEY)){
 
                                 String query = rawroute.replace("/" + key, "");
                                 if (method.equals("GET")){

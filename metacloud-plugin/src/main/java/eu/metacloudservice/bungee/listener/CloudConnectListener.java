@@ -7,6 +7,9 @@ import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.groups.dummy.Group;
+import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerConnect;
+import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerDisconnect;
+import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerSwitchService;
 import eu.metacloudservice.pool.service.entrys.CloudService;
 import eu.metacloudservice.webserver.dummys.WhiteList;
 import net.md_5.bungee.api.ProxyServer;
@@ -17,11 +20,11 @@ import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 public class CloudConnectListener implements Listener {
 
-    private boolean bypassMaintenance;
-    private boolean bypassFullNetwork;
-    private ArrayList<ProxiedPlayer> connected;
+    private final ArrayList<ProxiedPlayer> connected;
 
     public CloudConnectListener() {
         connected = new ArrayList<>();
@@ -31,56 +34,44 @@ public class CloudConnectListener implements Listener {
     public void  handle(final PostLoginEvent event){
 
 
-        this.bypassMaintenance = event.getPlayer().hasPermission("metacloud.connection.maintenance");
-
-        this.bypassFullNetwork = event.getPlayer().hasPermission("metacloud.connection.full");
-
-
+        boolean bypassMaintenance = event.getPlayer().hasPermission("metacloud.connection.maintenance");
+        boolean bypassFullNetwork = event.getPlayer().hasPermission("metacloud.connection.full");
         if (CloudAPI.getInstance().getWhitelist().contains(event.getPlayer().getName())){
-            this.bypassFullNetwork = true;
-            this.bypassMaintenance = true;
+            bypassFullNetwork = true;
+            bypassMaintenance = true;
         }
-        LiveService service = (LiveService)(new ConfigDriver("./CLOUDSERVICE.json")).read(LiveService.class);
 
+        LiveService service = (LiveService)(new ConfigDriver("./CLOUDSERVICE.json")).read(LiveService.class);
+        CloudAPI.getInstance().sendPacketSynchronized(new PacketInPlayerConnect(event.getPlayer().getName(), service.getService()));
         Group group = (Group)(new ConfigDriver()).convert(CloudAPI.getInstance().getRestDriver().get("/groups/"  + service.getGroup()), Group.class);
 
-        if (group.isMaintenance() && !this.bypassMaintenance) {
+        if (group.isMaintenance() && !bypassMaintenance) {
             Messages messages = CloudAPI.getInstance().getMessages();
             event.getPlayer().disconnect(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getKickNetworkIsMaintenance()).replace("&", "§"));
-
-            return;
-        }
-        if (CloudAPI.getInstance().getPlayerPool().getPlayers().size() >= group.getMaxPlayers() && !this.bypassFullNetwork) {
+        }else if (CloudAPI.getInstance().getPlayerPool().getPlayers().size() >= group.getMaxPlayers() && !bypassFullNetwork) {
             Messages messages = CloudAPI.getInstance().getMessages();
             event.getPlayer().disconnect(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getKickNetworkIsFull()).replace("&", "§"));
-
-
-        }
-        if (BungeeBootstrap.getInstance().getLobby(event.getPlayer()) == null){
+        }else if (BungeeBootstrap.getInstance().getLobby(event.getPlayer()) == null){
             Messages messages = CloudAPI.getInstance().getMessages();
             event.getPlayer().disconnect(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getKickNoFallback()).replace("&", "§"));
-
         }
 
 
 
     }
 
-
-
     @EventHandler
     public void handle(ServerConnectEvent event) {
         if (event.isCancelled()) return;
-
         if (event.getPlayer().getServer() == null){
             CloudService target = BungeeBootstrap.getInstance().getLobby(event.getPlayer());
             connected.add(event.getPlayer());
             if (target == null){
                 Messages messages = CloudAPI.getInstance().getMessages();
                 event.getPlayer().disconnect(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getKickNoFallback()).replace("&", "§"));
+            }else {
+                event.setTarget(ProxyServer.getInstance().getServerInfo(target.getName()));
             }
-
-            event.setTarget(ProxyServer.getInstance().getServerInfo(target.getName()));
         }else {
             if (event.getTarget().getName().equalsIgnoreCase("lobby")){
                 CloudService target = BungeeBootstrap.getInstance().getLobby(event.getPlayer());
@@ -88,9 +79,10 @@ public class CloudConnectListener implements Listener {
                 if (target == null){
                     Messages messages = CloudAPI.getInstance().getMessages();
                     event.getPlayer().disconnect(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getKickNoFallback()).replace("&", "§"));
-                }
 
-                event.setTarget(ProxyServer.getInstance().getServerInfo(target.getName()));
+                }else {
+                    event.setTarget(ProxyServer.getInstance().getServerInfo(target.getName()));
+                }
             }
         }
 
@@ -100,7 +92,7 @@ public class CloudConnectListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void handle(final PlayerDisconnectEvent event) {
         connected.remove(event.getPlayer());
-
+        CloudAPI.getInstance().sendPacketAsynchronous(new PacketInPlayerDisconnect(event.getPlayer().getName()));
 
     }
 
@@ -108,13 +100,7 @@ public class CloudConnectListener implements Listener {
     public void handle(final ServerSwitchEvent event){
 
         if (connected.contains(event.getPlayer())){
-            if (event.getFrom() == null){
-
-            }else {
-
-            }
-
-
+            CloudAPI.getInstance().sendPacketAsynchronous(new PacketInPlayerSwitchService(event.getPlayer().getName(), event.getPlayer().getServer().getInfo().getName()));
         }
 
     }
@@ -128,7 +114,6 @@ public class CloudConnectListener implements Listener {
             event.setCancelServer(ProxyServer.getInstance().getServerInfo(target.getName()));
             event.setCancelled(true);
         }
-
     }
 
 

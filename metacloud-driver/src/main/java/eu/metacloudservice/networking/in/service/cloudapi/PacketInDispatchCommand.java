@@ -1,4 +1,4 @@
-package eu.metacloudservice.networking.in.service;
+package eu.metacloudservice.networking.in.service.cloudapi;
 
 import eu.metacloudservice.networking.packet.NettyBuffer;
 import eu.metacloudservice.networking.packet.Packet;

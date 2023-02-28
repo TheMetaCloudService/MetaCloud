@@ -3,7 +3,6 @@ package eu.metacloudservice.manager.cloudservices;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
-import eu.metacloudservice.events.dummys.processbased.ServiceDisconnectedEvent;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.manager.CloudManager;
 import eu.metacloudservice.manager.cloudservices.entry.NetworkEntry;
@@ -37,11 +36,13 @@ public class CloudServiceDriver implements ICloudServiceDriver {
 
     @Override
     public TaskedService register(TaskedEntry entry) {
+        if (getService(entry.getServiceName()) != null) {
+            return getService(entry.getServiceName());
+        }
         if (!this.entry.group_player_potency.containsKey(entry.getGroupName())){
             this.entry.group_player_potency.put(entry.getGroupName(), 0);
         }
         this.services.add(new TaskedService(entry));
-        //todo: send an packet that sasys that the service is now registered
         CloudManager.queueDriver.addQueuedObjectToStart(entry.getServiceName());
         return getService(entry.getServiceName());
     }
@@ -49,11 +50,9 @@ public class CloudServiceDriver implements ICloudServiceDriver {
     @Override
     public void unregister(String service) {
         if (getService(service) == null) return;
-        Driver.getInstance().getEventDriver().executeEvent(new ServiceDisconnectedEvent(service));
         if (NettyDriver.getInstance().nettyServer.isChannelFound(service)) {
             NettyDriver.getInstance().nettyServer.removeChannel(service);
         }
-        //todo: send an packet that sasys that the service is unregistered
 
         CloudManager.queueDriver.addQueuedObjectToShutdown(service);
     }
@@ -63,11 +62,6 @@ public class CloudServiceDriver implements ICloudServiceDriver {
         if (NettyDriver.getInstance().nettyServer.isChannelFound(service)) {
             NettyDriver.getInstance().nettyServer.removeChannel(service);
         }
-
-        Driver.getInstance().getEventDriver().executeEvent(new ServiceDisconnectedEvent(service));
-
-        //todo: send an packet that sasys that the service is unregistered
-
         services.removeIf(taskedService -> taskedService.getEntry().getServiceName().equals(service));
     }
 
@@ -415,7 +409,11 @@ public class CloudServiceDriver implements ICloudServiceDriver {
 
     @Override
     public TaskedService getService(String service) {
-        return this.services.stream().filter(service1 -> service1.getEntry().getServiceName().equals(service)).findFirst().get();
+        if (    this.services.stream().filter(service1 -> service1.getEntry().getServiceName().equals(service)).collect(Collectors.toList()).isEmpty()){
+            return null;
+        }else {
+            return this.services.stream().filter(service1 -> service1.getEntry().getServiceName().equals(service)).findFirst().get();
+        }
     }
 
     @Override

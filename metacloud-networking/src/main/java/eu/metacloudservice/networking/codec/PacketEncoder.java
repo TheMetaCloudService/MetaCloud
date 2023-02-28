@@ -11,7 +11,9 @@ public class PacketEncoder extends MessageToByteEncoder<Packet> {
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, Packet packet, ByteBuf byteBuf) {
 
-        byteBuf.writeInt(packet.getPacketUUID());
-        packet.writePacket(new NettyBuffer(byteBuf));
+        try {
+            byteBuf.writeInt(packet.getPacketUUID());
+            packet.writePacket(new NettyBuffer(byteBuf));
+        }catch (Exception ignored){}
     }
 }

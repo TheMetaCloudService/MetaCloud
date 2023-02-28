@@ -17,7 +17,6 @@ public class Driver {
     private final GroupDriver groupDriver;
     private final TemplateDriver templateDriver;
     private final ModuleDriver moduleDriver;
-    private final EventDriver eventDriver;
     private WebServer webServer;
 
 
@@ -31,12 +30,7 @@ public class Driver {
         this.moduleDriver = new ModuleDriver();
         this.messageStorage = new MessageStorage();
         this.templateDriver = new TemplateDriver();
-        this.eventDriver = new EventDriver();
 
-    }
-
-    public EventDriver getEventDriver() {
-        return eventDriver;
     }
 
     public ModuleDriver getModuleDriver() {

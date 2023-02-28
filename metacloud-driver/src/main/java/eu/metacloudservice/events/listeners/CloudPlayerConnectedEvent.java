@@ -1,8 +1,9 @@
-package eu.metacloudservice.events.dummys.playerbased;
+package eu.metacloudservice.events.listeners;
 
-import eu.metacloudservice.events.entry.IEventAdapter;
 
-public class CloudPlayerConnectedEvent {
+import eu.metacloudservice.events.entrys.IEventAdapter;
+
+public class CloudPlayerConnectedEvent extends IEventAdapter {
     private final String name;
 
     private final String proxy;

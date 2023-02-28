@@ -13,13 +13,17 @@ import java.util.List;
 public class PacketDecoder extends ByteToMessageDecoder  {
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
-        int id = byteBuf.readInt();
-        var packetClass = NettyDriver.getInstance().packetDriver.getPacket(id);
-        if(packetClass != null) {
-            Packet packet = packetClass.newInstance();
-            packet.readPacket(new NettyBuffer(byteBuf));
-            list.add(packet);
-            NettyDriver.getInstance().packetDriver.handle(id, channelHandlerContext.channel(), packet);
-        }
+        try {
+            int id = byteBuf.readInt();
+            var packetClass = NettyDriver.getInstance().packetDriver.getPacket(id);
+            if(packetClass != null) {
+                Packet packet = packetClass.newInstance();
+                packet.readPacket(new NettyBuffer(byteBuf));
+                list.add(packet);
+                try {
+                    NettyDriver.getInstance().packetDriver.handle(id, channelHandlerContext.channel(), packet);
+                }catch (Exception ignored){}
+            }
+        }catch (Exception ignored){}
     }
 }

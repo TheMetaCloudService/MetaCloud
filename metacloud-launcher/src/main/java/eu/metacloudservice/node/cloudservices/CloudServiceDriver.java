@@ -3,9 +3,9 @@ package eu.metacloudservice.node.cloudservices;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.nodeconfig.NodeConfig;
 import eu.metacloudservice.groups.dummy.Group;
-import eu.metacloudservice.networking.nodes.from.PackageToManagerCallBackServiceExit;
-import eu.metacloudservice.networking.nodes.from.PackageToManagerCallBackServiceLaunch;
+import eu.metacloudservice.manager.networking.node.HandlePacketInNodeActionSuccess;
 import eu.metacloudservice.networking.NettyDriver;
+import eu.metacloudservice.networking.in.node.PacketInNodeActionSuccess;
 import eu.metacloudservice.node.cloudservices.entry.QueueEntry;
 import eu.metacloudservice.process.ServiceProcess;
 import eu.metacloudservice.timebaser.TimerBase;
@@ -77,8 +77,8 @@ public class CloudServiceDriver {
                                 processes.stream().filter(serviceProcess -> serviceProcess.getService().equalsIgnoreCase(service)).findFirst().get().handelLaunch();
 
                                 NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
-                                PackageToManagerCallBackServiceLaunch callBack = new PackageToManagerCallBackServiceLaunch(entry.getService(), config.getNodeName(),port);
-                                NettyDriver.getInstance().nettyClient.sendPacketSynchronized(callBack);
+                                NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInNodeActionSuccess(true, service, config.getNodeName(), port));
+
                             }
                         }else {
                             String service = entry.getService();
@@ -86,8 +86,8 @@ public class CloudServiceDriver {
                                 processes.stream().filter(serviceProcess -> serviceProcess.getService().equalsIgnoreCase(service)).findFirst().get().handelShutdown();
                                 try {Thread.sleep(1000);} catch (InterruptedException ignored) {}
                                 processes.removeIf(serviceProcess -> serviceProcess.getService().equalsIgnoreCase(service));
-                                PackageToManagerCallBackServiceExit callBack = new PackageToManagerCallBackServiceExit(service);
-                                NettyDriver.getInstance().nettyClient.sendPacketSynchronized(callBack);
+                                NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
+                                NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInNodeActionSuccess(false, service, config.getNodeName(), 0));
                             }
                         }
 

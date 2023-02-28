@@ -1,5 +1,6 @@
 package eu.metacloudservice.networking.server;
 
+import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.codec.PacketDecoder;
 import eu.metacloudservice.networking.codec.PacketEncoder;
 import eu.metacloudservice.networking.packet.Packet;
@@ -72,12 +73,34 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
 
     @Override
     protected void initChannel(Channel channel) {
-        ChannelPipeline pipeline = channel.pipeline();
-        pipeline.addLast(new PacketDecoder());
-        pipeline.addLast(new PacketEncoder());
+
+        final InetSocketAddress inetSocketAddress = ((InetSocketAddress) channel.remoteAddress());
+
+        if (allowAddress(inetSocketAddress.getAddress().getHostAddress())){
+            ChannelPipeline pipeline = channel.pipeline();
+            pipeline.addLast(new ChannelHandler() {
+                @Override
+                public void handlerAdded(ChannelHandlerContext channelHandlerContext) throws Exception {}
+                @Override
+                public void handlerRemoved(ChannelHandlerContext channelHandlerContext) throws Exception {}
+                @Override
+                public void exceptionCaught(ChannelHandlerContext channelHandlerContext, Throwable throwable) throws Exception {}});
+            pipeline.addLast(new PacketDecoder());
+            pipeline.addLast(new PacketEncoder());
+        }else {
+            channel.close().addListener(ChannelFutureListener.CLOSE_ON_FAILURE).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+        }
     }
 
 
+
+    private boolean allowAddress(String address){
+        if (NettyDriver.getInstance().whitelist.contains(address)){
+            return true;
+        }else {
+            return false;
+        }
+    }
 
     public void sendToAllSynchronized(final Packet... packets){
         for (Packet packet : packets)

@@ -1,2 +1,29 @@
-package eu.metacloudservice.events.listeners;public class CloudProxyPreparedEvent {
+package eu.metacloudservice.events.listeners;
+
+import eu.metacloudservice.events.entrys.IEventAdapter;
+
+public class CloudProxyPreparedEvent extends IEventAdapter {
+    private final String name;
+
+    private final String group;
+
+    private final String node;
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getGroup() {
+        return this.group;
+    }
+
+    public String getNode() {
+        return this.node;
+    }
+
+    public CloudProxyPreparedEvent(String name, String group, String node) {
+        this.name = name;
+        this.group = group;
+        this.node = node;
+    }
 }

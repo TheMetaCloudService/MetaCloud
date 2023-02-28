@@ -1,2 +1,4 @@
-package eu.metacloudservice.events.entrys;public class IEventAdapter {
+package eu.metacloudservice.events.entrys;
+
+public class IEventAdapter {
 }

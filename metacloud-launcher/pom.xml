@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>MetacloudService</artifactId>
-        <groupId>eu.themetacloudservice</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <groupId>eu.metacloudservice</groupId>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -18,9 +18,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>eu.themetacloudservice</groupId>
+            <groupId>eu.metacloudservice</groupId>
             <artifactId>metacloud-driver</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -37,8 +37,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>16</source>
+                    <target>16</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -62,7 +62,7 @@
                     <archive>
                         <index>true</index>
                         <manifest>
-                            <mainClass>eu.themetacloudservice.CloudBoot</mainClass>
+                            <mainClass>eu.metacloudservice.CloudBoot</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -1,2 +1,4 @@
-package eu.metacloudservice.events.entrys;public class ICloudListener {
+package eu.metacloudservice.events.entrys;
+
+public interface ICloudListener {
 }

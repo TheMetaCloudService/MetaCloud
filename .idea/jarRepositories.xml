@@ -12,6 +12,11 @@
       <option name="url" value="https://jitpack.io" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="papermc" />
+      <option name="name" value="papermc" />
+      <option name="url" value="https://papermc.io/repo/repository/maven-public/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="my" />
       <option name="name" value="my" />
       <option name="url" value="https://repo.metacloudservice.eu/repository/" />

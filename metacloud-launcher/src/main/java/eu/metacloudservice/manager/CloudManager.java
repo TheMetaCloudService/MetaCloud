@@ -4,7 +4,9 @@ import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.authenticator.AuthenticatorKey;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
+import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfigNodes;
 import eu.metacloudservice.configuration.dummys.message.Messages;
+import eu.metacloudservice.events.EventDriver;
 import eu.metacloudservice.manager.cloudservices.CloudServiceDriver;
 import eu.metacloudservice.manager.cloudservices.entry.TaskedService;
 import eu.metacloudservice.manager.cloudservices.queue.QueueDriver;
@@ -12,15 +14,30 @@ import eu.metacloudservice.manager.commands.*;
 import eu.metacloudservice.manager.networking.node.HandlePacketInAuthNode;
 import eu.metacloudservice.manager.networking.node.HandlePacketInNodeActionSuccess;
 import eu.metacloudservice.manager.networking.node.HandlePacketInShutdownNode;
-import eu.metacloudservice.manager.networking.service.HandlePacketInServiceConnect;
-import eu.metacloudservice.manager.networking.service.HandlePacketInServiceDisconnect;
+import eu.metacloudservice.manager.networking.service.*;
+import eu.metacloudservice.manager.networking.service.playerbased.HandlePacketInPlayerConnect;
+import eu.metacloudservice.manager.networking.service.playerbased.HandlePacketInPlayerDisconnect;
+import eu.metacloudservice.manager.networking.service.playerbased.HandlePacketInPlayerSwitchService;
 import eu.metacloudservice.networking.in.node.PacketInAuthNode;
 import eu.metacloudservice.networking.in.node.PacketInNodeActionSuccess;
 import eu.metacloudservice.networking.in.node.PacketInShutdownNode;
+import eu.metacloudservice.networking.in.service.cloudapi.*;
 import eu.metacloudservice.networking.in.service.PacketInServiceConnect;
 import eu.metacloudservice.networking.in.service.PacketInServiceDisconnect;
+import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerConnect;
+import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerDisconnect;
+import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerSwitchService;
+import eu.metacloudservice.networking.in.service.playerbased.apibased.PacketInAPIPlayerConnect;
+import eu.metacloudservice.networking.in.service.playerbased.apibased.PacketInAPIPlayerKick;
+import eu.metacloudservice.networking.in.service.playerbased.apibased.PacketInAPIPlayerMessage;
 import eu.metacloudservice.networking.out.node.*;
 import eu.metacloudservice.networking.NettyDriver;
+import eu.metacloudservice.networking.out.service.PacketOutServiceConnected;
+import eu.metacloudservice.networking.out.service.PacketOutServiceDisconnected;
+import eu.metacloudservice.networking.out.service.PacketOutServicePrepared;
+import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerConnect;
+import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerDisconnect;
+import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerSwitchService;
 import eu.metacloudservice.networking.server.NettyServer;
 import eu.metacloudservice.terminal.enums.Type;
 import eu.metacloudservice.webserver.RestDriver;
@@ -38,10 +55,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class CloudManager {
 
     public static CloudServiceDriver serviceDriver;
+    public static EventDriver eventDriver;
     public static QueueDriver queueDriver;
     public static RestDriver restDriver;
     public static boolean shutdown;
@@ -57,6 +76,7 @@ public class CloudManager {
         Driver.getInstance().getMessageStorage().canUseMemory = config.getCanUsedMemory();
         System.setProperty("log4j.configurationFile", "log4j2.properties");
         initNetty(config);
+        eventDriver = new EventDriver();
         restDriver = new RestDriver(config.getManagerAddress(), config.getRestApiCommunication());
         if (!new File("./connection.key").exists()){
             AuthenticatorKey key = new AuthenticatorKey();
@@ -201,6 +221,14 @@ public class CloudManager {
         new NettyDriver();
         Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der Netty-Server wird vorbereitet und dann gestartet", "the Netty server is prepared and then started");
 
+        NettyDriver.getInstance().whitelist.add("127.0.0.1");
+
+        config.getNodes().forEach(managerConfigNodes -> {
+            if (!NettyDriver.getInstance().whitelist.contains(managerConfigNodes.getAddress())){
+                NettyDriver.getInstance().whitelist.add(managerConfigNodes.getAddress());
+            }
+        });
+
         /*
          * this starts a new NettyServer with Epoll on EpollEventLoopGroup or NioEventLoopGroup basis.
          * */
@@ -219,16 +247,45 @@ public class CloudManager {
                 * {@link NettyAdaptor} handles the packet and looks where it belongs
                 * {@link Packet} handles the packets are written and read via a ByteBuf
                  * */
+                //NODE
                 .registerHandler(new PacketInAuthNode().getPacketUUID(), new HandlePacketInAuthNode(), PacketInAuthNode.class)
                 .registerHandler(new PacketInNodeActionSuccess().getPacketUUID(), new HandlePacketInNodeActionSuccess(), PacketInNodeActionSuccess.class)
                 .registerHandler(new PacketInShutdownNode().getPacketUUID(), new HandlePacketInShutdownNode(), PacketInShutdownNode.class)
+
+                //API
                 .registerHandler(new PacketInServiceConnect().getPacketUUID(), new HandlePacketInServiceConnect(), PacketInServiceConnect.class)
                 .registerHandler(new PacketInServiceDisconnect().getPacketUUID(), new HandlePacketInServiceDisconnect(), PacketInServiceDisconnect.class)
+                .registerHandler(new PacketInChangeState().getPacketUUID(), new HandlePacketInChangeState(), PacketInChangeState.class)
+                .registerHandler(new PacketInDispatchCommand().getPacketUUID(), new HandlePacketInDispatchCommand(), PacketInDispatchCommand.class)
+                .registerHandler(new PacketInDispatchMainCommand().getPacketUUID(), new HandlePacketInDispatchMainCommand(), PacketInDispatchMainCommand.class)
+                .registerHandler(new PacketInLaunchService().getPacketUUID(), new HandlePacketInLaunchService(), PacketInLaunchService.class)
+                .registerHandler(new PacketInStopGroup().getPacketUUID(), new HandlePacketInStopGroup(), PacketInStopGroup.class)
+                .registerHandler(new PacketInStopService().getPacketUUID(), new HandlePacketInStopService(), PacketInStopService.class)
+                .registerHandler(new PacketInAPIPlayerMessage().getPacketUUID(), new HandlePacketInAPIPlayerMessage(), PacketInAPIPlayerMessage.class)
+                .registerHandler(new PacketInAPIPlayerConnect().getPacketUUID(), new HandlePacketInAPIPlayerConnect(), PacketInAPIPlayerConnect.class)
+                .registerHandler(new PacketInAPIPlayerKick().getPacketUUID(), new HandlePacketInAPIPlayerKick(), PacketInAPIPlayerKick.class)
+
+                //PLAYER
+                .registerHandler(new PacketInPlayerConnect().getPacketUUID(), new HandlePacketInPlayerConnect(), PacketInPlayerConnect.class)
+                .registerHandler(new PacketInPlayerDisconnect().getPacketUUID(), new HandlePacketInPlayerDisconnect(), PacketInPlayerDisconnect.class)
+                .registerHandler(new PacketInPlayerSwitchService().getPacketUUID(), new HandlePacketInPlayerSwitchService(), PacketInPlayerSwitchService.class)
 
                 /*
                 *  in this part all packages sent form the server are registered
                 *  {@link Packet} handles the packets are written and read via a ByteBuf
                 * */
+
+                //API
+                .registerPacket(PacketOutServiceConnected.class)
+                .registerPacket(PacketOutServiceDisconnected.class)
+                .registerPacket(PacketOutServicePrepared.class)
+
+                //PLAYER
+                .registerPacket(PacketOutPlayerConnect.class)
+                .registerPacket(PacketOutPlayerSwitchService.class)
+                .registerPacket(PacketOutPlayerDisconnect.class)
+
+                //NODE
                 .registerPacket(PacketOutAuthSuccess.class)
                 .registerPacket(PacketOutLaunchService.class)
                 .registerPacket(PacketOutStopService.class)
@@ -248,7 +305,7 @@ public class CloudManager {
 
     public static void shutdownHook(){
         shutdown = true;
-
+        NettyDriver.getInstance().packetDriver.getAdaptor().clear();
         serviceDriver.getServicesFromNode("InternalNode").forEach(TaskedService::handelQuit);
 
         try {
@@ -257,6 +314,7 @@ public class CloudManager {
             e.printStackTrace();
         }
         Driver.getInstance().getWebServer().close();
+
         NettyDriver.getInstance().nettyServer.close();
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Danke für die Nutzung von MetaCloud ;->",
                 "thank you for using MetaCloud ;->");

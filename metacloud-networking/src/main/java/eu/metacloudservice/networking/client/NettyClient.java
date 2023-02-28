@@ -37,9 +37,18 @@ public class NettyClient{
                     .channel(Epoll.isAvailable() ? EpollSocketChannel.class : NioSocketChannel.class)
                     .handler(new ChannelInitializer<>() {
                         protected void initChannel(Channel channel) {
-                            ChannelPipeline pipeline = channel.pipeline();
-                            pipeline.addLast(new PacketDecoder());
-                            pipeline.addLast(new PacketEncoder());
+                                try {
+                                    ChannelPipeline pipeline = channel.pipeline();
+                                    pipeline.addLast(new ChannelHandler() {
+                                        @Override
+                                        public void handlerAdded(ChannelHandlerContext channelHandlerContext) throws Exception {}
+                                        @Override
+                                        public void handlerRemoved(ChannelHandlerContext channelHandlerContext) throws Exception {}
+                                        @Override
+                                        public void exceptionCaught(ChannelHandlerContext channelHandlerContext, Throwable throwable) throws Exception {}});
+                                    pipeline.addLast(new PacketDecoder());
+                                    pipeline.addLast(new PacketEncoder());
+                                }catch (Exception Ignored){}
                         }
                     });
                 ChannelFuture channelFuture = bootstrap.connect(this.host, this.port);

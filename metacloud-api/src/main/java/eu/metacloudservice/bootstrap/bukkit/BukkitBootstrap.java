@@ -1,4 +1,4 @@
-package eu.metacloudservice.bootstrap;
+package eu.metacloudservice.bootstrap.bukkit;
 
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.configuration.ConfigDriver;
