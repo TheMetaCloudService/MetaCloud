@@ -17,7 +17,7 @@
 </p>
 
 
-<!!> The CloudSystem is still in Developeing
+<!!> The cloud is currently in beta phase, join our Discord to download the cloud
 
 ## Requirements
 
