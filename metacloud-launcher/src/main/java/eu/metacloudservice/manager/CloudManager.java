@@ -1,0 +1,265 @@
+package eu.metacloudservice.manager;
+
+import eu.metacloudservice.Driver;
+import eu.metacloudservice.configuration.ConfigDriver;
+import eu.metacloudservice.configuration.dummys.authenticator.AuthenticatorKey;
+import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
+import eu.metacloudservice.configuration.dummys.message.Messages;
+import eu.metacloudservice.manager.cloudservices.CloudServiceDriver;
+import eu.metacloudservice.manager.cloudservices.entry.TaskedService;
+import eu.metacloudservice.manager.cloudservices.queue.QueueDriver;
+import eu.metacloudservice.manager.commands.*;
+import eu.metacloudservice.manager.networking.node.HandlePacketInAuthNode;
+import eu.metacloudservice.manager.networking.node.HandlePacketInNodeActionSuccess;
+import eu.metacloudservice.manager.networking.node.HandlePacketInShutdownNode;
+import eu.metacloudservice.manager.networking.service.HandlePacketInServiceConnect;
+import eu.metacloudservice.manager.networking.service.HandlePacketInServiceDisconnect;
+import eu.metacloudservice.networking.in.node.PacketInAuthNode;
+import eu.metacloudservice.networking.in.node.PacketInNodeActionSuccess;
+import eu.metacloudservice.networking.in.node.PacketInShutdownNode;
+import eu.metacloudservice.networking.in.service.PacketInServiceConnect;
+import eu.metacloudservice.networking.in.service.PacketInServiceDisconnect;
+import eu.metacloudservice.networking.out.node.*;
+import eu.metacloudservice.networking.NettyDriver;
+import eu.metacloudservice.networking.server.NettyServer;
+import eu.metacloudservice.terminal.enums.Type;
+import eu.metacloudservice.webserver.RestDriver;
+import eu.metacloudservice.webserver.dummys.Addresses;
+import eu.metacloudservice.webserver.dummys.GroupList;
+import eu.metacloudservice.webserver.dummys.WhiteList;
+import eu.metacloudservice.webserver.dummys.liveservice.LiveServiceList;
+import eu.metacloudservice.webserver.entry.RouteEntry;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.UUID;
+
+public class CloudManager {
+
+    public static CloudServiceDriver serviceDriver;
+    public static QueueDriver queueDriver;
+    public static RestDriver restDriver;
+    public static boolean shutdown;
+
+    public CloudManager() {
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Es wird versucht, den '§fCloud Manager§r' zu starten",
+                "an attempt is made to start the '§fcloud manager§r'");
+        new File("./modules/").mkdirs();
+        new File("./local/GLOBAL/plugins/").mkdirs();
+        new File("./local/groups/").mkdirs();
+        new File( "./local/templates/").mkdirs();
+        ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+        Driver.getInstance().getMessageStorage().canUseMemory = config.getCanUsedMemory();
+        System.setProperty("log4j.configurationFile", "log4j2.properties");
+        initNetty(config);
+        restDriver = new RestDriver(config.getManagerAddress(), config.getRestApiCommunication());
+        if (!new File("./connection.key").exists()){
+            AuthenticatorKey key = new AuthenticatorKey();
+            String  k = Driver.getInstance().getMessageStorage().utf8ToUBase64(UUID.randomUUID() + UUID.randomUUID().toString()+ UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID());
+            key.setKey(k);
+            new ConfigDriver("./connection.key").save(key);
+        }if (!new File("./local/messages.json").exists()){
+            new ConfigDriver("./local/messages.json").save(new Messages("§8► §bMetaCloud §8▌ §7", "%PREFIX%Successfully connected to §a%SERVICE%",
+                    "%PREFIX%§cthe service is unfortunately full", "%PREFIX%§cYou are already on a Fallback", "%PREFIX%§cthe group is in maintenance",
+                    "%PREFIX%§cCould not find a suitable fallback to connect you to!", "§8► §cthe network is full buy the premium to be able to despite that on it",
+                    "§8► §cthe network is currently undergoing maintenance",
+                    "§8► §cThe server you were on went down, but no fallback server was found!",
+                    "§8► §cpleas connect over the main proxy"));
+        }
+
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Die Datei '§fconnection.key§r' wurde geladen",
+                "the '§fconnection.key§r' file was loaded");
+
+        if (!new File("./local/server-icon.png").exists()){
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Versuche die Datei '§fserver-icon.png§r' herunter zuladen",
+                    "Try to download the file '§fserver-icon.png§r'.");
+            Driver.getInstance().getMessageStorage().packetLoader.loadLogo();
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
+                    "The download was successful");
+        }else {
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Die Datei '§fserver-icon.png§r' wurde gefunden",
+                    "the '§fserver-icon.png§r' file was found");
+        }
+
+        if (!new File("./local/GLOBAL/plugins/metacloud-plugin.jar").exists()){
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Versuche die Datei '§fmetacloud-plugin.jar§r' herunter zuladen",
+                    "Try to download the file '§fmetacloud-plugin.jar§r'.");
+            Driver.getInstance().getMessageStorage().packetLoader.loadPlugin();
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
+                    "The download was successful");
+        }else {
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Die Datei '§fmetacloud-plugin.jar§r' wurde gefunden",
+                    "the '§fmetacloud-plugin.jar§r' file was found");
+        }
+
+        if (config.isUseViaVersion()){
+            if (!new File("./local/GLOBAL/plugins/viaversion-latest.jar").exists()){
+                Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Versuche die Datei '§fviaversion-latest.jar§r' herunter zuladen",
+                        "Try to download the file '§fviaversion-latest.jar§r'.");
+                try {
+                    URLConnection urlConnection = new URL("https://github.com/ViaVersion/ViaVersion/releases/download/4.5.1/ViaVersion-4.5.1.jar").openConnection();
+                    urlConnection.setRequestProperty("User-Agent",
+                            "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+                    urlConnection.connect();
+                    Files.copy(urlConnection.getInputStream(), Paths.get("local/GLOBAL/plugins/viaversion-latest.jar"));
+                } catch (IOException ignored) {
+
+                }
+                Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
+                        "The download was successful");
+            }else {
+                Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Die Datei '§fviaversion-latest.jar§r' wurde gefunden",
+                        "the '§fviaversion-latest.jar§r' file was found");
+            }
+        }
+
+        if (!new File("./local/GLOBAL/plugins/metacloud-api.jar").exists()){
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Versuche die Datei '§fmetacloud-api.jar§r' herunter zuladen",
+                    "Try to download the file '§fmetacloud-api.jar§r'.");
+            Driver.getInstance().getMessageStorage().packetLoader.loadAPI();
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
+                    "The download was successful");
+        }else {
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Die Datei '§fmetacloud-api.jar§r' wurde gefunden",
+                    "the '§fmetacloud-api.jar§r' file was found");
+        }
+
+        Driver.getInstance().getModuleDriver().enableModules();
+        initRestService();
+
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Es wird versucht, alle Befehle zu laden und ihre Bereitstellung deutlich zu machen",
+                "it is tried to load all commands and to make the provision of them clear");
+        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new HelpCommand());
+        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new GroupCommand());
+        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new ClearCommand());
+        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new StopCommand());
+        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new ServiceCommand());
+        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new NodeCommand());
+        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new ReloadCommand());
+        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new ModuleCommand());
+        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new MetaCloudCommand());
+
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Es wurden '§f"+Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().size()+" Befehle§r' gefunden und geladen",
+                "there were '§f"+Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().size()+" commands§r'  found and loaded");
+
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Die Cloud erfolgreich gestartet ist, können Sie sie von nun an mit '§fhelp§r' nutzen.",
+                "the cloud is successfully started, you can use it from now on with '§fhelp§r'.");
+        queueDriver= new QueueDriver();
+        queueDriver.handler();
+
+        Messages raw = (Messages) new ConfigDriver("./local/messages.json").read(Messages.class);
+        Messages msg = new Messages(Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getPrefix()),
+                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getSuccessfullyConnected()),
+                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getServiceIsFull()),
+                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getAlreadyOnFallback()),
+                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getConnectingGroupMaintenance()),
+                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getNoFallbackServer()),
+                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNetworkIsFull()),
+                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNetworkIsMaintenance()),
+                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNoFallback()),
+                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickOnlyProxyJoin()));
+
+        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/general/messages", new ConfigDriver().convert(msg)));
+        Driver.getInstance().getGroupDriver().getAll().forEach(group -> {
+            if (Driver.getInstance().getWebServer().getRoute("/groups/" +group.getGroup()) == null){
+                Driver.getInstance().getWebServer().addRoute(new RouteEntry("/groups/" + group.getGroup(), new ConfigDriver().convert(group)));
+
+            }else {
+                Driver.getInstance().getWebServer().updateRoute("/groups/" + group.getGroup(), new ConfigDriver().convert(group));
+            }
+        });
+
+        LiveServiceList liveGroup = new LiveServiceList();
+        liveGroup.setServices(new ArrayList<>());
+        liveGroup.setSplitter(config.getSplitter());
+        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/general/services", new ConfigDriver().convert(liveGroup)));
+        WhiteList whitelistConfig = new WhiteList();
+        whitelistConfig.setWhitelist(config.getWhitelist());
+        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/general/whitelist", new ConfigDriver().convert(whitelistConfig)));
+        GroupList groupList = new GroupList();
+        groupList.setGroups(Driver.getInstance().getGroupDriver().getAllStrings());
+        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/general/grouplist", new ConfigDriver().convert(groupList)));
+
+        Addresses AddressesConfig = new Addresses();
+
+        ArrayList<String> addresses = new ArrayList<>();
+        config.getNodes().forEach(managerConfigNodes -> {
+            addresses.add(managerConfigNodes.getAddress());
+        });
+        AddressesConfig.setWhitelist(addresses);
+        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/general/addresses", new ConfigDriver().convert(AddressesConfig)));
+        serviceDriver = new CloudServiceDriver();
+
+    }
+
+    public void initNetty(ManagerConfig config){
+        new NettyDriver();
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der Netty-Server wird vorbereitet und dann gestartet", "the Netty server is prepared and then started");
+
+        /*
+         * this starts a new NettyServer with Epoll on EpollEventLoopGroup or NioEventLoopGroup basis.
+         * */
+
+        NettyDriver.getInstance().nettyServer = new NettyServer();
+        NettyDriver.getInstance().nettyServer.bind(config.getNetworkingCommunication()).start();
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der '§fNetty-Server§r' wurde erfolgreich an Port '§f"+config.getNetworkingCommunication()+"§r' angebunden", "the '§fNetty-server§r' was successfully bound on port '§f"+config.getNetworkingCommunication()+"§r'");
+
+
+
+        //PACKETS
+        NettyDriver.getInstance().packetDriver
+
+                /*
+                * in this part all packages and traders sent to the server are registered
+                * {@link NettyAdaptor} handles the packet and looks where it belongs
+                * {@link Packet} handles the packets are written and read via a ByteBuf
+                 * */
+                .registerHandler(new PacketInAuthNode().getPacketUUID(), new HandlePacketInAuthNode(), PacketInAuthNode.class)
+                .registerHandler(new PacketInNodeActionSuccess().getPacketUUID(), new HandlePacketInNodeActionSuccess(), PacketInNodeActionSuccess.class)
+                .registerHandler(new PacketInShutdownNode().getPacketUUID(), new HandlePacketInShutdownNode(), PacketInShutdownNode.class)
+                .registerHandler(new PacketInServiceConnect().getPacketUUID(), new HandlePacketInServiceConnect(), PacketInServiceConnect.class)
+                .registerHandler(new PacketInServiceDisconnect().getPacketUUID(), new HandlePacketInServiceDisconnect(), PacketInServiceDisconnect.class)
+
+                /*
+                *  in this part all packages sent form the server are registered
+                *  {@link Packet} handles the packets are written and read via a ByteBuf
+                * */
+                .registerPacket(PacketOutAuthSuccess.class)
+                .registerPacket(PacketOutLaunchService.class)
+                .registerPacket(PacketOutStopService.class)
+                .registerPacket(PacketOutShutdownNode.class)
+                .registerPacket(PacketOutSyncService.class)
+                .registerPacket(PacketOutSendCommand.class);
+
+    }
+
+
+    public void initRestService(){
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Es wird versucht, den Webserver zu laden und zu starten",
+                "an attempt is made to load the web server and start it");
+        Driver.getInstance().runWebServer();
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Webserver wurde §ferfolgreich§r geladen und gestartet", "the web server is §fsuccessfully§r loaded and started");
+    }
+
+    public static void shutdownHook(){
+        shutdown = true;
+
+        serviceDriver.getServicesFromNode("InternalNode").forEach(TaskedService::handelQuit);
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Driver.getInstance().getWebServer().close();
+        NettyDriver.getInstance().nettyServer.close();
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Danke für die Nutzung von MetaCloud ;->",
+                "thank you for using MetaCloud ;->");
+        System.exit(0);
+    }
+}
