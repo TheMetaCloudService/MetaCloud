@@ -4,19 +4,19 @@ import eu.metacloudservice.cloudplayer.intefaces.ICloudPlayerRestCech;
 import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
 import eu.metacloudservice.webserver.interfaces.IRest;
 
-public class CloudPlayerRestCech implements ICloudPlayerRestCech, IConfigAdapter, IRest {
+public class CloudPlayerRestCache implements ICloudPlayerRestCech, IConfigAdapter, IRest {
 
     private  String  name;
     private  String  uuid;
     private  String currentProxy;
     private  String currentService;
 
-    public CloudPlayerRestCech(String name, String uuid) {
+    public CloudPlayerRestCache(String name, String uuid) {
         this.name = name;
         this.uuid = uuid;
     }
 
-    public CloudPlayerRestCech() {}
+    public CloudPlayerRestCache() {}
 
     @Override
     public void handleConnect(String proxyService) {
