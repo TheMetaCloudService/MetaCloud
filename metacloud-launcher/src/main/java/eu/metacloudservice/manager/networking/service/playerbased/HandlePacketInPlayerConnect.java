@@ -1,7 +1,7 @@
 package eu.metacloudservice.manager.networking.service.playerbased;
 
 import eu.metacloudservice.Driver;
-import eu.metacloudservice.cloudplayer.CloudPlayerRestCech;
+import eu.metacloudservice.cloudplayer.CloudPlayerRestCache;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
 import eu.metacloudservice.events.listeners.CloudPlayerConnectedEvent;
@@ -22,14 +22,14 @@ public class HandlePacketInPlayerConnect implements NettyAdaptor {
     public void handle(Channel channel, Packet packet) {
         if (packet instanceof PacketInPlayerConnect){
             if (!CloudManager.shutdown){
-                CloudPlayerRestCech restCech = new CloudPlayerRestCech(((PacketInPlayerConnect) packet).getName(), UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()));
+                CloudPlayerRestCache restCech = new CloudPlayerRestCache(((PacketInPlayerConnect) packet).getName(), UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()));
                 restCech.handleConnect(((PacketInPlayerConnect) packet).getProxy());
                 restCech.setCurrentService("");
                 Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudplayer/" + UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()), (new RestDriver()).convert(restCech)));
                 ManagerConfig config = (ManagerConfig)(new ConfigDriver("./service.json")).read(ManagerConfig.class);
                 if (config.isShowConnectingPlayers()){
-                    Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der Spieler '"+ ((PacketInPlayerConnect) packet).getName() + "@" + UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()) +"ist mit dem Proxy '"+ ((PacketInPlayerConnect) packet).getProxy() + "§r' verbunden",
-                            "The player '"+ ((PacketInPlayerConnect) packet).getName()+ "@" + UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()) + "is connected to the proxy '"+ ((PacketInPlayerConnect) packet).getProxy() + "§r'");
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der Spieler '"+ ((PacketInPlayerConnect) packet).getName() + "@" + UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()) +"§f' ist mit dem Proxy '"+ ((PacketInPlayerConnect) packet).getProxy() + "§r' verbunden",
+                            "The player '"+ ((PacketInPlayerConnect) packet).getName()+ "@" + UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()) + "§f' is connected to the proxy '"+ ((PacketInPlayerConnect) packet).getProxy() + "§r'");
                 }
                 CloudManager.serviceDriver.getService(((PacketInPlayerConnect) packet).getProxy()).handelCloudPlayerConnection(true);
                 NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutPlayerConnect(((PacketInPlayerConnect) packet).getName()));

@@ -45,8 +45,6 @@ public class CloudService {
         return services.getState();
     }
 
-
-
     public String getHost(){
         LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/general/services"), LiveServiceList.class);
         LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/services/" + getName().replace(list.getSplitter(), "~")), LiveServices.class);

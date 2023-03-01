@@ -27,9 +27,7 @@ import eu.metacloudservice.networking.in.service.PacketInServiceDisconnect;
 import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerConnect;
 import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerDisconnect;
 import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerSwitchService;
-import eu.metacloudservice.networking.in.service.playerbased.apibased.PacketInAPIPlayerConnect;
-import eu.metacloudservice.networking.in.service.playerbased.apibased.PacketInAPIPlayerKick;
-import eu.metacloudservice.networking.in.service.playerbased.apibased.PacketInAPIPlayerMessage;
+import eu.metacloudservice.networking.in.service.playerbased.apibased.*;
 import eu.metacloudservice.networking.out.node.*;
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.out.service.PacketOutServiceConnected;
@@ -264,6 +262,8 @@ public class CloudManager {
                 .registerHandler(new PacketInAPIPlayerMessage().getPacketUUID(), new HandlePacketInAPIPlayerMessage(), PacketInAPIPlayerMessage.class)
                 .registerHandler(new PacketInAPIPlayerConnect().getPacketUUID(), new HandlePacketInAPIPlayerConnect(), PacketInAPIPlayerConnect.class)
                 .registerHandler(new PacketInAPIPlayerKick().getPacketUUID(), new HandlePacketInAPIPlayerKick(), PacketInAPIPlayerKick.class)
+                .registerHandler(new PacketInAPIPlayerTitle().getPacketUUID(), new HandlePacketInAPIPlayerTitle(), PacketInAPIPlayerTitle.class)
+                .registerHandler(new PacketInAPIPlayerActionBar().getPacketUUID(), new HandlePacketInAPIPlayerActionBar(), PacketInAPIPlayerActionBar.class)
 
                 //PLAYER
                 .registerHandler(new PacketInPlayerConnect().getPacketUUID(), new HandlePacketInPlayerConnect(), PacketInPlayerConnect.class)

@@ -1,5 +1,6 @@
 package eu.metacloudservice.pool.player.components;
 
+import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
 import eu.metacloudservice.pool.player.components.actions.ClickEventAction;
 import eu.metacloudservice.pool.player.components.actions.HoverEventAction;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 public class CloudComponent {
 
     @Getter
-    private final String component;
+    private String component;
 
     @Getter
     private String clickEventAction;
@@ -25,7 +26,9 @@ public class CloudComponent {
     private String hoverResul;
 
     @Getter
-    private final ArrayList<String> extras;
+    private ArrayList<String> extras;
+
+
 
     public CloudComponent(String component) {
         this.component = component;

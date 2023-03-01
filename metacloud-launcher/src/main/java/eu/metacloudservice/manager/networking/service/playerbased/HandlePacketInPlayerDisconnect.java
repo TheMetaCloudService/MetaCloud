@@ -1,7 +1,7 @@
 package eu.metacloudservice.manager.networking.service.playerbased;
 
 import eu.metacloudservice.Driver;
-import eu.metacloudservice.cloudplayer.CloudPlayerRestCech;
+import eu.metacloudservice.cloudplayer.CloudPlayerRestCache;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
 import eu.metacloudservice.events.listeners.CloudPlayerDisconnectedEvent;
@@ -22,7 +22,7 @@ public class HandlePacketInPlayerDisconnect implements NettyAdaptor {
     public void handle(Channel channel, Packet packet) {
          if (packet instanceof PacketInPlayerDisconnect){
              if (!CloudManager.shutdown){
-                     CloudPlayerRestCech restCech = (CloudPlayerRestCech)(new RestDriver()).convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/" + UUIDDriver.getUUID(((PacketInPlayerDisconnect) packet).getName())), CloudPlayerRestCech.class);
+                 CloudPlayerRestCache restCech = (CloudPlayerRestCache)(new RestDriver()).convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/" + UUIDDriver.getUUID(((PacketInPlayerDisconnect) packet).getName())), CloudPlayerRestCache.class);
                  ManagerConfig config = (ManagerConfig)(new ConfigDriver("./service.json")).read(ManagerConfig.class);
                      CloudManager.serviceDriver.getService(restCech.getCurrentProxy()).handelCloudPlayerConnection(false);
                  if (!restCech.getCurrentService().equalsIgnoreCase("")){

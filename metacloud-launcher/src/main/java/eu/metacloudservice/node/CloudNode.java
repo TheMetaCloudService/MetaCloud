@@ -40,13 +40,25 @@ public class CloudNode {
                 "the '§fconnection.key§r' file was loaded");
 
         if (!new File("./local/server-icon.png").exists()){
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Versuche die Datei '§fserver-icon.png§r' herunter zuladen",
+                    "Try to download the file '§fserver-icon.png§r'.");
             Driver.getInstance().getMessageStorage().packetLoader.loadLogo();
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
+                    "The download was successful");
+        }else {
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Die Datei '§fserver-icon.png§r' wurde gefunden",
+                    "the '§fserver-icon.png§r' file was found");
         }
+
         if (!new File("./local/GLOBAL/plugins/metacloud-plugin.jar").exists()){
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Versuche die Datei '§fmetacloud-plugin.jar§r' herunter zuladen",
+                    "Try to download the file '§fmetacloud-plugin.jar§r'.");
             Driver.getInstance().getMessageStorage().packetLoader.loadPlugin();
-        }
-        if (!new File("./local/GLOBAL/plugins/metacloud-api.jar").exists()){
-            Driver.getInstance().getMessageStorage().packetLoader.loadAPI();
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
+                    "The download was successful");
+        }else {
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Die Datei '§fmetacloud-plugin.jar§r' wurde gefunden",
+                    "the '§fmetacloud-plugin.jar§r' file was found");
         }
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Die Datei '§fserver-icon.png§r' wurde gefunden",
                 "the '§fserver-icon.png§r' file was found");

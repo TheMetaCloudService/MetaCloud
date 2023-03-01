@@ -1,0 +1,3 @@
+eu\metacloudservice\bungee\BungeeBootstrap.class
+eu\metacloudservice\bukkit\BukkitBootstrap.class
+eu\metacloudservice\bungee\listener\CloudConnectListener.class

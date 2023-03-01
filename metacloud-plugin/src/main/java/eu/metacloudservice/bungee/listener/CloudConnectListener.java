@@ -11,7 +11,6 @@ import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerConne
 import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerDisconnect;
 import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerSwitchService;
 import eu.metacloudservice.pool.service.entrys.CloudService;
-import eu.metacloudservice.webserver.dummys.WhiteList;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.*;
@@ -20,7 +19,6 @@ import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class CloudConnectListener implements Listener {
 

@@ -1,9 +1,7 @@
 package eu.metacloudservice;
 
 import eu.metacloudservice.bootstrap.bungee.listener.CloudEvents;
-import eu.metacloudservice.bootstrap.bungee.networking.HandlePacketOutAPIPlayerConnect;
-import eu.metacloudservice.bootstrap.bungee.networking.HandlePacketOutAPIPlayerKick;
-import eu.metacloudservice.bootstrap.bungee.networking.HandlePacketOutAPIPlayerMessage;
+import eu.metacloudservice.bootstrap.bungee.networking.*;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
@@ -18,18 +16,14 @@ import eu.metacloudservice.networking.in.service.cloudapi.*;
 import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerConnect;
 import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerDisconnect;
 import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerSwitchService;
-import eu.metacloudservice.networking.in.service.playerbased.apibased.PacketInAPIPlayerConnect;
-import eu.metacloudservice.networking.in.service.playerbased.apibased.PacketInAPIPlayerKick;
-import eu.metacloudservice.networking.in.service.playerbased.apibased.PacketInAPIPlayerMessage;
+import eu.metacloudservice.networking.in.service.playerbased.apibased.*;
 import eu.metacloudservice.networking.out.service.PacketOutServiceConnected;
 import eu.metacloudservice.networking.out.service.PacketOutServiceDisconnected;
 import eu.metacloudservice.networking.out.service.PacketOutServicePrepared;
 import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerConnect;
 import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerDisconnect;
 import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerSwitchService;
-import eu.metacloudservice.networking.out.service.playerbased.apibased.PacketOutAPIPlayerConnect;
-import eu.metacloudservice.networking.out.service.playerbased.apibased.PacketOutAPIPlayerKick;
-import eu.metacloudservice.networking.out.service.playerbased.apibased.PacketOutAPIPlayerMessage;
+import eu.metacloudservice.networking.out.service.playerbased.apibased.*;
 import eu.metacloudservice.networking.packet.Packet;
 import eu.metacloudservice.pool.player.PlayerPool;
 import eu.metacloudservice.pool.service.ServicePool;
@@ -84,6 +78,8 @@ public class CloudAPI {
                         .registerPacket(PacketInPlayerDisconnect.class)
                         .registerPacket(PacketInPlayerSwitchService.class)
                         .registerPacket(PacketInServiceDisconnect.class)
+                        .registerPacket(PacketInAPIPlayerTitle.class)
+                        .registerPacket(PacketInAPIPlayerActionBar.class)
                         .registerPacket(PacketInServiceConnect.class);
 
 
@@ -95,6 +91,8 @@ public class CloudAPI {
             NettyDriver.getInstance().packetDriver
                     .registerHandler(new PacketOutAPIPlayerConnect().getPacketUUID(), new HandlePacketOutAPIPlayerConnect(), PacketOutAPIPlayerConnect.class)
                     .registerHandler(new PacketOutAPIPlayerMessage().getPacketUUID(), new HandlePacketOutAPIPlayerMessage(), PacketOutAPIPlayerMessage.class)
+                    .registerHandler(new PacketOutAPIPlayerTitle().getPacketUUID(), new HandlePacketOutAPIPlayerTitle(), PacketOutAPIPlayerTitle.class)
+                    .registerHandler(new PacketOutAPIPlayerActionBar().getPacketUUID(), new HandlePacketOutAPIPlayerActionBar(), PacketOutAPIPlayerActionBar.class)
                     .registerHandler(new PacketOutAPIPlayerKick().getPacketUUID(), new HandlePacketOutAPIPlayerKick(), PacketOutAPIPlayerKick.class);
 
         }

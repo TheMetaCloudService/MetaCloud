@@ -5,7 +5,9 @@ import eu.metacloudservice.networking.out.service.playerbased.apibased.PacketOut
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;
 import io.netty.channel.Channel;
+import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 public class HandlePacketOutAPIPlayerMessage implements NettyAdaptor {
@@ -15,7 +17,7 @@ public class HandlePacketOutAPIPlayerMessage implements NettyAdaptor {
             if (ProxyServer.getInstance().getPlayer(((PacketOutAPIPlayerMessage) packet).getUsername()).isConnected()){
                 ProxiedPlayer player = ProxyServer.getInstance().getPlayer(((PacketOutAPIPlayerMessage) packet).getUsername());
                 player.sendMessage(((PacketOutAPIPlayerMessage) packet).getMessage());
-            }
+              }
         }
     }
 }
