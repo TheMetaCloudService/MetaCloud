@@ -13,7 +13,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class MessageStorage {
-    public String version = "BETA-1.0.0";
+    public String version = "Sandstorm-1.0.0";
     public String language;
     public Integer canUseMemory = 0;
     public PacketLoader packetLoader;

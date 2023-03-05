@@ -4,7 +4,6 @@ import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.authenticator.AuthenticatorKey;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
-import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfigNodes;
 import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.events.EventDriver;
 import eu.metacloudservice.manager.cloudservices.CloudServiceDriver;
@@ -18,24 +17,27 @@ import eu.metacloudservice.manager.networking.service.*;
 import eu.metacloudservice.manager.networking.service.playerbased.HandlePacketInPlayerConnect;
 import eu.metacloudservice.manager.networking.service.playerbased.HandlePacketInPlayerDisconnect;
 import eu.metacloudservice.manager.networking.service.playerbased.HandlePacketInPlayerSwitchService;
+import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.in.node.PacketInAuthNode;
 import eu.metacloudservice.networking.in.node.PacketInNodeActionSuccess;
 import eu.metacloudservice.networking.in.node.PacketInShutdownNode;
-import eu.metacloudservice.networking.in.service.cloudapi.*;
 import eu.metacloudservice.networking.in.service.PacketInServiceConnect;
 import eu.metacloudservice.networking.in.service.PacketInServiceDisconnect;
+import eu.metacloudservice.networking.in.service.cloudapi.*;
 import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerConnect;
 import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerDisconnect;
 import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerSwitchService;
 import eu.metacloudservice.networking.in.service.playerbased.apibased.*;
 import eu.metacloudservice.networking.out.node.*;
-import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.out.service.PacketOutServiceConnected;
 import eu.metacloudservice.networking.out.service.PacketOutServiceDisconnected;
 import eu.metacloudservice.networking.out.service.PacketOutServicePrepared;
 import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerConnect;
 import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerDisconnect;
 import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerSwitchService;
+import eu.metacloudservice.networking.out.service.playerbased.apibased.PacketOutAPIPlayerActionBar;
+import eu.metacloudservice.networking.out.service.playerbased.apibased.PacketOutAPIPlayerKick;
+import eu.metacloudservice.networking.out.service.playerbased.apibased.PacketOutAPIPlayerTitle;
 import eu.metacloudservice.networking.server.NettyServer;
 import eu.metacloudservice.terminal.enums.Type;
 import eu.metacloudservice.webserver.RestDriver;
@@ -53,7 +55,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 public class CloudManager {
 
@@ -71,17 +72,20 @@ public class CloudManager {
         new File("./local/groups/").mkdirs();
         new File( "./local/templates/").mkdirs();
         ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
-        Driver.getInstance().getMessageStorage().canUseMemory = config.getCanUsedMemory();
-        System.setProperty("log4j.configurationFile", "log4j2.properties");
-        initNetty(config);
-        eventDriver = new EventDriver();
-        restDriver = new RestDriver(config.getManagerAddress(), config.getRestApiCommunication());
         if (!new File("./connection.key").exists()){
             AuthenticatorKey key = new AuthenticatorKey();
             String  k = Driver.getInstance().getMessageStorage().utf8ToUBase64(UUID.randomUUID() + UUID.randomUUID().toString()+ UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID());
             key.setKey(k);
             new ConfigDriver("./connection.key").save(key);
-        }if (!new File("./local/messages.json").exists()){
+        }
+        Driver.getInstance().getMessageStorage().canUseMemory = config.getCanUsedMemory();
+        System.setProperty("log4j.configurationFile", "log4j2.properties");
+        initNetty(config);
+        eventDriver = new EventDriver();
+        restDriver = new RestDriver(config.getManagerAddress(), config.getRestApiCommunication());
+        initRestService();
+
+        if (!new File("./local/messages.json").exists()){
             new ConfigDriver("./local/messages.json").save(new Messages("§8► §bMetaCloud §8▌ §7", "%PREFIX%Successfully connected to §a%SERVICE%",
                     "%PREFIX%§cthe service is unfortunately full", "%PREFIX%§cYou are already on a Fallback", "%PREFIX%§cthe group is in maintenance",
                     "%PREFIX%§cCould not find a suitable fallback to connect you to!", "§8► §cthe network is full buy the premium to be able to despite that on it",
@@ -90,8 +94,6 @@ public class CloudManager {
                     "§8► §cpleas connect over the main proxy"));
         }
 
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Die Datei '§fconnection.key§r' wurde geladen",
-                "the '§fconnection.key§r' file was loaded");
 
         if (!new File("./local/server-icon.png").exists()){
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Versuche die Datei '§fserver-icon.png§r' herunter zuladen",
@@ -100,8 +102,6 @@ public class CloudManager {
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
                     "The download was successful");
         }else {
-            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Die Datei '§fserver-icon.png§r' wurde gefunden",
-                    "the '§fserver-icon.png§r' file was found");
         }
 
         if (!new File("./local/GLOBAL/plugins/metacloud-plugin.jar").exists()){
@@ -111,9 +111,8 @@ public class CloudManager {
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
                     "The download was successful");
         }else {
-            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Die Datei '§fmetacloud-plugin.jar§r' wurde gefunden",
-                    "the '§fmetacloud-plugin.jar§r' file was found");
         }
+
 
         if (config.isUseViaVersion()){
             if (!new File("./local/GLOBAL/plugins/viaversion-latest.jar").exists()){
@@ -131,8 +130,7 @@ public class CloudManager {
                 Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
                         "The download was successful");
             }else {
-                Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Die Datei '§fviaversion-latest.jar§r' wurde gefunden",
-                        "the '§fviaversion-latest.jar§r' file was found");
+
             }
         }
 
@@ -147,8 +145,8 @@ public class CloudManager {
                     "the '§fmetacloud-api.jar§r' file was found");
         }
 
-        Driver.getInstance().getModuleDriver().enableModules();
-        initRestService();
+
+        Driver.getInstance().getModuleDriver().load();
 
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Es wird versucht, alle Befehle zu laden und ihre Bereitstellung deutlich zu machen",
                 "it is tried to load all commands and to make the provision of them clear");
@@ -279,6 +277,11 @@ public class CloudManager {
                 .registerPacket(PacketOutServiceConnected.class)
                 .registerPacket(PacketOutServiceDisconnected.class)
                 .registerPacket(PacketOutServicePrepared.class)
+                .registerPacket(PacketOutAPIPlayerActionBar.class)
+                .registerPacket(PacketOutAPIPlayerTitle.class)
+                .registerPacket(PacketOutAPIPlayerKick.class)
+                .registerPacket(PacketInAPIPlayerConnect.class)
+                .registerPacket(PacketOutAPIPlayerKick.class)
 
                 //PLAYER
                 .registerPacket(PacketOutPlayerConnect.class)

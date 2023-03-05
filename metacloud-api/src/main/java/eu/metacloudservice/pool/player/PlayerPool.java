@@ -63,13 +63,8 @@ public class PlayerPool {
         }
     }
 
-    public boolean unregisterPlayer(@NonNull String username){
-        if (connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.getUsername().equals(username))){
-            connectedPlayers.removeIf(cloudPlayer -> cloudPlayer.getUsername().equals(username));
-            return true;
-        }else {
-            return false;
-        }
+    public void unregisterPlayer(@NonNull String username){
+        connectedPlayers.removeIf(cloudPlayer -> cloudPlayer.getUsername().equalsIgnoreCase(username));
     }
     public boolean unregisterPlayer(@NonNull UUID uniqueId){
         if (connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString()))){

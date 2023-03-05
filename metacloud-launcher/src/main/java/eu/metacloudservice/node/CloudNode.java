@@ -36,9 +36,6 @@ public class CloudNode {
 
             System.exit(0);
         }
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Die Datei '§fconnection.key§r' wurde geladen",
-                "the '§fconnection.key§r' file was loaded");
-
         if (!new File("./local/server-icon.png").exists()){
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Versuche die Datei '§fserver-icon.png§r' herunter zuladen",
                     "Try to download the file '§fserver-icon.png§r'.");
@@ -46,8 +43,6 @@ public class CloudNode {
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
                     "The download was successful");
         }else {
-            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Die Datei '§fserver-icon.png§r' wurde gefunden",
-                    "the '§fserver-icon.png§r' file was found");
         }
 
         if (!new File("./local/GLOBAL/plugins/metacloud-plugin.jar").exists()){
@@ -57,11 +52,7 @@ public class CloudNode {
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
                     "The download was successful");
         }else {
-            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Die Datei '§fmetacloud-plugin.jar§r' wurde gefunden",
-                    "the '§fmetacloud-plugin.jar§r' file was found");
         }
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Die Datei '§fserver-icon.png§r' wurde gefunden",
-                "the '§fserver-icon.png§r' file was found");
         initNetty(config);
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Es wird versucht, alle Befehle zu laden und ihre Bereitstellung deutlich zu machen",
                 "it is tried to load all commands and to make the provision of them clear");
@@ -99,16 +90,9 @@ public class CloudNode {
         Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der Netty-Client wird vorbereitet und dann gestartet", "the Netty client is prepared and then started");
 
         NettyDriver.getInstance().nettyClient = new NettyClient();
-        NettyDriver.getInstance().nettyClient.bind(config.getManagerAddress(), config.getNetworkingCommunication()).connect();
+        Boolean connected = NettyDriver.getInstance().nettyClient.bind(config.getManagerAddress(), config.getNetworkingCommunication()).connect();
 
         NettyDriver.getInstance().packetDriver
-                /*
-                * in this part all packages sent to the server are registered
-                * {@link Packet} handles the packets are written and read via a ByteBuf
-                * */
-                .registerPacket(PacketInAuthNode.class)
-                .registerPacket(PacketInShutdownNode.class)
-                .registerPacket(PacketInNodeActionSuccess.class)
 
                 /*
                 * in this part all packages and trader sent form the server are registered
@@ -120,10 +104,10 @@ public class CloudNode {
                 .registerHandler(new PacketOutLaunchService().getPacketUUID(), new HandlePacketOutLaunchService(), PacketOutLaunchService.class)
                 .registerHandler(new PacketOutShutdownNode().getPacketUUID(), new HandlePacketOutShutdownNode(), PacketOutShutdownNode.class)
                 .registerHandler(new PacketOutSyncService().getPacketUUID(), new HandlePacketOutSyncService(), PacketOutSyncService.class)
-                .registerHandler(new PacketOutSendCommand().getPacketUUID(), new HandlePacketOutSendCommand(), PacketOutSendCommand.class)
-        ;
+                .registerHandler(new PacketOutSendCommand().getPacketUUID(), new HandlePacketOutSendCommand(), PacketOutSendCommand.class);
 
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "der '§fNetty-Client§r' wurde erfolgreich verbunden '§f"+config.getManagerAddress()+"~"+config.getNetworkingCommunication()+"§r' angebunden", "the '§fNetty-client§r' was successfully connected '§f"+config.getManagerAddress()+"~"+config.getNetworkingCommunication()+"§r'");
-
+        if (connected){
+             Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "der '§fNetty-Client§r' wurde erfolgreich verbunden '§f"+config.getManagerAddress()+"~"+config.getNetworkingCommunication()+"§r' angebunden", "the '§fNetty-client§r' was successfully connected '§f"+config.getManagerAddress()+"~"+config.getNetworkingCommunication()+"§r'");
+        }
     }
 }

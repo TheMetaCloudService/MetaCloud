@@ -4,7 +4,6 @@ import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.cloudplayer.CloudPlayerRestCache;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.networking.in.service.playerbased.apibased.*;
-import eu.metacloudservice.pool.player.components.CloudComponent;
 import eu.metacloudservice.pool.service.entrys.CloudService;
 import lombok.NonNull;
 
@@ -48,13 +47,8 @@ public class CloudPlayer {
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInAPIPlayerMessage(username, message));
     }
 
-
     public void sendTitle(String title, String subTitle, int fadeIn, int stay, int fadeOut){
         CloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerTitle(title, subTitle, fadeIn, stay, fadeOut, username));
-    }
-
-    public void sendComponent(CloudComponent component){
-
     }
 
     public void sendActionBar(String message){

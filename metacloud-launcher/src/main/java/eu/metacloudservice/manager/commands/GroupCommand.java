@@ -73,15 +73,15 @@ public class GroupCommand extends CommandAdapter {
                     sendHelp();
                 }
             }else  if (args.length== 3) {
-                if (args[1].equalsIgnoreCase("setmaintenace")){
+                if (args[1].equalsIgnoreCase("setmaintenance")){
                     String group = args[0];
                     if (Driver.getInstance().getGroupDriver().find(group)){
                         Group raw = Driver.getInstance().getGroupDriver().load(group);
                         raw.setMaintenance(args[2].equalsIgnoreCase("true"));
                         Driver.getInstance().getGroupDriver().update(group, raw);
                         Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS,
-                                "die Wartungsarbeiten der Gruppe '§f"+group+"§r' wurden geändert",
-                                "the maintenance of the '§f"+group+"§r' group has been changed");
+                                "Die Wartungen wurde für die Gruppe bearbeitet",
+                                "The maintenance has been processed for the group");
                         Driver.getInstance().getWebServer().updateRoute("/groups/" + raw.getGroup(), new ConfigDriver().convert(raw));
                     }else {
                         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
@@ -97,8 +97,8 @@ public class GroupCommand extends CommandAdapter {
                             raw.getStorage().setTemplate(args[2].replace(" ", ""));
                             Driver.getInstance().getGroupDriver().update(group, raw);
                             Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS,
-                                    "Die Vorlage wurde erfolgreich geändert",
-                                    "The template was successfully modified");
+                                    "Die Vorlage der Gruppe wurde geändert, sie wird nun von der angegebenen Vorlage gestartet",
+                                    "The template of the group has been changed, it is now started from the specified template");
                             Driver.getInstance().getWebServer().updateRoute("/groups/" + raw.getGroup(), new ConfigDriver().convert(raw));
                         }else {
                             Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
@@ -118,8 +118,29 @@ public class GroupCommand extends CommandAdapter {
                             raw.setMinimalOnline(Integer.valueOf(args[2]));
                             Driver.getInstance().getGroupDriver().update(group, raw);
                             Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS,
-                                    "Die Vorlage wurde erfolgreich geändert",
-                                    "The template was successfully modified");
+                                    "Die Mindestanzahl der Dienste würde für die Gruppe bearbeitet werden",
+                                    "The minimum service number would be edited for the group");
+                            Driver.getInstance().getWebServer().updateRoute("/groups/" + raw.getGroup(), new ConfigDriver().convert(raw));
+                        }else {
+                            Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                    "du kannst nur eine zahl angeben",
+                                    "you can only specify one number");
+                        }
+                    }else {
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "die Gruppe '§f"+group+"§r' wurde nicht gefunden",
+                                "the group '§f"+group+"§r' was not found");
+                    }
+                }else  if (args[1].equalsIgnoreCase("setmaxplayers")) {
+                    String group = args[0];
+                    if (Driver.getInstance().getGroupDriver().find(group)){
+                        if(args[2].matches("[0-9]+")){
+                            Group raw = Driver.getInstance().getGroupDriver().load(group);
+                            raw.setMaxPlayers(Integer.valueOf(args[2]));
+                            Driver.getInstance().getGroupDriver().update(group, raw);
+                            Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS,
+                                    "Die maximale Anzahl der Spieler wurde für die Gruppe geändert",
+                                    "The maximum number of players was changed for the group");
                             Driver.getInstance().getWebServer().updateRoute("/groups/" + raw.getGroup(), new ConfigDriver().convert(raw));
                         }else {
                             Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
@@ -151,12 +172,13 @@ public class GroupCommand extends CommandAdapter {
         if (args.length == 1){
             commands.add("delete");
             commands.add("info");
-            commands.add("setmaintenace");
+            commands.add("setmaintenance");
+            commands.add("setmaxplayers");
             commands.add("settemplate");
             commands.add("setminamount");
         }
         if (args.length == 3){
-            if (args[1].equalsIgnoreCase("setmaintenace")) {
+            if (args[1].equalsIgnoreCase("setmaintenance")) {
                 commands.add("true");
                 commands.add("false");
             }  if (args[1].equalsIgnoreCase("settemplate")) {
@@ -182,8 +204,11 @@ public class GroupCommand extends CommandAdapter {
                 " >> §fgroup <group> info §7~ um die Wartung ein- und wieder auszuschalten",
                 " >> §fgroup <group> info §7~ to switch the maintenance on and off again");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fgroup <group> setmaintenace <true/false> §7~ um die Wartung ein- und wieder auszuschalten",
-                " >> §fgroup <group> setmaintenace <true/false> §7~ to switch the maintenance on and off again");
+                " >> §fgroup <group> setmaintenance <true/false> §7~ um die Wartung ein- und wieder auszuschalten",
+                " >> §fgroup <group> setmaintenance <true/false> §7~ to switch the maintenance on and off again");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                " >> §fgroup <group> setmaxplayers <count> §7~ um die maximalen Spielerzahlen ändern",
+                " >> §fgroup <group> setmaxplayers <count> §7~ to change the maximum number of players");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fgroup <group> setminamount <count> §7~ die Anzahl der Server festlegen, die immer online sein sollen",
                 " >> §fgroup <group> setminamount <count> §7~ set the number of servers that should always be online");

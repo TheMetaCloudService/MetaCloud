@@ -18,7 +18,6 @@ public class PacketInPlayerConnect extends Packet {
 
     public PacketInPlayerConnect(String name, String proxy) {
         setPacketUUID(2995985);
-
         this.name = name;
         this.proxy = proxy;
     }

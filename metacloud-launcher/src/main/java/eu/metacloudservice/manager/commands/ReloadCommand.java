@@ -22,8 +22,7 @@ public class ReloadCommand extends CommandAdapter {
     @Override
     public void performCommand(CommandAdapter command, String[] args) {
 
-          Driver.getInstance().getModuleDriver().disableModules();
-        Driver.getInstance().getModuleDriver().enableModules();
+          Driver.getInstance().getModuleDriver().reload();
         Messages raw = (Messages) new ConfigDriver("./local/messages.json").read(Messages.class);
         Messages msg = new Messages(Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getPrefix()),
                 Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getSuccessfullyConnected()),

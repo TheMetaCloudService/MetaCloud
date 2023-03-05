@@ -29,10 +29,13 @@ import eu.metacloudservice.pool.player.PlayerPool;
 import eu.metacloudservice.pool.service.ServicePool;
 import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.webserver.RestDriver;
+import eu.metacloudservice.webserver.dummys.GroupList;
 import eu.metacloudservice.webserver.dummys.WhiteList;
 import lombok.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class CloudAPI {
 
@@ -58,7 +61,6 @@ public class CloudAPI {
 
 
         NettyDriver.getInstance().packetDriver
-
                 .registerHandler(new PacketOutServicePrepared().getPacketUUID(), new HandlePacketOutServicePrepared(), PacketOutServicePrepared.class)
                 .registerHandler(new PacketOutServiceConnected().getPacketUUID(), new HandlePacketOutServiceConnected(), PacketOutServiceConnected.class)
                 .registerHandler(new PacketOutServiceDisconnected().getPacketUUID(), new HandlePacketOutServiceDisconnected(), PacketOutServiceDisconnected.class)
@@ -93,7 +95,7 @@ public class CloudAPI {
                     .registerHandler(new PacketOutAPIPlayerMessage().getPacketUUID(), new HandlePacketOutAPIPlayerMessage(), PacketOutAPIPlayerMessage.class)
                     .registerHandler(new PacketOutAPIPlayerTitle().getPacketUUID(), new HandlePacketOutAPIPlayerTitle(), PacketOutAPIPlayerTitle.class)
                     .registerHandler(new PacketOutAPIPlayerActionBar().getPacketUUID(), new HandlePacketOutAPIPlayerActionBar(), PacketOutAPIPlayerActionBar.class)
-                    .registerHandler(new PacketOutAPIPlayerKick().getPacketUUID(), new HandlePacketOutAPIPlayerKick(), PacketOutAPIPlayerKick.class);
+                     .registerHandler(new PacketOutAPIPlayerKick().getPacketUUID(), new HandlePacketOutAPIPlayerKick(), PacketOutAPIPlayerKick.class);
 
         }
 
@@ -125,6 +127,23 @@ public class CloudAPI {
 
     public EventDriver getEventDriver() {
         return eventDriver;
+    }
+
+
+    public ArrayList<Group> getGroups(){
+        ArrayList<Group> groups = new ArrayList<>();
+        GroupList cech = (GroupList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/general/grouplist"), GroupList.class);
+        cech.getGroups().forEach(s -> {
+            Group g = (Group) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/groups/" + s), Group.class);
+            groups.add(g);
+        });
+        return groups;
+
+    }
+
+    public List<String> getGroupsName(){
+        GroupList cech = (GroupList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/general/grouplist"), GroupList.class);
+        return cech.getGroups();
     }
 
     public List<String> getWhitelist(){

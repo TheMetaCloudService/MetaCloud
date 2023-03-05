@@ -104,7 +104,26 @@ public class ServiceCommand extends CommandAdapter {
                 sendHelp();
             }
         }else {
-            if (args[0].equalsIgnoreCase("run")) {
+
+            if (args[0].equalsIgnoreCase("stopGroup") && args[2].equalsIgnoreCase("--force")) {
+                String group = args[1];
+                if (Driver.getInstance().getGroupDriver().find(group)) {
+                    CloudManager.serviceDriver.getServices(group).forEach(taskedService -> CloudManager.serviceDriver.unregistered(taskedService.getEntry().getServiceName()));
+                } else {
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                            "Die Gruppe '§f" + group + "§r' wurde nicht gefunden",
+                            "the group '§f" + group + "§r' was not found");
+                }
+            }else  if (args[0].equalsIgnoreCase("stop") && args[2].equalsIgnoreCase("--force")){
+                String service = args[1];
+                if (CloudManager.serviceDriver.getService(service) != null){
+                    CloudManager.serviceDriver.unregistered(service);
+                }else {
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                            "Der Service '§f"+service+"§r' wurde nicht gefunden",
+                            "the service '§f"+service+"§r' was not found");
+                }
+            }else if (args[0].equalsIgnoreCase("run")) {
                 String group = args[1];
                 if (Driver.getInstance().getGroupDriver().find(group)) {
                     if (args[2].matches("[0-9]+")) {
@@ -232,11 +251,11 @@ public class ServiceCommand extends CommandAdapter {
                 " >> §fservice run <group> <count> §7~ um ein Service zu starten",
                 " >> §fservice run <group> <count> §7~ to start a service");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fservice stopgroup <group> §7~ um eine ganze Gruppe stoppen",
-                " >> §fservice stopgroup <group> §7~ to stop an entire group");
+                " >> §fservice stopgroup <group> --force §7~ um eine ganze Gruppe stoppen",
+                " >> §fservice stopgroup <group> --force §7~ to stop an entire group");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fservice stop <service> §7~ um ein Service zu stoppen",
-                " >> §fservice stop <service> §7~ to stop a service");
+                " >> §fservice stop <service> --force §7~ um ein Service zu stoppen",
+                " >> §fservice stop <service> --force §7~ to stop a service");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fservice sync <service> §7~ um einen Service zu synchronisieren",
                 " >> §fservice sync <service> §7~ to synchronize a service");

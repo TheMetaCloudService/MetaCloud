@@ -106,7 +106,7 @@ public class WebServer implements IWebServer {
 
                         if (rawroute.contains("/")){
                             String key = rawroute.split("/")[1];
-                            if (key.contains(AUTH_KEY)){
+                            if (key.contains(AUTH_KEY) || key.equalsIgnoreCase("debug")){
 
                                 String query = rawroute.replace("/" + key, "");
                                 if (method.equals("GET")){
@@ -126,8 +126,7 @@ public class WebServer implements IWebServer {
                         finalConnection.close();
 
                     } catch (Exception e) {
-                        writeAndFlush(finalConnection, "error 404", "{\"reason\":\"Pleas restart the cloud, if this error not can be fixed with an restart, pleas report this on the Discord\"}");
-
+                        finalConnection.close();
                     }
                 } catch (IOException ignored) {}
 

@@ -24,8 +24,8 @@ public class HandlePacketInPlayerSwitchService implements NettyAdaptor {
                 CloudPlayerRestCache restCech = (CloudPlayerRestCache)(new RestDriver()).convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/" + UUIDDriver.getUUID(((PacketInPlayerSwitchService) packet).getName())), CloudPlayerRestCache.class);
                 ManagerConfig config = (ManagerConfig)(new ConfigDriver("./service.json")).read(ManagerConfig.class);
                 if (config.isShowConnectingPlayers()){
-                    Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der Spieler '"+ ((PacketInPlayerSwitchService) packet).getName() + "@" + restCech.getUuid() + "§f' hat sich mit dem Server '"+ ((PacketInPlayerSwitchService) packet).getServer() + "§r' verbunden",
-                            "The player '"+ ((PacketInPlayerSwitchService) packet).getName()+ "@" + restCech.getUuid() + "§f' has connected to the '"+ ((PacketInPlayerSwitchService) packet).getServer()+ "§r' server");
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der Spieler '"+ ((PacketInPlayerSwitchService) packet).getName() + "@" + UUIDDriver.getUUID(((PacketInPlayerSwitchService) packet).getName())  + "§f' hat sich mit dem Server '"+ ((PacketInPlayerSwitchService) packet).getServer() + "§r' verbunden",
+                            "The player '"+ ((PacketInPlayerSwitchService) packet).getName()+ "@" + UUIDDriver.getUUID(((PacketInPlayerSwitchService) packet).getName()) + "§f' has connected to the '"+ ((PacketInPlayerSwitchService) packet).getServer()+ "§r' server");
                 }
                 if (!restCech.getCurrentService().equalsIgnoreCase("")){
                     CloudManager.serviceDriver.getService(restCech.getCurrentService()).handelCloudPlayerConnection(false);

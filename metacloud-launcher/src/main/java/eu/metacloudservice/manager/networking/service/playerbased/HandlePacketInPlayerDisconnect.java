@@ -9,6 +9,7 @@ import eu.metacloudservice.manager.CloudManager;
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerDisconnect;
 import eu.metacloudservice.networking.out.service.PacketOutServiceDisconnected;
+import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerDisconnect;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;
 import eu.metacloudservice.storage.UUIDDriver;
@@ -33,7 +34,7 @@ public class HandlePacketInPlayerDisconnect implements NettyAdaptor {
                      Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der Spieler '"+ ((PacketInPlayerDisconnect) packet).getName() + "@" + UUIDDriver.getUUID(((PacketInPlayerDisconnect) packet).getName()) + "§r' hat das Netzwerk verlassen",
                              "The player '"+ ((PacketInPlayerDisconnect) packet).getName()  + "@" + UUIDDriver.getUUID(((PacketInPlayerDisconnect) packet).getName()) + "§r' has left the network");
                  }
-                 NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutServiceDisconnected(((PacketInPlayerDisconnect) packet).getName(), true));
+                 NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutPlayerDisconnect(((PacketInPlayerDisconnect) packet).getName()));
                  CloudManager.eventDriver.executeEvent(new CloudPlayerDisconnectedEvent(((PacketInPlayerDisconnect) packet).getName(), UUIDDriver.getUUID(((PacketInPlayerDisconnect) packet).getName())));
 
              }

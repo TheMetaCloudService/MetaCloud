@@ -17,11 +17,13 @@ public class CloudEvents implements ICloudListener {
     @EventHandler(priority = 100)
     public void handle(CloudServiceConnectedEvent event){
         ServerInfo info = ProxyServer.getInstance().constructServerInfo(event.getName(), new InetSocketAddress(event.getHost(), event.getPort()), "metacloud-service", false);
+        ProxyServer.getInstance().getConsole().sendMessage("[§bMetaCloud§r] > added ~ " +event.getName());
         new ServerDriver().addServer(info);
     }
 
     @EventHandler
     public void handle(CloudServiceDisconnectedEvent event){
+        ProxyServer.getInstance().getConsole().sendMessage("[§bMetaCloud§r] > remove ~ " +event.getName());
         new ServerDriver().removeServer(event.getName());
     }
 

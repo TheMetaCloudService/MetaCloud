@@ -25,7 +25,7 @@ public class NettyClient{
         return this;
     }
 
-    public void connect() {
+    public boolean connect() {
         BOSS = EPOLL ? new EpollEventLoopGroup() : new NioEventLoopGroup();
         try {
                 Bootstrap bootstrap = new Bootstrap()
@@ -53,8 +53,9 @@ public class NettyClient{
                     });
                 ChannelFuture channelFuture = bootstrap.connect(this.host, this.port);
                 channel = channelFuture.sync().channel();
+                return true;
         } catch (InterruptedException exception) {
-            exception.printStackTrace();
+            return false;
         }
     }
 

@@ -10,7 +10,9 @@
         <module name="metacloud-api" />
         <module name="metacloud-plugin" />
         <module name="metacloud-networking" />
+        <module name="metamodule-notify" />
         <module name="metacloud-driver" />
+        <module name="metamodule-syncproxy" />
       </profile>
     </annotationProcessing>
   </component>

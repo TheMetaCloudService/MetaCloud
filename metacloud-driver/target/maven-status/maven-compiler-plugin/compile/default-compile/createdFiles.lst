@@ -1,5 +1,6 @@
 eu\metacloudservice\networking\out\service\playerbased\PacketOutPlayerSwitchService.class
 eu\metacloudservice\networking\out\service\PacketOutServicePrepared.class
+eu\metacloudservice\cloudplayer\intefaces\ICloudPlayerRestCache.class
 eu\metacloudservice\configuration\dummys\restapi\UpdateConfig.class
 eu\metacloudservice\networking\out\service\playerbased\apibased\PacketOutAPIPlayerKick.class
 eu\metacloudservice\terminal\screens\MainSetup$36.class
@@ -14,7 +15,6 @@ eu\metacloudservice\module\ModuleDriver.class
 eu\metacloudservice\terminal\screens\MainSetup$19.class
 eu\metacloudservice\webserver\RestDriver.class
 eu\metacloudservice\terminal\screens\MainSetup$3.class
-eu\metacloudservice\module\loader\ModuleClassLoader.class
 eu\metacloudservice\process\ServiceProcess.class
 eu\metacloudservice\networking\out\node\PacketOutSyncService.class
 eu\metacloudservice\networking\in\service\cloudapi\PacketInDispatchMainCommand.class
@@ -26,7 +26,6 @@ eu\metacloudservice\terminal\screens\GroupSetup.class
 eu\metacloudservice\networking\out\service\playerbased\PacketOutPlayerConnect.class
 eu\metacloudservice\webserver\WebServer.class
 eu\metacloudservice\configuration\dummys\managerconfig\ManagerConfig.class
-eu\metacloudservice\cloudplayer\intefaces\ICloudPlayerRestCech.class
 eu\metacloudservice\terminal\screens\MainSetup$23.class
 eu\metacloudservice\webserver\dummys\GroupList.class
 eu\metacloudservice\networking\in\node\PacketInAuthNode.class
@@ -45,7 +44,6 @@ eu\metacloudservice\Driver.class
 eu\metacloudservice\events\listeners\CloudServicePreparedEvent.class
 eu\metacloudservice\terminal\enums\Type.class
 eu\metacloudservice\networking\out\service\PacketOutServiceDisconnected.class
-eu\metacloudservice\module\configuration\ModuleClassConfig.class
 eu\metacloudservice\networking\out\node\PacketOutStopService.class
 eu\metacloudservice\terminal\commands\CommandDriver.class
 eu\metacloudservice\terminal\screens\MainSetup$14.class
@@ -56,12 +54,13 @@ eu\metacloudservice\terminal\screens\MainSetup$30.class
 eu\metacloudservice\webserver\dummys\liveservice\LiveServices.class
 eu\metacloudservice\events\listeners\CloudProxyDisconnectedEvent.class
 eu\metacloudservice\events\listeners\CloudProxyPreparedEvent.class
+eu\metacloudservice\module\interfaces\IModuleLoader.class
 eu\metacloudservice\terminal\screens\MainSetup$25.class
 eu\metacloudservice\terminal\screens\MainSetup$37.class
 eu\metacloudservice\networking\in\service\playerbased\apibased\PacketInAPIPlayerMessage.class
 eu\metacloudservice\configuration\interfaces\IConfigAdapter.class
+eu\metacloudservice\module\loader\ModuleLoader.class
 eu\metacloudservice\storage\SetupStorage.class
-eu\metacloudservice\module\extendable\ModuleExtendable.class
 eu\metacloudservice\cloudplayer\CloudPlayerRestCache.class
 eu\metacloudservice\storage\UUIDDriver.class
 eu\metacloudservice\terminal\screens\MainSetup$13.class
@@ -89,6 +88,7 @@ eu\metacloudservice\networking\in\service\playerbased\apibased\PacketInAPIPlayer
 eu\metacloudservice\timebaser\TimerBase.class
 eu\metacloudservice\terminal\commands\CommandAdapter.class
 eu\metacloudservice\networking\out\service\playerbased\apibased\PacketOutAPIPlayerConnect.class
+eu\metacloudservice\module\extention\IModule.class
 eu\metacloudservice\networking\in\service\playerbased\apibased\PacketInAPIPlayerTitle.class
 eu\metacloudservice\terminal\screens\MainSetup$35.class
 eu\metacloudservice\webserver\dummys\Addresses.class
@@ -101,7 +101,6 @@ eu\metacloudservice\networking\out\service\playerbased\apibased\PacketOutAPIPlay
 eu\metacloudservice\events\listeners\CloudServiceConnectedEvent.class
 eu\metacloudservice\networking\out\node\PacketOutSendCommand.class
 eu\metacloudservice\terminal\commands\CommandInfo.class
-eu\metacloudservice\networking\in\service\playerbased\apibased\PacketInAPIPlayerComponent.class
 eu\metacloudservice\networking\out\service\PacketOutServiceConnected.class
 eu\metacloudservice\terminal\screens\MainSetup$18.class
 eu\metacloudservice\terminal\utils\TerminalStorageLine.class
@@ -134,12 +133,12 @@ eu\metacloudservice\networking\out\service\playerbased\apibased\PacketOutAPIPlay
 eu\metacloudservice\terminal\screens\MainSetup$17.class
 eu\metacloudservice\terminal\screens\MainSetup$1.class
 eu\metacloudservice\terminal\screens\MainSetup$22.class
-eu\metacloudservice\networking\out\service\playerbased\apibased\PacketOutAPIPlayerComponent.class
 eu\metacloudservice\networking\in\service\cloudapi\PacketInStopGroup.class
 eu\metacloudservice\terminal\enums\Color.class
 eu\metacloudservice\terminal\TerminalDriver.class
 eu\metacloudservice\groups\dummy\Group.class
 eu\metacloudservice\events\EventDriver.class
+eu\metacloudservice\module\config\ModuleConfiguration.class
 eu\metacloudservice\terminal\screens\MainSetup$33.class
 eu\metacloudservice\webserver\entry\RouteEntry.class
 eu\metacloudservice\events\entrys\IEventAdapter.class

@@ -14,6 +14,8 @@
         <module>metacloud-networking</module>
         <module>metacloud-plugin</module>
         <module>metacloud-api</module>
+        <module>metacloud-modules</module>
+        <module>metacloud-modules/metamodule-notify</module>
     </modules>
 
     <properties>

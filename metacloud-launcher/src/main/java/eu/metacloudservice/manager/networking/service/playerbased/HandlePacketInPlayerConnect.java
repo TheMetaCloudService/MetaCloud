@@ -22,10 +22,10 @@ public class HandlePacketInPlayerConnect implements NettyAdaptor {
     public void handle(Channel channel, Packet packet) {
         if (packet instanceof PacketInPlayerConnect){
             if (!CloudManager.shutdown){
-                CloudPlayerRestCache restCech = new CloudPlayerRestCache(((PacketInPlayerConnect) packet).getName(), UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()));
-                restCech.handleConnect(((PacketInPlayerConnect) packet).getProxy());
-                restCech.setCurrentService("");
-                Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudplayer/" + UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()), (new RestDriver()).convert(restCech)));
+                CloudPlayerRestCache cache = new CloudPlayerRestCache(((PacketInPlayerConnect) packet).getName(), "");
+                cache.handleConnect(((PacketInPlayerConnect) packet).getProxy());
+                cache.setCurrentService("");
+                Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudplayer/" + UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()), (new RestDriver()).convert(cache)));
                 ManagerConfig config = (ManagerConfig)(new ConfigDriver("./service.json")).read(ManagerConfig.class);
                 if (config.isShowConnectingPlayers()){
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der Spieler '"+ ((PacketInPlayerConnect) packet).getName() + "@" + UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()) +"§f' ist mit dem Proxy '"+ ((PacketInPlayerConnect) packet).getProxy() + "§r' verbunden",

@@ -1,10 +1,10 @@
 package eu.metacloudservice.cloudplayer;
 
-import eu.metacloudservice.cloudplayer.intefaces.ICloudPlayerRestCech;
+import eu.metacloudservice.cloudplayer.intefaces.ICloudPlayerRestCache;
 import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
 import eu.metacloudservice.webserver.interfaces.IRest;
 
-public class CloudPlayerRestCache implements ICloudPlayerRestCech, IConfigAdapter, IRest {
+public class CloudPlayerRestCache implements ICloudPlayerRestCache, IConfigAdapter, IRest {
 
     private  String  name;
     private  String  uuid;
@@ -15,7 +15,6 @@ public class CloudPlayerRestCache implements ICloudPlayerRestCech, IConfigAdapte
         this.name = name;
         this.uuid = uuid;
     }
-
     public CloudPlayerRestCache() {}
 
     @Override
@@ -48,7 +47,6 @@ public class CloudPlayerRestCache implements ICloudPlayerRestCech, IConfigAdapte
     public void setCurrentService(String currentService) {
         this.currentService = currentService;
     }
-
     public String getCurrentProxy() {
         return currentProxy;
     }

@@ -31,6 +31,10 @@ public class CloudService {
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInChangeState(this.name, state.toString()));
     }
 
+    public void sync(){
+        CloudAPI.getInstance().dispatchCommand("service sync " + name);
+    }
+
     public Group getGroup(){
     return (Group) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/groups/" + group), Group.class);
     }
@@ -58,9 +62,9 @@ public class CloudService {
 
     public List<CloudPlayer> getPlayers(){
         if (getGroup().getGroupType().equalsIgnoreCase("PROXY")){
-            return CloudAPI.getInstance().getPlayerPool().getPlayersByProxyGroup(group);
+            return CloudAPI.getInstance().getPlayerPool().getPlayersFromProxy(name);
         }else {
-            return CloudAPI.getInstance().getPlayerPool().getPlayersByServiceGroup(group);
+            return CloudAPI.getInstance().getPlayerPool().getPlayersFromService(name);
         }
 
     }

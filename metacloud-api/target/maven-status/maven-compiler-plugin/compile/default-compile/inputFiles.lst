@@ -3,8 +3,6 @@ E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacl
 E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacloudservice\bootstrap\bungee\utils\ServerDriver.java
 E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacloudservice\pool\service\ServicePool.java
 E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacloudservice\CloudAPI.java
-E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacloudservice\pool\player\components\CloudComponent.java
-E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacloudservice\pool\player\components\actions\HoverEventAction.java
 E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacloudservice\networking\HandlePacketOutServiceConnected.java
 E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacloudservice\pool\player\entrys\CloudPlayer.java
 E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacloudservice\bootstrap\bungee\networking\HandlePacketOutAPIPlayerMessage.java
@@ -13,7 +11,6 @@ E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacl
 E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacloudservice\bootstrap\bungee\listener\CloudEvents.java
 E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacloudservice\bootstrap\bungee\networking\HandlePacketOutAPIPlayerKick.java
 E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacloudservice\bootstrap\bungee\utils\ServerConfig.java
-E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacloudservice\pool\player\components\actions\ClickEventAction.java
 E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacloudservice\bootstrap\bungee\networking\HandlePacketOutAPIPlayerActionBar.java
 E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacloudservice\networking\HandlePacketOutPlayerSwitchService.java
 E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacloudservice\bootstrap\bukkit\BukkitBootstrap.java

@@ -1,7 +1,6 @@
 package eu.metacloudservice.manager.commands;
 
 import eu.metacloudservice.Driver;
-import eu.metacloudservice.module.loader.ModuleClassLoader;
 import eu.metacloudservice.terminal.commands.CommandAdapter;
 import eu.metacloudservice.terminal.commands.CommandInfo;
 import eu.metacloudservice.terminal.enums.Type;
@@ -17,44 +16,29 @@ public class ModuleCommand extends CommandAdapter {
         if (args.length == 0){
             sendHelp();
         }else if (args[0].equalsIgnoreCase("list")){
-            if ( Driver.getInstance().getModuleDriver().loadedModules.isEmpty()){
+            if ( Driver.getInstance().getModuleDriver().getLoadedModules().isEmpty()){
                 Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                         "Es konnten keine module gefunden werden",
                         "No modules could be found");
                 return;
             }
 
-            Driver.getInstance().getModuleDriver().loadedModules.forEach(loadedModule -> {
-                Driver.getInstance().getTerminalDriver().log(Type.COMMAND,  "§7> Name: §b" + loadedModule.readProperties().MODULE_NAME
-                        +"§7~Author(s):§b " + loadedModule.readProperties().MODULE_AUTHOR +"§7-Version:§b " +
-                        loadedModule.readProperties().MODULE_VERSION);
+            Driver.getInstance().getModuleDriver().getLoadedModules().forEach(loadedModule -> {
+                Driver.getInstance().getTerminalDriver().log(Type.COMMAND,  "§7> Name: §b" + loadedModule.configuration.getName()
+                        +"§7~Author(s):§b " + loadedModule.configuration.getAuthor()+"§7-Version:§b " +
+                        loadedModule.configuration.getVersion());
             });
         }else if (args[0].equalsIgnoreCase("reload")){
             if (args.length == 2) {
                 String module = args[1];
 
-                boolean exists = false;
-                ModuleClassLoader selecedModule = null;
 
-                for (int i = 0; i != Driver.getInstance().getModuleDriver().loadedModules.size(); i++) {
-                    ModuleClassLoader module1 = Driver.getInstance().getModuleDriver().loadedModules.get(i);
-                    if (module1.readProperties().MODULE_NAME.equalsIgnoreCase(module)) {
-                        selecedModule = module1;
-                        exists = true;
-                    }
-                }
-                if (exists) {
-                    selecedModule.disableModule();
-                    selecedModule.enableModule();
+                Driver.getInstance().getModuleDriver().getLoadedModules().stream().filter(moduleLoader -> moduleLoader.configuration.getName().equalsIgnoreCase(module)).findFirst().get().reload();
+
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                             "Das Modul '§f"+module+"§r' wurde mit Erfolg neu geladen",
                             "The module '§f"+module+"§r' was reloaded with success");
 
-                } else {
-                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                            "Das Module wurde nicht gefunden",
-                            "The module was not found");
-                }
             }else {
                 sendHelp();
             }
@@ -73,9 +57,7 @@ public class ModuleCommand extends CommandAdapter {
             commands.add("reload");
         }if (args.length == 1){
             if (args[0].equalsIgnoreCase("reload")){
-                Driver.getInstance().getModuleDriver().loadedModules.forEach(moduleClassLoader -> {
-                    commands.add(moduleClassLoader.modulename);
-                });
+
             }
         }
         return commands;
