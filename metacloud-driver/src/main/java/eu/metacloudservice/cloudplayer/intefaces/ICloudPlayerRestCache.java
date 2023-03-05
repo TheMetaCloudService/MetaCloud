@@ -1,6 +1,6 @@
 package eu.metacloudservice.cloudplayer.intefaces;
 
-public interface ICloudPlayerRestCech {
+public interface ICloudPlayerRestCache {
 
 
     void handleConnect(String proxyService);
