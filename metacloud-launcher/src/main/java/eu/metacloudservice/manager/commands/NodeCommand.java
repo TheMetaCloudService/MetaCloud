@@ -91,7 +91,7 @@ public class NodeCommand extends CommandAdapter {
          commands.add("create");
          commands.add("delete");
          commands.add("list");
-        }else if (args.length == 1 & args[0].equalsIgnoreCase("delete")){
+        }else if (args.length == 1 & !args[0].equalsIgnoreCase("list")){
             ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
             config.getNodes().forEach(managerConfigNodes -> commands.add(managerConfigNodes.getName()));
         }

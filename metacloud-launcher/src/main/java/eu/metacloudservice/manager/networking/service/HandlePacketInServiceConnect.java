@@ -34,7 +34,7 @@ public class HandlePacketInServiceConnect implements NettyAdaptor {
                 TaskedEntry entry = CloudManager.serviceDriver.getService(((PacketInServiceConnect) packet).getService()).getEntry();
                 Group group = Driver.getInstance().getGroupDriver().load(entry.getGroupName());
                 Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der Service '§f"+((PacketInServiceConnect) packet).getService()+"§r' ist nun §ferfolgreich§r verbunden",
-                        "the service '§f"+((PacketInServiceConnect) packet).getService()+"§r' is now §fsuccessfully§r connected");
+                        "The service '§f"+((PacketInServiceConnect) packet).getService()+"§r' is now §fsuccessfully§r connected");
                 ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
 
 
@@ -46,11 +46,17 @@ public class HandlePacketInServiceConnect implements NettyAdaptor {
                         }
                     });
 
-                    CloudManager.eventDriver.executeEvent(new CloudProxyConnectedEvent(((PacketInServiceConnect) packet).getService(), entry.getNode(), entry.getUsedPort(), config.getNodes().stream().filter(managerConfigNodes -> managerConfigNodes.getName().equals(entry.getNode())).toList().get(0).getAddress(), entry.getGroupName()));
+                    Driver.getInstance().getMessageStorage().eventDriver .executeEvent(new CloudProxyConnectedEvent(((PacketInServiceConnect) packet).getService(), entry.getNode(), entry.getUsedPort(), config.getNodes().stream().filter(managerConfigNodes -> managerConfigNodes.getName().equals(entry.getNode())).toList().get(0).getAddress(), entry.getGroupName()));
 
                 }else {
                     NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutServiceConnected(((PacketInServiceConnect) packet).getService(), group.getGroup()));
-                    CloudManager.eventDriver.executeEvent(new CloudServiceConnectedEvent(((PacketInServiceConnect) packet).getService(), entry.getNode(), entry.getUsedPort(), config.getNodes().stream().filter(managerConfigNodes -> managerConfigNodes.getName().equals(entry.getNode())).toList().get(0).getAddress(), entry.getGroupName()));
+                    Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudServiceConnectedEvent(((PacketInServiceConnect) packet).getService(), entry.getNode(), entry.getUsedPort(), config.getNodes().stream().filter(managerConfigNodes -> managerConfigNodes.getName().equals(entry.getNode())).toList().get(0).getAddress(), entry.getGroupName()));
+                    CloudManager.serviceDriver.getServices().forEach(taskedService -> {
+                        if (!taskedService.getEntry().getServiceName().equals(((PacketInServiceConnect) packet).getService()) && taskedService.getEntry().getStatus() != ServiceState.STARTED  && taskedService.getEntry().getStatus() != ServiceState.QUEUED) {
+                            NettyDriver.getInstance().nettyServer.sendPacketSynchronized(((PacketInServiceConnect) packet).getService(), new PacketOutServiceConnected(taskedService.getEntry().getServiceName(),taskedService.getEntry().getGroupName()));
+                        }
+                    });
+
                 }
             }
         }

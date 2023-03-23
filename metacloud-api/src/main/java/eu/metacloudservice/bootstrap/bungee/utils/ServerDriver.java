@@ -27,6 +27,15 @@ public class ServerDriver {
         ServerConfig.addToConfig(serverInfo);
     }
 
+    public  void addLobby(ServerInfo serverInfo) {
+        if (serverExists(serverInfo.getName())) {
+            return;
+        }
+
+        getServers().put(serverInfo.getName(), serverInfo);
+        ServerConfig.addToConfigLobby(serverInfo);
+    }
+
     public  void removeServer(String name) {
         if (!serverExists(name)) {
             return;
@@ -34,6 +43,14 @@ public class ServerDriver {
 
         getServers().remove(name);
         ServerConfig.removeFromConfig(name);
+    }
+    public  void removeLobby(String name) {
+        if (!serverExists(name)) {
+            return;
+        }
+
+        getServers().remove(name);
+        ServerConfig.remove(name);
     }
 
     public  Map<String, ServerInfo> getServers() {

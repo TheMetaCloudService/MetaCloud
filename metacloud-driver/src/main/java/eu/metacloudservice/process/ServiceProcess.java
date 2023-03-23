@@ -7,13 +7,17 @@ import eu.metacloudservice.configuration.dummys.nodeconfig.NodeConfig;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.module.loader.ModuleLoader;
+import eu.metacloudservice.timebaser.TimerBase;
+import eu.metacloudservice.timebaser.utils.TimeUtil;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.sql.Time;
+import java.util.LinkedList;
 import java.util.Objects;
+import java.util.Queue;
+import java.util.TimerTask;
 import java.util.function.Consumer;
 
 public class ServiceProcess {
@@ -24,6 +28,12 @@ public class ServiceProcess {
     private Process process;
     private final boolean useProtocol;
     private boolean useVelocity;
+    public boolean useConsole;
+
+
+    private   BufferedReader reader;
+
+    public final LinkedList<String> consoelStorage;
 
 
 
@@ -34,6 +44,10 @@ public class ServiceProcess {
         this.port = port;
         this.useProtocol = useProtocol;
         this.useVelocity = false;
+        consoelStorage = new LinkedList<>();
+        useConsole = false;
+
+
     }
 
     @SneakyThrows
@@ -61,6 +75,31 @@ public class ServiceProcess {
         };
     }
 
+
+    public void handelConsole(){
+        if (useConsole){
+            useConsole = false;
+        }else {
+            useConsole = true;
+            new Thread(() -> {
+                String line;
+
+                consoelStorage.forEach(s -> {
+                    Driver.getInstance().getTerminalDriver().log(getService(), s);
+                });
+                    try {
+                        while ((line = reader.readLine()) != null && useConsole){
+                            consoelStorage.add(line);
+                            if (new File("./service.json").exists()){
+                                Driver.getInstance().getTerminalDriver().log(getService(), line);
+                            }else {}
+                        }
+                    }catch (Exception e){}
+
+            }).start();
+        }
+    }
+
     public void handelLaunch() {
 
         if (process != null || this.port == 0 || this.service == null || this.group == null ){
@@ -69,9 +108,6 @@ public class ServiceProcess {
 
         if (!Driver.getInstance().getTemplateDriver().get().contains(group.getStorage().getTemplate())) {
             Driver.getInstance().getTemplateDriver().create(group.getStorage().getTemplate(), group.getGroupType().equalsIgnoreCase("PROXY"), group.isRunStatic());
-        }
-        if (!new File("./live/").exists()) {
-            new File("./live/").mkdirs();
         }
         new File("./live/" + group.getGroup() + "/" + service + "/plugins/").mkdirs();
 
@@ -96,33 +132,36 @@ public class ServiceProcess {
           }
         }
 
-        Driver.getInstance().getModuleDriver().getLoadedModules().forEach(moduleLoader -> {
-            if (moduleLoader.configuration.getCopy().equalsIgnoreCase("ALL")){
-                try {
-                    FileUtils.copyFile(new File("./modules/" + moduleLoader.getJarName() + ".jar"), new File("./live/" + group.getGroup() + "/" + service + "/plugins/" + moduleLoader.getJarName() + ".jar"));
-                } catch (IOException ignored) {}
-            }else if (moduleLoader.configuration.getCopy().equalsIgnoreCase("LOBBY")){
-                if (group.getGroupType().equalsIgnoreCase("LOBBY")){
+        if (!Driver.getInstance().getModuleDriver().getLoadedModules().isEmpty()){
+            Driver.getInstance().getModuleDriver().getLoadedModules().forEach(moduleLoader -> {
+                if (moduleLoader.configuration.getCopy().equalsIgnoreCase("ALL")){
                     try {
                         FileUtils.copyFile(new File("./modules/" + moduleLoader.getJarName() + ".jar"), new File("./live/" + group.getGroup() + "/" + service + "/plugins/" + moduleLoader.getJarName() + ".jar"));
                     } catch (IOException ignored) {}
-                }
-            }else if (moduleLoader.configuration.getCopy().equalsIgnoreCase("PROXY")){
-                if (group.getGroupType().equalsIgnoreCase("PROXY")){
-                    try {
-                        FileUtils.copyFile(new File("./modules/" + moduleLoader.getJarName() + ".jar"), new File("./live/" + group.getGroup() + "/" + service + "/plugins/" + moduleLoader.getJarName() + ".jar"));
-                    } catch (IOException ignored) {}
+                }else if (moduleLoader.configuration.getCopy().equalsIgnoreCase("LOBBY")){
+                    if (group.getGroupType().equalsIgnoreCase("LOBBY")){
+                        try {
+                            FileUtils.copyFile(new File("./modules/" + moduleLoader.getJarName() + ".jar"), new File("./live/" + group.getGroup() + "/" + service + "/plugins/" + moduleLoader.getJarName() + ".jar"));
+                        } catch (IOException ignored) {}
+                    }
+                }else if (moduleLoader.configuration.getCopy().equalsIgnoreCase("PROXY")){
+                    if (group.getGroupType().equalsIgnoreCase("PROXY")){
+                        try {
+                            FileUtils.copyFile(new File("./modules/" + moduleLoader.getJarName() + ".jar"), new File("./live/" + group.getGroup() + "/" + service + "/plugins/" + moduleLoader.getJarName() + ".jar"));
+                        } catch (IOException ignored) {}
 
-                }
-            }else if (moduleLoader.configuration.getCopy().equalsIgnoreCase("SERVER")){
-                if (!group.getGroupType().equalsIgnoreCase("PROXY")){
-                    try {
-                        FileUtils.copyFile(new File("./modules/" + moduleLoader.getJarName() + ".jar"), new File("./live/" + group.getGroup() + "/" + service + "/plugins/" + moduleLoader.getJarName() + ".jar"));
-                    } catch (IOException ignored) {}
+                    }
+                }else if (moduleLoader.configuration.getCopy().equalsIgnoreCase("SERVER")){
+                    if (!group.getGroupType().equalsIgnoreCase("PROXY")){
+                        try {
+                            FileUtils.copyFile(new File("./modules/" + moduleLoader.getJarName() + ".jar"), new File("./live/" + group.getGroup() + "/" + service + "/plugins/" + moduleLoader.getJarName() + ".jar"));
+                        } catch (IOException ignored) {}
 
+                    }
                 }
-            }
-        });
+            });
+        }
+
 
         LiveService liveService = new LiveService();
         liveService.setService(service);
@@ -148,16 +187,12 @@ public class ServiceProcess {
 
 
         try {
-            FileUtils.copyDirectory( new File("./local/GLOBAL/"),
+            FileUtils.copyDirectory( new File("./local/GLOBAL/EVERY/"),
                     new File("./live/" + group.getGroup() + "/" + service +"/"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try {
-            FileUtils.copyFile(new File("./local/server-icon.png"), new File("./live/" + group.getGroup() + "/" + service+ "/server-icon.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
         try {
             FileUtils.copyFile(new File("./connection.key"), new File("./live/" + group.getGroup() + "/" + service+ "/connection.key"));
         } catch (IOException e) {
@@ -167,6 +202,22 @@ public class ServiceProcess {
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.directory(new File("./live/" + group.getGroup() + "/" + service + "/"));
         if (group.getGroupType().equals("PROXY")) {
+
+            if (!new File("./live/" + group.getGroup() + "/" + service+ "/server-icon.png").exists()){
+                try {
+                    FileUtils.copyFile(new File("./local/server-icon.png"), new File("./live/" + group.getGroup() + "/" + service+ "/server-icon.png"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            try {
+                FileUtils.copyDirectory( new File("./local/GLOBAL/EVERY_PROXY/"),
+                        new File("./live/" + group.getGroup() + "/" + service +"/"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             if (useVelocity){
                 String[] command = new String[]{
                         "java",
@@ -199,6 +250,7 @@ public class ServiceProcess {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             }else {
                 String[] command = new String[]{
                         "java",
@@ -231,9 +283,17 @@ public class ServiceProcess {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
 
+            }
+            reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         } else {
+
+            try {
+                FileUtils.copyDirectory( new File("./local/GLOBAL/EVERY_SERVER/"),
+                        new File("./live/" + group.getGroup() + "/" + service +"/"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             String[] command = new String[]{
                     "java",
@@ -289,7 +349,7 @@ public class ServiceProcess {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
+            reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         }
     }
 

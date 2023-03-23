@@ -20,6 +20,7 @@ import eu.metacloudservice.networking.in.service.playerbased.apibased.*;
 import eu.metacloudservice.networking.out.service.PacketOutServiceConnected;
 import eu.metacloudservice.networking.out.service.PacketOutServiceDisconnected;
 import eu.metacloudservice.networking.out.service.PacketOutServicePrepared;
+import eu.metacloudservice.networking.out.service.PacketOutServiceReaction;
 import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerConnect;
 import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerDisconnect;
 import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerSwitchService;
@@ -67,6 +68,7 @@ public class CloudAPI {
                 .registerHandler(new PacketOutPlayerConnect().getPacketUUID(), new HandlePacketOutPlayerConnect(), PacketOutPlayerConnect.class)
                 .registerHandler(new PacketOutPlayerDisconnect().getPacketUUID(), new HandlePacketOutPlayerDisconnect(), PacketOutPlayerDisconnect.class)
                 .registerHandler(new PacketOutPlayerSwitchService().getPacketUUID(), new HandlePacketOutPlayerSwitchService(), PacketOutPlayerSwitchService.class)
+                .registerHandler(new PacketOutServiceReaction().getPacketUUID(), new HandlePacketOutServiceReaction(), PacketOutServiceReaction.class)
                         .registerPacket(PacketInAPIPlayerMessage.class)
                         .registerPacket(PacketInAPIPlayerConnect.class)
                         .registerPacket(PacketInAPIPlayerKick.class)
@@ -87,7 +89,7 @@ public class CloudAPI {
 
         this.eventDriver = new EventDriver();
 
-        Group group = (Group) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/groups/" + service.getGroup()), Group.class);
+        Group group = (Group) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/" + service.getGroup()), Group.class);
         if (group.getGroupType().equals("PROXY")){
             eventDriver.registerListener(new CloudEvents());
             NettyDriver.getInstance().packetDriver
@@ -98,9 +100,6 @@ public class CloudAPI {
                      .registerHandler(new PacketOutAPIPlayerKick().getPacketUUID(), new HandlePacketOutAPIPlayerKick(), PacketOutAPIPlayerKick.class);
 
         }
-
-
-
 
 
         NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInServiceConnect(service.getService()));
@@ -132,27 +131,31 @@ public class CloudAPI {
 
     public ArrayList<Group> getGroups(){
         ArrayList<Group> groups = new ArrayList<>();
-        GroupList cech = (GroupList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/general/grouplist"), GroupList.class);
+        GroupList cech = (GroupList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/general"), GroupList.class);
         cech.getGroups().forEach(s -> {
-            Group g = (Group) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/groups/" + s), Group.class);
+            Group g = (Group) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/" + s), Group.class);
             groups.add(g);
         });
         return groups;
 
     }
 
+    public LiveService getCurrentService(){
+        return service;
+    }
+
     public List<String> getGroupsName(){
-        GroupList cech = (GroupList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/general/grouplist"), GroupList.class);
+        GroupList cech = (GroupList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/general"), GroupList.class);
         return cech.getGroups();
     }
 
     public List<String> getWhitelist(){
-        WhiteList cech = (WhiteList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/general/whitelist"), WhiteList.class);
+        WhiteList cech = (WhiteList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/default/whitelist"), WhiteList.class);
         return cech.getWhitelist();
     }
 
     public Messages getMessages(){
-        return (Messages) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/general/messages"), Messages.class);
+        return (Messages) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/message/default"), Messages.class);
     }
 
     public boolean addWhiteList(String username){

@@ -4,112 +4,86 @@ import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.bungee.BungeeBootstrap;
 import eu.metacloudservice.config.Motd;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.event.EventPriority;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class MotdListener  implements Listener {
 
 
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void handelPings(ProxyPingEvent event){
         ServerPing ping = event.getResponse();
-        ServerPing.Players players = ping.getPlayers();
-           if (BungeeBootstrap.getInstance().group.isMaintenance()){
-            Motd motd = BungeeBootstrap.getInstance().configuration.getMaintenancen().get(BungeeBootstrap.getInstance().motdCount);
-            if (!motd.getPlayerinfos().isEmpty()){
 
-                String array[] = new String[motd.getPlayerinfos().size()];
-                for(int j =0;j<motd.getPlayerinfos().size();j++){
-                    array[j] = motd.getPlayerinfos().get(j);
-                }
-                ServerPing.PlayerInfo[] playerInfo = new ServerPing.PlayerInfo[array.length];
-                for (int i = 0; i < playerInfo.length; i++) {
-                    playerInfo[i] = new ServerPing.PlayerInfo(
-                            Driver.getInstance().getMessageStorage().base64ToUTF8(array[i]).replace("&", "§"),
-                            UUID.randomUUID().toString());
-                }
-
-                ping.setPlayers( new ServerPing.Players(BungeeBootstrap.getInstance().group.getMaxPlayers(), CloudAPI.getInstance().getPlayerPool().getPlayers().size(), playerInfo));
-            }else{
-                ping.setPlayers( new ServerPing.Players(BungeeBootstrap.getInstance().group.getMaxPlayers(),  CloudAPI.getInstance().getPlayerPool().getPlayers().size(), null));
-            }
-            if (motd.getProtocol() != null && !motd.getProtocol().equalsIgnoreCase("")) {
-                ping.setVersion(new ServerPing.Protocol(Driver.getInstance().getMessageStorage().base64ToUTF8(motd.getProtocol())
-                        .replace("&", "§")
-                        .replace("%proxy_name%", BungeeBootstrap.getInstance().getLiveService().getService())
-                        .replace("%online_players%", ""+CloudAPI.getInstance().getPlayerPool().getPlayers().size())
-                        .replace("%max_players%", ""+ BungeeBootstrap.getInstance().group.getMaxPlayers()), ping.getVersion().getProtocol() -1));
-            }else {
-                ping.setVersion(new ServerPing.Protocol("§7" + CloudAPI.getInstance().getPlayerPool().getPlayers().size() + "/" + BungeeBootstrap.getInstance().group.getMaxPlayers(), ping.getVersion().getProtocol() -1));
-            }
-
-
-            ping.setDescription( Driver.getInstance().getMessageStorage().base64ToUTF8(motd.getFirstline())
-                    .replace("&", "§")
-                    .replace("%proxy_name%", BungeeBootstrap.getInstance().getLiveService().getService())
-                    .replace("%proxy_group%", BungeeBootstrap.getInstance().getLiveService().getGroup())
-                     .replace("%online_players%", ""+CloudAPI.getInstance().getPlayerPool().getPlayers().size())
-                    .replace("%max_players%", ""+BungeeBootstrap.getInstance().group.getMaxPlayers())
-                    + "\n" +
-                    Driver.getInstance().getMessageStorage().base64ToUTF8(motd.getSecondline())
-                            .replace("&", "§")
-                            .replace("%proxy_name%", BungeeBootstrap.getInstance().getLiveService().getService())
-                            .replace("%proxy_group%", BungeeBootstrap.getInstance().getLiveService().getGroup())
-                            .replace("%online_players%", ""+CloudAPI.getInstance().getPlayerPool().getPlayers().size())
-                            .replace("%max_players%", ""+BungeeBootstrap.getInstance().group.getMaxPlayers()));
-
-            event.setResponse(ping);
+        if (BungeeBootstrap.getInstance().configuration == null){
+            return;
+        }else if (!BungeeBootstrap.getInstance().configuration.isMotdEnabled()){
+            return;
         }else {
-            Motd motd = BungeeBootstrap.getInstance().configuration.getDefaults().get(BungeeBootstrap.getInstance().motdCount);
-            if (!motd.getPlayerinfos().isEmpty()){
 
-                String array[] = new String[motd.getPlayerinfos().size()];
-                for(int j =0;j<motd.getPlayerinfos().size();j++){
-                    array[j] = motd.getPlayerinfos().get(j);
-                }
-                ServerPing.PlayerInfo[] playerInfo = new ServerPing.PlayerInfo[array.length];
-                for (int i = 0; i < playerInfo.length; i++) {
-                    playerInfo[i] = new ServerPing.PlayerInfo(
-                            Driver.getInstance().getMessageStorage().base64ToUTF8(array[i]).replace("&", "§"),
-                            UUID.randomUUID().toString());
-                }
+            BungeeBootstrap bungeeBootstrap = BungeeBootstrap.getInstance();
+            CloudAPI cloudAPI = CloudAPI.getInstance();
+            int motdIndex = bungeeBootstrap.motdCount;
+            Motd motd = bungeeBootstrap.group.isMaintenance() ? bungeeBootstrap.configuration.getMaintenancen().get(motdIndex) : bungeeBootstrap.configuration.getDefaults().get(motdIndex);
 
-                ping.setPlayers( new ServerPing.Players(BungeeBootstrap.getInstance().group.getMaxPlayers(), CloudAPI.getInstance().getPlayerPool().getPlayers().size(), playerInfo));
-            }else{
-                ping.setPlayers( new ServerPing.Players(BungeeBootstrap.getInstance().group.getMaxPlayers(),  CloudAPI.getInstance().getPlayerPool().getPlayers().size(), null));
-            }
-            if (motd.getProtocol() != null && !motd.getProtocol().equalsIgnoreCase("")) {
-                ping.setVersion(new ServerPing.Protocol(Driver.getInstance().getMessageStorage().base64ToUTF8(motd.getProtocol())
-                        .replace("&", "§")
-                        .replace("%proxy_name%", BungeeBootstrap.getInstance().getLiveService().getService())
-                        .replace("%online_players%", ""+CloudAPI.getInstance().getPlayerPool().getPlayers().size())
-                        .replace("%max_players%", ""+ BungeeBootstrap.getInstance().group.getMaxPlayers()), ping.getVersion().getProtocol() -1));
-            }else {
-                ping.setVersion(new ServerPing.Protocol("§7" + CloudAPI.getInstance().getPlayerPool().getPlayers().size() + "/" +BungeeBootstrap.getInstance(). group.getMaxPlayers(), ping.getVersion().getProtocol() -1));
-            }
+            ServerPing.PlayerInfo[] playerInfos = motd.getPlayerinfos().stream()
+                    .map(info -> new ServerPing.PlayerInfo(
+                            Driver.getInstance().getMessageStorage().base64ToUTF8(info).replace("&", "§"),
+                            UUID.randomUUID().toString()))
+                    .toArray(ServerPing.PlayerInfo[]::new);
 
-
-            ping.setDescription( Driver.getInstance().getMessageStorage().base64ToUTF8(motd.getFirstline())
-                    .replace("&", "§")
-                    .replace("%proxy_name%", BungeeBootstrap.getInstance().getLiveService().getService())
-                    .replace("%proxy_group%", BungeeBootstrap.getInstance().getLiveService().getGroup())
-                    .replace("%online_players%", ""+CloudAPI.getInstance().getPlayerPool().getPlayers().size())
-                    .replace("%max_players%", ""+BungeeBootstrap.getInstance().group.getMaxPlayers())
-                    + "\n" +
-                    Driver.getInstance().getMessageStorage().base64ToUTF8(motd.getSecondline())
+            ServerPing.Players players = new ServerPing.Players(
+                    bungeeBootstrap.group.getMaxPlayers(),
+                    cloudAPI.getPlayerPool().getPlayers().size(),
+                    playerInfos.length > 0 ? playerInfos : null);
+            String protocol = motd.getProtocol();
+            String protocolString = protocol != null && !protocol.isEmpty() ?
+                    Driver.getInstance().getMessageStorage().base64ToUTF8(protocol)
                             .replace("&", "§")
-                            .replace("%proxy_name%", BungeeBootstrap.getInstance().getLiveService().getService())
-                            .replace("%proxy_group%", BungeeBootstrap.getInstance().getLiveService().getGroup())
-                            .replace("%online_players%", ""+CloudAPI.getInstance().getPlayerPool().getPlayers().size())
-                            .replace("%max_players%", ""+BungeeBootstrap.getInstance().group.getMaxPlayers()));
+                            .replace("%proxy_name%", bungeeBootstrap.getLiveService().getService())
+                            .replace("%proxy_node%", bungeeBootstrap.getLiveService().getRunningNode())
+                            .replace("%online_players%", "" + cloudAPI.getPlayerPool().getPlayers().size())
+                            .replace("%max_players%", "" + bungeeBootstrap.group.getMaxPlayers()) :
+                    "§7" + cloudAPI.getPlayerPool().getPlayers().size() + "/" + bungeeBootstrap.group.getMaxPlayers();
+
+            ServerPing.Protocol serverProtocol = new ServerPing.Protocol(protocolString, ping.getVersion().getProtocol() - 1);
+            String firstLine = Driver.getInstance().getMessageStorage().base64ToUTF8(motd.getFirstline())
+                    .replace("&", "§")
+                    .replace("%proxy_name%", bungeeBootstrap.getLiveService().getService())
+                    .replace("%proxy_node%", bungeeBootstrap.getLiveService().getRunningNode())
+                    .replace("%proxy_group%", bungeeBootstrap.getLiveService().getGroup())
+                    .replace("%online_players%", "" + cloudAPI.getPlayerPool().getPlayers().size())
+                    .replace("%max_players%", "" + bungeeBootstrap.group.getMaxPlayers());
+
+            String secondLine = Driver.getInstance().getMessageStorage().base64ToUTF8(motd.getSecondline())
+                    .replace("&", "§")
+                    .replace("%proxy_name%", bungeeBootstrap.getLiveService().getService())
+                    .replace("%proxy_node%", bungeeBootstrap.getLiveService().getRunningNode())
+                    .replace("%proxy_group%", bungeeBootstrap.getLiveService().getGroup())
+                    .replace("%online_players%", "" + cloudAPI.getPlayerPool().getPlayers().size())
+                    .replace("%max_players%", "" + bungeeBootstrap.group.getMaxPlayers());
+
+
+            String description = firstLine + "\n" + secondLine;
+
+            ping.setDescription(description);
+            ping.setVersion(serverProtocol);
+            ping.setPlayers(players);
+
 
             event.setResponse(ping);
+
         }
 
     }
+
+
 }

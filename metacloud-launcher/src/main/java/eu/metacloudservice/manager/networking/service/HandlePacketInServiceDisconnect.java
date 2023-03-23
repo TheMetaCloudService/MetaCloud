@@ -18,11 +18,9 @@ public class HandlePacketInServiceDisconnect implements NettyAdaptor {
         if (packet instanceof PacketInServiceDisconnect){
             Group group = Driver.getInstance().getGroupDriver().load(CloudManager.serviceDriver.getService(((PacketInServiceDisconnect) packet).getService()).getEntry().getGroupName());
             if (group.getGroupType().equals("PROXY")){
-                CloudManager.eventDriver.executeEvent(new CloudProxyDisconnectedEvent(((PacketInServiceDisconnect) packet).getService()));
-                NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutServiceDisconnected(((PacketInServiceDisconnect) packet).getService(), true));
+                Driver.getInstance().getMessageStorage().eventDriver .executeEvent(new CloudProxyDisconnectedEvent(((PacketInServiceDisconnect) packet).getService()));
             }else {
-                CloudManager.eventDriver.executeEvent(new CloudServiceDisconnectedEvent(((PacketInServiceDisconnect) packet).getService()));
-                NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutServiceDisconnected(((PacketInServiceDisconnect) packet).getService(), false));
+                Driver.getInstance().getMessageStorage().eventDriver .executeEvent(new CloudServiceDisconnectedEvent(((PacketInServiceDisconnect) packet).getService()));
 
             }
             CloudManager.serviceDriver.unregister(((PacketInServiceDisconnect) packet).getService());

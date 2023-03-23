@@ -2,6 +2,7 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -11,9 +12,15 @@
         <module name="metacloud-plugin" />
         <module name="metacloud-networking" />
         <module name="metamodule-notify" />
+        <module name="metamodule-permissions" />
         <module name="metacloud-driver" />
+        <module name="metamodule-balancer" />
         <module name="metamodule-syncproxy" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="metacloud-cloudupdater" target="17" />
+      <module name="metacloud-updater" target="16" />
+    </bytecodeTargetLevel>
   </component>
 </project>

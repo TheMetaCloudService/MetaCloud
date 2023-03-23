@@ -41,7 +41,16 @@ public class TimerBase {
 
     }
 
+    public boolean isCanceled(){
+        if (timer == null){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
     public void cancel(){
         timer.cancel();
+        timer = null;
     }
 }

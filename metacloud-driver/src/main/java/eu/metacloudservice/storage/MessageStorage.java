@@ -4,6 +4,8 @@ import com.google.common.io.BaseEncoding;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.restapi.UpdateConfig;
+import eu.metacloudservice.events.EventDriver;
+import eu.metacloudservice.events.entrys.EventHandler;
 import lombok.SneakyThrows;
 
 import java.io.BufferedReader;
@@ -11,18 +13,27 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class MessageStorage {
-    public String version = "Sandstorm-1.0.0";
+    public String version = "BETA-1.0.4";
     public String language;
     public Integer canUseMemory = 0;
     public PacketLoader packetLoader;
+
+    public EventDriver eventDriver;
     public boolean shutdownAccept;
-    public boolean finishSetup;
+
+    public boolean openServiceScreen = false;
+
+    public LinkedList<String> consoleInput;
+
     public String setuptype = "";
 
     public MessageStorage() {
         packetLoader = new PacketLoader();
+        consoleInput = new LinkedList<>();
         shutdownAccept = false;
     }
 

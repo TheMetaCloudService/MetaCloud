@@ -1,4 +1,4 @@
-package eu.metacloud.config;
+package eu.metacloudservice.config;
 
 import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
 

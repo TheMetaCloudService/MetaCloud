@@ -26,7 +26,14 @@ public class TerminalCompleter  implements Completer {
         final var input = parsedLine.line();
         List<String> suggestions = null;
 
-        if (Driver.getInstance().getTerminalDriver().isInSetup()){
+
+        if (Driver.getInstance().getMessageStorage().openServiceScreen){
+            final var result = new LinkedList<String>();
+            result.add("leave");
+
+            suggestions = result;
+            suggestions.stream().map(Candidate::new).forEach(list::add);
+        }else if (Driver.getInstance().getTerminalDriver().isInSetup()){
             final var result = new LinkedList<String>();
 
             if (Driver.getInstance().getMessageStorage().setuptype.equalsIgnoreCase("GROUP")){
@@ -72,7 +79,6 @@ public class TerminalCompleter  implements Completer {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        result.add("127.0.0.1");
                     }
 
                 }
@@ -137,7 +143,6 @@ public class TerminalCompleter  implements Completer {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            result.add("127.0.0.1");
                         }
                     }
 

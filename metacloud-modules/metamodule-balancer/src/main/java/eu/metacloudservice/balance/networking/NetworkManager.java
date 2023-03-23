@@ -1,9 +1,9 @@
-package io.metacloud.module.utils.networking;
+package eu.metacloudservice.balance.networking;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import io.metacloud.module.utils.LoadBalancer;
-import io.metacloud.module.utils.networking.bridges.ClientConnection;
-import io.metacloud.module.utils.networking.handler.LengthDeserializer;
+import eu.metacloudservice.balance.LoadBalancer;
+import eu.metacloudservice.balance.networking.bridges.ClientConnection;
+import eu.metacloudservice.balance.networking.handler.LengthDeserializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.*;

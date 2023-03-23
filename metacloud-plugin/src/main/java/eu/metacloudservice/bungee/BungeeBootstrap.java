@@ -6,19 +6,20 @@ import eu.metacloudservice.bungee.command.CloudCommand;
 import eu.metacloudservice.bungee.command.LobbyCommand;
 import eu.metacloudservice.bungee.listener.CloudConnectListener;
 import eu.metacloudservice.configuration.ConfigDriver;
+import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.pool.service.entrys.CloudService;
 import eu.metacloudservice.process.ServiceState;
+import eu.metacloudservice.timebaser.TimerBase;
+import eu.metacloudservice.timebaser.utils.TimeUtil;
 import net.md_5.bungee.PacketConstants;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.protocol.packet.Respawn;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class BungeeBootstrap extends Plugin {
@@ -39,6 +40,24 @@ public class BungeeBootstrap extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CloudCommand("cloud"));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CloudCommand("metacloud"));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CloudCommand("mc"));
+
+        new TimerBase().schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+                if (
+                        CloudAPI.getInstance().getGroups().stream().filter(group -> group.getGroup().equalsIgnoreCase(service.getGroup())).findFirst().get().isMaintenance()){
+                    ProxyServer.getInstance().getPlayers().forEach(player -> {
+                       if ( !player.hasPermission("metacloud.connection.maintenance") && !CloudAPI.getInstance().getWhitelist().contains(player.getName())){
+                           Messages messages = CloudAPI.getInstance().getMessages();
+                           player.disconnect(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getKickNetworkIsMaintenance()).replace("&", "§"));
+                       }
+                    });
+                }
+
+
+            }
+        }, 2, 2, TimeUtil.SECONDS);
 
     }
 

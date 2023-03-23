@@ -1,10 +1,10 @@
-package io.metacloud.module.utils.networking.handler;
+package eu.metacloudservice.balance.networking.handler;
 /*
  * Created AT: 23.07.2021
  * Created by Robin B. (UniqueByte)
  */
 
-import io.metacloud.module.utils.util.PacketUtils;
+import eu.metacloudservice.balance.util.PacketUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;

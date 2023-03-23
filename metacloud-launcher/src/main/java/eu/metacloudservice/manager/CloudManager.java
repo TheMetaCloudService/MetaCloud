@@ -23,6 +23,7 @@ import eu.metacloudservice.networking.in.node.PacketInNodeActionSuccess;
 import eu.metacloudservice.networking.in.node.PacketInShutdownNode;
 import eu.metacloudservice.networking.in.service.PacketInServiceConnect;
 import eu.metacloudservice.networking.in.service.PacketInServiceDisconnect;
+import eu.metacloudservice.networking.in.service.PacketInServiceReaction;
 import eu.metacloudservice.networking.in.service.cloudapi.*;
 import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerConnect;
 import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerDisconnect;
@@ -39,10 +40,12 @@ import eu.metacloudservice.networking.out.service.playerbased.apibased.PacketOut
 import eu.metacloudservice.networking.out.service.playerbased.apibased.PacketOutAPIPlayerKick;
 import eu.metacloudservice.networking.out.service.playerbased.apibased.PacketOutAPIPlayerTitle;
 import eu.metacloudservice.networking.server.NettyServer;
+import eu.metacloudservice.storage.UUIDDriver;
 import eu.metacloudservice.terminal.enums.Type;
 import eu.metacloudservice.webserver.RestDriver;
 import eu.metacloudservice.webserver.dummys.Addresses;
 import eu.metacloudservice.webserver.dummys.GroupList;
+import eu.metacloudservice.webserver.dummys.PlayerGeneral;
 import eu.metacloudservice.webserver.dummys.WhiteList;
 import eu.metacloudservice.webserver.dummys.liveservice.LiveServiceList;
 import eu.metacloudservice.webserver.entry.RouteEntry;
@@ -59,7 +62,6 @@ import java.util.UUID;
 public class CloudManager {
 
     public static CloudServiceDriver serviceDriver;
-    public static EventDriver eventDriver;
     public static QueueDriver queueDriver;
     public static RestDriver restDriver;
     public static boolean shutdown;
@@ -67,8 +69,17 @@ public class CloudManager {
     public CloudManager() {
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Es wird versucht, den '§fCloud Manager§r' zu starten",
                 "an attempt is made to start the '§fcloud manager§r'");
+
+        System.setProperty("io.netty.noPreferDirect", "true");
+        System.setProperty("client.encoding.override", "UTF-8");
+        System.setProperty("io.netty.maxDirectMemory", "0");
+        System.setProperty("io.netty.leakDetectionLevel", "DISABLED");
+        System.setProperty("io.netty.recycler.maxCapacity", "0");
+        System.setProperty("io.netty.recycler.maxCapacity.default", "0");
         new File("./modules/").mkdirs();
-        new File("./local/GLOBAL/plugins/").mkdirs();
+        new File("./local/GLOBAL/EVERY/plugins/").mkdirs();
+        new File("./local/GLOBAL/EVERY_SERVER/plugins/").mkdirs();
+        new File("./local/GLOBAL/EVERY_PROXY/plugins/").mkdirs();
         new File("./local/groups/").mkdirs();
         new File( "./local/templates/").mkdirs();
         ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
@@ -81,7 +92,7 @@ public class CloudManager {
         Driver.getInstance().getMessageStorage().canUseMemory = config.getCanUsedMemory();
         System.setProperty("log4j.configurationFile", "log4j2.properties");
         initNetty(config);
-        eventDriver = new EventDriver();
+        Driver.getInstance().getMessageStorage().eventDriver = new EventDriver();
         restDriver = new RestDriver(config.getManagerAddress(), config.getRestApiCommunication());
         initRestService();
 
@@ -104,7 +115,7 @@ public class CloudManager {
         }else {
         }
 
-        if (!new File("./local/GLOBAL/plugins/metacloud-plugin.jar").exists()){
+        if (!new File("./local/GLOBAL/EVERY/plugins/metacloud-plugin.jar").exists()){
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Versuche die Datei '§fmetacloud-plugin.jar§r' herunter zuladen",
                     "Try to download the file '§fmetacloud-plugin.jar§r'.");
             Driver.getInstance().getMessageStorage().packetLoader.loadPlugin();
@@ -115,7 +126,7 @@ public class CloudManager {
 
 
         if (config.isUseViaVersion()){
-            if (!new File("./local/GLOBAL/plugins/viaversion-latest.jar").exists()){
+            if (!new File("./local/GLOBAL/EVERY/plugins/viaversion-latest.jar").exists()){
                 Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Versuche die Datei '§fviaversion-latest.jar§r' herunter zuladen",
                         "Try to download the file '§fviaversion-latest.jar§r'.");
                 try {
@@ -123,7 +134,7 @@ public class CloudManager {
                     urlConnection.setRequestProperty("User-Agent",
                             "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
                     urlConnection.connect();
-                    Files.copy(urlConnection.getInputStream(), Paths.get("local/GLOBAL/plugins/viaversion-latest.jar"));
+                    Files.copy(urlConnection.getInputStream(), Paths.get("local/GLOBAL/EVERY/plugins/viaversion-latest.jar"));
                 } catch (IOException ignored) {
 
                 }
@@ -134,7 +145,7 @@ public class CloudManager {
             }
         }
 
-        if (!new File("./local/GLOBAL/plugins/metacloud-api.jar").exists()){
+        if (!new File("./local/GLOBAL/EVERY/plugins/metacloud-api.jar").exists()){
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Versuche die Datei '§fmetacloud-api.jar§r' herunter zuladen",
                     "Try to download the file '§fmetacloud-api.jar§r'.");
             Driver.getInstance().getMessageStorage().packetLoader.loadAPI();
@@ -166,7 +177,6 @@ public class CloudManager {
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Die Cloud erfolgreich gestartet ist, können Sie sie von nun an mit '§fhelp§r' nutzen.",
                 "the cloud is successfully started, you can use it from now on with '§fhelp§r'.");
         queueDriver= new QueueDriver();
-        queueDriver.handler();
 
         Messages raw = (Messages) new ConfigDriver("./local/messages.json").read(Messages.class);
         Messages msg = new Messages(Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getPrefix()),
@@ -180,26 +190,29 @@ public class CloudManager {
                 Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNoFallback()),
                 Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickOnlyProxyJoin()));
 
-        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/general/messages", new ConfigDriver().convert(msg)));
+        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/message/default", new ConfigDriver().convert(msg)));
+        GroupList groupList = new GroupList();
+        groupList.setGroups(Driver.getInstance().getGroupDriver().getAllStrings());
+        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudgroup/general", new ConfigDriver().convert(groupList)));
         Driver.getInstance().getGroupDriver().getAll().forEach(group -> {
-            if (Driver.getInstance().getWebServer().getRoute("/groups/" +group.getGroup()) == null){
-                Driver.getInstance().getWebServer().addRoute(new RouteEntry("/groups/" + group.getGroup(), new ConfigDriver().convert(group)));
+            if (Driver.getInstance().getWebServer().getRoute("/cloudgroup/" +group.getGroup()) == null){
+                Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudgroup/" + group.getGroup(), new ConfigDriver().convert(group)));
 
             }else {
-                Driver.getInstance().getWebServer().updateRoute("/groups/" + group.getGroup(), new ConfigDriver().convert(group));
+                Driver.getInstance().getWebServer().updateRoute("/cloudgroup/" + group.getGroup(), new ConfigDriver().convert(group));
             }
         });
 
         LiveServiceList liveGroup = new LiveServiceList();
-        liveGroup.setServices(new ArrayList<>());
-        liveGroup.setSplitter(config.getSplitter());
-        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/general/services", new ConfigDriver().convert(liveGroup)));
+        liveGroup.setCloudServiceSplitter(config.getSplitter());
+        liveGroup.setCloudServices(new ArrayList<>());
+        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudservice/general", new ConfigDriver().convert(liveGroup)));
         WhiteList whitelistConfig = new WhiteList();
         whitelistConfig.setWhitelist(config.getWhitelist());
-        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/general/whitelist", new ConfigDriver().convert(whitelistConfig)));
-        GroupList groupList = new GroupList();
-        groupList.setGroups(Driver.getInstance().getGroupDriver().getAllStrings());
-        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/general/grouplist", new ConfigDriver().convert(groupList)));
+        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/default/whitelist", new ConfigDriver().convert(whitelistConfig)));
+        PlayerGeneral general = new PlayerGeneral();
+        general.setCloudplayers(new ArrayList<>());
+        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudplayer/genernal", new ConfigDriver().convert(general)));
 
         Addresses AddressesConfig = new Addresses();
 
@@ -208,9 +221,8 @@ public class CloudManager {
             addresses.add(managerConfigNodes.getAddress());
         });
         AddressesConfig.setWhitelist(addresses);
-        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/general/addresses", new ConfigDriver().convert(AddressesConfig)));
+        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/default/addresses", new ConfigDriver().convert(AddressesConfig)));
         serviceDriver = new CloudServiceDriver();
-
     }
 
     public void initNetty(ManagerConfig config){
@@ -230,14 +242,11 @@ public class CloudManager {
          * */
 
         NettyDriver.getInstance().nettyServer = new NettyServer();
-        NettyDriver.getInstance().nettyServer.bind(config.getNetworkingCommunication()).start();
+        NettyDriver.getInstance().nettyServer.bind( config.getNetworkingCommunication()).start();
         Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der '§fNetty-Server§r' wurde erfolgreich an Port '§f"+config.getNetworkingCommunication()+"§r' angebunden", "the '§fNetty-server§r' was successfully bound on port '§f"+config.getNetworkingCommunication()+"§r'");
-
-
 
         //PACKETS
         NettyDriver.getInstance().packetDriver
-
                 /*
                 * in this part all packages and traders sent to the server are registered
                 * {@link NettyAdaptor} handles the packet and looks where it belongs
@@ -247,7 +256,6 @@ public class CloudManager {
                 .registerHandler(new PacketInAuthNode().getPacketUUID(), new HandlePacketInAuthNode(), PacketInAuthNode.class)
                 .registerHandler(new PacketInNodeActionSuccess().getPacketUUID(), new HandlePacketInNodeActionSuccess(), PacketInNodeActionSuccess.class)
                 .registerHandler(new PacketInShutdownNode().getPacketUUID(), new HandlePacketInShutdownNode(), PacketInShutdownNode.class)
-
                 //API
                 .registerHandler(new PacketInServiceConnect().getPacketUUID(), new HandlePacketInServiceConnect(), PacketInServiceConnect.class)
                 .registerHandler(new PacketInServiceDisconnect().getPacketUUID(), new HandlePacketInServiceDisconnect(), PacketInServiceDisconnect.class)

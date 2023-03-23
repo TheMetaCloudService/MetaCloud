@@ -36,7 +36,7 @@ public class CloudService {
     }
 
     public Group getGroup(){
-    return (Group) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/groups/" + group), Group.class);
+    return (Group) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/" + group), Group.class);
     }
 
     public void dispatchCommand(@NonNull String command){
@@ -44,19 +44,19 @@ public class CloudService {
     }
 
     public ServiceState getState(){
-        LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/general/services"), LiveServiceList.class);
-        LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/services/" + getName().replace(list.getSplitter(), "~")), LiveServices.class);
+        LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
+        LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
         return services.getState();
     }
 
     public String getHost(){
-        LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/general/services"), LiveServiceList.class);
-        LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/services/" + getName().replace(list.getSplitter(), "~")), LiveServices.class);
+        LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
+        LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
         return services.getHost();
     }
     public Integer getPort(){
-        LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/general/services"), LiveServiceList.class);
-        LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/services/" + getName().replace(list.getSplitter(), "~")), LiveServices.class);
+        LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
+        LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
         return services.getPort();
     }
 

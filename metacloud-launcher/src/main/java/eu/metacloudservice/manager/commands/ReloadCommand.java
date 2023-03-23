@@ -39,7 +39,7 @@ public class ReloadCommand extends CommandAdapter {
         WhiteList whitelistConfig = new WhiteList();
         ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
         whitelistConfig.setWhitelist(config.getWhitelist());
-        Driver.getInstance().getWebServer().updateRoute("/general/whitelist", new ConfigDriver().convert(whitelistConfig));
+        Driver.getInstance().getWebServer().updateRoute("/default/whitelist", new ConfigDriver().convert(whitelistConfig));
         Addresses AddressesConfig = new Addresses();
 
         ArrayList<String> addresses = new ArrayList<>();
@@ -47,19 +47,19 @@ public class ReloadCommand extends CommandAdapter {
             addresses.add(managerConfigNodes.getAddress());
         });
         AddressesConfig.setWhitelist(addresses);
-        Driver.getInstance().getWebServer().updateRoute("/general/addresses", new ConfigDriver().convert(AddressesConfig));
+        Driver.getInstance().getWebServer().updateRoute("/default/addresses", new ConfigDriver().convert(AddressesConfig));
         GroupList groupList = new GroupList();
         groupList.setGroups(Driver.getInstance().getGroupDriver().getAllStrings());
-        Driver.getInstance().getWebServer().updateRoute("/general/grouplist", new ConfigDriver().convert(groupList));
+        Driver.getInstance().getWebServer().updateRoute("/cloudgroup/general", new ConfigDriver().convert(groupList));
 
-        Driver.getInstance().getWebServer().updateRoute("/general/messages", new ConfigDriver().convert(msg));
+        Driver.getInstance().getWebServer().updateRoute("/message/default", new ConfigDriver().convert(msg));
         try {
             Driver.getInstance().getGroupDriver().getAll().forEach(group -> {
-                if (Driver.getInstance().getWebServer().getRoute("/groups/" +group.getGroup()) == null){
-                    Driver.getInstance().getWebServer().addRoute(new RouteEntry("/groups/" + group.getGroup(), new ConfigDriver().convert(group)));
+                if (Driver.getInstance().getWebServer().getRoute("/cloudgroup/" +group.getGroup()) == null){
+                    Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudgroup/" + group.getGroup(), new ConfigDriver().convert(group)));
 
                 }else {
-                    Driver.getInstance().getWebServer().updateRoute("/groups/"  + group.getGroup(), new ConfigDriver().convert(group));
+                    Driver.getInstance().getWebServer().updateRoute("/cloudgroup/"  + group.getGroup(), new ConfigDriver().convert(group));
                 }
             });
         }catch (Exception ignored){}

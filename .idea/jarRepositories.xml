@@ -27,6 +27,11 @@
       <option name="url" value="https://repo.metacloudservice.eu/repository" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="MetaCloud-Repo" />
+      <option name="name" value="MetaCloud-Repo" />
+      <option name="url" value="https://repo.metacloudservice.eu/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="jitpack" />
       <option name="name" value="jitpack" />
       <option name="url" value="https://jitpack.io" />

@@ -17,8 +17,14 @@ public class QueueDriver {
     public QueueDriver() {
         this.queue_startup = new LinkedList<>();
         this.queue_shutdown = new LinkedList<>();
-        //Todo: fix the howl QueueSystem because they crashed the system
+    }
 
+    public LinkedList<String> getQueue_startup() {
+        return queue_startup;
+    }
+
+    public LinkedList<String> getQueue_shutdown() {
+        return queue_shutdown;
     }
 
     public void addQueuedObjectToStart(String service){
@@ -30,27 +36,7 @@ public class QueueDriver {
     }
 
 
-    public void handler(){
-        TimerBase base = new TimerBase();
-         base.schedule(new TimerTask() {
-             @Override
-             public void run() {
-                try {
 
-                    if (!queue_startup.isEmpty()){
-                        String service = queue_startup.removeFirst();
-                        CloudManager.serviceDriver.getService(service).handelStatusChange(ServiceState.STARTED);
-                        CloudManager.serviceDriver.getService(service).handelLaunch();
-                    }else if (!queue_shutdown.isEmpty()){
-                        String service = queue_shutdown.removeFirst();
-                        CloudManager.serviceDriver.getService(service).handelQuit();
-                        CloudManager.serviceDriver.unregistered(service);
-                    }
-                }catch (Exception ignored){}
-
-             }
-         }, 0, 1, TimeUtil.MILLISECONDS);
-    }
 
 }
 

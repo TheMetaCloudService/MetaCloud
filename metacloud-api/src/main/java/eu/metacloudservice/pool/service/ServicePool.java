@@ -24,7 +24,7 @@ public class ServicePool {
     }
 
     public CloudService getService(@NonNull String name){
-        return connectedServices.stream().filter(cloudService -> cloudService.getName().equals(name)).collect(Collectors.toList()).get(0);
+        return connectedServices.stream().filter(cloudService -> cloudService.getName().equalsIgnoreCase(name)).findFirst().get();
     }
 
     public List<CloudService> getServicesByGroup(@NonNull String group){

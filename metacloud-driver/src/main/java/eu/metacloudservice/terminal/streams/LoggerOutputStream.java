@@ -20,6 +20,7 @@ public class LoggerOutputStream extends ByteArrayOutputStream {
         this.reset();
         if (input != null && !input.isEmpty()) {
             Driver.getInstance().getTerminalDriver().log(this.logType, input.split("\n"));
+            Driver.getInstance().getTerminalDriver().getLineReader().getTerminal().flush();
         }
     }
 }

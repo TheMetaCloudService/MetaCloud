@@ -19,6 +19,7 @@ public class MetaModule implements IModule {
     public void load() {
         imnitConfigs();
         Driver.getInstance().getMessageStorage().eventDriver.registerListener(new CloudListener());
+
     }
 
     @Override
@@ -32,6 +33,11 @@ public class MetaModule implements IModule {
     }
 
     private void imnitConfigs(){
+
+        if (!new File("./modules/permissions/database/").exists()){
+            new File("./modules/permissions/database/").mkdirs();
+        }
+
         File file = new File("./modules/permissions/database/");
         File[] files = file.listFiles();
         ArrayList<String> modules = new ArrayList<>();
@@ -47,7 +53,7 @@ public class MetaModule implements IModule {
             PlayerConfiguration configuration = (PlayerConfiguration) new ConfigDriver("./modules/permissions/database/"+ s+ ".json").read(PlayerConfiguration.class);
         });
 
-        if (new File("./modules/permissions/groups.json").exists()){
+        if (!new File("./modules/permissions/groups.json").exists()){
 
          GroupConfiguration configuration = new GroupConfiguration();
          ArrayList<GroupEntry> groups = new ArrayList<>();

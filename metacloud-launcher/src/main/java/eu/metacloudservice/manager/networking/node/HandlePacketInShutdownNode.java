@@ -19,7 +19,7 @@ public class HandlePacketInShutdownNode implements NettyAdaptor {
             });
             NettyDriver.getInstance().nettyServer.removeChannel(((PacketInShutdownNode) packet).getNode());
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Node '§f"+((PacketInShutdownNode) packet).getNode()+"§r' ist jetzt offline, alle Dienste wurden gelöscht",
-                    "the node '§f"+((PacketInShutdownNode) packet).getNode()+"§r' is now offline, all services have been deleted");
+                    "The node '§f"+((PacketInShutdownNode) packet).getNode()+"§r' is now offline, all services have been deleted");
 
         }
 

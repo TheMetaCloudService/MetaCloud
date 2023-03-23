@@ -25,14 +25,13 @@ public class CloudPlayer {
     }
 
     public CloudService getProxyServer(){
-
         CloudPlayerRestCache cech = (CloudPlayerRestCache) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/" + getUniqueId()), CloudPlayerRestCache.class);
-        return  CloudAPI.getInstance().getServicePool().getService(cech.getCurrentProxy());
+        return  CloudAPI.getInstance().getServicePool().getService(cech.getCloudplayerproxy());
     }
     public CloudService getServer(){
         CloudPlayerRestCache cech = (CloudPlayerRestCache) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/" + getUniqueId()), CloudPlayerRestCache.class);
 
-        return  CloudAPI.getInstance().getServicePool().getService(cech.getCurrentService());
+        return  CloudAPI.getInstance().getServicePool().getService(cech.getCloudplayerservice());
     }
 
     public void connect(@NonNull CloudService cloudService){

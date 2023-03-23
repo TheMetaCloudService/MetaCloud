@@ -234,7 +234,7 @@ public class CloudCommand extends Command {
         player.sendMessage(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix()).replace("&", "§") + "/cloud dispatch <service> <command>");
         player.sendMessage(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix()).replace("&", "§") + "/cloud sync <service>");
         player.sendMessage(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix()).replace("&", "§") + "/cloud listServices");
-        player.sendMessage(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix()).replace("&", "§") + "/cloud listgroups");
+        player.sendMessage(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix()).replace("&", "§") + "/cloud listGroups");
         player.sendMessage(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix()).replace("&", "§") + "/cloud listPlayers");
         player.sendMessage(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix()).replace("&", "§") + "/cloud version");
         player.sendMessage(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix()).replace("&", "§") + "/cloud reload");

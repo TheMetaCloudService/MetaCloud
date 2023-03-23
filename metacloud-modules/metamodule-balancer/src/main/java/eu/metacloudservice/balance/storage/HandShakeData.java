@@ -1,6 +1,6 @@
-package io.metacloud.module.utils.storage;
+package eu.metacloudservice.balance.storage;
 
-import io.metacloud.module.utils.util.PacketUtils;
+import eu.metacloudservice.balance.util.PacketUtils;
 import io.netty.buffer.ByteBuf;
 
 import java.io.IOException;

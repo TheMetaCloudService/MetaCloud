@@ -8,6 +8,7 @@ import eu.metacloudservice.manager.CloudManager;
 import eu.metacloudservice.manager.cloudservices.entry.TaskedEntry;
 import eu.metacloudservice.manager.cloudservices.entry.TaskedService;
 import eu.metacloudservice.networking.NettyDriver;
+import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.terminal.commands.CommandAdapter;
 import eu.metacloudservice.terminal.commands.CommandInfo;
 import eu.metacloudservice.terminal.enums.Type;
@@ -57,6 +58,15 @@ public class ServiceCommand extends CommandAdapter {
                 String service = args[1];
                 if (CloudManager.serviceDriver.getService(service) != null){
                     CloudManager.serviceDriver.unregister(service);
+                }else {
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                            "Der Service '§f"+service+"§r' wurde nicht gefunden",
+                            "the service '§f"+service+"§r' was not found");
+                }
+            }else  if (args[0].equalsIgnoreCase("joinscreen")){
+                String service = args[1];
+                if (CloudManager.serviceDriver.getService(service) != null && CloudManager.serviceDriver.getService(service).getEntry().getStatus() != ServiceState.QUEUED){
+                    CloudManager.serviceDriver.getService(service).handelScreen();
                 }else {
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                             "Der Service '§f"+service+"§r' wurde nicht gefunden",
@@ -226,6 +236,7 @@ public class ServiceCommand extends CommandAdapter {
             commands.add("list");
             commands.add("run");
             commands.add("stopgroup");
+            commands.add("joinscreen");
             commands.add("stop");
             commands.add("sync");
             commands.add("info");
@@ -254,6 +265,9 @@ public class ServiceCommand extends CommandAdapter {
                 " >> §fservice stopgroup <group> --force §7~ um eine ganze Gruppe stoppen",
                 " >> §fservice stopgroup <group> --force §7~ to stop an entire group");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                " >> §fservice joinscreen <service> §7~ um einen Screen von einen Service zu joinen",
+                " >> §fservice joinscreen <service> §7~ to join a screen from a service");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fservice stop <service> --force §7~ um ein Service zu stoppen",
                 " >> §fservice stop <service> --force §7~ to stop a service");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
@@ -265,6 +279,8 @@ public class ServiceCommand extends CommandAdapter {
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fservice execute <service> <command> §7~ um einen Befehl auf dem Server auszuführen",
                 " >> §fservice execute <service> <command> §7~ to execute a command on the server");
+
+
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fservice whitelist <add/remove> <name> §7~ um Spieler zur Whitelist hinzuzufügen oder von ihr zu entfernen",
                 " >> §fservice whitelist <add/remove> <name> §7~ to add players to the whitelist or to remove them from it");

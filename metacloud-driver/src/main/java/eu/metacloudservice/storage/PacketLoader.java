@@ -58,7 +58,7 @@ public class PacketLoader {
             PacketConfig updateConfig = (PacketConfig) new ConfigDriver().convert(rawJson, PacketConfig.class);
 
             try (BufferedInputStream in = new BufferedInputStream(new URL(updateConfig.getApi()).openStream());
-                 FileOutputStream fileOutputStream = new FileOutputStream("./local/GLOBAL/plugins/metacloud-api.jar")) {
+                 FileOutputStream fileOutputStream = new FileOutputStream("./local/GLOBAL/EVERY/plugins/metacloud-api.jar")) {
                 byte[] dataBuffer = new byte[1024];
 
                 int bytesRead;
@@ -90,7 +90,7 @@ public class PacketLoader {
             PacketConfig updateConfig = (PacketConfig) new ConfigDriver().convert(rawJson, PacketConfig.class);
 
             try (BufferedInputStream in = new BufferedInputStream(new URL(updateConfig.getPlugin()).openStream());
-                 FileOutputStream fileOutputStream = new FileOutputStream("./local/GLOBAL/plugins/metacloud-plugin.jar")) {
+                 FileOutputStream fileOutputStream = new FileOutputStream("./local/GLOBAL/EVERY/plugins/metacloud-plugin.jar")) {
                 byte[] dataBuffer = new byte[1024];
 
                 int bytesRead;

@@ -63,7 +63,7 @@ public class WebServer implements IWebServer {
     }
 
     public void removeRoute(String path){
-        this.ROUTES.removeIf(entry -> entry.channelRead().equals(path));
+        this.ROUTES.removeIf(entry -> entry.route.equalsIgnoreCase(path));
     }
 
 
@@ -106,7 +106,7 @@ public class WebServer implements IWebServer {
 
                         if (rawroute.contains("/")){
                             String key = rawroute.split("/")[1];
-                            if (key.contains(AUTH_KEY) || key.equalsIgnoreCase("debug")){
+                            if (key.contains(AUTH_KEY)){
 
                                 String query = rawroute.replace("/" + key, "");
                                 if (method.equals("GET")){

@@ -82,7 +82,7 @@ public class GroupCommand extends CommandAdapter {
                         Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS,
                                 "Die Wartungen wurde für die Gruppe bearbeitet",
                                 "The maintenance has been processed for the group");
-                        Driver.getInstance().getWebServer().updateRoute("/groups/" + raw.getGroup(), new ConfigDriver().convert(raw));
+                        Driver.getInstance().getWebServer().updateRoute("/cloudgroup/" + raw.getGroup(), new ConfigDriver().convert(raw));
                     }else {
                         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                                 "die Gruppe '§f"+group+"§r' wurde nicht gefunden",
@@ -99,7 +99,7 @@ public class GroupCommand extends CommandAdapter {
                             Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS,
                                     "Die Vorlage der Gruppe wurde geändert, sie wird nun von der angegebenen Vorlage gestartet",
                                     "The template of the group has been changed, it is now started from the specified template");
-                            Driver.getInstance().getWebServer().updateRoute("/groups/" + raw.getGroup(), new ConfigDriver().convert(raw));
+                            Driver.getInstance().getWebServer().updateRoute("/cloudgroup/" + raw.getGroup(), new ConfigDriver().convert(raw));
                         }else {
                             Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                                     "das Template wurde nicht gefunden",
@@ -120,7 +120,7 @@ public class GroupCommand extends CommandAdapter {
                             Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS,
                                     "Die Mindestanzahl der Dienste würde für die Gruppe bearbeitet werden",
                                     "The minimum service number would be edited for the group");
-                            Driver.getInstance().getWebServer().updateRoute("/groups/" + raw.getGroup(), new ConfigDriver().convert(raw));
+                            Driver.getInstance().getWebServer().updateRoute("/cloudgroup/" + raw.getGroup(), new ConfigDriver().convert(raw));
                         }else {
                             Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                                     "du kannst nur eine zahl angeben",
@@ -141,7 +141,7 @@ public class GroupCommand extends CommandAdapter {
                             Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS,
                                     "Die maximale Anzahl der Spieler wurde für die Gruppe geändert",
                                     "The maximum number of players was changed for the group");
-                            Driver.getInstance().getWebServer().updateRoute("/groups/" + raw.getGroup(), new ConfigDriver().convert(raw));
+                            Driver.getInstance().getWebServer().updateRoute("/cloudgroup/" + raw.getGroup(), new ConfigDriver().convert(raw));
                         }else {
                             Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                                     "du kannst nur eine zahl angeben",
@@ -177,7 +177,7 @@ public class GroupCommand extends CommandAdapter {
             commands.add("settemplate");
             commands.add("setminamount");
         }
-        if (args.length == 3){
+        if (args.length == 2){
             if (args[1].equalsIgnoreCase("setmaintenance")) {
                 commands.add("true");
                 commands.add("false");

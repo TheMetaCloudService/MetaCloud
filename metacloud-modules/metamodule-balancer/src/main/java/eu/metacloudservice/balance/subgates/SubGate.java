@@ -1,4 +1,4 @@
-package io.metacloud.module.utils.subgates;
+package eu.metacloudservice.balance.subgates;
 /*
  * Created AT: 01.08.2021
  * Created by Robin B. (RauchigesEtwas)

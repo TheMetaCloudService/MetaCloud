@@ -17,6 +17,11 @@ import eu.metacloudservice.node.networking.*;
 import eu.metacloudservice.terminal.enums.Type;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class CloudNode {
 
@@ -45,7 +50,7 @@ public class CloudNode {
         }else {
         }
 
-        if (!new File("./local/GLOBAL/plugins/metacloud-plugin.jar").exists()){
+        if (!new File("./local/GLOBAL/EVERY/plugins/metacloud-plugin.jar").exists()){
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Versuche die Datei '§fmetacloud-plugin.jar§r' herunter zuladen",
                     "Try to download the file '§fmetacloud-plugin.jar§r'.");
             Driver.getInstance().getMessageStorage().packetLoader.loadPlugin();
@@ -54,6 +59,27 @@ public class CloudNode {
         }else {
         }
         initNetty(config);
+
+        if (config.isUseViaVersion()){
+            if (!new File("./local/GLOBAL/EVERY/plugins/viaversion-latest.jar").exists()){
+                Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Versuche die Datei '§fviaversion-latest.jar§r' herunter zuladen",
+                        "Try to download the file '§fviaversion-latest.jar§r'.");
+                try {
+                    URLConnection urlConnection = new URL("https://github.com/ViaVersion/ViaVersion/releases/download/4.5.1/ViaVersion-4.5.1.jar").openConnection();
+                    urlConnection.setRequestProperty("User-Agent",
+                            "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+                    urlConnection.connect();
+                    Files.copy(urlConnection.getInputStream(), Paths.get("local/GLOBAL/EVERY/plugins/viaversion-latest.jar"));
+                } catch (IOException ignored) {
+
+                }
+                Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
+                        "The download was successful");
+            }else {
+
+            }
+        }
+
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Es wird versucht, alle Befehle zu laden und ihre Bereitstellung deutlich zu machen",
                 "it is tried to load all commands and to make the provision of them clear");
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new HelpCommand());
@@ -90,7 +116,7 @@ public class CloudNode {
         Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der Netty-Client wird vorbereitet und dann gestartet", "the Netty client is prepared and then started");
 
         NettyDriver.getInstance().nettyClient = new NettyClient();
-        Boolean connected = NettyDriver.getInstance().nettyClient.bind(config.getManagerAddress(), config.getNetworkingCommunication()).connect();
+         NettyDriver.getInstance().nettyClient.bind(config.getManagerAddress(), config.getNetworkingCommunication()).connect();
 
         NettyDriver.getInstance().packetDriver
 
@@ -105,9 +131,7 @@ public class CloudNode {
                 .registerHandler(new PacketOutShutdownNode().getPacketUUID(), new HandlePacketOutShutdownNode(), PacketOutShutdownNode.class)
                 .registerHandler(new PacketOutSyncService().getPacketUUID(), new HandlePacketOutSyncService(), PacketOutSyncService.class)
                 .registerHandler(new PacketOutSendCommand().getPacketUUID(), new HandlePacketOutSendCommand(), PacketOutSendCommand.class);
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "der '§fNetty-Client§r' wurde erfolgreich verbunden '§f"+config.getManagerAddress()+"~"+config.getNetworkingCommunication()+"§r' angebunden", "the '§fNetty-client§r' was successfully connected '§f"+config.getManagerAddress()+"~"+config.getNetworkingCommunication()+"§r'");
 
-        if (connected){
-             Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "der '§fNetty-Client§r' wurde erfolgreich verbunden '§f"+config.getManagerAddress()+"~"+config.getNetworkingCommunication()+"§r' angebunden", "the '§fNetty-client§r' was successfully connected '§f"+config.getManagerAddress()+"~"+config.getNetworkingCommunication()+"§r'");
-        }
     }
 }

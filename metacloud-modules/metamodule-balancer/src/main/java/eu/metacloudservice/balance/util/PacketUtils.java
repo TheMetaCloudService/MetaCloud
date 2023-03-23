@@ -1,4 +1,4 @@
-package io.metacloud.module.utils.util;
+package eu.metacloudservice.balance.util;
 
 import io.netty.buffer.ByteBuf;
 import lombok.experimental.UtilityClass;

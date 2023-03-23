@@ -148,7 +148,7 @@ public class MainSetup {
 
             }else if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 5){
 
-          if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5 ")){
+                if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5 ")){
                     Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.16.5");
                     new Timer().schedule(new TimerTask() {
                         @Override
@@ -303,7 +303,7 @@ public class MainSetup {
                     Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "Die version wurde nicht gefunden");
                 }
             }
-            }else {
+        }else {
             if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 3){
                 if(line.matches("[0-9]+")){
                     Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
@@ -349,7 +349,7 @@ public class MainSetup {
 
             }else if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 5){
 
-if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5 ")){
+                if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5 ")){
                     Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.16.5");
                     new Timer().schedule(new TimerTask() {
                         @Override
@@ -584,7 +584,7 @@ if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5
                     Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "Die version wurde nicht gefunden");
                 }
             } if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 7){
-      if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5 ")){
+                if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5 ")){
                     Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.16.5");
                     new Timer().schedule(new TimerTask() {
                         @Override
@@ -840,7 +840,7 @@ if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5
                     Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "The version was not found");
                 }
             }if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 7){
-if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5 ")){
+                if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5 ")){
                     Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.16.5");
                     new Timer().schedule(new TimerTask() {
                         @Override
@@ -1037,7 +1037,7 @@ if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5
                 ManagerConfig managerConfig = new ManagerConfig();
                 ManagerConfigNodes managerConfigNodes = new ManagerConfigNodes();
                 managerConfigNodes.setName("InternalNode");
-                managerConfigNodes.setAddress("127.0.0.1");
+                managerConfigNodes.setAddress(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address").toString());
                 managerConfig.setUseProtocol(false);
 
                 managerConfig.setLanguage("DE");
@@ -1066,7 +1066,7 @@ if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5
                 ManagerConfig managerConfig = new ManagerConfig();
                 ManagerConfigNodes managerConfigNodes = new ManagerConfigNodes();
                 managerConfigNodes.setName("InternalNode");
-                managerConfigNodes.setAddress("127.0.0.1");
+                managerConfigNodes.setAddress(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address").toString());
                 managerConfig.setLanguage("EN");
                 ArrayList<ManagerConfigNodes> nodes = new ArrayList<>();
                 nodes.add(managerConfigNodes);

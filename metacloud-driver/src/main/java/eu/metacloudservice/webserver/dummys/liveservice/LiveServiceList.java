@@ -6,25 +6,29 @@ import java.util.ArrayList;
 
 public class LiveServiceList implements IConfigAdapter {
 
-    private ArrayList<String> services;
-    private String splitter;
+
+    private String cloudServiceSplitter;
+    private ArrayList<String> cloudServices;
 
     public LiveServiceList() {}
 
-    public ArrayList<String> getServices() {
-        return services;
+    public String getCloudServiceSplitter() {
+        return cloudServiceSplitter;
     }
 
-
-    public void setServices(ArrayList<String> services) {
-        this.services = services;
+    public ArrayList<String> getCloudServices() {
+        return cloudServices;
     }
 
-    public void setSplitter(String splitter) {
-        this.splitter = splitter;
+    public void  remove(String service){
+        cloudServices.removeIf(s -> s.equalsIgnoreCase(service));
     }
 
-    public String getSplitter() {
-        return splitter;
+    public void setCloudServiceSplitter(String cloudServiceSplitter) {
+        this.cloudServiceSplitter = cloudServiceSplitter;
+    }
+
+    public void setCloudServices(ArrayList<String> cloudServices) {
+        this.cloudServices = cloudServices;
     }
 }

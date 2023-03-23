@@ -28,6 +28,7 @@
     </properties>
 
     <dependencies>
+
         <dependency>
             <artifactId>guava</artifactId>
             <groupId>com.google.guava</groupId>

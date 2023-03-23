@@ -19,23 +19,6 @@ public class CloudListener implements ICloudListener {
 
     @EventHandler
     public void handle(CloudPlayerConnectedEvent event){
-        if (!new File("./modules/permissions/database/" + event.getUniqueId()+ ".json").exists()){
-            GroupConfiguration configuration = (GroupConfiguration) new ConfigDriver("./modules/permissions/groups.json").read(GroupConfiguration.class);
-            List<GroupEntry> groups = configuration.getGroups().stream().filter(GroupEntry::isDefaultGroup).toList();
 
-            ArrayList<GivenGroup> givenGroups = new ArrayList<>();
-            for (GroupEntry group : groups) {
-                GivenGroup givenGroup = new GivenGroup();
-                givenGroup.setGroup(group.getName());
-                givenGroup.setCancellationAt("LIFETIME");
-                givenGroups.add(givenGroup);
-            }
-            PlayerConfiguration player = new PlayerConfiguration();
-            player.setUUID(event.getUniqueId();
-            player.setPermissions(new ArrayList<>());
-            player.setGroups(givenGroups);
-
-            new ConfigDriver("./modules/permissions/database/" + event.getUniqueId()+ ".json").save(player);
-        }
     }
 }

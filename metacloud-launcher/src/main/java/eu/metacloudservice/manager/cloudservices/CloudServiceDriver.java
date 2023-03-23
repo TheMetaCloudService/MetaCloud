@@ -10,12 +10,14 @@ import eu.metacloudservice.manager.cloudservices.entry.TaskedEntry;
 import eu.metacloudservice.manager.cloudservices.entry.TaskedService;
 import eu.metacloudservice.manager.cloudservices.interfaces.ICloudServiceDriver;
 import eu.metacloudservice.networking.NettyDriver;
+import eu.metacloudservice.networking.out.service.PacketOutServiceReaction;
 import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.timebaser.TimerBase;
 import eu.metacloudservice.timebaser.utils.TimeUtil;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -23,6 +25,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
 
 
     private final ArrayList<TaskedService> services;
+    public ArrayList<String> reaction;
     public final NetworkEntry entry;
     private final ManagerConfig config;
 
@@ -30,6 +33,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
     public CloudServiceDriver() {
         entry = new NetworkEntry();
         services = new ArrayList<>();
+        reaction = new ArrayList<>();
         handelServices();
         this.config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
     }
@@ -53,6 +57,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
         if (NettyDriver.getInstance().nettyServer.isChannelFound(service)) {
             NettyDriver.getInstance().nettyServer.removeChannel(service);
         }
+
 
         CloudManager.queueDriver.addQueuedObjectToShutdown(service);
     }
@@ -122,6 +127,22 @@ public class CloudServiceDriver implements ICloudServiceDriver {
     @Override
     public void handelServices() {
         Thread current = new Thread(() -> {
+            new TimerBase().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if (!CloudManager.queueDriver.getQueue_startup().isEmpty()){
+                        String service = CloudManager.queueDriver.getQueue_startup().removeFirst();
+                        CloudManager.serviceDriver.getService(service).handelStatusChange(ServiceState.STARTED);
+                        CloudManager.serviceDriver.getService(service).handelLaunch();
+                    }else if (!CloudManager.queueDriver.getQueue_shutdown().isEmpty()){
+                        String service = CloudManager.queueDriver.getQueue_shutdown().removeFirst();
+                        CloudManager.serviceDriver.getService(service).handelQuit();
+                        CloudManager.serviceDriver.unregistered(service);
+                    }
+
+                }
+            }, 0, 100, TimeUtil.MILLISECONDS);
+
 
             new TimerBase().schedule(new TimerTask() {
                 @Override
@@ -211,18 +232,6 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                             .collect(Collectors.toList());
 
 
-                    servicess.forEach(taskedService -> {
-
-                        Group group = Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName());
-                        ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
-                     /*   PackageConnectedServiceToALL packageConnectedServiceToALL = new PackageConnectedServiceToALL(taskedService.getEntry().getServiceName(),
-                                taskedService.getEntry().getGroupName(),
-                                taskedService.getEntry().getUsedPort(),
-                                taskedService.getEntry().getNode(),
-                                config.getNodes().stream().filter(managerConfigNodes -> managerConfigNodes.getName().equalsIgnoreCase(taskedService.getEntry().getNode())).findFirst().get().getAddress(), group.getGroupType(), new ConfigDriver().convert( group));
-
-                        NettyDriver.getInstance().nettyServer.sendToAllSynchronized(packageConnectedServiceToALL);*/
-                    });
 
                     servicess.stream().sorted(Comparator.comparingInt(o -> o.getEntry().getCurrentPlayers())).collect(Collectors.toList()).forEach(taskedService -> {
                         Group group = Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName());
@@ -396,7 +405,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                                 });
                     }catch (Exception ignored){}
                 }
-            }, 0, 2, TimeUtil.SECONDS);
+            }, 0, 1, TimeUtil.SECONDS);
         });
         current.setPriority(1);
         current.start();

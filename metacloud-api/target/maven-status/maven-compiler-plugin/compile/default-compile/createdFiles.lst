@@ -19,3 +19,4 @@ eu\metacloudservice\bootstrap\bungee\listener\CloudEvents.class
 eu\metacloudservice\networking\HandlePacketOutPlayerSwitchService.class
 eu\metacloudservice\bootstrap\bungee\networking\HandlePacketOutAPIPlayerMessage.class
 eu\metacloudservice\bootstrap\bungee\networking\HandlePacketOutAPIPlayerActionBar.class
+eu\metacloudservice\networking\HandlePacketOutServiceReaction.class

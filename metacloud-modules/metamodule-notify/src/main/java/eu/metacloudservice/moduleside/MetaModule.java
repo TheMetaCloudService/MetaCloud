@@ -1,7 +1,8 @@
-package eu.metacloud.moduleside;
+package eu.metacloudservice.moduleside;
 
-import eu.metacloud.config.Configuration;
+import eu.metacloudservice.config.Configuration;
 import eu.metacloudservice.Driver;
+import eu.metacloudservice.config.General;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.module.extention.IModule;
 import eu.metacloudservice.webserver.entry.RouteEntry;
@@ -29,6 +30,7 @@ public class MetaModule implements IModule {
 
     public void create(){
         if (!new File("./modules/notify/config.json").exists()){
+            new File("./modules/notify/").mkdirs();
             try {
                 Configuration configuration = new Configuration();
                 configuration.setProxiedServiceConnected("§8[§a▷§8] §7service: §a%service_name% §7was §aconnected §8| §b%node_name%");
@@ -47,6 +49,11 @@ public class MetaModule implements IModule {
     }
 
     public void set(){
+
+
+        General general = new General("notify", "1.0.0", "RauchigesEtwas");
+        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/notify/general", new ConfigDriver().convert(general)));
+
         Configuration configuration = (Configuration) new ConfigDriver("./modules/notify/config.json").read(Configuration.class);
         Configuration rest = new Configuration();
         rest.setProxiedServiceConnected(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getProxiedServiceConnected()));
@@ -55,7 +62,7 @@ public class MetaModule implements IModule {
         rest.setServiceConnected(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getServiceConnected()));
         rest.setServiceDiconnected(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getServiceDiconnected()));
         rest.setServicePrepared(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getServicePrepared()));
-        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/modules/syncproxy", new ConfigDriver().convert(rest)));
+        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/notify/configuration", new ConfigDriver().convert(rest)));
     }
 
     public void update(){
@@ -67,7 +74,7 @@ public class MetaModule implements IModule {
         rest.setServiceConnected(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getServiceConnected()));
         rest.setServiceDiconnected(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getServiceDiconnected()));
         rest.setServicePrepared(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getServicePrepared()));
-        Driver.getInstance().getWebServer().updateRoute("/modules/syncproxy", new ConfigDriver().convert(rest));
+        Driver.getInstance().getWebServer().updateRoute("/module/notify/configuration", new ConfigDriver().convert(rest));
     }
 }
 

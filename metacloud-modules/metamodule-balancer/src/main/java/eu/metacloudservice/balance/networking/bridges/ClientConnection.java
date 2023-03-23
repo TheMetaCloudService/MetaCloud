@@ -1,15 +1,16 @@
-package io.metacloud.module.utils.networking.bridges;
+package eu.metacloudservice.balance.networking.bridges;
 
 import com.google.common.collect.Queues;
-import io.metacloud.configuration.ConfigDriver;
-import io.metacloud.module.LoadBalancerModule;
-import io.metacloud.module.config.Configuration;
-import io.metacloud.module.config.ConnectionType;
-import io.metacloud.module.utils.LoadBalancer;
-import io.metacloud.module.utils.storage.HandShakeData;
-import io.metacloud.module.utils.subgates.SubGate;
-import io.metacloud.module.utils.util.ConnectionState;
-import io.metacloud.module.utils.util.PacketUtils;
+
+import eu.metacloudservice.MetaModule;
+import eu.metacloudservice.balance.LoadBalancer;
+import eu.metacloudservice.balance.storage.HandShakeData;
+import eu.metacloudservice.balance.subgates.SubGate;
+import eu.metacloudservice.balance.util.ConnectionState;
+import eu.metacloudservice.balance.util.PacketUtils;
+import eu.metacloudservice.config.Configuration;
+import eu.metacloudservice.config.ConnectionType;
+import eu.metacloudservice.configuration.ConfigDriver;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -81,8 +82,6 @@ public class ClientConnection extends SimpleChannelInboundHandler<ByteBuf> {
             this.serverConnection.closeChannel();
         }
 
-        LoadBalancerModule.getInstance().getProxyStorage().get(this.servername).setConnectedPlayers(LoadBalancerModule.getInstance().getProxyStorage().get(this.servername).getConnectedPlayers() - 1);
-
 
         LoadBalancer.ONLINE_PLAYERS.remove(this);
 
@@ -136,7 +135,7 @@ public class ClientConnection extends SimpleChannelInboundHandler<ByteBuf> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
 
-        if (LoadBalancerModule.getInstance().getProxyStorage().isEmpty()){
+        if (MetaModule.getInstance().getProxyStorage().isEmpty()){
             this.closeChannel();
             return;
         }
@@ -236,19 +235,19 @@ public class ClientConnection extends SimpleChannelInboundHandler<ByteBuf> {
      */
     public void connectToServer() {
 
-        Configuration config = (Configuration) new ConfigDriver("./modules/metacloud-loadbalancer/config.json").read(Configuration.class);
-        if (LoadBalancerModule.getInstance().getProxyStorage().isEmpty()){
+        Configuration config = (Configuration) new ConfigDriver("./modules/balancer/config.json").read(Configuration.class);
+        if (MetaModule.getInstance().getProxyStorage().isEmpty()){
             this.closeChannel();
             return;
         }
 
         if (config.getConnectionType() == ConnectionType.RANDOM){
-            SubGate subGate = LoadBalancerModule.getInstance().getRandomSub();
+            SubGate subGate = MetaModule.getInstance().getRandomSub();
 
 
 
             this.servername = subGate.proxyedtaskname;
-            LoadBalancerModule.getInstance().getProxyStorage().get(subGate.proxyedtaskname).setConnectedPlayers(LoadBalancerModule.getInstance().getProxyStorage().get(subGate.proxyedtaskname).getConnectedPlayers() + 1);
+            MetaModule.getInstance().getProxyStorage().get(subGate.proxyedtaskname).setConnectedPlayers(MetaModule.getInstance().getProxyStorage().get(subGate.proxyedtaskname).getConnectedPlayers() + 1);
             connectToServer(new InetSocketAddress(subGate.ip, subGate.port));
         }
     }
@@ -260,7 +259,7 @@ public class ClientConnection extends SimpleChannelInboundHandler<ByteBuf> {
      */
     public void connectToServer(InetSocketAddress server) {
 
-        if (LoadBalancerModule.getInstance().getProxyStorage().isEmpty()){
+        if (MetaModule.getInstance().getProxyStorage().isEmpty()){
             this.closeChannel();
             return;
         }

@@ -8,6 +8,8 @@ import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.YamlConfiguration;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
@@ -33,6 +35,37 @@ public class ServerConfig {
         bungeeConfig.set("servers." + serverInfo.getName() + ".address", serverInfo.getSocketAddress().toString());
         bungeeConfig.set("servers." + serverInfo.getName() + ".restricted", false);
         saveConfig();
+    }
+
+
+    public static void addToConfigLobby(ServerInfo serverInfo) {
+        if (locked) {
+            return;
+        }
+
+        List<String> b = bungeeConfig.getStringList("listeners.priorities");
+        b.add(serverInfo.getName());
+        bungeeConfig.set("listeners.priorities", b);
+
+        bungeeConfig.set("servers." + serverInfo.getName() + ".motd", serverInfo.getMotd().replace(ChatColor.COLOR_CHAR, '&'));
+        bungeeConfig.set("servers." + serverInfo.getName() + ".address", serverInfo.getSocketAddress().toString());
+        bungeeConfig.set("servers." + serverInfo.getName() + ".restricted", false);
+        saveConfig();
+    }
+
+    public static void remove(String lobby) {
+        if (locked) {
+            return;
+        }
+        List<String> b = bungeeConfig.getStringList("listeners.priorities");
+        if (b.contains(lobby)){
+            b.remove(lobby);
+        }
+        bungeeConfig.set("listeners.priorities", b);
+
+        bungeeConfig.set("servers." + lobby, null);
+        saveConfig();
+
     }
 
 

@@ -1,6 +1,6 @@
-package eu.metacloud.bungee;
+package eu.metacloudservice.bungee;
 
-import eu.metacloud.bungee.listener.CloudListener;
+import eu.metacloudservice.bungee.listener.CloudListener;
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;

@@ -5,7 +5,6 @@ import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
 public class AuthenticatorKey implements IConfigAdapter {
 
     private String key;
-
     public AuthenticatorKey() {}
 
     public String getKey() {

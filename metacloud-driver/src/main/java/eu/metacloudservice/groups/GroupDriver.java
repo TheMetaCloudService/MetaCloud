@@ -5,6 +5,7 @@ import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.groups.interfaces.IGroupDriver;
 import eu.metacloudservice.terminal.enums.Type;
+import eu.metacloudservice.webserver.dummys.GroupList;
 import eu.metacloudservice.webserver.entry.RouteEntry;
 import lombok.SneakyThrows;
 import java.io.File;
@@ -50,7 +51,10 @@ public class GroupDriver implements IGroupDriver {
                 }
             }
             new ConfigDriver("./local/groups/" + group.getGroup()+ ".json").save(group);
-            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/groups/" + group.getGroup(), new ConfigDriver().convert(group)));
+            GroupList groupList = new GroupList();
+            groupList.setGroups(Driver.getInstance().getGroupDriver().getAllStrings());
+            Driver.getInstance().getWebServer().updateRoute("/cloudgroup/general", new ConfigDriver().convert(groupList));
+            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudgroup/" + group.getGroup(), new ConfigDriver().convert(group)));
 
            Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS, "die Gruppe '§f"+group.getGroup()+"§r' wurde erfolgreich erstellt", "the group '§f"+group.getGroup()+"§r' was successfully created");
 

@@ -17,33 +17,48 @@ public class SimpleLatestLog {
     public SimpleLatestLog(){
         this.logs = new LinkedList<>();
 
-        if (!new File("./local/logs/").exists()){
-            new File("./local/logs/").mkdirs();
+        File logsDir = new File("./local/logs/");
+        if (!logsDir.exists()) {
+            logsDir.mkdirs();
         }
-        if (new File("./local/logs/latest.log").exists()){
 
-            getAllLogs().forEach(s -> {
-                if (!s.equalsIgnoreCase("latest.log"))      {
-                    new File("./local/logs/" + s).delete();
-                }
-            });
+        if (new File(logsDir, "latest.log").exists()) {
+            getAllLogs().stream()
+                    .filter(s -> !s.equalsIgnoreCase("latest.log"))
+                    .map(s -> new File(logsDir, s))
+                    .forEach(File::delete);
 
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-            try (InputStream is = new FileInputStream(new File("./local/logs/latest.log")); OutputStream os = new FileOutputStream(new File("./local/logs/Log_" + dtf.format(LocalDateTime.now()) + ".log"))) {
-                byte[] buffer = new byte[1024];
+            File oldLog = new File(logsDir, "latest.log");
+            File newLog = new File(logsDir, "Log_" + dtf.format(LocalDateTime.now()) + ".log");
+            try (InputStream is = new BufferedInputStream(new FileInputStream(oldLog));
+                 OutputStream os = new BufferedOutputStream(new FileOutputStream(newLog))) {
+                byte[] buffer = new byte[8192];
                 int length;
                 while ((length = is.read(buffer)) > 0) {
                     os.write(buffer, 0, length);
                 }
+            } catch (IOException e) {
+                // handle the exception or rethrow it
+                e.printStackTrace();
             }
-            new File("./local/logs/latest.log").delete();
+            oldLog.delete();
         }
-        this.latestLog = new File("./local/logs/latest.log");
-        this.latestLog.createNewFile();
 
-        PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(this.latestLog), StandardCharsets.UTF_8), true);
-        printWriter.flush();
-        printWriter.close();
+        this.latestLog = new File(logsDir, "latest.log");
+        try {
+            this.latestLog.createNewFile();
+        } catch (IOException e) {
+            // handle the exception or rethrow it
+            e.printStackTrace();
+        }
+
+        try (PrintWriter printWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(this.latestLog), StandardCharsets.UTF_8)), true)) {
+            // write any initial data here
+        } catch (IOException e) {
+            // handle the exception or rethrow it
+            e.printStackTrace();
+        }
 
     }
 
@@ -51,35 +66,29 @@ public class SimpleLatestLog {
 
     public void log( String line) {
         String lineToLog = line;
-        lineToLog = lineToLog.replaceAll("\033\\[[;\\d]*m", "");
-        this.logs.add(lineToLog);
-        try {
-            Writer output = new BufferedWriter(new FileWriter(this.latestLog, true));
+        this.logs.add(line);
+        try (Writer output = new BufferedWriter(new FileWriter(this.latestLog, true))) {
             output.write(lineToLog);
             output.write("\n");
-            output.flush();
-            output.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
+            // handle the exception or rethrow it
             e.printStackTrace();
         }
 
     }
 
     public void saveLogs(){
-        Thread execute = new Thread(() -> {
-
-            try (PrintWriter w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(this.latestLog), StandardCharsets.UTF_8), true)) {
-                for (String loggedLine :this.logs) {
-                    if (loggedLine == null)
-                        continue;
+        try (PrintWriter w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(this.latestLog, true), StandardCharsets.UTF_8), true)) {
+            for (String loggedLine : this.logs) {
+                if (loggedLine != null) {
                     w.println(loggedLine);
                 }
-                w.flush();
-            } catch (Exception ignored) {
             }
-        });
-        execute.setPriority(Thread.MIN_PRIORITY);
-        execute.start();
+            w.flush();
+        } catch (IOException e) {
+            // handle the exception or rethrow it
+            e.printStackTrace();
+        }
     }
 
 

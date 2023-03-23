@@ -18,6 +18,7 @@ eu\metacloudservice\terminal\screens\MainSetup$3.class
 eu\metacloudservice\process\ServiceProcess.class
 eu\metacloudservice\networking\out\node\PacketOutSyncService.class
 eu\metacloudservice\networking\in\service\cloudapi\PacketInDispatchMainCommand.class
+eu\metacloudservice\webserver\dummys\PlayerGeneral.class
 eu\metacloudservice\terminal\screens\MainSetup$20.class
 eu\metacloudservice\terminal\screens\MainSetup$6.class
 eu\metacloudservice\terminal\screens\MainSetup$40.class
@@ -43,6 +44,7 @@ eu\metacloudservice\configuration\dummys\nodeconfig\NodeConfig.class
 eu\metacloudservice\Driver.class
 eu\metacloudservice\events\listeners\CloudServicePreparedEvent.class
 eu\metacloudservice\terminal\enums\Type.class
+eu\metacloudservice\networking\in\service\PacketInServiceReaction.class
 eu\metacloudservice\networking\out\service\PacketOutServiceDisconnected.class
 eu\metacloudservice\networking\out\node\PacketOutStopService.class
 eu\metacloudservice\terminal\commands\CommandDriver.class
@@ -90,6 +92,7 @@ eu\metacloudservice\terminal\commands\CommandAdapter.class
 eu\metacloudservice\networking\out\service\playerbased\apibased\PacketOutAPIPlayerConnect.class
 eu\metacloudservice\module\extention\IModule.class
 eu\metacloudservice\networking\in\service\playerbased\apibased\PacketInAPIPlayerTitle.class
+eu\metacloudservice\networking\out\service\PacketOutServiceReaction.class
 eu\metacloudservice\terminal\screens\MainSetup$35.class
 eu\metacloudservice\webserver\dummys\Addresses.class
 eu\metacloudservice\terminal\screens\MainSetup$27.class

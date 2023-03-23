@@ -1,2 +1,5 @@
-package eu.metacloudservice.config;public enum ConnectionType {
+package eu.metacloudservice.config;
+
+public enum ConnectionType {
+    RANDOM
 }

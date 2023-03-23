@@ -1,4 +1,4 @@
-package io.metacloud.module.utils.networking.bridges;
+package eu.metacloudservice.balance.networking.bridges;
 
 
 import io.netty.buffer.ByteBuf;

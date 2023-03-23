@@ -2,7 +2,6 @@ eu\metacloudservice\networking\NettyDriver.class
 eu\metacloudservice\networking\client\NettyClient.class
 eu\metacloudservice\networking\server\NettyServer$1.class
 eu\metacloudservice\networking\client\NettyClient$1.class
-eu\metacloudservice\networking\client\NettyClient$1$1.class
 eu\metacloudservice\networking\packet\NettyBuffer.class
 eu\metacloudservice\networking\packet\PacketDriver.class
 eu\metacloudservice\networking\packet\NettyAdaptor.class

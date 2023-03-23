@@ -5,6 +5,7 @@ import eu.metacloudservice.Driver;
 import eu.metacloudservice.bungee.listener.MotdListener;
 import eu.metacloudservice.bungee.listener.TabListListener;
 import eu.metacloudservice.config.Configuration;
+import eu.metacloudservice.config.DesignConfig;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.groups.dummy.Group;
@@ -15,6 +16,9 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class BungeeBootstrap extends Plugin {
@@ -24,7 +28,7 @@ public class BungeeBootstrap extends Plugin {
     private LiveService liveService;
     private RestDriver restDriver;
     public Integer motdCount;
-    public  Configuration configuration;
+    public DesignConfig configuration;
     public  Group group;
     public Integer tabCount;
 
@@ -36,6 +40,10 @@ public class BungeeBootstrap extends Plugin {
         instance = this;
         liveService = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         restDriver = new RestDriver(liveService.getManagerAddress(), liveService.getRestPort());
+        Configuration conf = (Configuration) new ConfigDriver().convert(BungeeBootstrap.getInstance().getRestDriver().get("/module/syncproxy/configuration"), Configuration.class);
+        if (conf.getConfiguration().stream().anyMatch(designConfig -> designConfig.getTargetGroup().equalsIgnoreCase(liveService.getGroup()))){
+            configuration = conf.getConfiguration().stream().filter(designConfig -> designConfig.getTargetGroup().equalsIgnoreCase(liveService.getGroup())).findFirst().get();
+        }
         ProxyServer.getInstance().getPluginManager().registerListener(this, new MotdListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new TabListListener());
         updater();
@@ -60,40 +68,27 @@ public class BungeeBootstrap extends Plugin {
         return liveService;
     }
 
-    private void  updater(){
-        new Thread(() -> {
-            new TimerBase().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    configuration = (Configuration) new ConfigDriver().convert(BungeeBootstrap.getInstance().getRestDriver().get("/modules/syncproxy"), Configuration.class);
-                    group = CloudAPI.getInstance().getGroups().stream().filter(group1 -> group1.getGroup().equalsIgnoreCase(BungeeBootstrap.getInstance().getLiveService().getGroup())).findFirst().get();
+    private void  updater() {
 
-                }
-            }, 0, 2, TimeUtil.SECONDS);
-            new TimerBase().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    if (tabCount >= (long) configuration.getTablist().stream().toList().size()-1){
-                        tabCount = 0;
-                    }else {
-                        tabCount++;
-                    }
-                    if (group.isMaintenance()){
-                        if (motdCount >= (long) configuration.getMaintenancen().stream().toList().size()-1){
-                            motdCount = 0;
-                        }else {
-                            motdCount++;
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(() -> {
+            Configuration conf = (Configuration) new ConfigDriver().convert(BungeeBootstrap.getInstance().getRestDriver().get("/module/syncproxy/configuration"), Configuration.class);
+            conf.getConfiguration().stream()
+                    .filter(designConfig -> designConfig.getTargetGroup().equalsIgnoreCase(liveService.getGroup()))
+                    .findFirst()
+                    .ifPresent(config -> {
+                        configuration = config;
+                        group = CloudAPI.getInstance().getGroups().stream()
+                                .filter(group1 -> group1.getGroup().equalsIgnoreCase(BungeeBootstrap.getInstance().getLiveService().getGroup()))
+                                .findFirst()
+                                .orElseThrow(); // or handle the case when no group is found
+                        tabCount = tabCount >= configuration.getTablist().size() - 1 ? 0 : tabCount + 1;
+                        if (group.isMaintenance()) {
+                            motdCount = motdCount >= configuration.getMaintenancen().size() - 1 ? 0 : motdCount + 1;
+                        } else {
+                            motdCount = motdCount >= configuration.getDefaults().size() - 1 ? 0 : motdCount + 1;
                         }
-                    }else {
-                        if (motdCount >= (long) configuration.getDefaults().stream().toList().size()-1){
-                            motdCount = 0;
-                        }else {
-                            motdCount++;
-                        }
-                    }
-
-                }
-            }, 0, 5, TimeUtil.SECONDS);
-        }).start();
+                    });
+        }, 0, 5, TimeUnit.SECONDS);
     }
 }

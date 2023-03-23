@@ -4,22 +4,23 @@ import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.codec.PacketDecoder;
 import eu.metacloudservice.networking.codec.PacketEncoder;
 import eu.metacloudservice.networking.packet.Packet;
+import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.*;
-import io.netty.channel.epoll.Epoll;
-import io.netty.channel.epoll.EpollEventLoopGroup;
-import io.netty.channel.epoll.EpollServerSocketChannel;
+import io.netty.channel.epoll.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import lombok.SneakyThrows;
 
 import java.net.InetSocketAddress;
 import java.util.HashMap;
+import java.util.function.BiConsumer;
 
 public class NettyServer extends ChannelInitializer<Channel> implements AutoCloseable{
     private int port;
-
-    private final  String SPACE_STRING = " ", SLASH_STRING = "/", EMPTY_STRING ="";
     private final boolean EPOLL = Epoll.isAvailable();
     private final HashMap<String, Channel> CHANNELS = new HashMap<>();
     EventLoopGroup WORKER;
@@ -29,28 +30,36 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
         return this;
     }
 
+    @SneakyThrows
     public void start() {
 
-        WORKER= EPOLL ? new EpollEventLoopGroup() : new NioEventLoopGroup();
-        BOSS = EPOLL ? new EpollEventLoopGroup() : new NioEventLoopGroup();
+        boolean isEpoll = Epoll.isAvailable();
 
-        try {
-            ServerBootstrap bootstrap = new ServerBootstrap()
+        // get runtime processors for thread-size
+        int cores = Runtime.getRuntime().availableProcessors();
 
-                    .group(WORKER, BOSS)
-                    .option(ChannelOption.ALLOCATOR, ByteBufAllocator.DEFAULT)
-                    .option(ChannelOption.AUTO_READ, true)
-                    .channel(Epoll.isAvailable() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
-                    .childOption(ChannelOption.IP_TOS, 24)
-                    .childOption(ChannelOption.TCP_NODELAY, true)
-                    .childOption(ChannelOption.AUTO_READ, true)
-                    .childOption(ChannelOption.SO_KEEPALIVE, true)
+        // Check for eventloop-groups
+        this.BOSS = isEpoll ? new EpollEventLoopGroup(2 * cores) : new NioEventLoopGroup(2 * cores);
+        this.WORKER = isEpoll ? new EpollEventLoopGroup(10 * cores) : new NioEventLoopGroup(10 * cores);
 
-                    .childHandler(this);
+        ServerBootstrap bootstrap = new ServerBootstrap()
+                .group(BOSS, WORKER)
+                .channel(isEpoll ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
+                .childHandler(this)
+                .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+                .childOption(ChannelOption.IP_TOS, 24)
+                .childOption(ChannelOption.TCP_NODELAY, true)
+                .childOption(ChannelOption.SO_KEEPALIVE, true)
+                .childOption(ChannelOption.SO_REUSEADDR, true);
 
-            ChannelFuture channelFuture = bootstrap.bind(new InetSocketAddress("0.0.0.0", this.port));
-            channelFuture.sync().channel();
-        } catch (InterruptedException ignore) {}
+        if(isEpoll) {
+            bootstrap
+                    .childOption(EpollChannelOption.EPOLL_MODE, EpollMode.LEVEL_TRIGGERED)
+                    .option(EpollChannelOption.TCP_FASTOPEN, 3)
+                    .option(EpollChannelOption.SO_REUSEPORT, true);
+        }
+
+        bootstrap.bind(new InetSocketAddress(port)).sync().channel();
     }
 
     public void registerChannel(String receiver, Channel channel) {
@@ -63,16 +72,21 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
     }
 
     public void removeChannel(String receiver) {
+        this.CHANNELS.get(receiver).close();
         this.CHANNELS.remove(receiver);
     }
 
     public void close() {
+        this.CHANNELS.forEach((s, channel) -> {
+            channel.close();
+        });
         WORKER.shutdownGracefully();
         BOSS.shutdownGracefully();
     }
 
     @Override
     protected void initChannel(Channel channel) {
+
 
         final InetSocketAddress inetSocketAddress = ((InetSocketAddress) channel.remoteAddress());
 

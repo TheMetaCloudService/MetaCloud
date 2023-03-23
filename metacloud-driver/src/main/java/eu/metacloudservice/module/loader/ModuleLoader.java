@@ -47,14 +47,25 @@ public class ModuleLoader implements IModuleLoader {
                             Method method = classEntry.getDeclaredMethod("load");
                             Object instance = classEntry.newInstance();
                             method.invoke(instance);
+                            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Das Module '§f"+configuration.getName()+"§r' wurde geladen 'version: §f"+configuration.getVersion()+" §r| author: §f"+configuration.getAuthor()+"§r'",
+                                    "The module '§f"+this.configuration.getName()+"§r' was loaded 'version: §f"+this.configuration.getVersion()+"§r | author: §f"+this.configuration.getAuthor()+"§r'.");
+
+                        }catch (Exception e){
+                            Driver.getInstance().getTerminalDriver().logSpeed(Type.WARN, "Im Modul '§f"+getJarName()+"§r' ist ein Fehler aufgetreten, bitte überprüfen Sie Ihre Module",
+                                    "An error has occurred in module '§f"+getJarName()+"§r', please check your modules");
+                            e.printStackTrace();
+
                         }
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.WARN, "Das Module '§f"+configuration.getName()+"§r' wurde geladen 'version: §f"+configuration.getVersion()+" §r| author: §f"+configuration.getAuthor()+"§r'",
-                                "The module '§f"+this.configuration.getName()+"§r' was loaded 'version: §f"+this.configuration.getVersion()+"§r | author: §f"+this.configuration.getAuthor()+"§r'.");
 
                     }else {
                         Driver.getInstance().getTerminalDriver().logSpeed(Type.WARN, "Es wurde keine Modulkonfiguration gefunden", "No modules configuration was found");
                     }
-                }catch (Exception ignore){}
+                }catch (Exception ignore){
+
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.WARN, "Im Modul '§f"+getJarName()+"§r' ist ein Fehler aufgetreten, bitte überprüfen Sie Ihre Module (#ERROR_12092)",
+                            "An error has occurred in module '§f"+getJarName()+"§r', please check your modules (#ERROR_12092)");
+                    ignore.printStackTrace();
+                }
             } catch (MalformedURLException e) {
                 throw new RuntimeException(e);
             }
@@ -81,7 +92,7 @@ public class ModuleLoader implements IModuleLoader {
                             Object instance = classEntry.newInstance();
                             method.invoke(instance);
                         }
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.WARN, "Das Module '§f"+configuration.getName()+"§r' wurde gestoppt",
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Das Module '§f"+configuration.getName()+"§r' wurde gestoppt",
                                 "The module '§f"+this.configuration.getName()+"§r' was stopped");
                     }else {
                         Driver.getInstance().getTerminalDriver().logSpeed(Type.WARN, "Es wurde keine Modulkonfiguration gefunden", "No modules configuration was found");
@@ -116,7 +127,7 @@ public class ModuleLoader implements IModuleLoader {
                             method.invoke(instance);
 
                         }
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.WARN, "Das Module '§f"+configuration.getName()+"§r' wurde neu geladen",
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Das Module '§f"+configuration.getName()+"§r' wurde neu geladen",
                                 "The module '§f"+this.configuration.getName()+"§r' was reloaded");
 
                     }else {

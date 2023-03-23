@@ -11,7 +11,6 @@ eu\metacloudservice\manager\networking\service\HandlePacketInAPIPlayerActionBar.
 eu\metacloudservice\manager\networking\service\HandlePacketInAPIPlayerConnect.class
 eu\metacloudservice\manager\cloudservices\entry\TaskedService.class
 eu\metacloudservice\node\CloudNode.class
-eu\metacloudservice\manager\cloudservices\queue\QueueDriver$1.class
 eu\metacloudservice\manager\commands\ClearCommand.class
 eu\metacloudservice\manager\networking\service\playerbased\HandlePacketInPlayerDisconnect.class
 eu\metacloudservice\manager\cloudservices\CloudServiceDriver$1.class
@@ -31,6 +30,7 @@ eu\metacloudservice\node\networking\HandlePacketOutSendCommand.class
 eu\metacloudservice\node\networking\HandlePacketOutShutdownNode.class
 eu\metacloudservice\node\networking\HandlePacketOutSyncService.class
 eu\metacloudservice\CloudBoot$1.class
+eu\metacloudservice\manager\cloudservices\CloudServiceDriver$4.class
 eu\metacloudservice\manager\networking\node\HandlePacketInAuthNode.class
 eu\metacloudservice\manager\commands\StopCommand.class
 eu\metacloudservice\node\commands\HelpCommand.class
@@ -43,6 +43,7 @@ eu\metacloudservice\manager\networking\service\HandlePacketInStopService.class
 eu\metacloudservice\manager\networking\service\HandlePacketInDispatchCommand.class
 eu\metacloudservice\manager\CloudManager.class
 eu\metacloudservice\manager\networking\service\HandlePacketInLaunchService.class
+eu\metacloudservice\manager\cloudservices\entry\TaskedService$1.class
 eu\metacloudservice\node\commands\StopCommand.class
 eu\metacloudservice\manager\commands\GroupCommand.class
 eu\metacloudservice\manager\networking\service\HandlePacketInDispatchMainCommand.class

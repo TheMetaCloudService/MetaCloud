@@ -3,6 +3,7 @@ package eu.metacloudservice.storage;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.SneakyThrows;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,34 +15,46 @@ import java.net.URL;
 
 public class UUIDDriver {
 
-    private static final String URL = "https://api.mojang.com/users/profiles/minecraft/";
+    private static final String URL2 = "https://minecraft-api.com/api/pseudo/";
     public static String getUUID(String name) {
-        URL url = null;
+        String urlString = "https://minecraft-api.com/api/uuid/" + name + "/json";
         try {
-            url = new URL(URL + name);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
-            con.setDoOutput(false);
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuffer content = new StringBuffer();
-            while ((inputLine = in.readLine()) != null) {
-                content.append(inputLine);
+            URL url = new URL(urlString);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            StringBuilder builder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
             }
-            in.close();
-            String json = content.toString();
-            JsonObject jso = JsonParser.parseString(json).getAsJsonObject();
-            return jso.get("id").getAsString();
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        } catch (ProtocolException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            JSONObject json = new JSONObject(builder.toString());
+            return json.getString("uuid");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+        return null;
 
     }
 
+
+    public static String getUsername(String uuid) {
+        String urlString = "https://minecraft-api.com/api/pseudo/" + uuid + "/json";
+        try {
+            URL url = new URL(urlString);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            StringBuilder builder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
+            }
+            JSONObject json = new JSONObject(builder.toString());
+            return json.getString("pseudo");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
 
 
 }

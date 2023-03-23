@@ -21,6 +21,7 @@ public class BungeeBootstrap extends Plugin {
         ProxyServer.getInstance().getConsole().sendMessage("[§bMetaCloud§r] >");
         new CloudAPI();
 
+
     }
 
     @Override

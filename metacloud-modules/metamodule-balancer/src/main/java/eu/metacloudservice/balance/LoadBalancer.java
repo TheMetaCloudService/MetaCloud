@@ -1,7 +1,8 @@
-package io.metacloud.module.utils;
+package eu.metacloudservice.balance;
 
-import io.metacloud.module.utils.networking.NetworkManager;
-import io.metacloud.module.utils.networking.bridges.ClientConnection;
+
+import eu.metacloudservice.balance.networking.NetworkManager;
+import eu.metacloudservice.balance.networking.bridges.ClientConnection;
 import io.netty.util.ResourceLeakDetector;
 import java.io.Closeable;
 import java.util.List;

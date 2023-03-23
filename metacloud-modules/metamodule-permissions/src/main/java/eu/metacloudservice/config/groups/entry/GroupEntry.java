@@ -1,4 +1,4 @@
-package eu.metacloudservice.config.entry;
+package eu.metacloudservice.config.groups.entry;
 
 import java.util.ArrayList;
 
@@ -8,12 +8,21 @@ public class GroupEntry {
     private String prefix;
     private String suffix;
 
+    private int tagPower;
     private boolean defaultGroup;
     private ArrayList<String> permissions;
     private ArrayList<String> include;
 
     public String getName() {
         return name;
+    }
+
+    public int getTagPower() {
+        return tagPower;
+    }
+
+    public void setTagPower(int tagPower) {
+        this.tagPower = tagPower;
     }
 
     public void setName(String name) {

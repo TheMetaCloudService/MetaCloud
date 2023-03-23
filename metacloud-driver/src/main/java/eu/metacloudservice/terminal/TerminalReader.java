@@ -23,7 +23,9 @@ public final class TerminalReader extends Thread{
                 if (line != null && !line.isEmpty()) {
                     final var input = this.consoleDriver.getInputs().poll();
 
-                    if(Driver.getInstance().getTerminalDriver().isInSetup()){
+                    if (Driver.getInstance().getMessageStorage().openServiceScreen){
+                        Driver.getInstance().getMessageStorage().consoleInput.add(line);
+                    }else if(Driver.getInstance().getTerminalDriver().isInSetup()){
                         if (line.equalsIgnoreCase("leave")){
                             Driver.getInstance().getTerminalDriver().leaveSetup();
                         }else if (Driver.getInstance().getMessageStorage().setuptype.equalsIgnoreCase("MAINSETUP")){

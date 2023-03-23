@@ -6,20 +6,25 @@ import eu.metacloudservice.webserver.interfaces.IRest;
 
 public class CloudPlayerRestCache implements ICloudPlayerRestCache, IConfigAdapter, IRest {
 
-    private  String  name;
-    private  String  uuid;
-    private  String currentProxy;
-    private  String currentService;
+    private  String  cloudplayername;
+    private  String  cloudplayeruuid;
+    private  String cloudplayerproxy;
+    private  String cloudplayerservice;
+    private Long cloudplayerconnect;
+
+
+
 
     public CloudPlayerRestCache(String name, String uuid) {
-        this.name = name;
-        this.uuid = uuid;
+        this.cloudplayername = name;
+        this.cloudplayeruuid = uuid;
+        cloudplayerconnect = System.currentTimeMillis();
     }
     public CloudPlayerRestCache() {}
 
     @Override
-    public void handleConnect(String proxyService) {
-        this.currentProxy = proxyService;
+    public void handleConnect(String cloudplayerproxy) {
+        this.cloudplayerproxy = cloudplayerproxy;
     }
 
     @Override
@@ -28,26 +33,37 @@ public class CloudPlayerRestCache implements ICloudPlayerRestCache, IConfigAdapt
     }
 
     @Override
-    public void handleSwitch(String nextService) {
-        this.currentService = nextService;
+    public void handleSwitch(String cloudplayerservice) {
+        this.cloudplayerservice = cloudplayerservice;
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getCloudplayername() {
+        return cloudplayername;
     }
 
-    public String getName() {
-        return name;
+
+    public String getCloudplayeruuid() {
+        return cloudplayeruuid;
     }
 
-    public String getCurrentService() {
-        return currentService;
+    public String getCloudplayerproxy() {
+        return cloudplayerproxy;
     }
 
-    public void setCurrentService(String currentService) {
-        this.currentService = currentService;
+    public void setCloudplayerproxy(String cloudplayerproxy) {
+        this.cloudplayerproxy = cloudplayerproxy;
     }
-    public String getCurrentProxy() {
-        return currentProxy;
+
+    public String getCloudplayerservice() {
+        return cloudplayerservice;
     }
+
+    public void setCloudplayerservice(String cloudplayerservice) {
+        this.cloudplayerservice = cloudplayerservice;
+    }
+
+    public Long getCloudplayerconnect() {
+        return cloudplayerconnect;
+    }
+
 }

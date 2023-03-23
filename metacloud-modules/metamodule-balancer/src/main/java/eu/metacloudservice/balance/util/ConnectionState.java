@@ -1,4 +1,4 @@
-package io.metacloud.module.utils.util;
+package eu.metacloudservice.balance.util;
 
 /**
  * The enum Connection state.
