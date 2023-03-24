@@ -18,6 +18,7 @@
         <module>metacloud-modules/metamodule-notify</module>
         <module>metacloud-modules/metamodule-permissions</module>
         <module>metacloud-modules/metamodule-balancer</module>
+        <module>metacloud-modules/metamodule-signs</module>
     </modules>
 
     <properties>

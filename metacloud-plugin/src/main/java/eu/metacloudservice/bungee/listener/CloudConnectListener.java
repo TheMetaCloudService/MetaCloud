@@ -2,6 +2,7 @@ package eu.metacloudservice.bungee.listener;
 
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
+import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.bungee.BungeeBootstrap;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
@@ -45,7 +46,7 @@ public class CloudConnectListener implements Listener {
         Group group = CloudAPI.getInstance().getGroups().parallelStream().filter(group1 -> group1.getGroup().equalsIgnoreCase(service.getGroup())).findFirst().get();
 
         this.connected.add(event.getPlayer().getUniqueId());
-        CloudAPI.getInstance().sendPacketAsynchronous(new PacketInPlayerConnect(event.getPlayer().getName(), service.getService()));
+        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInPlayerConnect(event.getPlayer().getName(), service.getService()));
 
         if (group.isMaintenance()
                 && !ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()).hasPermission("metacloud.connection.maintenance")
@@ -67,13 +68,13 @@ public class CloudConnectListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void handle(final PlayerDisconnectEvent event) {
         if (this.connected.contains(event.getPlayer().getUniqueId())) {
-            CloudAPI.getInstance().sendPacketAsynchronous(new PacketInPlayerDisconnect(event.getPlayer().getName()));
+            AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInPlayerDisconnect(event.getPlayer().getName()));
         }
     }
 
     @EventHandler
     public void handle(ServerSwitchEvent event){
-        CloudAPI.getInstance().sendPacketAsynchronous(new PacketInPlayerSwitchService(event.getPlayer().getName(), event.getPlayer().getServer().getInfo().getName()));
+        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInPlayerSwitchService(event.getPlayer().getName(), event.getPlayer().getServer().getInfo().getName()));
     }
 
     @EventHandler(priority = - 127)

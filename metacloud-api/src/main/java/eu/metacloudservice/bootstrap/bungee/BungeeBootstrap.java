@@ -1,6 +1,7 @@
 package eu.metacloudservice.bootstrap.bungee;
 
 import eu.metacloudservice.CloudAPI;
+import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.networking.NettyDriver;
@@ -19,6 +20,7 @@ public class BungeeBootstrap extends Plugin {
         ProxyServer.getInstance().getConsole().sendMessage("[§bMetaCloud§r] > THE METACLOUD has been loaded with Succsess");
         ProxyServer.getInstance().getConsole().sendMessage("[§bMetaCloud§r] > This registered all Classes & files..");
         ProxyServer.getInstance().getConsole().sendMessage("[§bMetaCloud§r] >");
+        new AsyncCloudAPI();
         new CloudAPI();
 
 

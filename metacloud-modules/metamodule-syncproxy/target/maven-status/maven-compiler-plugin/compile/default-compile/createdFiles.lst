@@ -1,9 +1,0 @@
-eu\metacloudservice\bungee\listener\TabListListener.class
-eu\metacloudservice\config\Configuration.class
-eu\metacloudservice\config\DesignConfig.class
-eu\metacloudservice\moduleside\MetaModule.class
-eu\metacloudservice\bungee\BungeeBootstrap.class
-eu\metacloudservice\bungee\listener\MotdListener.class
-eu\metacloudservice\config\Motd.class
-eu\metacloudservice\config\General.class
-eu\metacloudservice\config\Tablist.class

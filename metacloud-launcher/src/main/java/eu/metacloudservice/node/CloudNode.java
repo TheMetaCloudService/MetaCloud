@@ -125,6 +125,8 @@ public class CloudNode {
                 * {@link NettyAdaptor} handles the packet and looks where it belongs
                 * {@link Packet} handles the packets are written and read via a ByteBuf
                 * */
+                .registerHandler(new PacketOutEnableConsole().getPacketUUID(), new HandlePacketOutEnableConsole(), PacketOutEnableConsole.class)
+                .registerHandler(new PacketOutDisableConsole().getPacketUUID(), new HandlePacketOutDisableConsole(), PacketOutDisableConsole.class)
                 .registerHandler(new PacketOutAuthSuccess().getPacketUUID(), new HandlePacketOutAuthSuccess(), PacketOutAuthSuccess.class)
                 .registerHandler(new PacketOutStopService().getPacketUUID(), new HandlePacketOutStopService(), PacketOutStopService.class)
                 .registerHandler(new PacketOutLaunchService().getPacketUUID(), new HandlePacketOutLaunchService(), PacketOutLaunchService.class)

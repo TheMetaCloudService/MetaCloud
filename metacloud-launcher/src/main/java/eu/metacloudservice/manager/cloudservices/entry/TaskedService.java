@@ -9,10 +9,7 @@ import eu.metacloudservice.manager.CloudManager;
 import eu.metacloudservice.manager.cloudservices.interfaces.ITaskedService;
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.in.service.PacketInServiceDisconnect;
-import eu.metacloudservice.networking.out.node.PacketOutLaunchService;
-import eu.metacloudservice.networking.out.node.PacketOutSendCommand;
-import eu.metacloudservice.networking.out.node.PacketOutStopService;
-import eu.metacloudservice.networking.out.node.PacketOutSyncService;
+import eu.metacloudservice.networking.out.node.*;
 import eu.metacloudservice.networking.out.service.PacketOutServiceDisconnected;
 import eu.metacloudservice.networking.out.service.PacketOutServicePrepared;
 import eu.metacloudservice.process.ServiceProcess;
@@ -136,6 +133,30 @@ public class TaskedService implements ITaskedService {
                 }, 100, 100);
             }
         }else {
+            if (Driver.getInstance().getMessageStorage().openServiceScreen){
+                base.cancel();
+                NettyDriver.getInstance().nettyServer.sendPacketSynchronized(entry.getNode(), new PacketOutDisableConsole(entry.getServiceName()));
+                Driver.getInstance().getTerminalDriver().leaveSetup();
+
+            }else {
+                Driver.getInstance().getMessageStorage().openServiceScreen = true;
+                Driver.getInstance().getTerminalDriver().clearScreen();
+                NettyDriver.getInstance().nettyServer.sendPacketSynchronized(entry.getNode(), new PacketOutEnableConsole(entry.getServiceName()));
+                base = new Timer();
+                base.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (! Driver.getInstance().getMessageStorage().consoleInput.isEmpty()){
+                            String line =  Driver.getInstance().getMessageStorage().consoleInput.removeFirst();
+                            if (line.equalsIgnoreCase("leave")){
+                                handelScreen();
+                            }else {
+                                handelExecute(line);
+                            }
+                        }
+                    }
+                }, 100, 100);
+            }
 
         }
 

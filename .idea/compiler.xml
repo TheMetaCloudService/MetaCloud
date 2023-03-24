@@ -10,6 +10,7 @@
         <module name="metacloud-launcher" />
         <module name="metacloud-api" />
         <module name="metacloud-plugin" />
+        <module name="metamodule-signs" />
         <module name="metacloud-networking" />
         <module name="metamodule-notify" />
         <module name="metamodule-permissions" />

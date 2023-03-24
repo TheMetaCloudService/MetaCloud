@@ -17,7 +17,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class MessageStorage {
-    public String version = "BETA-1.0.4";
+    public String version = "BETA-1.0.5";
     public String language;
     public Integer canUseMemory = 0;
     public PacketLoader packetLoader;

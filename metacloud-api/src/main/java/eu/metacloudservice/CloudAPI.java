@@ -187,10 +187,7 @@ public class CloudAPI {
     public void sendPacketSynchronized(Packet packet){
         NettyDriver.getInstance().nettyClient.sendPacketSynchronized(packet);
     }
-
-    public void sendPacketAsynchronous(Packet packet){
-        NettyDriver.getInstance().nettyClient.sendPacketsAsynchronous(packet);
-    }
+    
 
     public RestDriver getRestDriver() {
         return restDriver;

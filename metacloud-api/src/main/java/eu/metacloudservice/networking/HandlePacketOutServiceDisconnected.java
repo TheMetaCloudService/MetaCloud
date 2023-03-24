@@ -2,6 +2,7 @@ package eu.metacloudservice.networking;
 
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
+import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.events.listeners.CloudProxyDisconnectedEvent;
 import eu.metacloudservice.events.listeners.CloudServiceDisconnectedEvent;
 import eu.metacloudservice.networking.out.service.PacketOutServiceDisconnected;
@@ -21,6 +22,7 @@ public class HandlePacketOutServiceDisconnected implements NettyAdaptor {
 
 
             CloudAPI.getInstance().getServicePool().unregisterService(((PacketOutServiceDisconnected) packet).getName());
+            AsyncCloudAPI.getInstance().getServicePool().unregisterService(((PacketOutServiceDisconnected) packet).getName());
         }
     }
 }

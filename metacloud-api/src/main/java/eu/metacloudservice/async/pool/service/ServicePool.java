@@ -1,8 +1,6 @@
-package eu.metacloudservice.pool.service;
+package eu.metacloudservice.async.pool.service;
 
-import eu.metacloudservice.CloudAPI;
-import eu.metacloudservice.pool.player.entrys.CloudPlayer;
-import eu.metacloudservice.pool.service.entrys.CloudService;
+import eu.metacloudservice.async.pool.service.entrys.CloudService;
 import eu.metacloudservice.process.ServiceState;
 import lombok.NonNull;
 

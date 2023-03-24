@@ -1,6 +1,7 @@
 package eu.metacloudservice.bootstrap.bukkit;
 
 import eu.metacloudservice.CloudAPI;
+import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.networking.NettyDriver;
@@ -12,6 +13,7 @@ public class BukkitBootstrap extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        new AsyncCloudAPI();
         new CloudAPI();
 
     }

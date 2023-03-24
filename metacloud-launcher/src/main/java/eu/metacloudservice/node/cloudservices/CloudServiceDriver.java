@@ -49,6 +49,11 @@ public class CloudServiceDriver {
         processes.clear();
     }
 
+
+    public void handleConsole(String service){
+        ServiceProcess process = processes.stream().filter(serviceProcess -> serviceProcess.getService().equalsIgnoreCase(service)).findFirst().get();
+        process.handelConsole();
+    }
     @SneakyThrows
     public void execute(String service, String line){
        ServiceProcess process = processes.stream().filter(serviceProcess -> serviceProcess.getService().equalsIgnoreCase(service)).findFirst().get();

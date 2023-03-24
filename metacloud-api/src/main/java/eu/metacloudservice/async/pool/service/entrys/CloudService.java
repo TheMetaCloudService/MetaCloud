@@ -1,11 +1,12 @@
-package eu.metacloudservice.pool.service.entrys;
+package eu.metacloudservice.async.pool.service.entrys;
 
 import eu.metacloudservice.CloudAPI;
+import eu.metacloudservice.async.AsyncCloudAPI;
+import eu.metacloudservice.async.pool.player.entrys.CloudPlayer;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.networking.in.service.cloudapi.PacketInChangeState;
 import eu.metacloudservice.networking.in.service.cloudapi.PacketInDispatchCommand;
-import eu.metacloudservice.pool.player.entrys.CloudPlayer;
 import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.webserver.dummys.liveservice.LiveServiceList;
 import eu.metacloudservice.webserver.dummys.liveservice.LiveServices;
@@ -62,9 +63,9 @@ public class CloudService {
 
     public List<CloudPlayer> getPlayers(){
         if (getGroup().getGroupType().equalsIgnoreCase("PROXY")){
-            return CloudAPI.getInstance().getPlayerPool().getPlayersFromProxy(name);
+            return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromProxy(name);
         }else {
-            return CloudAPI.getInstance().getPlayerPool().getPlayersFromService(name);
+            return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromService(name);
         }
 
     }

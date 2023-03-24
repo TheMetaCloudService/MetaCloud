@@ -7,6 +7,8 @@ import eu.metacloudservice.configuration.dummys.nodeconfig.NodeConfig;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.module.loader.ModuleLoader;
+import eu.metacloudservice.networking.NettyDriver;
+import eu.metacloudservice.networking.in.node.PacketInSendConsole;
 import eu.metacloudservice.timebaser.TimerBase;
 import eu.metacloudservice.timebaser.utils.TimeUtil;
 import lombok.SneakyThrows;
@@ -85,14 +87,20 @@ public class ServiceProcess {
                 String line;
 
                 consoelStorage.forEach(s -> {
-                    Driver.getInstance().getTerminalDriver().log(getService(), s);
+                    if (new File("./service.json").exists()){
+                        Driver.getInstance().getTerminalDriver().log(getService(), s);
+                    }else {
+                        NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInSendConsole(service, s));
+                    }
                 });
                     try {
                         while ((line = reader.readLine()) != null && useConsole){
                             consoelStorage.add(line);
                             if (new File("./service.json").exists()){
                                 Driver.getInstance().getTerminalDriver().log(getService(), line);
-                            }else {}
+                            }else {
+                                NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInSendConsole(service, line));
+                            }
                         }
                     }catch (Exception e){}
 
@@ -308,7 +316,8 @@ public class ServiceProcess {
                     "-Xmx" + group.getUsedMemory() + "M",
                     "-jar",
                     "server.jar",
-                    "--nogui"
+                    "--nogui",
+                    "--nojline"
             };
                 File configFile = new File(System.getProperty("user.dir") + "/live/" + group.getGroup()+ "/" +service + "/", "server.properties");
                 try {

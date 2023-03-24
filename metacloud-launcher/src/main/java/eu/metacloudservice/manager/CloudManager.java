@@ -12,6 +12,7 @@ import eu.metacloudservice.manager.cloudservices.queue.QueueDriver;
 import eu.metacloudservice.manager.commands.*;
 import eu.metacloudservice.manager.networking.node.HandlePacketInAuthNode;
 import eu.metacloudservice.manager.networking.node.HandlePacketInNodeActionSuccess;
+import eu.metacloudservice.manager.networking.node.HandlePacketInSendConsole;
 import eu.metacloudservice.manager.networking.node.HandlePacketInShutdownNode;
 import eu.metacloudservice.manager.networking.service.*;
 import eu.metacloudservice.manager.networking.service.playerbased.HandlePacketInPlayerConnect;
@@ -20,6 +21,7 @@ import eu.metacloudservice.manager.networking.service.playerbased.HandlePacketIn
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.in.node.PacketInAuthNode;
 import eu.metacloudservice.networking.in.node.PacketInNodeActionSuccess;
+import eu.metacloudservice.networking.in.node.PacketInSendConsole;
 import eu.metacloudservice.networking.in.node.PacketInShutdownNode;
 import eu.metacloudservice.networking.in.service.PacketInServiceConnect;
 import eu.metacloudservice.networking.in.service.PacketInServiceDisconnect;
@@ -256,6 +258,7 @@ public class CloudManager {
                 .registerHandler(new PacketInAuthNode().getPacketUUID(), new HandlePacketInAuthNode(), PacketInAuthNode.class)
                 .registerHandler(new PacketInNodeActionSuccess().getPacketUUID(), new HandlePacketInNodeActionSuccess(), PacketInNodeActionSuccess.class)
                 .registerHandler(new PacketInShutdownNode().getPacketUUID(), new HandlePacketInShutdownNode(), PacketInShutdownNode.class)
+                .registerHandler(new PacketInSendConsole().getPacketUUID(), new HandlePacketInSendConsole(), PacketInSendConsole.class)
                 //API
                 .registerHandler(new PacketInServiceConnect().getPacketUUID(), new HandlePacketInServiceConnect(), PacketInServiceConnect.class)
                 .registerHandler(new PacketInServiceDisconnect().getPacketUUID(), new HandlePacketInServiceDisconnect(), PacketInServiceDisconnect.class)

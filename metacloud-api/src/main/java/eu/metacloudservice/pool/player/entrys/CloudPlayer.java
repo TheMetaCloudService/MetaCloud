@@ -47,11 +47,11 @@ public class CloudPlayer {
     }
 
     public void sendTitle(String title, String subTitle, int fadeIn, int stay, int fadeOut){
-        CloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerTitle(title, subTitle, fadeIn, stay, fadeOut, username));
+        CloudAPI.getInstance().sendPacketSynchronized(new PacketInAPIPlayerTitle(title, subTitle, fadeIn, stay, fadeOut, username));
     }
 
     public void sendActionBar(String message){
-        CloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerActionBar(username, message));
+        CloudAPI.getInstance().sendPacketSynchronized(new PacketInAPIPlayerActionBar(username, message));
     }
 
     public void sendMessage(@NonNull String... message){

@@ -1,10 +1,11 @@
-package eu.metacloudservice.pool.player.entrys;
+package eu.metacloudservice.async.pool.player.entrys;
 
 import eu.metacloudservice.CloudAPI;
+import eu.metacloudservice.async.AsyncCloudAPI;
+import eu.metacloudservice.async.pool.service.entrys.CloudService;
 import eu.metacloudservice.cloudplayer.CloudPlayerRestCache;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.networking.in.service.playerbased.apibased.*;
-import eu.metacloudservice.pool.service.entrys.CloudService;
 import lombok.NonNull;
 
 public class CloudPlayer {
@@ -26,32 +27,32 @@ public class CloudPlayer {
 
     public CloudService getProxyServer(){
         CloudPlayerRestCache cech = (CloudPlayerRestCache) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/" + getUniqueId()), CloudPlayerRestCache.class);
-        return  CloudAPI.getInstance().getServicePool().getService(cech.getCloudplayerproxy());
+        return  AsyncCloudAPI.getInstance().getServicePool().getService(cech.getCloudplayerproxy());
     }
     public CloudService getServer(){
         CloudPlayerRestCache cech = (CloudPlayerRestCache) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/" + getUniqueId()), CloudPlayerRestCache.class);
 
-        return  CloudAPI.getInstance().getServicePool().getService(cech.getCloudplayerservice());
+        return  AsyncCloudAPI.getInstance().getServicePool().getService(cech.getCloudplayerservice());
     }
 
     public void connect(@NonNull CloudService cloudService){
-        CloudAPI.getInstance().sendPacketSynchronized(new PacketInAPIPlayerConnect(username, cloudService.getName()));
+        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerConnect(username, cloudService.getName()));
     }
 
     public void kick(@NonNull String message){
-        CloudAPI.getInstance().sendPacketSynchronized(new PacketInAPIPlayerKick(username, message));
+        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerKick(username, message));
     }
 
     public void sendMessage(@NonNull String message){
-        CloudAPI.getInstance().sendPacketSynchronized(new PacketInAPIPlayerMessage(username, message));
+        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerMessage(username, message));
     }
 
     public void sendTitle(String title, String subTitle, int fadeIn, int stay, int fadeOut){
-        CloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerTitle(title, subTitle, fadeIn, stay, fadeOut, username));
+        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerTitle(title, subTitle, fadeIn, stay, fadeOut, username));
     }
 
     public void sendActionBar(String message){
-        CloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerActionBar(username, message));
+        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerActionBar(username, message));
     }
 
     public void sendMessage(@NonNull String... message){
