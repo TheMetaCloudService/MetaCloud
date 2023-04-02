@@ -37,4 +37,4 @@
 - Powerful **REST-API**
 - Modular system with **comprehensive modules**
 - multi-root system for great **scalability**
-- Multiversion support for bungeecord (**Waterfall**, **Bungeecord** & **Velocity (comming soon)**) and spigot & paperspigot (**1.16.2** upto **1.19.3**)
+- Multiversion support for bungeecord (**Waterfall**, **Bungeecord**, **Travertine** & **Velocity**) and spigot, bukkit, purourspigot % paperspigot (**1.16.2** upto **1.19.3**)
