@@ -3,7 +3,7 @@
 
 <p>
   <p align="center">
-   We are Metacloud, an open source Intilligent Minecraft cloud system
+   We are Metacloud, an open source Minecraft cloud system
     <br>
     ► <a href="https://discord.com/invite/4kKEcaP9WC">Discord</a>
     •
@@ -33,8 +33,8 @@
 - Language-System (German & English)
 - **Dynamic** and **static** launch of Services
 - Template system with groups
-- Powerful **API**
+- Powerful **API** with Async & Sync support
 - Powerful **REST-API**
 - Modular system with **comprehensive modules**
 - multi-root system for great **scalability**
-- Multiversion support for bungeecord (**Waterfall**, **Bungeecord**, **Travertine** & **Velocity**) and spigot, bukkit, purourspigot % paperspigot (**1.16.2** upto **1.19.3**)
+- Multiversion support for bungeecord (**Waterfall**, **Bungeecord**, **Hexacord**, **Travertine** & **Velocity**) and spigot, purourspigot % paperspigot (**1.16.2** upto **1.19.3**)
