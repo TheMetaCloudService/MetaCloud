@@ -32,6 +32,11 @@ public class ServicePool {
         return connectedServices.stream().filter(cloudService -> cloudService.getState() == state).collect(Collectors.toList());
     }
 
+    public boolean serviceNotNull(@NonNull String name){
+        return connectedServices.stream().anyMatch(service -> service.getName().equalsIgnoreCase(name));
+    }
+
+
     public boolean registerService(CloudService service){
         if (connectedServices.stream().noneMatch(service1 -> service1.getName().equals(service.getName()))){
             connectedServices.add(service);

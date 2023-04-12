@@ -59,6 +59,10 @@ public class NettyClient extends ChannelInitializer<Channel> implements AutoClos
     }
 
 
+    public Channel getChannel() {
+        return channel;
+    }
+
     @Override
     protected void initChannel(Channel channel) {
         ChannelPipeline pipeline = channel.pipeline();

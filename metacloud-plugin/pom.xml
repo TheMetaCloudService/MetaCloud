@@ -19,6 +19,7 @@
             <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
+
     </repositories>
 
     <properties>
@@ -37,6 +38,12 @@
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
             <version>1.18-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.velocitypowered</groupId>
+            <artifactId>velocity-api</artifactId>
+            <version>3.1.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

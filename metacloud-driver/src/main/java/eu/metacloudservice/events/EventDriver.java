@@ -1,8 +1,8 @@
 package eu.metacloudservice.events;
 
-import eu.metacloudservice.events.entrys.EventHandler;
 import eu.metacloudservice.events.entrys.ICloudListener;
 import eu.metacloudservice.events.entrys.IEventAdapter;
+import eu.metacloudservice.events.entrys.Subscribe;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -52,7 +52,7 @@ public class EventDriver {
         Method[] methods = listener.getClass().getDeclaredMethods();
         this.registeredListeners.add(listener);
         for (final Method method : methods) {
-            EventHandler annotation = method.getAnnotation(EventHandler.class);
+            Subscribe annotation = method.getAnnotation(Subscribe.class);
             if (annotation == null)
                 continue;
 
@@ -79,7 +79,7 @@ public class EventDriver {
         }
     }
 
-    private EventProcess createEventHandler(final ICloudListener listener, final Method method, final EventHandler annotation) {
+    private EventProcess createEventHandler(final ICloudListener listener, final Method method, final Subscribe annotation) {
         return new EventProcess(listener, method, annotation);
     }
 

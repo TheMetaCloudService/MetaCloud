@@ -20,14 +20,14 @@ public class HandlePacketOutServiceConnected implements NettyAdaptor {
             CloudService cloudService = CloudAPI.getInstance().getServicePool().getService(((PacketOutServiceConnected) packet).getName());
             if (cloudService.getGroup().getGroupType().equals("PROXY")){
                 try {
-                    CloudAPI.getInstance().getEventDriver().executeEvent(new CloudProxyConnectedEvent(cloudService.getName(), cloudService.getGroup().getStorage().getRunningNode(), cloudService.getPort(), cloudService.getHost(), cloudService.getGroup().getGroup()));
+                    CloudAPI.getInstance().getEventDriver().executeEvent(new CloudProxyConnectedEvent(cloudService.getName(), cloudService.getGroup().getStorage().getRunningNode(), cloudService.getPort(), cloudService.getAddress(), cloudService.getGroup().getGroup()));
                 }catch (Exception e){
                     e.printStackTrace();
                 }
 
             }else {
                 try {
-                    CloudAPI.getInstance().getEventDriver().executeEvent(new CloudServiceConnectedEvent(cloudService.getName(), cloudService.getGroup().getStorage().getRunningNode(), cloudService.getPort(), cloudService.getHost(), cloudService.getGroup().getGroup()));
+                    CloudAPI.getInstance().getEventDriver().executeEvent(new CloudServiceConnectedEvent(cloudService.getName(), cloudService.getGroup().getStorage().getRunningNode(), cloudService.getPort(), cloudService.getAddress(), cloudService.getGroup().getGroup()));
 
                 }catch (Exception e){
                     e.printStackTrace();

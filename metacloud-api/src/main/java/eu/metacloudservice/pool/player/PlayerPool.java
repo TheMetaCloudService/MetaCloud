@@ -12,11 +12,9 @@ import java.util.stream.Collectors;
 public class PlayerPool {
 
 
-    private final LiveService service;
     private final ArrayList<CloudPlayer> connectedPlayers;
 
     public PlayerPool(@NonNull LiveService liveService) {
-        this.service = liveService;
         this.connectedPlayers = new ArrayList<>();
     }
 

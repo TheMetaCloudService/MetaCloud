@@ -3,28 +3,27 @@ package eu.metacloudservice.bungee.listener;
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.bungee.BungeeBootstrap;
-import eu.metacloudservice.config.Configuration;
 import eu.metacloudservice.config.Tablist;
-import eu.metacloudservice.configuration.ConfigDriver;
-import eu.metacloudservice.groups.dummy.Group;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.api.scheduler.ScheduledTask;
-import net.md_5.bungee.api.scheduler.TaskScheduler;
 import net.md_5.bungee.event.EventHandler;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Timer;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TabListListener implements Listener {
+
+
+
 
     public TabListListener() {
         ProxyServer
@@ -63,15 +62,19 @@ public class TabListListener implements Listener {
 
             if (!BungeeBootstrap.getInstance().configuration.isTabEnabled()) {
                 return;
-            }else {
+            } else {
                 try {
                     Tablist tab = BungeeBootstrap.getInstance().configuration.getTablist().get(BungeeBootstrap.getInstance().tabCount);
                     String[] config = readConfigs(tab, player);
+
                     player.setTabHeader(TextComponent.fromLegacyText(config[0]), TextComponent.fromLegacyText(config[1]));
 
-                }catch (Exception ignored){}
+                } catch (Exception ignored) {
+                }
             }
-        }
+
+}
+
 
     }
     private static String[] readConfigs(Tablist tablist, ProxiedPlayer player) {

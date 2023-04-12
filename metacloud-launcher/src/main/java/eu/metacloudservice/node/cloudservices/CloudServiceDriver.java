@@ -78,7 +78,7 @@ public class CloudServiceDriver {
                             String  service = entry.getService();
                             if (processes.stream().noneMatch(serviceProcess -> serviceProcess.getService().equalsIgnoreCase(service))){
                                 int port = getFreePort(group.getGroupType().equalsIgnoreCase("PROXY"));
-                                processes.add(new ServiceProcess(group, service, port , entry.isUseProtocol(), config.getSpigotVersion().equalsIgnoreCase("MINESTOM")));
+                                processes.add(new ServiceProcess(group, service, port , entry.isUseProtocol()));
                                 processes.stream().filter(serviceProcess -> serviceProcess.getService().equalsIgnoreCase(service)).findFirst().get().handelLaunch();
 
                                 NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);

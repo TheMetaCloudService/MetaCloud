@@ -16,6 +16,18 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    <repositories>
+        <!-- ... -->
+        <repository> <!-- for development builds -->
+            <id>sonatype-oss-snapshots1</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>papermc</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+        <!-- ... -->
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -23,6 +35,11 @@
             <artifactId>metacloud-api</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-minimessage</artifactId>
+            <version>4.13.0</version>
         </dependency>
         <dependency>
             <groupId>eu.metacloudservice</groupId>
@@ -34,6 +51,12 @@
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
             <version>1.18-R0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.velocitypowered</groupId>
+            <artifactId>velocity-api</artifactId>
+            <version>3.1.1</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

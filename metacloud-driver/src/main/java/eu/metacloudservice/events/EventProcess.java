@@ -1,8 +1,8 @@
 package eu.metacloudservice.events;
 
-import eu.metacloudservice.events.entrys.EventHandler;
 import eu.metacloudservice.events.entrys.ICloudListener;
 import eu.metacloudservice.events.entrys.IEventAdapter;
+import eu.metacloudservice.events.entrys.Subscribe;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -10,14 +10,14 @@ import java.lang.reflect.Method;
 public class EventProcess implements  Comparable<EventProcess>{
     private final ICloudListener listener;
     private final Method method;
-    private final EventHandler annotation;
+    private final Subscribe annotation;
 
-    public EventProcess(ICloudListener listener, Method method, EventHandler annotation) {
+    public EventProcess(ICloudListener listener, Method method, Subscribe annotation) {
         this.listener = listener;
         this.method = method;
         this.annotation = annotation;
     }
-    public EventHandler getAnnotation() {
+    public Subscribe getAnnotation() {
         return annotation;
     }
 

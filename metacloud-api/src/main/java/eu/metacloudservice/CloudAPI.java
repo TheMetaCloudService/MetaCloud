@@ -1,5 +1,6 @@
 package eu.metacloudservice;
 
+import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.bootstrap.bungee.listener.CloudEvents;
 import eu.metacloudservice.bootstrap.bungee.networking.*;
 import eu.metacloudservice.configuration.ConfigDriver;
@@ -17,6 +18,7 @@ import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerConne
 import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerDisconnect;
 import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerSwitchService;
 import eu.metacloudservice.networking.in.service.playerbased.apibased.*;
+import eu.metacloudservice.networking.in.service.playerbased.apibased.PacketOutAPIPlayerDispactchCommand;
 import eu.metacloudservice.networking.out.service.PacketOutServiceConnected;
 import eu.metacloudservice.networking.out.service.PacketOutServiceDisconnected;
 import eu.metacloudservice.networking.out.service.PacketOutServicePrepared;
@@ -34,6 +36,7 @@ import eu.metacloudservice.webserver.dummys.GroupList;
 import eu.metacloudservice.webserver.dummys.WhiteList;
 import lombok.NonNull;
 
+import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -41,6 +44,7 @@ import java.util.function.Consumer;
 public class CloudAPI {
 
     private static CloudAPI instance;
+    private boolean isVelo;
     private LiveService service;
 
     private PlayerPool playerPool;
@@ -48,8 +52,9 @@ public class CloudAPI {
     private RestDriver restDriver;
     private EventDriver eventDriver;
 
-    public CloudAPI() {
+    public CloudAPI(boolean isVelo) {
         instance = this;
+        isVelo = isVelo;
         new Driver();
         service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         new NettyDriver();
@@ -68,37 +73,35 @@ public class CloudAPI {
                 .registerHandler(new PacketOutPlayerConnect().getPacketUUID(), new HandlePacketOutPlayerConnect(), PacketOutPlayerConnect.class)
                 .registerHandler(new PacketOutPlayerDisconnect().getPacketUUID(), new HandlePacketOutPlayerDisconnect(), PacketOutPlayerDisconnect.class)
                 .registerHandler(new PacketOutPlayerSwitchService().getPacketUUID(), new HandlePacketOutPlayerSwitchService(), PacketOutPlayerSwitchService.class)
-                .registerHandler(new PacketOutServiceReaction().getPacketUUID(), new HandlePacketOutServiceReaction(), PacketOutServiceReaction.class)
-                        .registerPacket(PacketInAPIPlayerMessage.class)
-                        .registerPacket(PacketInAPIPlayerConnect.class)
-                        .registerPacket(PacketInAPIPlayerKick.class)
-                        .registerPacket(PacketInDispatchMainCommand.class)
-                        .registerPacket(PacketInLaunchService.class)
-                        .registerPacket(PacketInStopGroup.class)
-                        .registerPacket(PacketInStopService.class)
-                        .registerPacket(PacketInChangeState.class)
-                        .registerPacket(PacketInDispatchCommand.class)
-                        .registerPacket(PacketInPlayerConnect.class)
-                        .registerPacket(PacketInPlayerDisconnect.class)
-                        .registerPacket(PacketInPlayerSwitchService.class)
-                        .registerPacket(PacketInServiceDisconnect.class)
-                        .registerPacket(PacketInAPIPlayerTitle.class)
-                        .registerPacket(PacketInAPIPlayerActionBar.class)
-                        .registerPacket(PacketInServiceConnect.class);
+                .registerHandler(new PacketOutServiceReaction().getPacketUUID(), new HandlePacketOutServiceReaction(), PacketOutServiceReaction.class);
 
 
         this.eventDriver = new EventDriver();
 
         Group group = (Group) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/" + service.getGroup()), Group.class);
         if (group.getGroupType().equals("PROXY")){
-            eventDriver.registerListener(new CloudEvents());
-            NettyDriver.getInstance().packetDriver
-                    .registerHandler(new PacketOutAPIPlayerConnect().getPacketUUID(), new HandlePacketOutAPIPlayerConnect(), PacketOutAPIPlayerConnect.class)
-                    .registerHandler(new PacketOutAPIPlayerMessage().getPacketUUID(), new HandlePacketOutAPIPlayerMessage(), PacketOutAPIPlayerMessage.class)
-                    .registerHandler(new PacketOutAPIPlayerTitle().getPacketUUID(), new HandlePacketOutAPIPlayerTitle(), PacketOutAPIPlayerTitle.class)
-                    .registerHandler(new PacketOutAPIPlayerActionBar().getPacketUUID(), new HandlePacketOutAPIPlayerActionBar(), PacketOutAPIPlayerActionBar.class)
-                     .registerHandler(new PacketOutAPIPlayerKick().getPacketUUID(), new HandlePacketOutAPIPlayerKick(), PacketOutAPIPlayerKick.class);
+            if (isVelo){
+                eventDriver.registerListener(new eu.metacloudservice.bootstrap.velocity.listener.CloudEvents());
+                NettyDriver.getInstance().packetDriver
+                        .registerHandler(new PacketOutAPIPlayerConnect().getPacketUUID(), new eu.metacloudservice.bootstrap.velocity.networking.HandlePacketOutAPIPlayerConnect(), PacketOutAPIPlayerConnect.class)
+                        .registerHandler(new PacketOutAPIPlayerMessage().getPacketUUID(), new eu.metacloudservice.bootstrap.velocity.networking.HandlePacketOutAPIPlayerMessage(), PacketOutAPIPlayerMessage.class)
+                        .registerHandler(new PacketOutAPIPlayerTitle().getPacketUUID(), new eu.metacloudservice.bootstrap.velocity.networking.HandlePacketOutAPIPlayerTitle(), PacketOutAPIPlayerTitle.class)
+                        .registerHandler(new PacketOutAPIPlayerActionBar().getPacketUUID(), new eu.metacloudservice.bootstrap.velocity.networking.HandlePacketOutAPIPlayerActionBar(), PacketOutAPIPlayerActionBar.class)
+                        .registerHandler(new PacketOutAPIPlayerDispactchCommand().getPacketUUID(), new eu.metacloudservice.bootstrap.velocity.networking.HandlePacketOutAPIPlayerDispactchCommand(), PacketOutAPIPlayerDispactchCommand.class)
+                        .registerHandler(new PacketOutAPIPlayerKick().getPacketUUID(), new eu.metacloudservice.bootstrap.velocity.networking.HandlePacketOutAPIPlayerKick(), PacketOutAPIPlayerKick.class)
+                        .registerHandler(new PacketOutAPIPlayerTab().getPacketUUID(), new eu.metacloudservice.bootstrap.velocity.networking.HandlePacketOutAPIPlayerTab(), PacketOutAPIPlayerTab.class);
 
+            }else {
+                eventDriver.registerListener(new CloudEvents());
+                NettyDriver.getInstance().packetDriver
+                        .registerHandler(new PacketOutAPIPlayerConnect().getPacketUUID(), new HandlePacketOutAPIPlayerConnect(), PacketOutAPIPlayerConnect.class)
+                        .registerHandler(new PacketOutAPIPlayerMessage().getPacketUUID(), new HandlePacketOutAPIPlayerMessage(), PacketOutAPIPlayerMessage.class)
+                        .registerHandler(new PacketOutAPIPlayerTitle().getPacketUUID(), new HandlePacketOutAPIPlayerTitle(), PacketOutAPIPlayerTitle.class)
+                        .registerHandler(new PacketOutAPIPlayerActionBar().getPacketUUID(), new HandlePacketOutAPIPlayerActionBar(), PacketOutAPIPlayerActionBar.class)
+                        .registerHandler(new PacketOutAPIPlayerKick().getPacketUUID(), new HandlePacketOutAPIPlayerKick(), PacketOutAPIPlayerKick.class)
+                        .registerHandler(new PacketOutAPIPlayerDispactchCommand().getPacketUUID(), new HandlePacketOutAPIPlayerDispactchCommand(), PacketOutAPIPlayerDispactchCommand.class)
+                        .registerHandler(new PacketOutAPIPlayerTab().getPacketUUID(), new HandlePacketOutAPIPlayerTab(), PacketOutAPIPlayerTab.class);
+            }
         }
 
 
@@ -109,6 +112,12 @@ public class CloudAPI {
 
     public void launchService(String group){
         sendPacketSynchronized(new PacketInLaunchService(group));
+    }
+
+    public void launchServices(String group, int count){
+        for (int i = 0; i != count-1; i++) {
+            launchService(group);
+        }
     }
 
     public void dispatchCommand(String command){
@@ -183,7 +192,23 @@ public class CloudAPI {
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInChangeState(name, state.toString()));
     }
 
+    public void setState(ServiceState state){
+        setState(state, getCurrentService().getService());
+    }
 
+
+    public double getUsedMemory(){
+        return  ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1048576;
+
+    }
+
+    public double getMaxMemory(){
+        return  ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getMax() / 1048576;
+
+    }
+    public AsyncCloudAPI getAsyncAPI(){
+        return AsyncCloudAPI.getInstance();
+    }
     public void sendPacketSynchronized(Packet packet){
         NettyDriver.getInstance().nettyClient.sendPacketSynchronized(packet);
     }

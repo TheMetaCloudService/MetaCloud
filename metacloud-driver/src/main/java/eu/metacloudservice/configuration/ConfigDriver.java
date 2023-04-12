@@ -10,6 +10,7 @@ import lombok.SneakyThrows;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.CompletableFuture;
 
 public class ConfigDriver {
 
@@ -53,16 +54,18 @@ public class ConfigDriver {
     }
 
     public void save(IConfigAdapter IConfigAdapter){
-        try {
-            if (!exists()) {
-                new File(this.location).createNewFile();
+        CompletableFuture.runAsync(() -> {
+            try {
+                if (!exists()) {
+                    new File(this.location).createNewFile();
+                }
+                try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(this.location), StandardCharsets.UTF_8)) {
+                    GSON.toJson(IConfigAdapter, writer);
+                }
+            } catch (IOException e) {
+                Driver.getInstance().getTerminalDriver().log(Type.ERROR, e.getMessage());
             }
-            try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(this.location), StandardCharsets.UTF_8)) {
-                GSON.toJson(IConfigAdapter, writer);
-            }
-        } catch (IOException e) {
-            Driver.getInstance().getTerminalDriver().log(Type.ERROR, e.getMessage());
-        }
+        });
     }
 
 }

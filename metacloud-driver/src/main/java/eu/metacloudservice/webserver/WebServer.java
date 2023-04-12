@@ -99,19 +99,15 @@ public class WebServer implements IWebServer {
                     Socket finalConnection = connection;
                     try {
                         BufferedReader reader = new BufferedReader(new InputStreamReader(finalConnection.getInputStream(), StandardCharsets.UTF_8));
-
                         String[] tokens = reader.readLine().split(" ");
                         String method = tokens[0];
                         String rawroute = tokens[1];
-
                         if (rawroute.contains("/")){
                             String key = rawroute.split("/")[1];
-                            if (key.contains(AUTH_KEY)){
-
+                            if (key.contains(AUTH_KEY) || key.contains("debug")){
                                 String query = rawroute.replace("/" + key, "");
                                 if (method.equals("GET")){
                                     writeAndFlush(finalConnection, "200 OK", getRoutes(query).channelRead());
-
                                 }else if (method.equals("PUT")){
                                     handlePut(query, finalConnection, reader);
                                 }else {

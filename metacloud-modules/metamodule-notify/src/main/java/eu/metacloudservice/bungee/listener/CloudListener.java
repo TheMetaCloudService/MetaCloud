@@ -1,18 +1,18 @@
 package eu.metacloudservice.bungee.listener;
 
+import eu.metacloudservice.Driver;
 import eu.metacloudservice.bungee.BungeeBootstrap;
 import eu.metacloudservice.config.Configuration;
-import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
-import eu.metacloudservice.events.entrys.EventHandler;
 import eu.metacloudservice.events.entrys.ICloudListener;
+import eu.metacloudservice.events.entrys.Subscribe;
 import eu.metacloudservice.events.listeners.*;
 import net.md_5.bungee.api.ProxyServer;
 
 public class CloudListener implements ICloudListener {
 
 
-    @EventHandler
+    @Subscribe
     public void handle(CloudProxyDisconnectedEvent event){
 
         Configuration configuration = (Configuration) new ConfigDriver().convert(BungeeBootstrap.getInstance().getRestDriver().get("/module/notify/configuration"), Configuration.class);
@@ -24,7 +24,7 @@ public class CloudListener implements ICloudListener {
         });
     }
 
-    @EventHandler
+    @Subscribe
     public void handle(CloudProxyConnectedEvent event){
         Configuration configuration = (Configuration) new ConfigDriver().convert(BungeeBootstrap.getInstance().getRestDriver().get("/module/notify/configuration"), Configuration.class);
 
@@ -36,7 +36,7 @@ public class CloudListener implements ICloudListener {
         });
     }
 
-    @EventHandler
+    @Subscribe
     public void handle(CloudProxyPreparedEvent event){
         Configuration configuration = (Configuration) new ConfigDriver().convert(BungeeBootstrap.getInstance().getRestDriver().get("/module/notify/configuration"), Configuration.class);
 
@@ -48,7 +48,7 @@ public class CloudListener implements ICloudListener {
         });
     }
 
-    @EventHandler
+    @Subscribe
     public void handle(CloudServiceConnectedEvent event){
         Configuration configuration = (Configuration) new ConfigDriver().convert(BungeeBootstrap.getInstance().getRestDriver().get("/module/notify/configuration"), Configuration.class);
 
@@ -60,7 +60,7 @@ public class CloudListener implements ICloudListener {
         });
     }
 
-    @EventHandler
+    @Subscribe
     public void handle(CloudServiceDisconnectedEvent event){
         Configuration configuration = (Configuration) new ConfigDriver().convert(BungeeBootstrap.getInstance().getRestDriver().get("/module/notify/configuration"), Configuration.class);
 
@@ -74,7 +74,7 @@ public class CloudListener implements ICloudListener {
         });
     }
 
-    @EventHandler
+    @Subscribe
     public void handle(CloudServicePreparedEvent event){
         Configuration configuration = (Configuration) new ConfigDriver().convert(BungeeBootstrap.getInstance().getRestDriver().get("/module/notify/configuration"), Configuration.class);
 

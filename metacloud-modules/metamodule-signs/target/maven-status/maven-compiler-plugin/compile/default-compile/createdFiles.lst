@@ -1,0 +1,7 @@
+eu\metacloudservice\config\ConfigBuilder.class
+eu\metacloudservice\config\Configuration.class
+eu\metacloudservice\config\SignLayout.class
+eu\metacloudservice\moduleside\MetaModule.class
+eu\metacloudservice\config\General.class
+eu\metacloudservice\config\SignLocation.class
+eu\metacloudservice\config\Locations.class

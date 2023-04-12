@@ -70,7 +70,7 @@ public class CloudManager {
 
     public CloudManager() {
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Es wird versucht, den '§fCloud Manager§r' zu starten",
-                "an attempt is made to start the '§fcloud manager§r'");
+                "An attempt is made to start the '§fcloud manager§r'");
 
         System.setProperty("io.netty.noPreferDirect", "true");
         System.setProperty("client.encoding.override", "UTF-8");
@@ -97,6 +97,8 @@ public class CloudManager {
         Driver.getInstance().getMessageStorage().eventDriver = new EventDriver();
         restDriver = new RestDriver(config.getManagerAddress(), config.getRestApiCommunication());
         initRestService();
+
+
 
         if (!new File("./local/messages.json").exists()){
             new ConfigDriver("./local/messages.json").save(new Messages("§8► §bMetaCloud §8▌ §7", "%PREFIX%Successfully connected to §a%SERVICE%",
@@ -162,7 +164,7 @@ public class CloudManager {
         Driver.getInstance().getModuleDriver().load();
 
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Es wird versucht, alle Befehle zu laden und ihre Bereitstellung deutlich zu machen",
-                "it is tried to load all commands and to make the provision of them clear");
+                "It is tried to load all commands and to make the provision of them clear");
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new HelpCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new GroupCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new ClearCommand());
@@ -174,10 +176,10 @@ public class CloudManager {
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new MetaCloudCommand());
 
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Es wurden '§f"+Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().size()+" Befehle§r' gefunden und geladen",
-                "there were '§f"+Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().size()+" commands§r'  found and loaded");
+                "There were '§f"+Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().size()+" commands§r' found and loaded");
 
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Die Cloud erfolgreich gestartet ist, können Sie sie von nun an mit '§fhelp§r' nutzen.",
-                "the cloud is successfully started, you can use it from now on with '§fhelp§r'.");
+                "The cloud is successfully started, you can use it from now on with '§fhelp§r'.");
         queueDriver= new QueueDriver();
 
         Messages raw = (Messages) new ConfigDriver("./local/messages.json").read(Messages.class);
@@ -229,7 +231,7 @@ public class CloudManager {
 
     public void initNetty(ManagerConfig config){
         new NettyDriver();
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der Netty-Server wird vorbereitet und dann gestartet", "the Netty server is prepared and then started");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der Netty-Server wird vorbereitet und dann gestartet", "The Netty server is prepared and then started");
 
         NettyDriver.getInstance().whitelist.add("127.0.0.1");
 
@@ -245,7 +247,7 @@ public class CloudManager {
 
         NettyDriver.getInstance().nettyServer = new NettyServer();
         NettyDriver.getInstance().nettyServer.bind( config.getNetworkingCommunication()).start();
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der '§fNetty-Server§r' wurde erfolgreich an Port '§f"+config.getNetworkingCommunication()+"§r' angebunden", "the '§fNetty-server§r' was successfully bound on port '§f"+config.getNetworkingCommunication()+"§r'");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der '§fNetty-Server§r' wurde erfolgreich an Port '§f"+config.getNetworkingCommunication()+"§r' angebunden", "The '§fNetty-server§r' was successfully bound on port '§f"+config.getNetworkingCommunication()+"§r'");
 
         //PACKETS
         NettyDriver.getInstance().packetDriver
@@ -273,48 +275,22 @@ public class CloudManager {
                 .registerHandler(new PacketInAPIPlayerKick().getPacketUUID(), new HandlePacketInAPIPlayerKick(), PacketInAPIPlayerKick.class)
                 .registerHandler(new PacketInAPIPlayerTitle().getPacketUUID(), new HandlePacketInAPIPlayerTitle(), PacketInAPIPlayerTitle.class)
                 .registerHandler(new PacketInAPIPlayerActionBar().getPacketUUID(), new HandlePacketInAPIPlayerActionBar(), PacketInAPIPlayerActionBar.class)
+                .registerHandler(new PacketInAPIPlayerTab().getPacketUUID(), new HandlePacketInAPIPlayerTab(), PacketInAPIPlayerTab.class)
+                .registerHandler(new PacketOutAPIPlayerDispactchCommand().getPacketUUID(), new HandlePacketOutAPIPlayerDispactchCommand(), PacketOutAPIPlayerDispactchCommand.class)
 
                 //PLAYER
                 .registerHandler(new PacketInPlayerConnect().getPacketUUID(), new HandlePacketInPlayerConnect(), PacketInPlayerConnect.class)
                 .registerHandler(new PacketInPlayerDisconnect().getPacketUUID(), new HandlePacketInPlayerDisconnect(), PacketInPlayerDisconnect.class)
-                .registerHandler(new PacketInPlayerSwitchService().getPacketUUID(), new HandlePacketInPlayerSwitchService(), PacketInPlayerSwitchService.class)
-
-                /*
-                *  in this part all packages sent form the server are registered
-                *  {@link Packet} handles the packets are written and read via a ByteBuf
-                * */
-
-                //API
-                .registerPacket(PacketOutServiceConnected.class)
-                .registerPacket(PacketOutServiceDisconnected.class)
-                .registerPacket(PacketOutServicePrepared.class)
-                .registerPacket(PacketOutAPIPlayerActionBar.class)
-                .registerPacket(PacketOutAPIPlayerTitle.class)
-                .registerPacket(PacketOutAPIPlayerKick.class)
-                .registerPacket(PacketInAPIPlayerConnect.class)
-                .registerPacket(PacketOutAPIPlayerKick.class)
-
-                //PLAYER
-                .registerPacket(PacketOutPlayerConnect.class)
-                .registerPacket(PacketOutPlayerSwitchService.class)
-                .registerPacket(PacketOutPlayerDisconnect.class)
-
-                //NODE
-                .registerPacket(PacketOutAuthSuccess.class)
-                .registerPacket(PacketOutLaunchService.class)
-                .registerPacket(PacketOutStopService.class)
-                .registerPacket(PacketOutShutdownNode.class)
-                .registerPacket(PacketOutSyncService.class)
-                .registerPacket(PacketOutSendCommand.class);
+                .registerHandler(new PacketInPlayerSwitchService().getPacketUUID(), new HandlePacketInPlayerSwitchService(), PacketInPlayerSwitchService.class);
 
     }
 
 
     public void initRestService(){
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Es wird versucht, den Webserver zu laden und zu starten",
-                "an attempt is made to load the web server and start it");
+                "An attempt is made to load the web server and start it");
         Driver.getInstance().runWebServer();
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Webserver wurde §ferfolgreich§r geladen und gestartet", "the web server is §fsuccessfully§r loaded and started");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Webserver wurde §ferfolgreich§r geladen und gestartet", "The web server is §fsuccessfully§r loaded and started");
     }
 
     public static void shutdownHook(){
@@ -331,7 +307,7 @@ public class CloudManager {
 
         NettyDriver.getInstance().nettyServer.close();
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Danke für die Nutzung von MetaCloud ;->",
-                "thank you for using MetaCloud ;->");
+                "Thank you for using MetaCloud ;->");
         System.exit(0);
     }
 }

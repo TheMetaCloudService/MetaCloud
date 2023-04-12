@@ -125,11 +125,13 @@ public class ClientConnection extends SimpleChannelInboundHandler<ByteBuf> {
         if (this.queuedPackets == null) {
             return;
         }
-        int readerIndex = in.readerIndex();
-        byte[] bytes = new byte[in.readableBytes()];
-        in.readBytes(bytes);
-        this.queuedPackets.add(bytes);
-        in.readerIndex(readerIndex);
+        try {
+            int readerIndex = in.readerIndex();
+            byte[] bytes = new byte[in.readableBytes()];
+            in.readBytes(bytes);
+            this.queuedPackets.add(bytes);
+            in.readerIndex(readerIndex);
+        }catch (Exception ignore){}
     }
 
     @Override
@@ -201,19 +203,19 @@ public class ClientConnection extends SimpleChannelInboundHandler<ByteBuf> {
 
 
         if (this.queuedPackets != null) {
-            if(!getName().contains(".")){
-            }
 
 
 
-            for (byte[] packet : this.queuedPackets) {
-                int length = packet.length;
-                int size = PacketUtils.getVarIntLength(length) + length;
-                ByteBuf buf = Unpooled.buffer(size, size);
-                PacketUtils.writeVarInt(buf, length);
-                buf.writeBytes(packet);
-                this.serverConnection.fastWrite(buf);
-            }
+            try {
+                for (byte[] packet : this.queuedPackets) {
+                    int length = packet.length;
+                    int size = PacketUtils.getVarIntLength(length) + length;
+                    ByteBuf buf = Unpooled.buffer(size, size);
+                    PacketUtils.writeVarInt(buf, length);
+                    buf.writeBytes(packet);
+                    this.serverConnection.fastWrite(buf);
+                }
+            }catch (Exception ignore){}
             this.queuedPackets.clear();
             this.queuedPackets = null;
         }
@@ -242,13 +244,15 @@ public class ClientConnection extends SimpleChannelInboundHandler<ByteBuf> {
         }
 
         if (config.getConnectionType() == ConnectionType.RANDOM){
-            SubGate subGate = MetaModule.getInstance().getRandomSub();
+            try {
 
+            }catch (Exception ignored){
+                SubGate subGate = MetaModule.getInstance().getRandomSub();
 
-
-            this.servername = subGate.proxyedtaskname;
-            MetaModule.getInstance().getProxyStorage().get(subGate.proxyedtaskname).setConnectedPlayers(MetaModule.getInstance().getProxyStorage().get(subGate.proxyedtaskname).getConnectedPlayers() + 1);
-            connectToServer(new InetSocketAddress(subGate.ip, subGate.port));
+                this.servername = subGate.proxyedtaskname;
+                MetaModule.getInstance().getProxyStorage().get(subGate.proxyedtaskname).setConnectedPlayers(MetaModule.getInstance().getProxyStorage().get(subGate.proxyedtaskname).getConnectedPlayers() + 1);
+                connectToServer(new InetSocketAddress(subGate.ip, subGate.port));
+            }
         }
     }
 

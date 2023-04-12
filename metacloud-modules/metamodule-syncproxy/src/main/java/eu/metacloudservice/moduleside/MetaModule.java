@@ -21,8 +21,8 @@ public class MetaModule implements IModule {
     @Override
     public void unload() {
 
-
-        Driver.getInstance().getWebServer().removeRoute("/modules/syncproxy");
+        Driver.getInstance().getWebServer().removeRoute("/module/syncproxy/general");
+        Driver.getInstance().getWebServer().removeRoute("/module/syncproxy/configuration");
     }
 
     @Override
@@ -48,8 +48,8 @@ public class MetaModule implements IModule {
 
                 ArrayList<String> maintenancePlayerInfo02 = new ArrayList<>();
                 maintenanceLayout02.setProtocol("§8▷ §cMaintenance");
-                maintenanceLayout02.setFirstline("§8► §bMetaCloud §8▷ §7Ready §ffor §7Future | §f1.16-1.19.3");
-                maintenanceLayout02.setSecondline("§8➥ ✎ §7The network now §fMAINTENANCE §8| §8◣ §b%proxy_name% §8◥ ");
+                maintenanceLayout02.setFirstline("§8► §bMetaCloud  §8▷ §7Ready §ffor §7Future | §f1.16-1.19.4");
+                maintenanceLayout02.setSecondline("§8➥ ✎ §7The network now in §fMAINTENANCE §8| §8◣ §b%proxy_name% §8◥ ");
 
                 maintenancePlayerInfo02.add("");
                 maintenancePlayerInfo02.add("§8► §bMetaCloud §8▷ §7Ready §ffor §7Future");
@@ -67,8 +67,8 @@ public class MetaModule implements IModule {
 
                 ArrayList<String> defaultsPlayerInfo02 = new ArrayList<>();
                 defaultsLayout02.setProtocol("§8▷ §b%online_players%§8/§b%max_players%");
-                defaultsLayout02.setFirstline("§8► §bMetaCloud §8▷ §7Ready §ffor §7Future | §f1.16-1.19.3");
-                defaultsLayout02.setSecondline("§8➥ ✎ §7The network now §fONLINE  §8|  §8◣ §b%proxy_name% §8◥ ");
+                defaultsLayout02.setFirstline("§8► §bMetaCloud §8▷ §7Ready §ffor §7Future | §f1.16-1.19.4");
+                defaultsLayout02.setSecondline("§8➥ ✎ §7The network now §fONLINE  §8|  §8◣ §b%proxy_name% §8◥");
                 defaultsPlayerInfo02.add("");
                 defaultsPlayerInfo02.add("§8► §bMetaCloud §8▷ §7Ready §ffor §7Future");
                 defaultsPlayerInfo02.add("");
@@ -82,14 +82,15 @@ public class MetaModule implements IModule {
                 ArrayList<Tablist> tablist = new ArrayList<>();
 
                 Tablist tablayout01 = new Tablist();
-                tablayout01.setHeader("\n      §8► §bMetaCloud §8▷ §7Ready §ffor §7Future §8◄      \n   §8► §7Current server §8▷ §b%service_name% §8◄   \n");
-                tablayout01.setFooter("\n§8► §7Web §8▷ §bMetaCloudServiceEU §8◄\n   §8► §7Powered by §8▷ §bInvis-CloudDE §8◄   \n");
+                tablayout01.setHeader("\n      §8► §bMetaCloud §8▷ §7Ready §ffor §7Future §8◄      \n   §8► §7Current server §8▷  §#0276af%service_name% §8◄   \n");
+
+                tablayout01.setFooter("\n§8► §7Web §8▷ §bmetacloudservice.eu §8◄\n   §8► §7Powered by §8▷ §bInvis-CloudDE §8◄   \n");
 
                 tablist.add(tablayout01);
 
                 Tablist tablayout02 = new Tablist();
-                tablayout02.setHeader("\n      §8► §bMetaCloud §8▷ §7Ready §ffor §7Future §8◄      \n   §8► §7Current players §8▷ §b%online_players%§r/§b%max_players% §8◄   \n");
-                tablayout02.setFooter("\n§8► §7Web §8▷ §bMetaCloudServiceEU §8◄\n   §8► §7Powered by §8▷ §bInvis-CloudDE §8◄   \n");
+                tablayout02.setHeader("\n      §8► §bMetaCloud §8▷ §7Ready §ffor §7Future §8◄      \n    §8► §7Current players §8▷  §#0276af%online_players%§r/ §#0276af%max_players% §8◄   \n");
+                tablayout02.setFooter("\n§8► §7Web §8▷  §bmetacloudservice.eu  §8◄\n   §8► §7Powered by §8▷ §bInvis-CloudDE §8◄   \n");
 
                 tablist.add(tablayout02);
                 config.setMaintenancen(maintenance);
@@ -102,9 +103,10 @@ public class MetaModule implements IModule {
                 new ConfigDriver("./modules/syncproxy/config.json").save(configuration);
             }
         }catch (Exception e){
-            create();
+            set();
+            update();
         }
-        set();
+
 
     }
     
@@ -252,7 +254,7 @@ public class MetaModule implements IModule {
 
             Driver.getInstance().getWebServer().updateRoute("/module/syncproxy/configuration", new ConfigDriver().convert(update));
         }catch (Exception e){
-            create();
+            set();
             update();
         }
 

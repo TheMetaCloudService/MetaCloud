@@ -55,15 +55,15 @@ public class CloudBoot {
                 runClient();
             }
         }else {
-            Driver.getInstance().getTerminalDriver().log(Type.INFO, "it will be checked if the cloud is already set up");
+            Driver.getInstance().getTerminalDriver().log(Type.INFO, "It will be checked if the cloud is already set up");
                 if (!new File("./service.json").exists() && !new File("./nodeservice.json").exists()){
                     Driver.getInstance().getMessageStorage().setuptype = "MAINSETUP";
-                    Driver.getInstance().getTerminalDriver().log(Type.INFO, "oh it seems you are new here, we will start the setup then...");
+                    Driver.getInstance().getTerminalDriver().log(Type.INFO, "Oh it seems you are new here, we will start the setup then...");
                     try {Thread.sleep(2000);} catch (InterruptedException ignored) {}
                     waitForFinishSetup();
                     Driver.getInstance().getTerminalDriver().joinSetup();
                 }else {
-                    Driver.getInstance().getTerminalDriver().log(Type.INFO, "everything perfect, we can try to start the cloud");
+                    Driver.getInstance().getTerminalDriver().log(Type.INFO, "Everything perfect, we can try to start the cloud");
                     runClient();
                 }
 

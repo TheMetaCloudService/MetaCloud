@@ -27,6 +27,11 @@
       <option name="url" value="https://repo.metacloudservice.eu/repository" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="sonatype-oss-snapshots1" />
+      <option name="name" value="sonatype-oss-snapshots1" />
+      <option name="url" value="https://s01.oss.sonatype.org/content/repositories/snapshots/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="MetaCloud-Repo" />
       <option name="name" value="MetaCloud-Repo" />
       <option name="url" value="https://repo.metacloudservice.eu/" />

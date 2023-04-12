@@ -15,6 +15,8 @@ import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.webserver.dummys.GroupList;
 import eu.metacloudservice.webserver.dummys.WhiteList;
 import lombok.NonNull;
+
+import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,8 @@ public class AsyncCloudAPI {
 
     public AsyncCloudAPI() {
         instance = this;
+        this.playerPool = new PlayerPool();
+        this.servicePool = new ServicePool();
     }
 
     public void launchService(String group){
@@ -45,8 +49,22 @@ public class AsyncCloudAPI {
         sendPacketAsynchronous(new PacketInStopGroup(group));
     }
 
+    public void launchServices(String group, int count){
+        for (int i = 0; i != count-1; i++) {
+            launchService(group);
+        }
+    }
 
 
+    public double getUsedMemory(){
+        return  ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1048576;
+
+    }
+
+    public double getMaxMemory(){
+        return  ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getMax() / 1048576;
+
+    }
     public ArrayList<Group> getGroups(){
         ArrayList<Group> groups = new ArrayList<>();
         GroupList cech = (GroupList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/general"), GroupList.class);
@@ -101,14 +119,17 @@ public class AsyncCloudAPI {
         sendPacketAsynchronous(new PacketInChangeState(name, state.toString()));
     }
 
-
-
-
     public void sendPacketAsynchronous(Packet packet){
         NettyDriver.getInstance().nettyClient.sendPacketsAsynchronous(packet);
     }
 
+    public CloudAPI getSyncAPI(){
+        return CloudAPI.getInstance();
+    }
 
+    public void setState(ServiceState state){
+        setState(state, getCurrentService().getService());
+    }
     public PlayerPool getPlayerPool() {
         return playerPool;
     }

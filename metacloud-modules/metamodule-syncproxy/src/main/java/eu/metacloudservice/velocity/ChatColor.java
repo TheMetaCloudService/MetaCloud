@@ -270,7 +270,7 @@ public class ChatColor {
     }
 
     /**
-     * See {@link Enum#valueOf(java.lang.Class, java.lang.String)}.
+     * See {@link Enum#valueOf(Class, String)}.
      *
      * @param name color name
      * @return ChatColor

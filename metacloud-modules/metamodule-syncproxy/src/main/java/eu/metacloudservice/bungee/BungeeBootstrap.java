@@ -72,16 +72,15 @@ public class BungeeBootstrap extends Plugin {
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(() -> {
-            Configuration conf = (Configuration) new ConfigDriver().convert(BungeeBootstrap.getInstance().getRestDriver().get("/module/syncproxy/configuration"), Configuration.class);
+            Configuration conf = (Configuration) new ConfigDriver().convert(getRestDriver().get("/module/syncproxy/configuration"), Configuration.class);
             conf.getConfiguration().stream()
                     .filter(designConfig -> designConfig.getTargetGroup().equalsIgnoreCase(liveService.getGroup()))
                     .findFirst()
                     .ifPresent(config -> {
                         configuration = config;
                         group = CloudAPI.getInstance().getGroups().stream()
-                                .filter(group1 -> group1.getGroup().equalsIgnoreCase(BungeeBootstrap.getInstance().getLiveService().getGroup()))
-                                .findFirst()
-                                .orElseThrow(); // or handle the case when no group is found
+                                .filter(group1 -> group1.getGroup().equalsIgnoreCase(getLiveService().getGroup()))
+                                .findFirst().get();
                         tabCount = tabCount >= configuration.getTablist().size() - 1 ? 0 : tabCount + 1;
                         if (group.isMaintenance()) {
                             motdCount = motdCount >= configuration.getMaintenancen().size() - 1 ? 0 : motdCount + 1;

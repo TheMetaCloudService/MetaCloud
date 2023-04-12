@@ -97,7 +97,7 @@ public class TaskedService implements ITaskedService {
             liveServices.setPort(entry.getUsedPort());
             Driver.getInstance().getWebServer().updateRoute("/cloudservice/" + entry.getServiceName().replace(config.getSplitter(), "~"), new ConfigDriver().convert(liveServices));
 
-            process = new ServiceProcess(Driver.getInstance().getGroupDriver().load(getEntry().getGroupName()), getEntry().getServiceName(), entry.getUsedPort(), entry.isUseProtocol(), config.getSpigotVersion().equals("MINESTOM"));
+            process = new ServiceProcess(Driver.getInstance().getGroupDriver().load(getEntry().getGroupName()), getEntry().getServiceName(), entry.getUsedPort(), entry.isUseProtocol());
             process.handelLaunch();
         }else {
             PacketOutLaunchService launch = new PacketOutLaunchService(entry.getServiceName(), new ConfigDriver().convert(Driver.getInstance().getGroupDriver().load(getEntry().getGroupName())), entry.isUseProtocol());
@@ -115,6 +115,7 @@ public class TaskedService implements ITaskedService {
 
             }else {
                 Driver.getInstance().getMessageStorage().openServiceScreen = true;
+                Driver.getInstance().getMessageStorage().setuptype = this.entry.getServiceName();
                 Driver.getInstance().getTerminalDriver().clearScreen();
                 process.handelConsole();
                 base = new Timer();
@@ -126,8 +127,20 @@ public class TaskedService implements ITaskedService {
                             if (line.equalsIgnoreCase("leave")){
                                 handelScreen();
                             }else {
-                                handelExecute(line);
+                                try {
+                                    handelExecute(line);
+                                }catch (Exception e){
+                                    Driver.getInstance().getMessageStorage().openServiceScreen = false;
+                                }
                             }
+                        }else {
+                            if (!Driver.getInstance().getMessageStorage().openServiceScreen){
+                                Driver.getInstance().getMessageStorage().openServiceScreen = true;
+                                base.cancel();
+                                process.handelConsole();
+                                Driver.getInstance().getTerminalDriver().leaveSetup();
+                            }
+
                         }
                     }
                 }, 100, 100);

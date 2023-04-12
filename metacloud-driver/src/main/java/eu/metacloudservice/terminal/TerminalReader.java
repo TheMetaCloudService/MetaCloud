@@ -19,7 +19,9 @@ public final class TerminalReader extends Thread{
     public void run() {
         while (!this.isInterrupted()) {
             try {
-                final var line = Driver.getInstance().getTerminalDriver().getLineReader().readLine(Driver.getInstance().getTerminalDriver().getColoredString("§bmetacloud§f@"+System.getProperty("user.name") +" §7=> "));
+                String prompt = "§bmetacloud§f@"+System.getProperty("user.name") +" §7=> ";
+
+                final var line = Driver.getInstance().getTerminalDriver().getLineReader().readLine(Driver.getInstance().getTerminalDriver().getColoredString(prompt));
                 if (line != null && !line.isEmpty()) {
                     final var input = this.consoleDriver.getInputs().poll();
 

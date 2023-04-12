@@ -12,6 +12,8 @@ import eu.metacloudservice.webserver.dummys.liveservice.LiveServiceList;
 import eu.metacloudservice.webserver.dummys.liveservice.LiveServices;
 import lombok.NonNull;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
 import java.util.List;
 
 public class CloudService {
@@ -28,12 +30,27 @@ public class CloudService {
         return name;
     }
 
+    public String getID(){
+        LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/genernal"),LiveServiceList.class );
+        return name.replace(group ,"").replace(list.getCloudServiceSplitter(), "");
+    }
     public void setState(@NonNull ServiceState state){
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInChangeState(this.name, state.toString()));
     }
 
     public void sync(){
         CloudAPI.getInstance().dispatchCommand("service sync " + name);
+    }
+
+    public void shutdown(){
+        AsyncCloudAPI.getInstance().stopService(name);
+    }
+    public boolean isTypeProxy(){
+        return getGroup().getGroupType().equalsIgnoreCase("PROXY");
+    }
+
+    public boolean isTypeLobby(){
+        return getGroup().getGroupType().equalsIgnoreCase("LOBBY");
     }
 
     public Group getGroup(){
@@ -50,7 +67,7 @@ public class CloudService {
         return services.getState();
     }
 
-    public String getHost(){
+    public String getAddress(){
         LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
         LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
         return services.getHost();
@@ -60,7 +77,6 @@ public class CloudService {
         LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
         return services.getPort();
     }
-
     public List<CloudPlayer> getPlayers(){
         if (getGroup().getGroupType().equalsIgnoreCase("PROXY")){
             return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromProxy(name);

@@ -8,6 +8,7 @@ import eu.metacloudservice.bungee.listener.CloudConnectListener;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
+import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.pool.service.entrys.CloudService;
 import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.timebaser.TimerBase;
@@ -54,6 +55,10 @@ public class BungeeBootstrap extends Plugin {
                        }
                     });
                 }
+
+                    if (!NettyDriver.getInstance().nettyClient.getChannel().isActive()){
+                        System.exit(0);
+                    }
 
 
             }

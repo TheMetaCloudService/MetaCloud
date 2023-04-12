@@ -1,0 +1,4 @@
+main: eu.metacloudservice.bukkit.BukkitBootstrap
+version: 1.0.0
+author: RauchigesEtwas
+name: metacloud-plugin

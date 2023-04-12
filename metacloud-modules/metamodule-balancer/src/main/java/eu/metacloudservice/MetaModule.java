@@ -77,7 +77,6 @@ public class MetaModule implements IModule {
     public SubGate getRandomSub(){
         Random generator = new Random();
         ArrayList<SubGate> subGates = new ArrayList<>();
-
         proxyStorage.forEach((s, proxyData) -> {
             subGates.add(proxyData.getSubGate());
         });

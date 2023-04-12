@@ -33,7 +33,7 @@ public class CloudNode {
         new File("./local/templates/").mkdirs();
         cloudServiceDriver = new CloudServiceDriver();
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Es wird versucht, den '§fCloud Node§r' zu starten",
-                "an attempt is made to start the '§fcloud node§r'");
+                "An attempt is made to start the '§fcloud node§r'");
         NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
         System.setProperty("log4j.configurationFile", "log4j2.properties");
         if (!new File("./connection.key").exists()){
@@ -49,7 +49,14 @@ public class CloudNode {
                     "The download was successful");
         }else {
         }
-
+        if (!new File("./local/GLOBAL/EVERY/plugins/metacloud-api.jar").exists()){
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Versuche die Datei '§fmetacloud-api.jar§r' herunter zuladen",
+                    "Try to download the file '§fmetacloud-api.jar§r'.");
+            Driver.getInstance().getMessageStorage().packetLoader.loadAPI();
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
+                    "The download was successful");
+        }else {
+        }
         if (!new File("./local/GLOBAL/EVERY/plugins/metacloud-plugin.jar").exists()){
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Versuche die Datei '§fmetacloud-plugin.jar§r' herunter zuladen",
                     "Try to download the file '§fmetacloud-plugin.jar§r'.");
@@ -81,7 +88,7 @@ public class CloudNode {
         }
 
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Es wird versucht, alle Befehle zu laden und ihre Bereitstellung deutlich zu machen",
-                "it is tried to load all commands and to make the provision of them clear");
+                "It is tried to load all commands and to make the provision of them clear");
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new HelpCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new StopCommand());
 
@@ -90,7 +97,7 @@ public class CloudNode {
                 "there were '§f"+Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().size()+" commands§r'  found and loaded");
 
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Die Cloud erfolgreich gestartet ist, können Sie sie von nun an mit '§fhelp§r' nutzen.",
-                "the cloud is successfully started, you can use it from now on with '§fhelp§r'.");
+                "The cloud is successfully started, you can use it from now on with '§fhelp§r'.");
         AuthenticatorKey authConfig = (AuthenticatorKey) new ConfigDriver("./connection.key").read(AuthenticatorKey.class);
         NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInAuthNode(config.getNodeName(), Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey())));
     }
@@ -113,7 +120,7 @@ public class CloudNode {
 
     private void initNetty(NodeConfig config){
         new NettyDriver();
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der Netty-Client wird vorbereitet und dann gestartet", "the Netty client is prepared and then started");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der Netty-Client wird vorbereitet und dann gestartet", "The Netty client is prepared and then started");
 
         NettyDriver.getInstance().nettyClient = new NettyClient();
          NettyDriver.getInstance().nettyClient.bind(config.getManagerAddress(), config.getNetworkingCommunication()).connect();
@@ -133,7 +140,7 @@ public class CloudNode {
                 .registerHandler(new PacketOutShutdownNode().getPacketUUID(), new HandlePacketOutShutdownNode(), PacketOutShutdownNode.class)
                 .registerHandler(new PacketOutSyncService().getPacketUUID(), new HandlePacketOutSyncService(), PacketOutSyncService.class)
                 .registerHandler(new PacketOutSendCommand().getPacketUUID(), new HandlePacketOutSendCommand(), PacketOutSendCommand.class);
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "der '§fNetty-Client§r' wurde erfolgreich verbunden '§f"+config.getManagerAddress()+"~"+config.getNetworkingCommunication()+"§r' angebunden", "the '§fNetty-client§r' was successfully connected '§f"+config.getManagerAddress()+"~"+config.getNetworkingCommunication()+"§r'");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "der '§fNetty-Client§r' wurde erfolgreich verbunden '§f"+config.getManagerAddress()+"~"+config.getNetworkingCommunication()+"§r' angebunden", "The '§fNetty-client§r' was successfully connected '§f"+config.getManagerAddress()+"~"+config.getNetworkingCommunication()+"§r'");
 
     }
 }

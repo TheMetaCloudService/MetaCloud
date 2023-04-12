@@ -30,7 +30,6 @@ public class TerminalCompleter  implements Completer {
         if (Driver.getInstance().getMessageStorage().openServiceScreen){
             final var result = new LinkedList<String>();
             result.add("leave");
-
             suggestions = result;
             suggestions.stream().map(Candidate::new).forEach(list::add);
         }else if (Driver.getInstance().getTerminalDriver().isInSetup()){
@@ -75,7 +74,7 @@ public class TerminalCompleter  implements Completer {
                     if (!input.contains(" ")){
                         try {
                             String ip = new BufferedReader(new InputStreamReader(new URL("https://checkip.amazonaws.com").openConnection().getInputStream())).readLine();
-                            result.add("" + ip);
+                            result.add( ip);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -88,22 +87,48 @@ public class TerminalCompleter  implements Completer {
                         if (!input.contains(" ")){
                             result.add("WATERFALL");
                             result.add("BUNGEECORD");
+                            result.add("VELOCITY");
+                            result.add("TRAVERTINE");
+                            result.add("HEXACORD");
+
                         }
                     }
                 }
                 if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 5){
                     if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("MANAGER")){
                         if (!input.contains(" ")){
-                            result.add("PAPER-1.19.3");
-                            result.add("PAPER-1.19.2");
-                            result.add("PAPER-1.18.2");
-                            result.add("PAPER-1.17.1");
-                            result.add("PAPER-1.16.5");
-                            result.add("SPIGOT-1.19.3");
-                            result.add("SPIGOT-1.19.2");
-                            result.add("SPIGOT-1.18.2");
-                            result.add("SPIGOT-1.17.1");
-                            result.add("SPIGOT-1.16.5");
+
+                            if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("none")){
+                                result.add("SPIGOT");
+                                result.add("PAPER");
+                                result.add("PURPUR");
+                            }
+                            if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("SPIGOT")){
+                                result.add("SPIGOT-1.19.4");
+                                result.add("SPIGOT-1.19.3");
+                                result.add("SPIGOT-1.19.2");
+                                result.add("SPIGOT-1.18.2");
+                                result.add("SPIGOT-1.17.1");
+                                result.add("SPIGOT-1.16.5");
+                                result.add("BACKTOMAIN");
+                            } if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("PAPER")){
+                                result.add("PAPER-1.19.4");
+                                result.add("PAPER-1.19.3");
+                                result.add("PAPER-1.19.2");
+                                result.add("PAPER-1.18.2");
+                                result.add("PAPER-1.17.1");
+                                result.add("PAPER-1.16.5");
+                                result.add("BACKTOMAIN");
+                            }if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("PURPUR")){
+                                result.add("PURPUR-1.19.4");
+                                result.add("PURPUR-1.19.3");
+                                result.add("PURPUR-1.19.2");
+                                result.add("PURPUR-1.18.2");
+                                result.add("PURPUR-1.17.1");
+                                result.add("PURPUR-1.16.5");
+                                result.add("BACKTOMAIN");
+                            }
+
 
                         }
                     }
@@ -113,23 +138,46 @@ public class TerminalCompleter  implements Completer {
                         if (!input.contains(" ")){
                             result.add("WATERFALL");
                             result.add("BUNGEECORD");
-
+                            result.add("VELOCITY");
+                            result.add("TRAVERTINE");
+                            result.add("HEXACORD");
                         }
                     }
                 }
                 if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 7){
                     if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("NODE")){
                         if (!input.contains(" ")){
-                            result.add("PAPER-1.19.3");
-                            result.add("PAPER-1.19.2");
-                            result.add("PAPER-1.18.2");
-                            result.add("PAPER-1.17.1");
-                            result.add("PAPER-1.16.5");
-                            result.add("SPIGOT-1.19.3");
-                            result.add("SPIGOT-1.19.2");
-                            result.add("SPIGOT-1.18.2");
-                            result.add("SPIGOT-1.17.1");
-                            result.add("SPIGOT-1.16.5");
+
+                            if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("none")){
+                                result.add("SPIGOT");
+                                result.add("PAPER");
+                                result.add("PURPUR");
+                            }
+                            if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("SPIGOT")){
+                                result.add("SPIGOT-1.19.4");
+                                result.add("SPIGOT-1.19.3");
+                                result.add("SPIGOT-1.19.2");
+                                result.add("SPIGOT-1.18.2");
+                                result.add("SPIGOT-1.17.1");
+                                result.add("SPIGOT-1.16.5");
+                                result.add("BACKTOMAIN");
+                            } if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("PAPER")){
+                                result.add("PAPER-1.19.4");
+                                result.add("PAPER-1.19.3");
+                                result.add("PAPER-1.19.2");
+                                result.add("PAPER-1.18.2");
+                                result.add("PAPER-1.17.1");
+                                result.add("PAPER-1.16.5");
+                                result.add("BACKTOMAIN");
+                            }if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("PURPUR")){
+                                result.add("PURPUR-1.19.4");
+                                result.add("PURPUR-1.19.3");
+                                result.add("PURPUR-1.19.2");
+                                result.add("PURPUR-1.18.2");
+                                result.add("PURPUR-1.17.1");
+                                result.add("PURPUR-1.16.5");
+                                result.add("BACKTOMAIN");
+                            }
                         }
                     }
                 }
@@ -139,7 +187,7 @@ public class TerminalCompleter  implements Completer {
                         if (!input.contains(" ")){
                             try {
                                 String ip = new BufferedReader(new InputStreamReader(new URL("https://checkip.amazonaws.com").openConnection().getInputStream())).readLine();
-                                result.add("" + ip);
+                                result.add(ip);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -147,9 +195,6 @@ public class TerminalCompleter  implements Completer {
                     }
 
                 }
-
-
-
                 suggestions = result;
                 suggestions.stream().map(Candidate::new).forEach(list::add);
             }

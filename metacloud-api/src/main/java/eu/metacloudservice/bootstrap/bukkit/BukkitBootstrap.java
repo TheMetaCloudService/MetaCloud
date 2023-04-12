@@ -14,7 +14,7 @@ public class BukkitBootstrap extends JavaPlugin {
     @Override
     public void onEnable() {
         new AsyncCloudAPI();
-        new CloudAPI();
+        new CloudAPI(false);
 
     }
 

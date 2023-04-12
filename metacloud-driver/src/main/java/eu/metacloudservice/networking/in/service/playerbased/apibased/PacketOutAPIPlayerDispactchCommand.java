@@ -10,11 +10,11 @@ public class PacketOutAPIPlayerDispactchCommand extends Packet {
 
 
     public PacketOutAPIPlayerDispactchCommand() {
-        setPacketUUID(239489892);
+        setPacketUUID(984322181);
     }
 
     public PacketOutAPIPlayerDispactchCommand(String userName, String command) {
-        setPacketUUID(239489892);
+        setPacketUUID(984322181);
         this.userName = userName;
         this.command = command;
     }

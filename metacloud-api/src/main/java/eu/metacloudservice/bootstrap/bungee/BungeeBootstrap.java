@@ -21,7 +21,7 @@ public class BungeeBootstrap extends Plugin {
         ProxyServer.getInstance().getConsole().sendMessage("[§bMetaCloud§r] > This registered all Classes & files..");
         ProxyServer.getInstance().getConsole().sendMessage("[§bMetaCloud§r] >");
         new AsyncCloudAPI();
-        new CloudAPI();
+        new CloudAPI(false);
 
 
     }

@@ -121,6 +121,70 @@
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>com.velocitypowered</groupId>
+      <artifactId>velocity-api</artifactId>
+      <version>3.1.1</version>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>toml4j</artifactId>
+          <groupId>com.moandjiezana.toml</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>adventure-api</artifactId>
+          <groupId>net.kyori</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>adventure-text-serializer-gson</artifactId>
+          <groupId>net.kyori</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>adventure-text-serializer-legacy</artifactId>
+          <groupId>net.kyori</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>adventure-text-serializer-plain</artifactId>
+          <groupId>net.kyori</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>slf4j-api</artifactId>
+          <groupId>org.slf4j</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>guice</artifactId>
+          <groupId>com.google.inject</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>checker-qual</artifactId>
+          <groupId>org.checkerframework</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>velocity-brigadier</artifactId>
+          <groupId>com.velocitypowered</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>configurate-hocon</artifactId>
+          <groupId>org.spongepowered</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>configurate-yaml</artifactId>
+          <groupId>org.spongepowered</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>configurate-gson</artifactId>
+          <groupId>org.spongepowered</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>gson</artifactId>
+          <groupId>com.google.code.gson</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>guava</artifactId>
+          <groupId>com.google.guava</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
       <groupId>eu.metacloudservice</groupId>
       <artifactId>metacloud-api</artifactId>
       <version>1.0.0-SNAPSHOT</version>

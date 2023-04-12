@@ -12,11 +12,9 @@ import java.util.stream.Collectors;
 public class PlayerPool {
 
 
-    private final LiveService service;
     private final ArrayList<CloudPlayer> connectedPlayers;
 
-    public PlayerPool(@NonNull LiveService liveService) {
-        this.service = liveService;
+    public PlayerPool() {
         this.connectedPlayers = new ArrayList<>();
     }
 
@@ -24,11 +22,11 @@ public class PlayerPool {
         return connectedPlayers;
     }
     public CloudPlayer getPlayer(@NonNull String username){
-        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUsername().equals(username)).collect(Collectors.toList()).get(0);
+        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUsername().equals(username)).toList().get(0);
     }
 
     public CloudPlayer getPlayer(@NonNull UUID uniqueId){
-        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString())).collect(Collectors.toList()).get(0);
+        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString())).toList().get(0);
     }
 
     public List<CloudPlayer> getPlayersFromService(@NonNull String service){

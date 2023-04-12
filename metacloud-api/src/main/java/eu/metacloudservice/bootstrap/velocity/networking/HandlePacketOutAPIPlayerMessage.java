@@ -1,23 +1,19 @@
-package eu.metacloudservice.bootstrap.bungee.networking;
+package eu.metacloudservice.bootstrap.velocity.networking;
 
-import eu.metacloudservice.networking.out.service.playerbased.apibased.PacketOutAPIPlayerKick;
+import eu.metacloudservice.bootstrap.velocity.VelocityBootstrap;
 import eu.metacloudservice.networking.out.service.playerbased.apibased.PacketOutAPIPlayerMessage;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;
 import io.netty.channel.Channel;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.kyori.adventure.text.Component;
 
 public class HandlePacketOutAPIPlayerMessage implements NettyAdaptor {
     @Override
     public void handle(Channel channel, Packet packet) {
         if (packet instanceof PacketOutAPIPlayerMessage) {
-            if (ProxyServer.getInstance().getPlayer(((PacketOutAPIPlayerMessage) packet).getUsername()).isConnected()){
-                ProxiedPlayer player = ProxyServer.getInstance().getPlayer(((PacketOutAPIPlayerMessage) packet).getUsername());
-                player.sendMessage(((PacketOutAPIPlayerMessage) packet).getMessage());
-              }
+            if (VelocityBootstrap.proxyServer.getPlayer(((PacketOutAPIPlayerMessage) packet).getUsername()).get() != null){
+                VelocityBootstrap.proxyServer.getPlayer(((PacketOutAPIPlayerMessage) packet).getUsername()).get().sendMessage(Component.text(((PacketOutAPIPlayerMessage) packet).getMessage()));
+            }
         }
     }
 }

@@ -16,10 +16,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.sql.Time;
-import java.util.LinkedList;
-import java.util.Objects;
-import java.util.Queue;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class ServiceProcess {
@@ -31,16 +28,11 @@ public class ServiceProcess {
     private final boolean useProtocol;
     private boolean useVelocity;
     public boolean useConsole;
-
-
     private   BufferedReader reader;
-
     public final LinkedList<String> consoelStorage;
 
 
-
-
-    public ServiceProcess(Group group, String service, int port, boolean useProtocol, boolean useMinestorm) {
+    public ServiceProcess(Group group, String service, int port, boolean useProtocol) {
         this.group = group;
         this.service = service;
         this.port = port;
@@ -102,7 +94,9 @@ public class ServiceProcess {
                                 NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInSendConsole(service, line));
                             }
                         }
-                    }catch (Exception e){}
+                    }catch (Exception e){
+                        Driver.getInstance().getMessageStorage().openServiceScreen = false;
+                    }
 
             }).start();
         }
@@ -250,6 +244,26 @@ public class ServiceProcess {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                int leftLimit = 97; // letter 'a'
+                int rightLimit = 122; // letter 'z'
+                int targetStringLength = 10;
+                Random random = new Random();
+
+                String generatedString = random.ints(leftLimit, rightLimit + 1)
+                        .limit(targetStringLength)
+                        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                        .toString();
+                File configFile2 = new File(System.getProperty("user.dir") + "/live/" + group.getGroup()+ "/" + service + "/", "forwarding.secret");
+                final FileWriter fileWriter2;
+                try {
+                    fileWriter2 = new FileWriter(configFile2);
+                    fileWriter2.write(generatedString);
+                    fileWriter2.flush();
+                    fileWriter2.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
 
 
                 processBuilder.command(command);
@@ -330,26 +344,33 @@ public class ServiceProcess {
                     e.printStackTrace();
                 }
 
-                File configFile2 = new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/", "bukkit.yml");
-                try {
-                    final FileWriter fileWriter2 = new FileWriter(configFile2);
-                    fileWriter2.write(Driver.getInstance().getMessageStorage().getSpigotConfiguration());
-                    fileWriter2.flush();
-                    fileWriter2.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (!new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service +"/bukkit.yml").exists()){
+                    File configFile2 = new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/", "bukkit.yml");
+                    try {
+                        final FileWriter fileWriter2 = new FileWriter(configFile2);
+                        fileWriter2.write(Driver.getInstance().getMessageStorage().getSpigotConfiguration());
+                        fileWriter2.flush();
+                        fileWriter2.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                 }
 
+            if (!new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service +"/spigot.yml").exists()){
                 File configFile3 = new File(System.getProperty("user.dir") + "/live/" + group.getGroup()+ "/" +service + "/", "spigot.yml");
                 try {
                     final FileWriter fileWriter3 = new FileWriter(configFile3);
-                    fileWriter3.write(Driver.getInstance().getMessageStorage().getSoigotYML());
+                    fileWriter3.write(Driver.getInstance().getMessageStorage().getSoigotYML(useVelocity));
                     fileWriter3.flush();
                     fileWriter3.close();
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+
+            }
 
 
                 processBuilder.command(command);

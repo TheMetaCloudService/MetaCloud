@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.TimeUnit;
 
 public class TerminalDriver {
 
@@ -74,6 +75,9 @@ public class TerminalDriver {
                 .option(LineReader.Option.INSERT_TAB, false)
                 .appName("META-READER")
                 .build();
+        this.lineReader.option(LineReader.Option.EMPTY_WORD_OPTIONS, false);
+        this.lineReader.option(LineReader.Option.HISTORY_TIMESTAMPED, false);
+        this.lineReader.option(LineReader.Option.DISABLE_EVENT_EXPANSION, true);
 
 
         Thread consoleReadingThread = new TerminalReader(this);
@@ -114,7 +118,6 @@ public class TerminalDriver {
 
     public void leaveSetup(){
         clearScreen();
-
         if (Driver.getInstance().getMessageStorage().openServiceScreen){
             Driver.getInstance().getMessageStorage().openServiceScreen = false;
         }
@@ -128,6 +131,7 @@ public class TerminalDriver {
                 }
             });
         }
+        Driver.getInstance().getMessageStorage().setuptype = "";
         this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
         for (int i = 0; i != this.mainScreenStorage.size(); i++) {
                 TerminalStorage storage = this.mainScreenStorage.get(i);
@@ -158,6 +162,7 @@ public class TerminalDriver {
         this.terminal.flush();
         this.redraw();
     }
+
 
     public void log(Type type, String[] de, String[] en){
         if (Driver.getInstance().getMessageStorage().language.equalsIgnoreCase("DE")){
