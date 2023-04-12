@@ -17,8 +17,6 @@
 </p>
 
 
-<!!> The cloud is currently in beta phase, join our Discord to download the cloud
-
 ## Requirements
 
  * Java 8
@@ -30,10 +28,10 @@
 ## Features
 
 - Plug & Play with an easy setup
-- Language-System (German & English)
+- Language-System (**German & English**)
 - **Dynamic** and **static** launch of Services
 - Template system with groups
-- Powerful **API** with Async & Sync support
+- Powerful **API** with **Async** & **Sync** support
 - Powerful **REST-API**
 - Modular system with **comprehensive modules**
 - multi-root system for great **scalability**
