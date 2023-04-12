@@ -1,9 +1,11 @@
-![Image of MetaCloud](https://i.ibb.co/HxZpBrD/banner-metacloud.png)
+
+![Logo](https://i.ibb.co/0XX0JTh/banner.png)
+
 
 
 <p>
   <p align="center">
-   We are Metacloud, an open source Intilligent Minecraft cloud system
+   We are Metacloud, an open source Minecraft cloud system
     <br>
     ► <a href="https://discord.com/invite/4kKEcaP9WC">Discord</a>
     •
@@ -16,25 +18,42 @@
   </p>
 </p>
 
-
-<!!> The cloud is currently in beta phase, join our Discord to download the cloud
-
 ## Requirements
 
- * Java 8
+* Java 8
  * Linux/Windows server with a minimum of 2GB DDR3 Memory and 2 vCores
  * Internet connection
 
+## Installation
 
++ Update & upgrade your server
+```bash
+  apt-get update && apt-get upgrade -y
+```
++ Download the zip data
+```bash
+  wget https://metacloudservice.eu/download/metacloud/metacloud-latest.zip
+```
+ + Unzip the **metacloud-latest.zip** in your folder
+```bash
+unzip metacloud-latest.zip
+```
+ + give the **start.sh** permission and start them
+```bash
+chmod +u start.sh
+./start.sh
+```
+    
 
 ## Features
 
 - Plug & Play with an easy setup
-- Language-System (German & English)
+- Language-System (**German & English**)
 - **Dynamic** and **static** launch of Services
 - Template system with groups
-- Powerful **API**
+- Powerful **API** with **Async** & **Sync** support
 - Powerful **REST-API**
 - Modular system with **comprehensive modules**
 - multi-root system for great **scalability**
-- Multiversion support for bungeecord (**Waterfall**, **Bungeecord** & **Velocity (comming soon)**) and spigot & paperspigot (**1.16.2** upto **1.19.3**)
+- Multiversion support for bungeecord (**Waterfall**, **Bungeecord**, **Hexacord**, **Travertine** & **Velocity**) and spigot, purourspigot % paperspigot (**1.16.2** upto **1.19.3**)
+
