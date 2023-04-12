@@ -1,4 +1,4 @@
-![Image of MetaCloud](https://i.ibb.co/HxZpBrD/banner-metacloud.png)
+![Image of MetaCloud](https://i.ibb.co/0XX0JTh/banner.png)
 
 
 <p>
