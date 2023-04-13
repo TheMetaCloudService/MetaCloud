@@ -53,6 +53,7 @@ chmod +u start.sh
 - Template system with groups
 - Powerful **API** with **Async** & **Sync** support
 - Powerful **REST-API**
+- CPU **overload** protection
 - Modular system with **comprehensive modules**
 - multi-root system for great **scalability**
 - Multiversion support for bungeecord (**Waterfall**, **Bungeecord**, **Hexacord**, **Travertine** & **Velocity**) and Spigot, Foliaspigot, Purpurspigot & Paperspigot (**1.16.5** upto **1.19.4**)
