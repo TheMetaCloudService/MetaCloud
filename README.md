@@ -19,9 +19,14 @@
 </p>
 
 ## Requirements
-
+minimal requirements: 
 * Java 17
- * Linux/Windows server with a minimum of 3GB Memory and 3 vCores
+ * Linux/Windows server with a minimum of 3GB Memory and 2 vCores
+ * Internet connection
+ 
+ recommended requirements: 
+ * Java 17
+ * Linux/Windows server with a minimum of 8GB Memory and 4 vCores
  * Internet connection
 
 ## Installation
