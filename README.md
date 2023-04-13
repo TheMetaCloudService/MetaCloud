@@ -52,7 +52,7 @@ chmod +u start.sh
 - **Dynamic** and **static** launch of Services
 - Template system with groups
 - Powerful **API** with **Async** & **Sync** support
-- Powerful **REST-API** with **PUT** & **GET** funktion
+- Powerful **REST-API** with **PUT** & **GET** function
 - CPU **overload** protection
 - Modular system with **comprehensive modules**
 - multi-root system for great **scalability**
