@@ -55,5 +55,5 @@ chmod +u start.sh
 - Powerful **REST-API**
 - Modular system with **comprehensive modules**
 - multi-root system for great **scalability**
-- Multiversion support for bungeecord (**Waterfall**, **Bungeecord**, **Hexacord**, **Travertine** & **Velocity**) and spigot, Foliaspigot, purourspigot % paperspigot (**1.16.2** upto **1.19.3**)
+- Multiversion support for bungeecord (**Waterfall**, **Bungeecord**, **Hexacord**, **Travertine** & **Velocity**) and Spigot, Foliaspigot, Purpurspigot % Paperspigot (**1.16.2** upto **1.19.3**)
 
