@@ -20,8 +20,8 @@
 
 ## Requirements
 
-* Java 8
- * Linux/Windows server with a minimum of 2GB DDR3 Memory and 2 vCores
+* Java 17
+ * Linux/Windows server with a minimum of 3GB Memory and 3 vCores
  * Internet connection
 
 ## Installation
@@ -55,5 +55,5 @@ chmod +u start.sh
 - Powerful **REST-API**
 - Modular system with **comprehensive modules**
 - multi-root system for great **scalability**
-- Multiversion support for bungeecord (**Waterfall**, **Bungeecord**, **Hexacord**, **Travertine** & **Velocity**) and spigot, purourspigot % paperspigot (**1.16.2** upto **1.19.3**)
+- Multiversion support for bungeecord (**Waterfall**, **Bungeecord**, **Hexacord**, **Travertine** & **Velocity**) and spigot, Foliaspigot, purourspigot % paperspigot (**1.16.2** upto **1.19.3**)
 
