@@ -82,14 +82,14 @@ public class MetaModule implements IModule {
                 ArrayList<Tablist> tablist = new ArrayList<>();
 
                 Tablist tablayout01 = new Tablist();
-                tablayout01.setHeader("\n      §8► §bMetaCloud §8▷ §7Ready §ffor §7Future §8◄      \n   §8► §7Current server §8▷  §#0276af%service_name% §8◄   \n");
+                tablayout01.setHeader("\n      §8► §bMetaCloud §8▷ §7Ready §ffor §7Future §8◄      \n   §8► §7Current server §8▷  §b%service_name% §8◄   \n");
 
                 tablayout01.setFooter("\n§8► §7Web §8▷ §bmetacloudservice.eu §8◄\n   §8► §7Powered by §8▷ §bInvis-CloudDE §8◄   \n");
 
                 tablist.add(tablayout01);
 
                 Tablist tablayout02 = new Tablist();
-                tablayout02.setHeader("\n      §8► §bMetaCloud §8▷ §7Ready §ffor §7Future §8◄      \n    §8► §7Current players §8▷  §#0276af%online_players%§r/ §#0276af%max_players% §8◄   \n");
+                tablayout02.setHeader("\n      §8► §bMetaCloud §8▷ §7Ready §ffor §7Future §8◄      \n    §8► §7Current players §8▷  §b%online_players%§r/ §b%max_players% §8◄   \n");
                 tablayout02.setFooter("\n§8► §7Web §8▷  §bmetacloudservice.eu  §8◄\n   §8► §7Powered by §8▷ §bInvis-CloudDE §8◄   \n");
 
                 tablist.add(tablayout02);

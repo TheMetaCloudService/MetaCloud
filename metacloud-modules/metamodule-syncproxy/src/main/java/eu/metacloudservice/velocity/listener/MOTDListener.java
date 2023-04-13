@@ -6,15 +6,10 @@ import com.velocitypowered.api.proxy.server.ServerPing;
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.config.Motd;
-import eu.metacloudservice.velocity.ChatColor;
 import eu.metacloudservice.velocity.VeloCityBootstrap;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class MOTDListener {
 
@@ -90,7 +85,6 @@ public class MOTDListener {
             if (protocol != null) {
                 ping.version(new ServerPing.Version(1, protocol));
             }
-
             event.setPing(ping.build());
 
     }

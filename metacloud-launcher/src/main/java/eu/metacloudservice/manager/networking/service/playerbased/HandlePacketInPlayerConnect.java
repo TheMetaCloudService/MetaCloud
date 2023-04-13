@@ -26,6 +26,7 @@ public class HandlePacketInPlayerConnect implements NettyAdaptor {
                 String service = ((PacketInPlayerConnect) packet).getProxy();
 
                 PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/genernal"), PlayerGeneral.class);
+                general.getCloudplayers().removeIf(s -> s.equalsIgnoreCase(UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName())));
                 general.getCloudplayers().add(UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()));
                 Driver.getInstance().getWebServer().updateRoute("/cloudplayer/genernal", new ConfigDriver().convert(general));
                 CloudPlayerRestCache cache = new CloudPlayerRestCache(((PacketInPlayerConnect) packet).getName(), UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()));

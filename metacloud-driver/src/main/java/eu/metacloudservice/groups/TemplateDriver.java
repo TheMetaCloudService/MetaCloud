@@ -57,8 +57,6 @@ public class TemplateDriver implements ITemplateDriver {
                 }
             }
         }
-
-
     }
 
     @SneakyThrows
@@ -104,7 +102,6 @@ public class TemplateDriver implements ITemplateDriver {
             }
         });
     }
-
 
     private boolean isInstalled(String template){
         return  new File("./local/templates/" + template + "/server.jar").exists();

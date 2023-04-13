@@ -78,7 +78,11 @@ public class CloudManager {
         System.setProperty("io.netty.leakDetectionLevel", "DISABLED");
         System.setProperty("io.netty.recycler.maxCapacity", "0");
         System.setProperty("io.netty.recycler.maxCapacity.default", "0");
-        new File("./modules/").mkdirs();
+        if (!new File("./modules/").exists()){
+            new File("./modules/").mkdirs();
+            Driver.getInstance().getMessageStorage().packetLoader.loadModules();
+        }
+
         new File("./local/GLOBAL/EVERY/plugins/").mkdirs();
         new File("./local/GLOBAL/EVERY_SERVER/plugins/").mkdirs();
         new File("./local/GLOBAL/EVERY_PROXY/plugins/").mkdirs();

@@ -11,6 +11,10 @@ public class ManagerConfig implements IConfigAdapter {
     private String splitter;
     private String uuid;
     private boolean useProtocol;
+
+    private Integer processorUsage;
+
+    private Integer serviceStartupCount;
     private boolean useViaVersion;
     private boolean showConnectingPlayers;
     private Integer canUsedMemory;
@@ -28,6 +32,21 @@ public class ManagerConfig implements IConfigAdapter {
     public ManagerConfig(){
     }
 
+    public Integer getServiceStartupCount() {
+        return serviceStartupCount;
+    }
+
+    public void setServiceStartupCount(Integer dd) {
+        serviceStartupCount = dd;
+    }
+
+    public Integer getProcessorUsage() {
+        return processorUsage;
+    }
+
+    public void setProcessorUsage(Integer processorUsage) {
+        this.processorUsage = processorUsage;
+    }
 
     public boolean isUseProtocol() {
         return useProtocol;

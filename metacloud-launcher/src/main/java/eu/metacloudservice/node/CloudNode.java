@@ -28,7 +28,11 @@ public class CloudNode {
     public  static  CloudServiceDriver cloudServiceDriver;
 
     public CloudNode() {
-        new File("./modules/").mkdirs();
+        if (!new File("./modules/").exists()){
+            new File("./modules/").mkdirs();
+            Driver.getInstance().getMessageStorage().packetLoader.loadModules();
+        }
+
         new File("./local/GLOBAL/plugins/").mkdirs();
         new File("./local/templates/").mkdirs();
         cloudServiceDriver = new CloudServiceDriver();

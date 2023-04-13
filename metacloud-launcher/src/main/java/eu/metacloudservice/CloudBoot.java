@@ -66,7 +66,6 @@ public class CloudBoot {
                     Driver.getInstance().getTerminalDriver().log(Type.INFO, "Everything perfect, we can try to start the cloud");
                     runClient();
                 }
-
         }
     }
 

@@ -51,8 +51,8 @@ public class GroupDriver implements IGroupDriver {
                 }
             }
             new ConfigDriver("./local/groups/" + group.getGroup()+ ".json").save(group);
-            GroupList groupList = new GroupList();
-            groupList.setGroups(Driver.getInstance().getGroupDriver().getAllStrings());
+            GroupList groupList = (GroupList) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudgroup/general"), GroupList.class);
+            groupList.getGroups().add(group.getGroup());
             Driver.getInstance().getWebServer().updateRoute("/cloudgroup/general", new ConfigDriver().convert(groupList));
             Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudgroup/" + group.getGroup(), new ConfigDriver().convert(group)));
 
@@ -65,6 +65,10 @@ public class GroupDriver implements IGroupDriver {
     public void delete(String group) {
         if (find(group)){
             new File("./local/groups/" + group+ ".json").delete();
+            GroupList groupList = (GroupList) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudgroup/general"), GroupList.class);
+            groupList.getGroups().removeIf(s -> s.equalsIgnoreCase(group));
+            Driver.getInstance().getWebServer().updateRoute("/cloudgroup/general", new ConfigDriver().convert(groupList));
+            Driver.getInstance().getWebServer().removeRoute("/cloudgroup/" + group);
         }
     }
 

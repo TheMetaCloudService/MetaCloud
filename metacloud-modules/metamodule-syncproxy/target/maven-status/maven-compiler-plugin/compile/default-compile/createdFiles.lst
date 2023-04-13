@@ -1,6 +1,5 @@
 eu\metacloudservice\velocity\VeloCityBootstrap.class
 eu\metacloudservice\config\Configuration.class
-eu\metacloudservice\velocity\ChatColor.class
 eu\metacloudservice\moduleside\MetaModule.class
 eu\metacloudservice\config\Motd.class
 velocity-plugin.json

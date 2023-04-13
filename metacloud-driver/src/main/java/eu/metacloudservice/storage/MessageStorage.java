@@ -10,6 +10,11 @@ import lombok.SneakyThrows;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
+import java.lang.management.ThreadInfo;
+import java.lang.management.ThreadMXBean;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
@@ -34,6 +39,21 @@ public class MessageStorage {
         packetLoader = new PacketLoader();
         consoleInput = new LinkedList<>();
         shutdownAccept = false;
+    }
+
+
+    public int getCPULoad() {
+
+        OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
+        if (osBean instanceof com.sun.management.OperatingSystemMXBean) {
+            com.sun.management.OperatingSystemMXBean sunOsBean = (com.sun.management.OperatingSystemMXBean) osBean;
+            double load = sunOsBean.getSystemCpuLoad();
+            int loadPercent = (int) (load * 100);
+            return loadPercent;
+        } else {
+            return -1;
+        }
+
     }
 
     public String getAsciiArt(){
@@ -438,7 +458,7 @@ public class MessageStorage {
 
     public String getSpigotConfiguration(){
         return "settings:\n" +
-                "  allow-end: true\n" +
+                "  allow-end: false\n" +
                 "  warn-on-overload: true\n" +
                 "  permissions-file: permissions.yml\n" +
                 "  update-folder: update\n" +
@@ -470,31 +490,16 @@ public class MessageStorage {
 
     public String  getSoigotYML(boolean useVelo){
         if (useVelo){
-            return "# This is the main configuration file for Spigot.\n" +
-                    "# As you can see, there's tons to configure. Some options may impact gameplay, so use\n" +
-                    "# with caution, and make sure you know what each option does before configuring.\n" +
-                    "# For a reference for any variable inside this file, check out the Spigot wiki at\n" +
-                    "# http://www.spigotmc.org/wiki/spigot-configuration/\n" +
-                    "#\n" +
-                    "# If you need help with the configuration or have any questions related to Spigot,\n" +
-                    "# join us at the Discord or drop by our forums and leave a post.\n" +
-                    "#\n" +
-                    "# Discord: https://www.spigotmc.org/go/discord\n" +
-                    "# Forums: http://www.spigotmc.org/\n" +
-                    "\n" +
+            return "config-version: 8\n" +
                     "settings:\n" +
                     "  debug: false\n" +
-                    "  sample-count: 12\n" +
+                    "  save-user-cache-on-stop-only: false\n" +
                     "  timeout-time: 60\n" +
                     "  restart-on-crash: false\n" +
                     "  restart-script: ./start.sh\n" +
+                    "  int-cache-limit: 1024\n" +
                     "  bungeecord: true\n" +
-                    "  player-shuffle: 0\n" +
-                    "  user-cache-size: 1000\n" +
-                    "  save-user-cache-on-stop-only: false\n" +
-                    "  moved-wrongly-threshold: 0.0625\n" +
-                    "  moved-too-quickly-multiplier: 10.0\n" +
-                    "  netty-threads: 5\n" +
+                    "  late-bind: false\n" +
                     "  attribute:\n" +
                     "    maxHealth:\n" +
                     "      max: 2048.0\n" +
@@ -502,8 +507,24 @@ public class MessageStorage {
                     "      max: 2048.0\n" +
                     "    attackDamage:\n" +
                     "      max: 2048.0\n" +
-                    "  log-villager-deaths: true\n" +
-                    "  log-named-deaths: true\n" +
+                    "  user-cache-size: 1000\n" +
+                    "  netty-threads: 6\n" +
+                    "  sample-count: 12\n" +
+                    "  player-shuffle: 0\n" +
+                    "  moved-wrongly-threshold: 0.0625\n" +
+                    "  moved-too-quickly-threshold: 100.0\n" +
+                    "  filter-creative-items: true\n" +
+                    "commands:\n" +
+                    "  tab-complete: 0\n" +
+                    "  log: true\n" +
+                    "  spam-exclusions:\n" +
+                    "    - /skill\n" +
+                    "  replace-commands:\n" +
+                    "    - setblock\n" +
+                    "    - summon\n" +
+                    "    - testforblock\n" +
+                    "    - tellraw\n" +
+                    "  silent-commandblock-console: false\n" +
                     "messages:\n" +
                     "  whitelist: You are not whitelisted on this server!\n" +
                     "  unknown-command: Unknown command. Type \"/help\" for help.\n" +
@@ -511,90 +532,16 @@ public class MessageStorage {
                     "  outdated-client: Outdated client! Please use {0}\n" +
                     "  outdated-server: Outdated server! I'm still on {0}\n" +
                     "  restart: Server is restarting\n" +
-                    "advancements:\n" +
+                    "stats:\n" +
                     "  disable-saving: false\n" +
-                    "  disabled:\n" +
-                    "  - minecraft:story/disabled\n" +
-                    "commands:\n" +
-                    "  spam-exclusions:\n" +
-                    "  - /skill\n" +
-                    "  silent-commandblock-console: false\n" +
-                    "  replace-commands:\n" +
-                    "  - setblock\n" +
-                    "  - summon\n" +
-                    "  - testforblock\n" +
-                    "  - tellraw\n" +
-                    "  log: true\n" +
-                    "  tab-complete: 0\n" +
-                    "  send-namespaced: true\n" +
-                    "players:\n" +
-                    "  disable-saving: false\n" +
+                    "  forced-stats: { }\n" +
                     "world-settings:\n" +
                     "  default:\n" +
-                    "    below-zero-generation-in-existing-chunks: true\n" +
-                    "    hanging-tick-frequency: 100\n" +
+                    "    verbose: false\n" +
+                    "    item-despawn-rate: 6000\n" +
                     "    merge-radius:\n" +
                     "      item: 2.5\n" +
                     "      exp: 3.0\n" +
-                    "    item-despawn-rate: 6000\n" +
-                    "    view-distance: default\n" +
-                    "    simulation-distance: default\n" +
-                    "    thunder-chance: 100000\n" +
-                    "    enable-zombie-pigmen-portal-spawns: true\n" +
-                    "    wither-spawn-sound-radius: 0\n" +
-                    "    arrow-despawn-rate: 1200\n" +
-                    "    trident-despawn-rate: 1200\n" +
-                    "    zombie-aggressive-towards-villager: true\n" +
-                    "    nerf-spawner-mobs: false\n" +
-                    "    mob-spawn-range: 8\n" +
-                    "    end-portal-sound-radius: 0\n" +
-                    "    growth:\n" +
-                    "      cactus-modifier: 100\n" +
-                    "      cane-modifier: 100\n" +
-                    "      melon-modifier: 100\n" +
-                    "      mushroom-modifier: 100\n" +
-                    "      pumpkin-modifier: 100\n" +
-                    "      sapling-modifier: 100\n" +
-                    "      beetroot-modifier: 100\n" +
-                    "      carrot-modifier: 100\n" +
-                    "      potato-modifier: 100\n" +
-                    "      wheat-modifier: 100\n" +
-                    "      netherwart-modifier: 100\n" +
-                    "      vine-modifier: 100\n" +
-                    "      cocoa-modifier: 100\n" +
-                    "      bamboo-modifier: 100\n" +
-                    "      sweetberry-modifier: 100\n" +
-                    "      kelp-modifier: 100\n" +
-                    "      twistingvines-modifier: 100\n" +
-                    "      weepingvines-modifier: 100\n" +
-                    "      cavevines-modifier: 100\n" +
-                    "      glowberry-modifier: 100\n" +
-                    "    entity-activation-range:\n" +
-                    "      animals: 32\n" +
-                    "      monsters: 32\n" +
-                    "      raiders: 48\n" +
-                    "      misc: 16\n" +
-                    "      water: 16\n" +
-                    "      villagers: 32\n" +
-                    "      flying-monsters: 32\n" +
-                    "      wake-up-inactive:\n" +
-                    "        animals-max-per-tick: 4\n" +
-                    "        animals-every: 1200\n" +
-                    "        animals-for: 100\n" +
-                    "        monsters-max-per-tick: 8\n" +
-                    "        monsters-every: 400\n" +
-                    "        monsters-for: 100\n" +
-                    "        villagers-max-per-tick: 4\n" +
-                    "        villagers-every: 600\n" +
-                    "        villagers-for: 100\n" +
-                    "        flying-monsters-max-per-tick: 8\n" +
-                    "        flying-monsters-every: 200\n" +
-                    "        flying-monsters-for: 100\n" +
-                    "      villagers-work-immunity-after: 100\n" +
-                    "      villagers-work-immunity-for: 20\n" +
-                    "      villagers-active-for-panic: true\n" +
-                    "      tick-inactive-villagers: true\n" +
-                    "      ignore-spectators: false\n" +
                     "    entity-tracking-range:\n" +
                     "      players: 48\n" +
                     "      animals: 48\n" +
@@ -603,72 +550,78 @@ public class MessageStorage {
                     "      other: 64\n" +
                     "    ticks-per:\n" +
                     "      hopper-transfer: 8\n" +
-                    "      hopper-check: 1\n" +
+                    "      hopper-check: 8\n" +
                     "    hopper-amount: 1\n" +
-                    "    hopper-can-load-chunks: false\n" +
-                    "    dragon-death-sound-radius: 0\n" +
-                    "    seed-village: 10387312\n" +
-                    "    seed-desert: 14357617\n" +
-                    "    seed-igloo: 14357618\n" +
-                    "    seed-jungle: 14357619\n" +
-                    "    seed-swamp: 14357620\n" +
-                    "    seed-monument: 10387313\n" +
-                    "    seed-shipwreck: 165745295\n" +
-                    "    seed-ocean: 14357621\n" +
-                    "    seed-outpost: 165745296\n" +
-                    "    seed-endcity: 10387313\n" +
-                    "    seed-slime: 987234911\n" +
-                    "    seed-nether: 30084232\n" +
-                    "    seed-mansion: 10387319\n" +
-                    "    seed-fossil: 14357921\n" +
-                    "    seed-portal: 34222645\n" +
-                    "    seed-ancientcity: 20083232\n" +
-                    "    seed-buriedtreasure: 10387320\n" +
-                    "    seed-mineshaft: default\n" +
-                    "    seed-stronghold: default\n" +
-                    "    hunger:\n" +
-                    "      jump-walk-exhaustion: 0.05\n" +
-                    "      jump-sprint-exhaustion: 0.2\n" +
-                    "      combat-exhaustion: 0.1\n" +
-                    "      regen-exhaustion: 6.0\n" +
-                    "      swim-multiplier: 0.01\n" +
-                    "      sprint-multiplier: 0.1\n" +
-                    "      other-multiplier: 0.0\n" +
-                    "    max-tnt-per-tick: 100\n" +
                     "    max-tick-time:\n" +
                     "      tile: 50\n" +
                     "      entity: 50\n" +
-                    "    verbose: false\n" +
-                    "config-version: 12\n" +
-                    "stats:\n" +
-                    "  disable-saving: false\n" +
-                    "  forced-stats: {}";
+                    "    random-light-updates: false\n" +
+                    "    max-tnt-per-tick: 100\n" +
+                    "    entity-activation-range:\n" +
+                    "      animals: 32\n" +
+                    "      monsters: 32\n" +
+                    "      misc: 16\n" +
+                    "    max-entity-collisions: 8\n" +
+                    "    seed-village: 10387312\n" +
+                    "    seed-feature: 14357617\n" +
+                    "    hunger:\n" +
+                    "      walk-exhaustion: 0.2\n" +
+                    "      sprint-exhaustion: 0.8\n" +
+                    "      combat-exhaustion: 0.3\n" +
+                    "      regen-exhaustion: 3.0\n" +
+                    "    max-bulk-chunks: 10\n" +
+                    "    save-structure-info: true\n" +
+                    "    arrow-despawn-rate: 1200\n" +
+                    "    enable-zombie-pigmen-portal-spawns: true\n" +
+                    "    mob-spawn-range: 4\n" +
+                    "    anti-xray:\n" +
+                    "      enabled: true\n" +
+                    "      engine-mode: 1\n" +
+                    "      hide-blocks:\n" +
+                    "        - 14\n" +
+                    "        - 15\n" +
+                    "        - 16\n" +
+                    "        - 21\n" +
+                    "        - 48\n" +
+                    "        - 49\n" +
+                    "        - 54\n" +
+                    "        - 56\n" +
+                    "        - 73\n" +
+                    "        - 74\n" +
+                    "        - 82\n" +
+                    "        - 129\n" +
+                    "        - 130\n" +
+                    "      replace-blocks:\n" +
+                    "        - 1\n" +
+                    "        - 5\n" +
+                    "    nerf-spawner-mobs: false\n" +
+                    "    growth:\n" +
+                    "      cactus-modifier: 100\n" +
+                    "      cane-modifier: 100\n" +
+                    "      melon-modifier: 100\n" +
+                    "      mushroom-modifier: 100\n" +
+                    "      pumpkin-modifier: 100\n" +
+                    "      sapling-modifier: 100\n" +
+                    "      wheat-modifier: 100\n" +
+                    "      netherwart-modifier: 100\n" +
+                    "    dragon-death-sound-radius: 0\n" +
+                    "    chunks-per-tick: 650\n" +
+                    "    clear-tick-list: false\n" +
+                    "    zombie-aggressive-towards-villager: true\n" +
+                    "    hanging-tick-frequency: 100\n" +
+                    "    view-distance: 10\n" +
+                    "    wither-spawn-sound-radius: 0\n";
         }else {
-            return "# This is the main configuration file for Spigot.\n" +
-                    "# As you can see, there's tons to configure. Some options may impact gameplay, so use\n" +
-                    "# with caution, and make sure you know what each option does before configuring.\n" +
-                    "# For a reference for any variable inside this file, check out the Spigot wiki at\n" +
-                    "# http://www.spigotmc.org/wiki/spigot-configuration/\n" +
-                    "#\n" +
-                    "# If you need help with the configuration or have any questions related to Spigot,\n" +
-                    "# join us at the Discord or drop by our forums and leave a post.\n" +
-                    "#\n" +
-                    "# Discord: https://www.spigotmc.org/go/discord\n" +
-                    "# Forums: http://www.spigotmc.org/\n" +
-                    "\n" +
+            return "config-version: 8\n" +
                     "settings:\n" +
                     "  debug: false\n" +
-                    "  sample-count: 12\n" +
+                    "  save-user-cache-on-stop-only: false\n" +
                     "  timeout-time: 60\n" +
                     "  restart-on-crash: false\n" +
                     "  restart-script: ./start.sh\n" +
+                    "  int-cache-limit: 1024\n" +
                     "  bungeecord: true\n" +
-                    "  player-shuffle: 0\n" +
-                    "  user-cache-size: 1000\n" +
-                    "  save-user-cache-on-stop-only: false\n" +
-                    "  moved-wrongly-threshold: 0.0625\n" +
-                    "  moved-too-quickly-multiplier: 10.0\n" +
-                    "  netty-threads: 5\n" +
+                    "  late-bind: false\n" +
                     "  attribute:\n" +
                     "    maxHealth:\n" +
                     "      max: 2048.0\n" +
@@ -676,8 +629,24 @@ public class MessageStorage {
                     "      max: 2048.0\n" +
                     "    attackDamage:\n" +
                     "      max: 2048.0\n" +
-                    "  log-villager-deaths: true\n" +
-                    "  log-named-deaths: true\n" +
+                    "  user-cache-size: 1000\n" +
+                    "  netty-threads: 6\n" +
+                    "  sample-count: 12\n" +
+                    "  player-shuffle: 0\n" +
+                    "  moved-wrongly-threshold: 0.0625\n" +
+                    "  moved-too-quickly-threshold: 100.0\n" +
+                    "  filter-creative-items: true\n" +
+                    "commands:\n" +
+                    "  tab-complete: 0\n" +
+                    "  log: true\n" +
+                    "  spam-exclusions:\n" +
+                    "    - /skill\n" +
+                    "  replace-commands:\n" +
+                    "    - setblock\n" +
+                    "    - summon\n" +
+                    "    - testforblock\n" +
+                    "    - tellraw\n" +
+                    "  silent-commandblock-console: false\n" +
                     "messages:\n" +
                     "  whitelist: You are not whitelisted on this server!\n" +
                     "  unknown-command: Unknown command. Type \"/help\" for help.\n" +
@@ -685,90 +654,16 @@ public class MessageStorage {
                     "  outdated-client: Outdated client! Please use {0}\n" +
                     "  outdated-server: Outdated server! I'm still on {0}\n" +
                     "  restart: Server is restarting\n" +
-                    "advancements:\n" +
+                    "stats:\n" +
                     "  disable-saving: false\n" +
-                    "  disabled:\n" +
-                    "  - minecraft:story/disabled\n" +
-                    "commands:\n" +
-                    "  spam-exclusions:\n" +
-                    "  - /skill\n" +
-                    "  silent-commandblock-console: false\n" +
-                    "  replace-commands:\n" +
-                    "  - setblock\n" +
-                    "  - summon\n" +
-                    "  - testforblock\n" +
-                    "  - tellraw\n" +
-                    "  log: true\n" +
-                    "  tab-complete: 0\n" +
-                    "  send-namespaced: true\n" +
-                    "players:\n" +
-                    "  disable-saving: false\n" +
+                    "  forced-stats: { }\n" +
                     "world-settings:\n" +
                     "  default:\n" +
-                    "    below-zero-generation-in-existing-chunks: true\n" +
-                    "    hanging-tick-frequency: 100\n" +
+                    "    verbose: false\n" +
+                    "    item-despawn-rate: 6000\n" +
                     "    merge-radius:\n" +
                     "      item: 2.5\n" +
                     "      exp: 3.0\n" +
-                    "    item-despawn-rate: 6000\n" +
-                    "    view-distance: default\n" +
-                    "    simulation-distance: default\n" +
-                    "    thunder-chance: 100000\n" +
-                    "    enable-zombie-pigmen-portal-spawns: true\n" +
-                    "    wither-spawn-sound-radius: 0\n" +
-                    "    arrow-despawn-rate: 1200\n" +
-                    "    trident-despawn-rate: 1200\n" +
-                    "    zombie-aggressive-towards-villager: true\n" +
-                    "    nerf-spawner-mobs: false\n" +
-                    "    mob-spawn-range: 8\n" +
-                    "    end-portal-sound-radius: 0\n" +
-                    "    growth:\n" +
-                    "      cactus-modifier: 100\n" +
-                    "      cane-modifier: 100\n" +
-                    "      melon-modifier: 100\n" +
-                    "      mushroom-modifier: 100\n" +
-                    "      pumpkin-modifier: 100\n" +
-                    "      sapling-modifier: 100\n" +
-                    "      beetroot-modifier: 100\n" +
-                    "      carrot-modifier: 100\n" +
-                    "      potato-modifier: 100\n" +
-                    "      wheat-modifier: 100\n" +
-                    "      netherwart-modifier: 100\n" +
-                    "      vine-modifier: 100\n" +
-                    "      cocoa-modifier: 100\n" +
-                    "      bamboo-modifier: 100\n" +
-                    "      sweetberry-modifier: 100\n" +
-                    "      kelp-modifier: 100\n" +
-                    "      twistingvines-modifier: 100\n" +
-                    "      weepingvines-modifier: 100\n" +
-                    "      cavevines-modifier: 100\n" +
-                    "      glowberry-modifier: 100\n" +
-                    "    entity-activation-range:\n" +
-                    "      animals: 32\n" +
-                    "      monsters: 32\n" +
-                    "      raiders: 48\n" +
-                    "      misc: 16\n" +
-                    "      water: 16\n" +
-                    "      villagers: 32\n" +
-                    "      flying-monsters: 32\n" +
-                    "      wake-up-inactive:\n" +
-                    "        animals-max-per-tick: 4\n" +
-                    "        animals-every: 1200\n" +
-                    "        animals-for: 100\n" +
-                    "        monsters-max-per-tick: 8\n" +
-                    "        monsters-every: 400\n" +
-                    "        monsters-for: 100\n" +
-                    "        villagers-max-per-tick: 4\n" +
-                    "        villagers-every: 600\n" +
-                    "        villagers-for: 100\n" +
-                    "        flying-monsters-max-per-tick: 8\n" +
-                    "        flying-monsters-every: 200\n" +
-                    "        flying-monsters-for: 100\n" +
-                    "      villagers-work-immunity-after: 100\n" +
-                    "      villagers-work-immunity-for: 20\n" +
-                    "      villagers-active-for-panic: true\n" +
-                    "      tick-inactive-villagers: true\n" +
-                    "      ignore-spectators: false\n" +
                     "    entity-tracking-range:\n" +
                     "      players: 48\n" +
                     "      animals: 48\n" +
@@ -777,46 +672,67 @@ public class MessageStorage {
                     "      other: 64\n" +
                     "    ticks-per:\n" +
                     "      hopper-transfer: 8\n" +
-                    "      hopper-check: 1\n" +
+                    "      hopper-check: 8\n" +
                     "    hopper-amount: 1\n" +
-                    "    hopper-can-load-chunks: false\n" +
-                    "    dragon-death-sound-radius: 0\n" +
-                    "    seed-village: 10387312\n" +
-                    "    seed-desert: 14357617\n" +
-                    "    seed-igloo: 14357618\n" +
-                    "    seed-jungle: 14357619\n" +
-                    "    seed-swamp: 14357620\n" +
-                    "    seed-monument: 10387313\n" +
-                    "    seed-shipwreck: 165745295\n" +
-                    "    seed-ocean: 14357621\n" +
-                    "    seed-outpost: 165745296\n" +
-                    "    seed-endcity: 10387313\n" +
-                    "    seed-slime: 987234911\n" +
-                    "    seed-nether: 30084232\n" +
-                    "    seed-mansion: 10387319\n" +
-                    "    seed-fossil: 14357921\n" +
-                    "    seed-portal: 34222645\n" +
-                    "    seed-ancientcity: 20083232\n" +
-                    "    seed-buriedtreasure: 10387320\n" +
-                    "    seed-mineshaft: default\n" +
-                    "    seed-stronghold: default\n" +
-                    "    hunger:\n" +
-                    "      jump-walk-exhaustion: 0.05\n" +
-                    "      jump-sprint-exhaustion: 0.2\n" +
-                    "      combat-exhaustion: 0.1\n" +
-                    "      regen-exhaustion: 6.0\n" +
-                    "      swim-multiplier: 0.01\n" +
-                    "      sprint-multiplier: 0.1\n" +
-                    "      other-multiplier: 0.0\n" +
-                    "    max-tnt-per-tick: 100\n" +
                     "    max-tick-time:\n" +
                     "      tile: 50\n" +
                     "      entity: 50\n" +
-                    "    verbose: false\n" +
-                    "config-version: 12\n" +
-                    "stats:\n" +
-                    "  disable-saving: false\n" +
-                    "  forced-stats: {}";
+                    "    random-light-updates: false\n" +
+                    "    max-tnt-per-tick: 100\n" +
+                    "    entity-activation-range:\n" +
+                    "      animals: 32\n" +
+                    "      monsters: 32\n" +
+                    "      misc: 16\n" +
+                    "    max-entity-collisions: 8\n" +
+                    "    seed-village: 10387312\n" +
+                    "    seed-feature: 14357617\n" +
+                    "    hunger:\n" +
+                    "      walk-exhaustion: 0.2\n" +
+                    "      sprint-exhaustion: 0.8\n" +
+                    "      combat-exhaustion: 0.3\n" +
+                    "      regen-exhaustion: 3.0\n" +
+                    "    max-bulk-chunks: 10\n" +
+                    "    save-structure-info: true\n" +
+                    "    arrow-despawn-rate: 1200\n" +
+                    "    enable-zombie-pigmen-portal-spawns: true\n" +
+                    "    mob-spawn-range: 4\n" +
+                    "    anti-xray:\n" +
+                    "      enabled: true\n" +
+                    "      engine-mode: 1\n" +
+                    "      hide-blocks:\n" +
+                    "        - 14\n" +
+                    "        - 15\n" +
+                    "        - 16\n" +
+                    "        - 21\n" +
+                    "        - 48\n" +
+                    "        - 49\n" +
+                    "        - 54\n" +
+                    "        - 56\n" +
+                    "        - 73\n" +
+                    "        - 74\n" +
+                    "        - 82\n" +
+                    "        - 129\n" +
+                    "        - 130\n" +
+                    "      replace-blocks:\n" +
+                    "        - 1\n" +
+                    "        - 5\n" +
+                    "    nerf-spawner-mobs: false\n" +
+                    "    growth:\n" +
+                    "      cactus-modifier: 100\n" +
+                    "      cane-modifier: 100\n" +
+                    "      melon-modifier: 100\n" +
+                    "      mushroom-modifier: 100\n" +
+                    "      pumpkin-modifier: 100\n" +
+                    "      sapling-modifier: 100\n" +
+                    "      wheat-modifier: 100\n" +
+                    "      netherwart-modifier: 100\n" +
+                    "    dragon-death-sound-radius: 0\n" +
+                    "    chunks-per-tick: 650\n" +
+                    "    clear-tick-list: false\n" +
+                    "    zombie-aggressive-towards-villager: true\n" +
+                    "    hanging-tick-frequency: 100\n" +
+                    "    view-distance: 10\n" +
+                    "    wither-spawn-sound-radius: 0\n";
         }
     }
 

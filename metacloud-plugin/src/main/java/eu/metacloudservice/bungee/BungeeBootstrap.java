@@ -72,7 +72,9 @@ public class BungeeBootstrap extends Plugin {
 
 
     public CloudService getLobby(ProxiedPlayer player){
-        if (CloudAPI.getInstance().getServicePool().getServices().stream().filter(service -> service.getGroup().getGroupType().equalsIgnoreCase("LOBBY")).collect(Collectors.toList()).isEmpty()){
+        if (CloudAPI.getInstance().getServicePool().getServices().isEmpty()){
+            return null;
+        }else if (CloudAPI.getInstance().getServicePool().getServices().stream().filter(service -> service.getGroup().getGroupType().equalsIgnoreCase("LOBBY")).collect(Collectors.toList()).isEmpty()){
             return null;
         }else {
             List<CloudService> cloudServices = CloudAPI.getInstance().getServicePool().getServices().stream()
@@ -84,8 +86,6 @@ public class BungeeBootstrap extends Plugin {
                             return true;
                         }else return player.hasPermission(service.getGroup().getPermission());
                     }).collect(Collectors.toList());
-
-
             if (cloudServices.isEmpty()){
                 return null;
             }
@@ -99,7 +99,9 @@ public class BungeeBootstrap extends Plugin {
     }
 
     public CloudService getLobby(ProxiedPlayer player, String kicked){
-        if ( CloudAPI.getInstance().getServicePool().getServices().stream()
+        if (CloudAPI.getInstance().getServicePool().getServices().isEmpty()){
+            return null;
+        }else if ( CloudAPI.getInstance().getServicePool().getServices().stream()
                 .filter(service -> service.getGroup().getGroupType().equals("LOBBY")).collect(Collectors.toList()).isEmpty()){
             return null;
         }

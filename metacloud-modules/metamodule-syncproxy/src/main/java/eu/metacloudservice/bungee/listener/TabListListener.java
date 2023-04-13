@@ -35,7 +35,7 @@ public class TabListListener implements Listener {
                         .schedule(BungeeBootstrap.getInstance(), () -> {ProxyServer
                                 .getInstance()
                                 .getPlayers()
-                                .forEach(TabListListener::sendTab);}, 0, 1, TimeUnit.SECONDS));
+                                .forEach(TabListListener::sendTab);}, 0, 2, TimeUnit.SECONDS));
     }
 
     @EventHandler

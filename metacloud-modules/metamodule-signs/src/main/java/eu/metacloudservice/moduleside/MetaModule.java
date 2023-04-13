@@ -13,7 +13,6 @@ import java.util.function.Consumer;
 public class
 MetaModule implements IModule {
 
-
     @Override
     public void load() {
         create();
@@ -34,6 +33,7 @@ MetaModule implements IModule {
 
     public void create(){
         if (!new File("./modules/signs/config.json").exists()){
+            new File("./modules/signs/").mkdirs();
 
             ArrayList<SignLayout> online = new ConfigBuilder()
                     .add("stained_hardened_clay", "5", "§8► service_name% §8◄", "§bLOBBY §8| §b§l✔", "%service_motd%", "§8• %online_players% / %max_players% §8•")

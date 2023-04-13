@@ -12,10 +12,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class BukkitBootstrap extends JavaPlugin {
 
     @Override
-    public void onEnable() {
+    public void onLoad() {
         new AsyncCloudAPI();
         new CloudAPI(false);
-
     }
 
     @Override

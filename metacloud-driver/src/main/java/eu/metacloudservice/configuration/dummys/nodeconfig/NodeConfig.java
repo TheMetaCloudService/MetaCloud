@@ -6,6 +6,7 @@ public class NodeConfig implements IConfigAdapter {
 
     private String language;
     private String managerAddress;
+    private Integer processorUsage;
     private boolean useViaVersion;
     private Integer canUsedMemory;
     private String bungeecordVersion;
@@ -22,6 +23,13 @@ public class NodeConfig implements IConfigAdapter {
 
     }
 
+    public Integer getProcessorUsage() {
+        return processorUsage;
+    }
+
+    public void setProcessorUsage(Integer processorUsage) {
+        this.processorUsage = processorUsage;
+    }
 
     public boolean isUseViaVersion() {
         return useViaVersion;

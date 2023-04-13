@@ -1,5 +1,6 @@
 package eu.metacloudservice.node.cloudservices;
 
+import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.nodeconfig.NodeConfig;
 import eu.metacloudservice.groups.dummy.Group;
@@ -70,7 +71,9 @@ public class CloudServiceDriver {
         base.schedule(new TimerTask() {
             @Override
             public void run() {
+                NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
 
+                if (Driver.getInstance().getMessageStorage().getCPULoad() <= config.getProcessorUsage()){
                     if (!queue.isEmpty()){
                         QueueEntry entry = queue.removeFirst();
                         if (entry.isRun()){
@@ -81,7 +84,7 @@ public class CloudServiceDriver {
                                 processes.add(new ServiceProcess(group, service, port , entry.isUseProtocol()));
                                 processes.stream().filter(serviceProcess -> serviceProcess.getService().equalsIgnoreCase(service)).findFirst().get().handelLaunch();
 
-                                NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
+
                                 NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInNodeActionSuccess(true, service, config.getNodeName(), port));
 
                             }
@@ -91,12 +94,14 @@ public class CloudServiceDriver {
                                 processes.stream().filter(serviceProcess -> serviceProcess.getService().equalsIgnoreCase(service)).findFirst().get().handelShutdown();
                                 try {Thread.sleep(1000);} catch (InterruptedException ignored) {}
                                 processes.removeIf(serviceProcess -> serviceProcess.getService().equalsIgnoreCase(service));
-                                NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
+
                                 NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInNodeActionSuccess(false, service, config.getNodeName(), 0));
                             }
                         }
 
                     }
+                }
+
 
             }
         }, 1, 1, TimeUtil.SECONDS);

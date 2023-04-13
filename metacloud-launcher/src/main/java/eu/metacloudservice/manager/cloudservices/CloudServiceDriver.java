@@ -29,7 +29,6 @@ public class CloudServiceDriver implements ICloudServiceDriver {
     public final NetworkEntry entry;
     private final ManagerConfig config;
 
-
     public CloudServiceDriver() {
         entry = new NetworkEntry();
         services = new ArrayList<>();
@@ -130,20 +129,23 @@ public class CloudServiceDriver implements ICloudServiceDriver {
             new TimerBase().schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    if (!CloudManager.queueDriver.getQueue_startup().isEmpty()){
-                        String service = CloudManager.queueDriver.getQueue_startup().removeFirst();
-                        CloudManager.serviceDriver.getService(service).handelStatusChange(ServiceState.STARTED);
-                        CloudManager.serviceDriver.getService(service).handelLaunch();
-                    }else if (!CloudManager.queueDriver.getQueue_shutdown().isEmpty()){
-                        String service = CloudManager.queueDriver.getQueue_shutdown().removeFirst();
-                        CloudManager.serviceDriver.getService(service).handelQuit();
-                        CloudManager.serviceDriver.unregistered(service);
-                    }
 
+                    if (Driver.getInstance().getMessageStorage().getCPULoad() <= config.getProcessorUsage()){
+                        if (getServices().stream().filter(taskedService -> taskedService.getEntry().getStatus() == ServiceState.STARTED).collect(Collectors.toList()).size() <= config.getServiceStartupCount()){
+                            if (!CloudManager.queueDriver.getQueue_startup().isEmpty()){
+                                String service = CloudManager.queueDriver.getQueue_startup().removeFirst();
+                                CloudManager.serviceDriver.getService(service).handelStatusChange(ServiceState.STARTED);
+                                CloudManager.serviceDriver.getService(service).handelLaunch();
+                            }
+                        }
+                        if (!CloudManager.queueDriver.getQueue_shutdown().isEmpty()){
+                            String service = CloudManager.queueDriver.getQueue_shutdown().removeFirst();
+                            CloudManager.serviceDriver.getService(service).handelQuit();
+                            CloudManager.serviceDriver.unregistered(service);
+                        }
+                    }
                 }
             }, 0, 100, TimeUtil.MILLISECONDS);
-
-
             new TimerBase().schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -197,7 +199,6 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                         Group group = Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName());
 
                         int minonline = 0;
-
                         if (!entry.group_player_potency.containsKey(group.getGroup())){
                             minonline = group.getMinimalOnline();
                         }else if (entry.group_player_potency.get(group.getGroup()) == 0 && entry.global_player_potency == 0){
@@ -226,12 +227,9 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                         }
                     });
 
-
                     List<TaskedService> servicess = getServices().stream()
                             .filter(taskedService -> taskedService.getEntry().getStatus() == ServiceState.LOBBY)
                             .collect(Collectors.toList());
-
-
 
                     servicess.stream().sorted(Comparator.comparingInt(o -> o.getEntry().getCurrentPlayers())).collect(Collectors.toList()).forEach(taskedService -> {
                         Group group = Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName());
@@ -246,7 +244,10 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                         }else if (entry.group_player_potency.get(group.getGroup()) != 0){
                             minonline = group.getOver100AtGroup()*entry.group_player_potency.get(group.getGroup());
                         }
-                        if (getLobbiedServices(taskedService.getEntry().getGroupName())-1 >=  minonline){
+
+                        int inStoppedQueue = CloudManager.queueDriver.getQueue_shutdown().stream().filter(s -> getService(s).getEntry().getGroupName().equalsIgnoreCase(taskedService.getEntry().getGroupName())).collect(Collectors.toList()).size();
+
+                        if (getLobbiedServices(taskedService.getEntry().getGroupName())-1-inStoppedQueue >=  minonline){
                             unregister(taskedService.getEntry().getServiceName());
                             try {
                                 Thread.sleep(1000);
@@ -255,8 +256,6 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                             }
                         }
                     });
-
-
 
                     servicess.stream().filter(taskedService -> !taskedService.hasStartedNew).collect(Collectors.toList()).stream().filter(taskedService -> {
 
@@ -316,13 +315,14 @@ public class CloudServiceDriver implements ICloudServiceDriver {
             }, 0, 30, TimeUtil.SECONDS);
 
 
+            //AUTO STARTUP
+
             new TimerBase().schedule(new TimerTask() {
                 @Override
                 public void run() {
                     if (CloudManager.shutdown){
                         cancel();
                     }
-
                     try {
                         Driver.getInstance().getGroupDriver().getAll().stream()
                                 .filter(group -> {
@@ -418,7 +418,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
 
     @Override
     public TaskedService getService(String service) {
-        if (    this.services.stream().filter(service1 -> service1.getEntry().getServiceName().equals(service)).collect(Collectors.toList()).isEmpty()){
+        if (this.services.stream().filter(service1 -> service1.getEntry().getServiceName().equals(service)).collect(Collectors.toList()).isEmpty()){
             return null;
         }else {
             return this.services.stream().filter(service1 -> service1.getEntry().getServiceName().equals(service)).findFirst().get();

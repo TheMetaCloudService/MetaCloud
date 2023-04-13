@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.function.BiConsumer;
 
 public class PacketLoader {
     public PacketLoader() {}
@@ -102,6 +103,44 @@ public class PacketLoader {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+
+        }
+    }
+
+    @SneakyThrows
+    public void loadModules(){
+
+        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/cloudloader.php").openStream()) {
+            final StringBuilder builder = new StringBuilder();
+            BufferedReader bufferedReader;
+
+            bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+            int counter;
+            while ((counter = bufferedReader.read()) != -1) {
+                builder.append((char) counter);
+            }
+            final String rawJson = builder.toString();
+            PacketConfig updateConfig = (PacketConfig) new ConfigDriver().convert(rawJson, PacketConfig.class);
+
+
+            updateConfig.getModules().forEach(new BiConsumer<>() {
+                @Override
+                public void accept(String s, String s2) {
+                    try (BufferedInputStream in = new BufferedInputStream(new URL(s2).openStream());
+                         FileOutputStream fileOutputStream = new FileOutputStream("./modules/metacloud-" + s + ".jar")) {
+                        byte[] dataBuffer = new byte[1024];
+
+                        int bytesRead;
+
+                        while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+                            fileOutputStream.write(dataBuffer, 0, bytesRead);
+                        }
+
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
 
         }
     }

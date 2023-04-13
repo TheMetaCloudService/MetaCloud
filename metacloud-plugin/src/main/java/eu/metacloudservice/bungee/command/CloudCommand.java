@@ -89,13 +89,6 @@ public class CloudCommand extends Command implements TabExecutor {
                                 if (args.length == 2){
                                     CloudAPI.getInstance().dispatchCommand("service stop " + group );
                                     player.sendMessage(PREFIX + "The '§f"+group+"§r' service is now stopped");
-                                }else if (args.length == 3){
-                                    if (args[2].equalsIgnoreCase("--force")){
-                                        CloudAPI.getInstance().dispatchCommand("service stop " + group + " --force");
-                                        player.sendMessage(PREFIX + "The '§f"+group+"§r' service is now stopped");
-                                    }else {
-                                        sendHelp(player);
-                                    }
                                 }else {
                                     sendHelp(player);
                                 }
@@ -113,13 +106,6 @@ public class CloudCommand extends Command implements TabExecutor {
                                 if (args.length == 2){
                                     CloudAPI.getInstance().dispatchCommand("service stopgroup " + group );
                                     player.sendMessage(PREFIX + "The '§f"+group+"§r' group is now stopped");
-                                }else if (args.length == 3){
-                                    if (args[2].equalsIgnoreCase("--force")){
-                                        CloudAPI.getInstance().dispatchCommand("service stopgroup " + group + " --force");
-                                        player.sendMessage(PREFIX + "The '§f"+group+"§r' group is now stopped");
-                                    }else {
-                                        sendHelp(player);
-                                    }
                                 }else {
                                     sendHelp(player);
                                 }
@@ -265,8 +251,8 @@ public class CloudCommand extends Command implements TabExecutor {
                     }
                 }
             }else {
-                player.sendMessage("§8⯮ §7The network uses §bMetacloud§8 [§a"+Driver.getInstance().getMessageStorage().version+"§8]");
-                player.sendMessage("§8⯮ §fhttps://metacloudservice.eu/");
+                player.sendMessage("§7The network uses §bMetacloud§8 [§a"+Driver.getInstance().getMessageStorage().version+"§8]");
+                player.sendMessage("§fhttps://metacloudservice.eu/");
             }
         }
     }
@@ -277,9 +263,9 @@ public class CloudCommand extends Command implements TabExecutor {
         String PREFIX = Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix()).replace("&", "§");
         player.sendMessage( PREFIX + "/cloud maintenance (group)");
         player.sendMessage( PREFIX + "/cloud maxplayers <amount> (group)");
-        player.sendMessage( PREFIX + "/cloud stop <service> --force");
-        player.sendMessage( PREFIX + "/cloud stopgroup <group> --force");
-        player.sendMessage( PREFIX + "/cloud whitelist (<add/remove>) <player>");
+        player.sendMessage( PREFIX + "/cloud stop <service>");
+        player.sendMessage( PREFIX + "/cloud stopgroup <group>");
+        player.sendMessage( PREFIX + "/cloud whitelist (<add/remove>) (<player>)");
         player.sendMessage( PREFIX + "/cloud dispatch <service> <command>");
         player.sendMessage( PREFIX + "/cloud list <players/services>");
         player.sendMessage( PREFIX + "/cloud sync <service>");

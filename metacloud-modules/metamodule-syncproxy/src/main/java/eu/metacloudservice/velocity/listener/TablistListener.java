@@ -8,7 +8,6 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.config.Tablist;
-import eu.metacloudservice.velocity.ChatColor;
 import eu.metacloudservice.velocity.VeloCityBootstrap;
 import net.kyori.adventure.text.Component;
 
@@ -27,7 +26,7 @@ public class TablistListener {
         this.proxyServer = proxyServer;
         proxyServer.getScheduler().buildTask(VeloCityBootstrap.getInstance(), () -> {
             proxyServer.getAllPlayers().forEach(TablistListener::sendTab);
-        }).repeat(1, TimeUnit.SECONDS).schedule();
+        }).repeat(2, TimeUnit.SECONDS).schedule();
     }
 
     @Subscribe
@@ -52,7 +51,7 @@ public class TablistListener {
                     Tablist tab = VeloCityBootstrap.getInstance().configuration.getTablist().get(VeloCityBootstrap.getInstance().tabCount);
                     String[] config = readConfigs(tab, player);
 
-                    player.getTabList().setHeaderAndFooter(Component.text(translateHexColorCodes(config[0])), Component.text(translateHexColorCodes(config[1])));
+                    player.getTabList().setHeaderAndFooter(Component.text(config[0]), Component.text(config[1]));
 
                 } catch (Exception ignored) {
                 }
@@ -116,20 +115,7 @@ public class TablistListener {
                 .replace("%proxy_group_name%", proxyGroupName);
 
         return new String[]{header, footer};
-
-
     }
 
-    public static String translateHexColorCodes(String message) {
-        Pattern HEX_PATTERN = Pattern.compile("§#(\\w{5}[0-9a-f])");
-        Matcher matcher = HEX_PATTERN.matcher(message);
-        StringBuffer buffer = new StringBuffer();
 
-        while(matcher.find()) {
-            matcher.appendReplacement(buffer, ChatColor.of("#" + matcher.group(1)).toString());
-        }
-
-        return ChatColor.translateAlternateColorCodes('&', matcher.appendTail(buffer).toString());
-
-    }
 }

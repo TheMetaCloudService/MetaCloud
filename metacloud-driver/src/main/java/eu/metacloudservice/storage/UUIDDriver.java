@@ -12,45 +12,102 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class UUIDDriver {
 
-    private static final String URL2 = "https://minecraft-api.com/api/pseudo/";
+    private static ArrayList<UUIDStorage> uuids;
     public static String getUUID(String name) {
-        String urlString = "https://minecraft-api.com/api/uuid/" + name + "/json";
-        try {
-            URL url = new URL(urlString);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringBuilder builder = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
-            }
-            JSONObject json = new JSONObject(builder.toString());
-            return json.getString("uuid");
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (uuids == null){
+            uuids = new ArrayList<>();
         }
+        if (uuids.stream().anyMatch(uuidStorage -> uuidStorage.getUsername().equalsIgnoreCase(name))){
+            return uuids.stream().filter(uuidStorage -> uuidStorage.getUsername().equalsIgnoreCase(name)).findFirst().get().getUniqueID();
+        }else {
+            String urlString = "https://minecraft-api.com/api/uuid/" + name + "/json";
+            try {
+                URL url = new URL(urlString);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+                StringBuilder builder = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    builder.append(line);
+                }
+                JSONObject json = new JSONObject(builder.toString());
+                String uuid = json.getString("uuid");
 
+                uuids.add(new UUIDStorage(name, uuid));
+
+                reader.close();
+
+                return uuid;
+            } catch (Exception e) {
+                try {
+                    URL url = new URL("https://api.minetools.eu/uuid/" + name);
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+                    StringBuilder builder = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        builder.append(line);
+                    }
+                    JSONObject json = new JSONObject(builder.toString());
+                    String uuid = json.getString("id");
+
+                    reader.close();
+                    uuids.add(new UUIDStorage(name, uuid));
+                    return uuid;
+                }catch (Exception ignored){}
+            }
+        }
         return null;
 
     }
 
 
     public static String getUsername(String uuid) {
-        String urlString = "https://minecraft-api.com/api/pseudo/" + uuid + "/json";
-        try {
-            URL url = new URL(urlString);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringBuilder builder = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
+
+
+
+        if (uuids == null){
+            uuids = new ArrayList<>();
+        }
+
+        if (uuids.stream().anyMatch(uuidStorage -> uuidStorage.getUniqueID().equalsIgnoreCase(uuid))){
+            return uuids.stream().filter(uuidStorage -> uuidStorage.getUniqueID().equalsIgnoreCase(uuid)).findFirst().get().getUsername();
+        }else {
+            String urlString = "https://minecraft-api.com/api/pseudo/" + uuid + "/json";
+            try {
+                URL url = new URL(urlString);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+                StringBuilder builder = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    builder.append(line);
+                }
+                JSONObject json = new JSONObject(builder.toString());
+                String username = json.getString("pseudo");
+                uuids.add(new UUIDStorage(username, uuid));
+
+                reader.close();
+                return username;
+            } catch (Exception e) {
+                try {
+                    URL url = new URL("https://api.minetools.eu/uuid/" + uuid);
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+                    StringBuilder builder = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        builder.append(line);
+                    }
+                    JSONObject json = new JSONObject(builder.toString());
+                    String username = json.getString("name");
+                    uuids.add(new UUIDStorage(username, uuid));
+
+                    reader.close();
+                    return username;
+                }catch (Exception ignored){}
             }
-            JSONObject json = new JSONObject(builder.toString());
-            return json.getString("pseudo");
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return null;
 

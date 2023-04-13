@@ -102,6 +102,7 @@ public class TerminalCompleter  implements Completer {
                                 result.add("SPIGOT");
                                 result.add("PAPER");
                                 result.add("PURPUR");
+                                result.add("FOLIA");
                             }
                             if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("SPIGOT")){
                                 result.add("SPIGOT-1.19.4");
@@ -127,9 +128,10 @@ public class TerminalCompleter  implements Completer {
                                 result.add("PURPUR-1.17.1");
                                 result.add("PURPUR-1.16.5");
                                 result.add("BACKTOMAIN");
+                            }       if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("FOLIA")){
+                                result.add("BACKTOMAIN");
+                                result.add("FOLIA-1.19.4");
                             }
-
-
                         }
                     }
                 }
@@ -152,6 +154,11 @@ public class TerminalCompleter  implements Completer {
                                 result.add("SPIGOT");
                                 result.add("PAPER");
                                 result.add("PURPUR");
+                                result.add("FOLIA");
+                            }
+                            if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("FOLIA")){
+                                result.add("BACKTOMAIN");
+                                result.add("FOLIA-1.19.4");
                             }
                             if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("SPIGOT")){
                                 result.add("SPIGOT-1.19.4");

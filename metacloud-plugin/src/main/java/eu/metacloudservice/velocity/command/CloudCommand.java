@@ -88,19 +88,12 @@ public class CloudCommand implements SimpleCommand {
                             sendHelp(player);
                         }
                     }else if (args[0].equalsIgnoreCase("stop")){
-                        if (args.length >= 2){
+                        if (args.length == 2){
                             String group = args[1];
                             if (CloudAPI.getInstance().getServicePool().getService(group) != null){
                                 if (args.length == 2){
                                     CloudAPI.getInstance().dispatchCommand("service stop " + group );
                                     player.sendMessage(Component.text(PREFIX + "The '§f"+group+"§r' service is now stopped"));
-                                }else if (args.length == 3){
-                                    if (args[2].equalsIgnoreCase("--force")){
-                                        CloudAPI.getInstance().dispatchCommand("service stop " + group + " --force");
-                                        player.sendMessage(Component.text(PREFIX + "The '§f"+group+"§r' service is now stopped"));
-                                    }else {
-                                        sendHelp(player);
-                                    }
                                 }else {
                                     sendHelp(player);
                                 }
@@ -111,19 +104,12 @@ public class CloudCommand implements SimpleCommand {
                             sendHelp(player);
                         }
                     }else if (args[0].equalsIgnoreCase("stopgroup")){
-                        if (args.length >= 2){
+                        if (args.length == 2){
                             String group = args[1];
                             if (CloudAPI.getInstance().getGroupsName().contains(group)){
                                 if (args.length == 2){
                                     CloudAPI.getInstance().dispatchCommand("service stopgroup " + group );
                                     player.sendMessage(Component.text(PREFIX + "The '§f"+group+"§r' group is now stopped"));
-                                }else if (args.length == 3){
-                                    if (args[2].equalsIgnoreCase("--force")){
-                                        CloudAPI.getInstance().dispatchCommand("service stopgroup " + group + " --force");
-                                        player.sendMessage(Component.text(PREFIX + "The '§f"+group+"§r' group is now stopped"));
-                                    }else {
-                                        sendHelp(player);
-                                    }
                                 }else {
                                     sendHelp(player);
                                 }
@@ -266,8 +252,8 @@ public class CloudCommand implements SimpleCommand {
                     }
                 }
             }else {
-                player.sendMessage(Component.text("§8⯮ §7The network uses §bMetacloud§8 [§a"+Driver.getInstance().getMessageStorage().version+"§8]"));
-                player.sendMessage(Component.text("§8⯮ §fhttps://metacloudservice.eu/"));
+                player.sendMessage(Component.text("§7The network uses §bMetacloud§8 [§a"+Driver.getInstance().getMessageStorage().version+"§8]"));
+                player.sendMessage(Component.text("§fhttps://metacloudservice.eu/"));
             }
         }
     }
@@ -278,8 +264,8 @@ public class CloudCommand implements SimpleCommand {
         player.sendMessage(Component.text(PREFIX + "/cloud maintenance (group)"));
         player.sendMessage(Component.text(PREFIX + "/cloud maxplayers <amount> (group)"));
         player.sendMessage(Component.text(PREFIX + "/cloud stop <service> --force"));
-        player.sendMessage(Component.text(PREFIX + "/cloud stopgroup <group> --force"));
-        player.sendMessage(Component.text(PREFIX + "/cloud whitelist (<add/remove>) <player>"));
+        player.sendMessage(Component.text(PREFIX + "/cloud stopgroup <group>"));
+        player.sendMessage(Component.text(PREFIX + "/cloud whitelist (<add/remove>) (<player>)"));
         player.sendMessage(Component.text(PREFIX + "/cloud dispatch <service> <command>"));
         player.sendMessage(Component.text(PREFIX + "/cloud list <players/services>"));
         player.sendMessage(Component.text(PREFIX + "/cloud sync <service>"));

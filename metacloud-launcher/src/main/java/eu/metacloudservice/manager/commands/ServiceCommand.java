@@ -115,25 +115,7 @@ public class ServiceCommand extends CommandAdapter {
             }
         }else {
 
-            if (args[0].equalsIgnoreCase("stopGroup") && args[2].equalsIgnoreCase("--force")) {
-                String group = args[1];
-                if (Driver.getInstance().getGroupDriver().find(group)) {
-                    CloudManager.serviceDriver.getServices(group).forEach(taskedService -> CloudManager.serviceDriver.unregistered(taskedService.getEntry().getServiceName()));
-                } else {
-                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                            "Die Gruppe '§f" + group + "§r' wurde nicht gefunden",
-                            "the group '§f" + group + "§r' was not found");
-                }
-            }else  if (args[0].equalsIgnoreCase("stop") && args[2].equalsIgnoreCase("--force")){
-                String service = args[1];
-                if (CloudManager.serviceDriver.getService(service) != null){
-                    CloudManager.serviceDriver.unregistered(service);
-                }else {
-                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                            "Der Service '§f"+service+"§r' wurde nicht gefunden",
-                            "the service '§f"+service+"§r' was not found");
-                }
-            }else if (args[0].equalsIgnoreCase("run")) {
+            if (args[0].equalsIgnoreCase("run")) {
                 String group = args[1];
                 if (Driver.getInstance().getGroupDriver().find(group)) {
                     if (args[2].matches("[0-9]+")) {
@@ -143,6 +125,17 @@ public class ServiceCommand extends CommandAdapter {
 
                         Group gdata = Driver.getInstance().getGroupDriver().load(group);
                         ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+
+
+                        if (gdata.getMaximalOnline() != -1){
+                            if (gdata.getMaximalOnline() < (CloudManager.serviceDriver.getServices(group).size() + Integer.parseInt(args[2]))){
+                                Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                        "Der angegebene Service-Startbetrag kann nicht ausgeführt werden, da er die maximale Anzahl der Services überschreiten würde",
+                                        "The specified service start amount cannot be executed because it would exceed the maximum services");
+                                return;
+                            }
+                        }
+
                         for (int i = 0; i != Integer.parseInt(args[2]); i++) {
                             String id = "";
                             if (config.getUuid().equals("INT")){
@@ -262,14 +255,14 @@ public class ServiceCommand extends CommandAdapter {
                 " >> §fservice run <group> <count> §7~ um ein Service zu starten",
                 " >> §fservice run <group> <count> §7~ to start a service");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fservice stopgroup <group> --force §7~ um eine ganze Gruppe stoppen",
-                " >> §fservice stopgroup <group> --force §7~ to stop an entire group");
+                " >> §fservice stopgroup <group> §7~ um eine ganze Gruppe stoppen",
+                " >> §fservice stopgroup <group> §7~ to stop an entire group");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fservice joinscreen <service> §7~ um einen Screen von einen Service zu joinen",
                 " >> §fservice joinscreen <service> §7~ to join a screen from a service");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fservice stop <service> --force §7~ um ein Service zu stoppen",
-                " >> §fservice stop <service> --force §7~ to stop a service");
+                " >> §fservice stop <service> §7~ um ein Service zu stoppen",
+                " >> §fservice stop <service> §7~ to stop a service");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fservice sync <service> §7~ um einen Service zu synchronisieren",
                 " >> §fservice sync <service> §7~ to synchronize a service");
@@ -279,8 +272,6 @@ public class ServiceCommand extends CommandAdapter {
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fservice execute <service> <command> §7~ um einen Befehl auf dem Server auszuführen",
                 " >> §fservice execute <service> <command> §7~ to execute a command on the server");
-
-
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fservice whitelist <add/remove> <name> §7~ um Spieler zur Whitelist hinzuzufügen oder von ihr zu entfernen",
                 " >> §fservice whitelist <add/remove> <name> §7~ to add players to the whitelist or to remove them from it");

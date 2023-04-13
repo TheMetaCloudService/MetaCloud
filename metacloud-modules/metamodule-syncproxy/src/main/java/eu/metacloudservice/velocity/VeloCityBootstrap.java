@@ -44,6 +44,9 @@ public class VeloCityBootstrap {
         tabCount = 0;
         motdCount = 0;
         instance = this;
+        group = CloudAPI.getInstance().getGroups().stream()
+                .filter(group1 -> group1.getGroup().equalsIgnoreCase(getLiveService().getGroup()))
+                .findFirst().get();
         liveService = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         restDriver = new RestDriver(liveService.getManagerAddress(), liveService.getRestPort());
         Configuration conf = (Configuration) new ConfigDriver().convert(getRestDriver().get("/module/syncproxy/configuration"), Configuration.class);
@@ -99,7 +102,7 @@ public class VeloCityBootstrap {
                         configuration = config;
                         group = CloudAPI.getInstance().getGroups().stream()
                                 .filter(group1 -> group1.getGroup().equalsIgnoreCase(getLiveService().getGroup()))
-                                .findFirst().get(); // or handle the case when no group is found
+                                .findFirst().get();
                         tabCount = tabCount >= configuration.getTablist().size() - 1 ? 0 : tabCount + 1;
                         if (group.isMaintenance()) {
                             motdCount = motdCount >= configuration.getMaintenancen().size() - 1 ? 0 : motdCount + 1;
