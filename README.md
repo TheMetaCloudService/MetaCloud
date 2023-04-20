@@ -19,32 +19,32 @@
 </p>
 
 ## Requirements
-**minimal requirements: **
- * *Java 17
- * *Linux/Windows server with a minimum of 3GB Memory and 2 vCores
- * *Internet connection
+minimal requirements: 
+ * Java 17
+ * Linux/Windows server with a minimum of 3GB Memory and 2 vCores
+ * Internet connection
  
  
- **recommended requirements: **
- * *Java 17
- * *Linux/Windows server with a minimum of 8GB Memory and 4 vCores
- * *Internet connection
+ recommended requirements: 
+ * Java 17
+ * Linux/Windows server with a minimum of 8GB Memory and 4 vCores
+ * Internet connection
 
 ## Installation
 
-+ *Update & upgrade your server
++ Update & upgrade your server
 ```bash
   apt-get update && apt-get upgrade -y
 ```
-+ *Download the zip data
++ Download the zip data
 ```bash
   wget https://metacloudservice.eu/download/metacloud/metacloud-latest.zip
 ```
- + *Unzip the **metacloud-latest.zip** in your folder
+ + Unzip the **metacloud-latest.zip** in your folder
 ```bash
 unzip metacloud-latest.zip
 ```
- + *give the **start.sh** permission and start them
+ + give the **start.sh** permission and start them
 ```bash
 chmod +u start.sh
 ./start.sh
