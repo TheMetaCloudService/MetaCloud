@@ -13,14 +13,14 @@
     •
     <a href="https://metacloudservice.eu">Website</a>
     •
-    <a href="https://twitter.com/@TheMetaCloud">Twitter</a>
+    <a href="https://metacloudservice.eu/download/metacloud/metacloud-latest.zip">Download</a>
      ◄
   </p>
 </p>
 
 ## Requirements
 minimal requirements: 
-* Java 17
+ * Java 17
  * Linux/Windows server with a minimum of 3GB Memory and 2 vCores
  * Internet connection
  
@@ -53,14 +53,14 @@ chmod +u start.sh
 
 ## Features
 
-- Plug & Play with an easy setup
-- Language-System (**German & English**)
-- **Dynamic** and **static** launch of Services
-- Template system with groups
-- Powerful **API** with **Async** & **Sync** support
+- Plug & Play with an **easy** setup
+- Language-System (**GERMAN** & **ENGLISH**)
+- **DYNAMIC** and **STATIC** launch of Services
+- Group System with Templats and **autoinstall** form Server software 
+- Powerful **API** with **ASYNC** & **SYNC** support based on **real-time results**
 - Powerful **REST-API** with **PUT** & **GET** function
-- CPU **overload** protection
-- Modular system with **comprehensive modules**
-- multi-root system for great **scalability**
-- Multiversion support for bungeecord (**Waterfall**, **Bungeecord**, **Hexacord**, **Travertine** & **Velocity**) and Spigot, Foliaspigot, Purpurspigot & Paperspigot (**1.16.5** upto **1.19.4**)
+- **CPU-Overload protaction** with **Queuesystem** and more 
+- Modular system with **comprehensive modules** like (**SYNCPROXY**, **BALANCER**, **NOTIFY** & more)
+- Great scalability, thanks to the **multi-proxy** and **multi-root** function
+- Multiversion support for bungeecord's (**WATERFALL**, **BUNGEECORD**, **HEXACORD**, **TRAVERTINE** & **VELOCITY**) and Spigot's (**SPIGOT**, *FOLIASPIGOT*, *PURPURSPIGOT* & **PAPERSPIGOT**)
 
