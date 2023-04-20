@@ -62,5 +62,5 @@ chmod +u start.sh
 - **CPU-Overload protaction** with **Queuesystem** and more 
 - Modular system with **comprehensive modules** like (**SYNCPROXY**, **BALANCER**, **NOTIFY** & more)
 - Great scalability, thanks to the **multi-proxy** and **multi-root** function
-- Multiversion support for bungeecord's (**WATERFALL**, **BUNGEECORD**, **HEXACORD**, **TRAVERTINE** & **VELOCITY**) and Spigot's (**SPIGOT**, *FOLIASPIGOT*, *PURPURSPIGOT* & **PAPERSPIGOT**)
+- Multiversion support for bungeecord's (*WATERFALL*, *BUNGEECORD*, *HEXACORD*, *TRAVERTINE* & *VELOCITY*) and Spigot's (*SPIGOT*, *FOLIASPIGOT*, *PURPURSPIGOT* & *PAPERSPIGOT*)
 
