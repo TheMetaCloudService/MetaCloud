@@ -9,7 +9,6 @@ public class CloudPlayerSwitchEvent extends IEventAdapter {
     private final String UniqueId;
 
     private final String from;
-
     private final String to;
 
     public String getName() {
