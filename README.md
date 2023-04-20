@@ -5,7 +5,7 @@
 
 <p>
   <p align="center">
-   **We are Metacloud, an open source Minecraft cloud system**
+   <b>We are Metacloud, an open source Minecraft cloud system</b>
     <br>
     ► <a href="https://discord.com/invite/4kKEcaP9WC">Discord</a>
     •
