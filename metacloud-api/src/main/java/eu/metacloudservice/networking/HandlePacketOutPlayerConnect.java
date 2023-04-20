@@ -2,15 +2,13 @@ package eu.metacloudservice.networking;
 
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.async.AsyncCloudAPI;
-import eu.metacloudservice.events.listeners.CloudPlayerConnectedEvent;
+import eu.metacloudservice.events.listeners.player.CloudPlayerConnectedEvent;
 import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerConnect;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;
 import eu.metacloudservice.pool.player.entrys.CloudPlayer;
 import eu.metacloudservice.storage.UUIDDriver;
 import io.netty.channel.Channel;
-
-import java.util.Objects;
 
 public class HandlePacketOutPlayerConnect implements NettyAdaptor {
     @Override

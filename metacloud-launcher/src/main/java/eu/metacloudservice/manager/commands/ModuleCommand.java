@@ -68,7 +68,7 @@ public class ModuleCommand extends CommandAdapter {
                 " >> §fmodule list §7~ zeigt dir alle laufenden Service",
                 " >> §fmodule list §7~ shows you all running service");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fmodule reload <module> §7~ um eine ganze Gruppe stoppen",
-                " >> §fmodule reload <module> §7~ to stop an entire group");
+                " >> §fmodule reload [module] §7~ um eine ganze Gruppe stoppen",
+                " >> §fmodule reload [module] §7~ to stop an entire group");
     }
 }

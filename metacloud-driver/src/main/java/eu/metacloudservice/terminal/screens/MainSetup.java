@@ -117,7 +117,7 @@ public class MainSetup {
                 }else {
                     Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "bitte gebe eine Ram anzahl an z.b. 512");
                 }
-            }else if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 4){
+            }else  if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 4){
                 if (line.equalsIgnoreCase("HEXACORD") | line.equalsIgnoreCase("HEXACORD ")){
                 Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
                 Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "HEXACORD");
@@ -2150,8 +2150,9 @@ public class MainSetup {
                 managerConfig.setSpigotVersion( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion").toString());
                 managerConfig.setNetworkingCommunication(7002);
                 managerConfig.setRestApiCommunication(8097);
+                managerConfig.setCopyLogs(true);
 
-                managerConfig.setServiceStartupCount(3);
+                managerConfig.setServiceStartupCount(5);
                 managerConfig.setProcessorUsage(90);
                 managerConfig.setUseViaVersion(false);
                 managerConfig.setBungeecordPort(25565);
@@ -2181,6 +2182,7 @@ public class MainSetup {
                 managerConfig.setNetworkingCommunication(7002);
                 managerConfig.setSplitter("-");
                 managerConfig.setUseProtocol(false);
+                managerConfig.setCopyLogs(true);
                 managerConfig.setProcessorUsage(90);
                 managerConfig.setServiceStartupCount(3);
                 managerConfig.setRestApiCommunication(8097);
@@ -2205,6 +2207,7 @@ public class MainSetup {
                 config.setSpigotVersion( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion").toString());
                 config.setNetworkingCommunication(7002);
                 config.setRestApiCommunication(8097);
+                config.setCopyLogs(true);
                 config.setBungeecordPort(25565);
                 config.setProcessorUsage(90);
                 config.setSpigotPort(5000);
@@ -2227,6 +2230,7 @@ public class MainSetup {
                 config.setBungeecordPort(25565);
                 config.setProcessorUsage(90);
                 config.setSpigotPort(5000);
+                config.setCopyLogs(true);
                 config.setUseViaVersion(false);
                 config.setNodeAddress(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress").toString());
                 config.setNodeName( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename").toString());

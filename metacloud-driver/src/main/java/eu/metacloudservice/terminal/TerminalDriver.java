@@ -133,20 +133,30 @@ public class TerminalDriver {
         }
         Driver.getInstance().getMessageStorage().setuptype = "";
         this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
-        for (int i = 0; i != this.mainScreenStorage.size(); i++) {
+        if ( this.mainScreenStorage.size() > 200){
+            for (int i =  this.mainScreenStorage.size()-200; i != this.mainScreenStorage.size(); i++) {
                 TerminalStorage storage = this.mainScreenStorage.get(i);
 
-            if (storage.getType() == Type.EMPTY){
-                String msg = storage.getMessage();
-                this.terminal.writer().println("\r" + getColoredString(msg + Color.RESET.getAnsiCode()));
-                simpleLatestLog.log(getClearSting(msg));
-                simpleLatestLog.saveLogs();
-            }else {
-                this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+storage.getType().toString().toUpperCase()+"§7: §r" + storage.getMessage() + Color.RESET.getAnsiCode()));
-                simpleLatestLog.log(getClearSting("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+storage.getType().toString().toUpperCase()+"§7: §r" + storage.getMessage())));
-                simpleLatestLog.saveLogs();
+                if (storage.getType() == Type.EMPTY){
+                    String msg = storage.getMessage();
+                    this.terminal.writer().println("\r" + getColoredString(msg + Color.RESET.getAnsiCode()));
+                }else {
+                    this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+storage.getType().toString().toUpperCase()+"§7: §r" + storage.getMessage() + Color.RESET.getAnsiCode()));
+                }
+            }
+        }else {
+            for (int i =  this.mainScreenStorage.size()-30; i != this.mainScreenStorage.size(); i++) {
+                TerminalStorage storage = this.mainScreenStorage.get(i);
+
+                if (storage.getType() == Type.EMPTY){
+                    String msg = storage.getMessage();
+                    this.terminal.writer().println("\r" + getColoredString(msg + Color.RESET.getAnsiCode()));
+                }else {
+                    this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+storage.getType().toString().toUpperCase()+"§7: §r" + storage.getMessage() + Color.RESET.getAnsiCode()));
+                }
             }
         }
+
         this.lineReader.getTerminal().flush();
         if (!this.lineReader.isReading()) return;
         this.lineReader.callWidget(LineReader.REDRAW_LINE);

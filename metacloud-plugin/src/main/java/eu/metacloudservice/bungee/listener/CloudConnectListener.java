@@ -45,6 +45,11 @@ public class CloudConnectListener implements Listener {
         LiveService service = (LiveService)(new ConfigDriver("./CLOUDSERVICE.json")).read(LiveService.class);
         Group group = CloudAPI.getInstance().getGroups().stream().filter(group1 -> group1.getGroup().equalsIgnoreCase(service.getGroup())).findFirst().get();
 
+        if (CloudAPI.getInstance().getPlayerPool().getPlayers().stream().anyMatch(cloudPlayer -> cloudPlayer.getUsername().equalsIgnoreCase(event.getPlayer().getName()))){
+            event.getPlayer().disconnect(Driver.getInstance().getMessageStorage().base64ToUTF8(CloudAPI.getInstance().getMessages().getKickAlreadyOnNetwork()).replace("&", "§"));
+
+        }
+
         this.connected.add(event.getPlayer().getUniqueId());
         AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInPlayerConnect(event.getPlayer().getName(), service.getService()));
 

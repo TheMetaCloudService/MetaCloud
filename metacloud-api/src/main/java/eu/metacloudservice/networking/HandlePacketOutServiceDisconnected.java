@@ -1,10 +1,9 @@
 package eu.metacloudservice.networking;
 
 import eu.metacloudservice.CloudAPI;
-import eu.metacloudservice.Driver;
 import eu.metacloudservice.async.AsyncCloudAPI;
-import eu.metacloudservice.events.listeners.CloudProxyDisconnectedEvent;
-import eu.metacloudservice.events.listeners.CloudServiceDisconnectedEvent;
+import eu.metacloudservice.events.listeners.services.CloudProxyDisconnectedEvent;
+import eu.metacloudservice.events.listeners.services.CloudServiceDisconnectedEvent;
 import eu.metacloudservice.networking.out.service.PacketOutServiceDisconnected;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;

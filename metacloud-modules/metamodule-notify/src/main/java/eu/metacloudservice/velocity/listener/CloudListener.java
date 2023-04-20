@@ -1,6 +1,5 @@
 package eu.metacloudservice.velocity.listener;
 
-import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.bungee.BungeeBootstrap;
@@ -8,10 +7,8 @@ import eu.metacloudservice.config.Configuration;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.events.entrys.ICloudListener;
 import eu.metacloudservice.events.entrys.Subscribe;
-import eu.metacloudservice.events.listeners.*;
+import eu.metacloudservice.events.listeners.services.*;
 import net.kyori.text.TextComponent;
-
-import java.util.function.Consumer;
 
 public class CloudListener implements ICloudListener {
 
@@ -91,6 +88,30 @@ public class CloudListener implements ICloudListener {
         proxyServer.getAllPlayers().forEach(player -> {
             if (player.hasPermission("metacloud.notify")){
                 player.sendMessage(TextComponent.builder(Driver.getInstance().getMessageStorage().base64ToUTF8(configuration.getServicePrepared()).replace("&", "§")
+                        .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode())).build());
+            }
+        });
+    }
+
+    @Subscribe
+    public void handle(CloudProxyLaunchEvent event){
+        Configuration configuration = (Configuration) new ConfigDriver().convert(BungeeBootstrap.getInstance().getRestDriver().get("/module/notify/configuration"), Configuration.class);
+
+        proxyServer.getAllPlayers().forEach(player -> {
+            if (player.hasPermission("metacloud.notify")){
+                player.sendMessage(TextComponent.builder(Driver.getInstance().getMessageStorage().base64ToUTF8(configuration.getProxiedServiceLaunch()).replace("&", "§")
+                        .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode())).build());
+            }
+        });
+    }
+
+    @Subscribe
+    public void handle(CloudServiceLaunchEvent event){
+        Configuration configuration = (Configuration) new ConfigDriver().convert(BungeeBootstrap.getInstance().getRestDriver().get("/module/notify/configuration"), Configuration.class);
+
+        proxyServer.getAllPlayers().forEach(player -> {
+            if (player.hasPermission("metacloud.notify")){
+                player.sendMessage(TextComponent.builder(Driver.getInstance().getMessageStorage().base64ToUTF8(configuration.getServiceLaunch()).replace("&", "§")
                         .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode())).build());
             }
         });

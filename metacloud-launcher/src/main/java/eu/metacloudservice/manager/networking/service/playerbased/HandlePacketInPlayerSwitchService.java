@@ -4,7 +4,7 @@ import eu.metacloudservice.Driver;
 import eu.metacloudservice.cloudplayer.CloudPlayerRestCache;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
-import eu.metacloudservice.events.listeners.CloudPlayerSwitchEvent;
+import eu.metacloudservice.events.listeners.player.CloudPlayerSwitchEvent;
 import eu.metacloudservice.manager.CloudManager;
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerSwitchService;

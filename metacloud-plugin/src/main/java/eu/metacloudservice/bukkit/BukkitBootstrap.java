@@ -25,7 +25,6 @@ public class BukkitBootstrap extends JavaPlugin {
         CloudAPI.getInstance().setState(ServiceState.LOBBY, service.getService());
         Bukkit.getPluginManager().registerEvents(new ReloadBlocker(), this);
         Bukkit.getPluginManager().registerEvents(new ServiceConnectListener(), this);
-
         new TimerBase().schedule(new TimerTask() {
             @Override
             public void run() {

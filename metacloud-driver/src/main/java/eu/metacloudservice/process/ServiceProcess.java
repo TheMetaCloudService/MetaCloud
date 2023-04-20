@@ -368,11 +368,7 @@ public class ServiceProcess {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-
             }
-
-
                 processBuilder.command(command);
                 try {
                     process = processBuilder.start();
@@ -390,8 +386,34 @@ public class ServiceProcess {
             process.destroy();
             process.destroyForcibly().destroy();
         }
-
         Thread.sleep(200);
+
+        if (new File("./service.json").exists()){
+            ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+            if (config.isCopyLogs()){
+                if (new File("./local/logs/services/"+group+"/" + service + ".json").exists()){
+                    new File("./local/logs/services/" +group+"/"+ service + ".json").delete();
+                    new File("./local/logs/services/"+group+"/").mkdirs();
+                    FileUtils.copyFile(new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/logs/latest.log"), new File("./local/logs/services/"+group+"/" + service + ".json"));
+                }else {
+                    new File("./local/logs/services/"+group+"/").mkdirs();
+                    FileUtils.copyFile(new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/logs/latest.log"), new File("./local/logs/services/"+group+"/" + service + ".json"));
+                }
+            }
+        }else {
+            NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
+            if (config.isCopyLogs()){
+                if (new File("./local/logs/services/"+group+"/" + service + ".json").exists()){
+                    new File("./local/logs/services/" +group+"/"+ service + ".json").delete();
+                    new File("./local/logs/services/"+group+"/").mkdirs();
+                    FileUtils.copyFile(new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/logs/latest.log"), new File("./local/logs/services/"+group+"/" + service + ".json"));
+                }else {
+                    new File("./local/logs/services/"+group+"/").mkdirs();
+                    FileUtils.copyFile(new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/logs/latest.log"), new File("./local/logs/services/"+group+"/" + service + ".json"));
+
+                }
+            }
+        }
 
         try {
             if (!group.isRunStatic()){

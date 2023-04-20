@@ -198,22 +198,22 @@ public class GroupCommand extends CommandAdapter {
                 " >> §fgroup list §7~ zeigt Ihnen alle derzeit verfügbaren Gruppen an",
                 " >> §fgroup list §7~ shows you all groups that are currently available");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fgroup <group> delete §7~ eine bestehende Gruppe löschen",
-                " >> §fgroup <group> delete §7~ delete an existing group");
+                " >> §fgroup [group] delete §7~ eine bestehende Gruppe löschen",
+                " >> §fgroup [group] delete §7~ delete an existing group");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fgroup <group> info §7~ um die Wartung ein- und wieder auszuschalten",
-                " >> §fgroup <group> info §7~ to switch the maintenance on and off again");
+                " >> §fgroup [group] info §7~ um die Wartung ein- und wieder auszuschalten",
+                " >> §fgroup [group] info §7~ to switch the maintenance on and off again");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fgroup <group> setmaintenance <true/false> §7~ um die Wartung ein- und wieder auszuschalten",
-                " >> §fgroup <group> setmaintenance <true/false> §7~ to switch the maintenance on and off again");
+                " >> §fgroup [group] setmaintenance [true/false] §7~ um die Wartung ein- und wieder auszuschalten",
+                " >> §fgroup [group] setmaintenance [true/false] §7~ to switch the maintenance on and off again");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fgroup <group> setmaxplayers <count> §7~ um die maximalen Spielerzahlen ändern",
-                " >> §fgroup <group> setmaxplayers <count> §7~ to change the maximum number of players");
+                " >> §fgroup [group] setmaxplayers [count] §7~ um die maximalen Spielerzahlen ändern",
+                " >> §fgroup [group] setmaxplayers [count] §7~ to change the maximum number of players");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fgroup <group> setminamount <count> §7~ die Anzahl der Server festlegen, die immer online sein sollen",
-                " >> §fgroup <group> setminamount <count> §7~ set the number of servers that should always be online");
+                " >> §fgroup [group] setminamount [count> §7~ die Anzahl der Server festlegen, die immer online sein sollen",
+                " >> §fgroup [group] setminamount [count] §7~ set the number of servers that should always be online");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fgroup <group> settemplate <template> §7~ um die Wartung ein- und wieder auszuschalten",
-                " >> §fgroup <group> settemplate <template> §7~ to switch the maintenance on and off again");
+                " >> §fgroup [group] settemplate [template] §7~ um die Wartung ein- und wieder auszuschalten",
+                " >> §fgroup [group] settemplate [template] §7~ to switch the maintenance on and off again");
     }
 }

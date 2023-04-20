@@ -31,6 +31,7 @@ eu\metacloudservice\manager\commands\MetaCloudCommand.class
 eu\metacloudservice\manager\cloudservices\interfaces\ITaskedService.class
 eu\metacloudservice\manager\networking\service\HandlePacketOutAPIPlayerDispactchCommand.class
 eu\metacloudservice\CloudBoot.class
+eu\metacloudservice\manager\commands\QueueCommand.class
 eu\metacloudservice\node\networking\HandlePacketOutSendCommand.class
 eu\metacloudservice\node\networking\HandlePacketOutShutdownNode.class
 eu\metacloudservice\node\networking\HandlePacketOutSyncService.class

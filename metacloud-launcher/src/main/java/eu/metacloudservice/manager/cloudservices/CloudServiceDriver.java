@@ -3,6 +3,8 @@ package eu.metacloudservice.manager.cloudservices;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
+import eu.metacloudservice.events.listeners.services.CloudProxyLaunchEvent;
+import eu.metacloudservice.events.listeners.services.CloudServiceLaunchEvent;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.manager.CloudManager;
 import eu.metacloudservice.manager.cloudservices.entry.NetworkEntry;
@@ -10,14 +12,13 @@ import eu.metacloudservice.manager.cloudservices.entry.TaskedEntry;
 import eu.metacloudservice.manager.cloudservices.entry.TaskedService;
 import eu.metacloudservice.manager.cloudservices.interfaces.ICloudServiceDriver;
 import eu.metacloudservice.networking.NettyDriver;
-import eu.metacloudservice.networking.out.service.PacketOutServiceReaction;
+import eu.metacloudservice.networking.out.service.PacketOutServiceLaunch;
 import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.timebaser.TimerBase;
 import eu.metacloudservice.timebaser.utils.TimeUtil;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -134,6 +135,15 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                         if (getServices().stream().filter(taskedService -> taskedService.getEntry().getStatus() == ServiceState.STARTED).collect(Collectors.toList()).size() <= config.getServiceStartupCount()){
                             if (!CloudManager.queueDriver.getQueue_startup().isEmpty()){
                                 String service = CloudManager.queueDriver.getQueue_startup().removeFirst();
+                                if (
+                                        Driver.getInstance().getGroupDriver().load(CloudManager.serviceDriver.getService(service).getEntry().getGroupName()).getGroupType().equalsIgnoreCase("PROXY")){
+                                    Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudProxyLaunchEvent(service,     CloudManager.serviceDriver.getService(service).getEntry().getGroupName(),     CloudManager.serviceDriver.getService(service).getEntry().getNode()));
+
+                                }else {
+                                    Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudServiceLaunchEvent(service,     CloudManager.serviceDriver.getService(service).getEntry().getGroupName(),     CloudManager.serviceDriver.getService(service).getEntry().getNode()));
+
+                                }
+                                NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutServiceLaunch(service,             Driver.getInstance().getGroupDriver().load(CloudManager.serviceDriver.getService(service).getEntry().getGroupName()).getGroupType().equalsIgnoreCase("PROXY"),  CloudManager.serviceDriver.getService(service).getEntry().getGroupName(),  CloudManager.serviceDriver.getService(service).getEntry().getNode() ));
                                 CloudManager.serviceDriver.getService(service).handelStatusChange(ServiceState.STARTED);
                                 CloudManager.serviceDriver.getService(service).handelLaunch();
                             }

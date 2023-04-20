@@ -105,12 +105,17 @@ public class CloudManager {
 
 
         if (!new File("./local/messages.json").exists()){
-            new ConfigDriver("./local/messages.json").save(new Messages("§8► §bMetaCloud §8▌ §7", "%PREFIX%Successfully connected to §a%SERVICE%",
-                    "%PREFIX%§cthe service is unfortunately full", "%PREFIX%§cYou are already on a Fallback", "%PREFIX%§cthe group is in maintenance",
-                    "%PREFIX%§cCould not find a suitable fallback to connect you to!", "§8► §cthe network is full buy the premium to be able to despite that on it",
-                    "§8► §cthe network is currently undergoing maintenance",
-                    "§8► §cThe server you were on went down, but no fallback server was found!",
-                    "§8► §cpleas connect over the main proxy"));
+            new ConfigDriver("./local/messages.json").save(new Messages("§8▷ §bMetaCloud §8▌ §7",
+                    "%PREFIX%Successfully connected to §a%SERVICE%",
+                    "%PREFIX%§cthe service is unfortunately full",
+                    "%PREFIX%§cYou are already on a Fallback",
+                    "%PREFIX%§cthe group is in maintenance",
+                    "%PREFIX%§cCould not find a suitable fallback to connect you to!",
+                    "§8▷ §cthe network is full buy the premium to be able to despite that on it",
+                    "§8▷ §cthe network is currently undergoing maintenance",
+                    "§8▷ §cThe server you were on went down, but no fallback server was found!",
+                    "§8▷ §cpleas connect over the main proxy",
+                    "§8▷ §cYou are already on the Network"));
         }
 
 
@@ -178,6 +183,7 @@ public class CloudManager {
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new ReloadCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new ModuleCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new MetaCloudCommand());
+        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new QueueCommand());
 
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Es wurden '§f"+Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().size()+" Befehle§r' gefunden und geladen",
                 "There were '§f"+Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().size()+" commands§r' found and loaded");
@@ -196,7 +202,8 @@ public class CloudManager {
                 Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNetworkIsFull()),
                 Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNetworkIsMaintenance()),
                 Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNoFallback()),
-                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickOnlyProxyJoin()));
+                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickOnlyProxyJoin()),
+                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickAlreadyOnNetwork()));
 
         Driver.getInstance().getWebServer().addRoute(new RouteEntry("/message/default", new ConfigDriver().convert(msg)));
         GroupList groupList = new GroupList();

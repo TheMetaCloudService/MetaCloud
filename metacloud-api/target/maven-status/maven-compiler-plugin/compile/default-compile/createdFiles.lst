@@ -1,6 +1,7 @@
 eu\metacloudservice\bootstrap\bungee\networking\HandlePacketOutAPIPlayerKick.class
 eu\metacloudservice\CloudAPI.class
 eu\metacloudservice\pool\player\entrys\CloudPlayer.class
+eu\metacloudservice\networking\HandlePacketOutServiceLaunch.class
 eu\metacloudservice\pool\player\PlayerPool.class
 eu\metacloudservice\bootstrap\velocity\VelocityBootstrap.class
 eu\metacloudservice\networking\HandlePacketOutServicePrepared.class
@@ -17,7 +18,6 @@ eu\metacloudservice\bootstrap\velocity\networking\HandlePacketOutAPIPlayerKick.c
 eu\metacloudservice\bootstrap\velocity\networking\HandlePacketOutAPIPlayerTab.class
 eu\metacloudservice\bootstrap\bungee\networking\HandlePacketOutAPIPlayerMessage.class
 eu\metacloudservice\bootstrap\bungee\networking\HandlePacketOutAPIPlayerActionBar.class
-eu\metacloudservice\networking\HandlePacketOutServiceReaction.class
 eu\metacloudservice\networking\HandlePacketOutPlayerConnect.class
 eu\metacloudservice\networking\HandlePacketOutServiceConnected.class
 eu\metacloudservice\bootstrap\velocity\networking\HandlePacketOutAPIPlayerDispactchCommand.class
@@ -27,11 +27,13 @@ eu\metacloudservice\bootstrap\velocity\networking\HandlePacketOutAPIPlayerConnec
 eu\metacloudservice\async\AsyncCloudAPI.class
 eu\metacloudservice\bootstrap\velocity\listener\CloudEvents.class
 eu\metacloudservice\bootstrap\bungee\utils\ServerConfig.class
+eu\metacloudservice\networking\HandlePacketOutGroupDelete.class
 eu\metacloudservice\async\pool\player\PlayerPool.class
 eu\metacloudservice\async\pool\player\entrys\CloudPlayer.class
 eu\metacloudservice\bootstrap\bungee\networking\HandlePacketOutAPIPlayerTab.class
 eu\metacloudservice\bootstrap\bungee\networking\HandlePacketOutAPIPlayerConnect.class
 eu\metacloudservice\bootstrap\velocity\networking\HandlePacketOutAPIPlayerMessage.class
+eu\metacloudservice\networking\HandlePacketOutGroupCreate.class
 eu\metacloudservice\pool\service\entrys\CloudService.class
 eu\metacloudservice\pool\service\ServicePool.class
 eu\metacloudservice\bootstrap\bukkit\BukkitBootstrap.class

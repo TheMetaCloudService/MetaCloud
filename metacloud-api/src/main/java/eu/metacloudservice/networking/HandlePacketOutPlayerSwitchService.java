@@ -1,8 +1,7 @@
 package eu.metacloudservice.networking;
 
 import eu.metacloudservice.CloudAPI;
-import eu.metacloudservice.Driver;
-import eu.metacloudservice.events.listeners.CloudPlayerSwitchEvent;
+import eu.metacloudservice.events.listeners.player.CloudPlayerSwitchEvent;
 import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerSwitchService;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;

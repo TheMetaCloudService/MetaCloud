@@ -7,9 +7,28 @@ public class Configuration implements IConfigAdapter {
     private String servicePrepared;
     private String serviceConnected;
     private String serviceDiconnected;
+    private String serviceLaunch;
     private String proxiedServicePrepared;
     private String proxiedServiceConnected;
     private String proxiedServiceDiconnected;
+    private String proxiedServiceLaunch;
+
+
+    public String getServiceLaunch() {
+        return serviceLaunch;
+    }
+
+    public void setServiceLaunch(String serviceLaunch) {
+        this.serviceLaunch = serviceLaunch;
+    }
+
+    public String getProxiedServiceLaunch() {
+        return proxiedServiceLaunch;
+    }
+
+    public void setProxiedServiceLaunch(String proxiedServiceLaunch) {
+        this.proxiedServiceLaunch = proxiedServiceLaunch;
+    }
 
     public String getServicePrepared() {
         return servicePrepared;

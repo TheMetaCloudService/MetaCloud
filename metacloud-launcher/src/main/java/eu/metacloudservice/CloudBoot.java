@@ -23,6 +23,13 @@ public class CloudBoot {
     public static void main(String[] args) {
 
 
+        String version = System.getProperty("java.version");
+        int majorVersion = Integer.parseInt(version.split("\\.")[0]);
+        if (majorVersion < 17) {
+            System.out.println("Pleas user Java 17 or higher");
+            System.exit(0);
+            return;
+        }
         if (new File("./OLD.jar").exists()){
             new File("./OLD.jar").delete();
         }

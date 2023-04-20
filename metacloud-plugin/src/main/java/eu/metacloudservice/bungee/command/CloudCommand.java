@@ -251,8 +251,8 @@ public class CloudCommand extends Command implements TabExecutor {
                     }
                 }
             }else {
-                player.sendMessage("§7The network uses §bMetacloud§8 [§a"+Driver.getInstance().getMessageStorage().version+"§8]");
-                player.sendMessage("§fhttps://metacloudservice.eu/");
+                player.sendMessage("§8▷ §7The network uses §bMetacloud§8 [§a"+Driver.getInstance().getMessageStorage().version+"§8]");
+                player.sendMessage("§8▷ §fhttps://metacloudservice.eu/");
             }
         }
     }

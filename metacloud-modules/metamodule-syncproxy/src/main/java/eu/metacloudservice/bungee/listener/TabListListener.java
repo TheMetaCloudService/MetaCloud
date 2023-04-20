@@ -16,15 +16,15 @@ import net.md_5.bungee.event.EventHandler;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.SimpleTimeZone;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TabListListener implements Listener {
-
-
-
-
+    
     public TabListListener() {
         ProxyServer
                 .getInstance()
@@ -69,8 +69,7 @@ public class TabListListener implements Listener {
 
                     player.setTabHeader(TextComponent.fromLegacyText(config[0]), TextComponent.fromLegacyText(config[1]));
 
-                } catch (Exception ignored) {
-                }
+                } catch (Exception ignored) {}
             }
 
 }
@@ -95,14 +94,27 @@ public class TabListListener implements Listener {
         String proxyGroupName = bungeeBootstrap.getLiveService().getGroup();
         String version =  Driver.getInstance().getMessageStorage().version;
         int onlinePlayers = cloudAPI.getPlayerPool().getPlayers().size();
+        double memory = CloudAPI.getInstance().getUsedMemory();
+        double maxMemory = CloudAPI.getInstance().getUsedMemory();
         int maxPlayers = bungeeBootstrap.group.getMaxPlayers();
+        String serviceID = CloudAPI.getInstance().getServicePool().getService(serviceName).getID();
+        String proxyID = CloudAPI.getInstance().getServicePool().getService(proxyName).getID();
         int playerPing = player.getPing();
         String time = dtf.format(LocalDateTime.now());
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+        cal.setTimeInMillis(CloudAPI.getInstance().getPlayerPool().getPlayer(playerName).getCurrentPlayTime());
+        String playtime =  (cal.get(Calendar.HOUR_OF_DAY) + ":"
+                + cal.get(Calendar.MINUTE));
 
 
         String footer = rawFooter.replace("&", "§")
                 .replace("%service_name%", serviceName)
                 .replace("%time%", time)
+                .replace("%service_id%", serviceID)
+                .replace("%proxy_id%", proxyID)
+                .replace("%memory%", ""+memory)
+                .replace("%max_memory%", ""+maxMemory)
                 .replace("%proxy_node%", proxyNode)
                 .replace("%cloud_version%",version)
                 .replace("%service_node%", serviceNode)
@@ -112,13 +124,18 @@ public class TabListListener implements Listener {
                 .replace("%max_players%", "" + maxPlayers)
                 .replace("%player_ping%", "" + playerPing)
                 .replace("%player_name%", playerName)
+                .replace("%player_playtime%", playtime)
                 .replace("%player_uuid%", playerUuid)
                 .replace("%proxy_group_name%", proxyGroupName);
 
         String header = rawHeader.replace("&", "§")
                 .replace("%service_name%", serviceName)
                 .replace("%time%", time)
+                .replace("%memory%", ""+memory)
+                .replace("%max_memory%", ""+maxMemory)
                 .replace("%proxy_node%", proxyNode)
+                .replace("%service_id%", serviceID)
+                .replace("%proxy_id%", proxyID)
                 .replace("%cloud_version%",version)
                 .replace("%service_node%", serviceNode)
                 .replace("%service_group_name%", serviceGroupName)
@@ -126,6 +143,7 @@ public class TabListListener implements Listener {
                 .replace("%online_players%", "" + onlinePlayers)
                 .replace("%max_players%", "" + maxPlayers)
                 .replace("%player_ping%", "" + playerPing)
+                .replace("%player_playtime%", playtime)
                 .replace("%player_name%", playerName)
                 .replace("%player_uuid%", playerUuid)
                 .replace("%proxy_group_name%", proxyGroupName);

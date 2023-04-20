@@ -1,6 +1,7 @@
 package eu.metacloudservice.config.groups.entry;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GroupEntry {
 
@@ -10,8 +11,8 @@ public class GroupEntry {
 
     private int tagPower;
     private boolean defaultGroup;
-    private ArrayList<String> permissions;
-    private ArrayList<String> include;
+    private HashMap<String, Boolean> permissions;
+    private HashMap<String, String> include;
 
     public String getName() {
         return name;
@@ -53,19 +54,19 @@ public class GroupEntry {
         this.defaultGroup = defaultGroup;
     }
 
-    public ArrayList<String> getPermissions() {
+    public HashMap<String, Boolean> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(ArrayList<String> permissions) {
+    public void setPermissions(HashMap<String, Boolean> permissions) {
         this.permissions = permissions;
     }
 
-    public ArrayList<String> getInclude() {
+    public HashMap<String, String> getInclude() {
         return include;
     }
 
-    public void setInclude(ArrayList<String> include) {
+    public void setInclude(HashMap<String, String> include) {
         this.include = include;
     }
 }

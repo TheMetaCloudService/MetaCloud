@@ -15,9 +15,10 @@ public class Messages implements IConfigAdapter {
     private String kickNetworkIsMaintenance;
     private String kickNoFallback;
     private String kickOnlyProxyJoin;
+    private String kickAlreadyOnNetwork;
 
 
-    public Messages(String prefix, String successfullyConnected, String serviceIsFull, String alreadyOnFallback, String connectingGroupMaintenance, String noFallbackServer, String kickNetworkIsFull, String kickNetworkIsMaintenance, String kickNoFallback, String kickOnlyProxyJoin) {
+    public Messages(String prefix, String successfullyConnected, String serviceIsFull, String alreadyOnFallback, String connectingGroupMaintenance, String noFallbackServer, String kickNetworkIsFull, String kickNetworkIsMaintenance, String kickNoFallback, String kickOnlyProxyJoin, String kickAlreadyOnNetwork) {
         this.prefix = prefix;
         this.successfullyConnected = successfullyConnected;
         this.serviceIsFull = serviceIsFull;
@@ -28,9 +29,14 @@ public class Messages implements IConfigAdapter {
         this.kickNetworkIsMaintenance = kickNetworkIsMaintenance;
         this.kickNoFallback = kickNoFallback;
         this.kickOnlyProxyJoin = kickOnlyProxyJoin;
+        this.kickAlreadyOnNetwork = kickAlreadyOnNetwork;
     }
 
     public Messages() {
+    }
+
+    public String getKickAlreadyOnNetwork() {
+        return kickAlreadyOnNetwork;
     }
 
     public String getPrefix() {

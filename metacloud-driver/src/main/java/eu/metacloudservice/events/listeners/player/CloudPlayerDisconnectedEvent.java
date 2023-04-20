@@ -1,4 +1,4 @@
-package eu.metacloudservice.events.listeners;
+package eu.metacloudservice.events.listeners.player;
 
 import eu.metacloudservice.events.entrys.IEventAdapter;
 

@@ -12,17 +12,14 @@ import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.networking.*;
 import eu.metacloudservice.networking.client.NettyClient;
 import eu.metacloudservice.networking.in.service.PacketInServiceConnect;
-import eu.metacloudservice.networking.in.service.PacketInServiceDisconnect;
 import eu.metacloudservice.networking.in.service.cloudapi.*;
-import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerConnect;
-import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerDisconnect;
-import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerSwitchService;
-import eu.metacloudservice.networking.in.service.playerbased.apibased.*;
 import eu.metacloudservice.networking.in.service.playerbased.apibased.PacketOutAPIPlayerDispactchCommand;
 import eu.metacloudservice.networking.out.service.PacketOutServiceConnected;
 import eu.metacloudservice.networking.out.service.PacketOutServiceDisconnected;
+import eu.metacloudservice.networking.out.service.PacketOutServiceLaunch;
 import eu.metacloudservice.networking.out.service.PacketOutServicePrepared;
-import eu.metacloudservice.networking.out.service.PacketOutServiceReaction;
+import eu.metacloudservice.networking.out.service.group.PacketOutGroupCreate;
+import eu.metacloudservice.networking.out.service.group.PacketOutGroupDelete;
 import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerConnect;
 import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerDisconnect;
 import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerSwitchService;
@@ -39,7 +36,6 @@ import lombok.NonNull;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class CloudAPI {
 
@@ -73,7 +69,9 @@ public class CloudAPI {
                 .registerHandler(new PacketOutPlayerConnect().getPacketUUID(), new HandlePacketOutPlayerConnect(), PacketOutPlayerConnect.class)
                 .registerHandler(new PacketOutPlayerDisconnect().getPacketUUID(), new HandlePacketOutPlayerDisconnect(), PacketOutPlayerDisconnect.class)
                 .registerHandler(new PacketOutPlayerSwitchService().getPacketUUID(), new HandlePacketOutPlayerSwitchService(), PacketOutPlayerSwitchService.class)
-                .registerHandler(new PacketOutServiceReaction().getPacketUUID(), new HandlePacketOutServiceReaction(), PacketOutServiceReaction.class);
+                .registerHandler(new PacketOutServiceLaunch().getPacketUUID(), new HandlePacketOutServiceLaunch(), PacketOutServiceLaunch.class)
+                .registerHandler(new PacketOutGroupCreate().getPacketUUID(), new HandlePacketOutGroupCreate(), PacketOutGroupCreate.class)
+                .registerHandler(new PacketOutGroupDelete().getPacketUUID(), new HandlePacketOutGroupDelete(), PacketOutGroupDelete.class);
 
 
         this.eventDriver = new EventDriver();
@@ -195,8 +193,7 @@ public class CloudAPI {
     public void setState(ServiceState state){
         setState(state, getCurrentService().getService());
     }
-
-
+    
     public double getUsedMemory(){
         return  ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1048576;
 

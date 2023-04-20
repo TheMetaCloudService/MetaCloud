@@ -6,7 +6,7 @@ import eu.metacloudservice.config.Configuration;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.events.entrys.ICloudListener;
 import eu.metacloudservice.events.entrys.Subscribe;
-import eu.metacloudservice.events.listeners.*;
+import eu.metacloudservice.events.listeners.services.*;
 import net.md_5.bungee.api.ProxyServer;
 
 public class CloudListener implements ICloudListener {
@@ -81,6 +81,30 @@ public class CloudListener implements ICloudListener {
         ProxyServer.getInstance().getPlayers().forEach(player -> {
             if (player.hasPermission("metacloud.notify")){
                 player.sendMessage(Driver.getInstance().getMessageStorage().base64ToUTF8(configuration.getServicePrepared()).replace("&", "§")
+                        .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode()));
+            }
+
+        });
+    }
+    @Subscribe
+    public void handle(CloudProxyLaunchEvent event){
+        Configuration configuration = (Configuration) new ConfigDriver().convert(BungeeBootstrap.getInstance().getRestDriver().get("/module/notify/configuration"), Configuration.class);
+
+        ProxyServer.getInstance().getPlayers().forEach(player -> {
+            if (player.hasPermission("metacloud.notify")){
+                player.sendMessage(Driver.getInstance().getMessageStorage().base64ToUTF8(configuration.getProxiedServiceLaunch()).replace("&", "§")
+                        .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode()));
+            }
+
+        });
+    }
+    @Subscribe
+    public void handle(CloudServiceLaunchEvent event){
+        Configuration configuration = (Configuration) new ConfigDriver().convert(BungeeBootstrap.getInstance().getRestDriver().get("/module/notify/configuration"), Configuration.class);
+
+        ProxyServer.getInstance().getPlayers().forEach(player -> {
+            if (player.hasPermission("metacloud.notify")){
+                player.sendMessage(Driver.getInstance().getMessageStorage().base64ToUTF8(configuration.getServiceLaunch()).replace("&", "§")
                         .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode()));
             }
 

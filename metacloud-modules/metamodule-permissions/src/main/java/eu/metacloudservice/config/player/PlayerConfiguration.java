@@ -4,13 +4,14 @@ import eu.metacloudservice.config.player.entry.GivenGroup;
 import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class PlayerConfiguration implements IConfigAdapter {
 
     private String UUID;
 
     private ArrayList<GivenGroup> groups;
-    private ArrayList<String> permissions;
+    private HashMap<String, Boolean> permissions;
 
 
     public String getUUID() {
@@ -29,11 +30,11 @@ public class PlayerConfiguration implements IConfigAdapter {
         this.groups = groups;
     }
 
-    public ArrayList<String> getPermissions() {
+    public HashMap<String, Boolean> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(ArrayList<String> permissions) {
+    public void setPermissions(HashMap<String, Boolean> permissions) {
         this.permissions = permissions;
     }
 }

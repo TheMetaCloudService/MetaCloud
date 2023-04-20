@@ -13,6 +13,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class WebServer implements IWebServer {
 
@@ -35,24 +36,12 @@ public class WebServer implements IWebServer {
 
     public String getRoute(String path){
 
-            for (RouteEntry entry : ROUTES){
-                if (entry.readROUTE().equalsIgnoreCase(path)){
-                    return entry.channelRead();
-                }
-            }
-
-        return null;
+        return  Objects.requireNonNull(ROUTES.parallelStream().filter(routeEntry -> routeEntry.readROUTE().equalsIgnoreCase(path)).findFirst().orElse(null)).channelRead();
     }
 
     public RouteEntry getRoutes(String path){
 
-        for (RouteEntry entry : ROUTES){
-            if (entry.readROUTE().equalsIgnoreCase(path)){
-                return entry;
-            }
-        }
-
-        return null;
+        return  ROUTES.parallelStream().filter(routeEntry -> routeEntry.readROUTE().equalsIgnoreCase(path)).findFirst().orElse(null);
     }
     public void addRoute(RouteEntry entry){
         ROUTES.add(entry);
@@ -104,11 +93,11 @@ public class WebServer implements IWebServer {
                         String rawroute = tokens[1];
                         if (rawroute.contains("/")){
                             String key = rawroute.split("/")[1];
-                            if (key.contains(AUTH_KEY) || key.contains("debug")){
+                            if (key.contains(AUTH_KEY)){
                                 String query = rawroute.replace("/" + key, "");
                                 if (method.equals("GET")){
                                     writeAndFlush(finalConnection, "200 OK", getRoutes(query).channelRead());
-                                }else if (method.equals("PUT")){
+                                }else if (method.equals("PUT") && key.contains(AUTH_KEY)){
                                     handlePut(query, finalConnection, reader);
                                 }else {
                                     writeAndFlush(finalConnection, "error 404", "{\"reason\":\"please enter GET ore PUT\"}");

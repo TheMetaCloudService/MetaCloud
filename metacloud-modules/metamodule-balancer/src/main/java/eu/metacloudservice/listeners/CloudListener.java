@@ -5,8 +5,8 @@ import eu.metacloudservice.MetaModule;
 import eu.metacloudservice.balance.subgates.SubGate;
 import eu.metacloudservice.events.entrys.ICloudListener;
 import eu.metacloudservice.events.entrys.Subscribe;
-import eu.metacloudservice.events.listeners.CloudProxyConnectedEvent;
-import eu.metacloudservice.events.listeners.CloudProxyDisconnectedEvent;
+import eu.metacloudservice.events.listeners.services.CloudProxyConnectedEvent;
+import eu.metacloudservice.events.listeners.services.CloudProxyDisconnectedEvent;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.utils.ProxyData;
 

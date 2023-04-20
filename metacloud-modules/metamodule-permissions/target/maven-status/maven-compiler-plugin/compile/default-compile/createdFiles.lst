@@ -1,6 +1,10 @@
 eu\metacloudservice\config\groups\GroupConfiguration.class
+eu\metacloudservice\moduleside\drivers\IPermissionDriver.class
+eu\metacloudservice\moduleside\commands\PermissionsCommand.class
+eu\metacloudservice\moduleside\drivers\PermissionDriver.class
 eu\metacloudservice\config\groups\entry\GroupEntry.class
 eu\metacloudservice\config\player\PlayerConfiguration.class
+eu\metacloudservice\moduleside\handlers\CloudPlayerHandler.class
 eu\metacloudservice\moduleside\MetaModule.class
 eu\metacloudservice\config\player\entry\GivenGroup.class
-eu\metacloudservice\moduleside\listeners\CloudListener.class
+eu\metacloudservice\config\General.class

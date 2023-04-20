@@ -5,8 +5,8 @@ import eu.metacloudservice.bootstrap.velocity.VelocityBootstrap;
 import eu.metacloudservice.events.entrys.ICloudListener;
 import eu.metacloudservice.events.entrys.Priority;
 import eu.metacloudservice.events.entrys.Subscribe;
-import eu.metacloudservice.events.listeners.CloudServiceConnectedEvent;
-import eu.metacloudservice.events.listeners.CloudServiceDisconnectedEvent;
+import eu.metacloudservice.events.listeners.services.CloudServiceConnectedEvent;
+import eu.metacloudservice.events.listeners.services.CloudServiceDisconnectedEvent;
 
 import java.net.InetSocketAddress;
 

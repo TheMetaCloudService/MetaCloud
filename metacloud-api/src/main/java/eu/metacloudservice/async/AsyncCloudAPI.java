@@ -6,12 +6,14 @@ import eu.metacloudservice.async.pool.service.ServicePool;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
+import eu.metacloudservice.events.EventDriver;
 import eu.metacloudservice.events.entrys.ICloudListener;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.in.service.cloudapi.*;
 import eu.metacloudservice.networking.packet.Packet;
 import eu.metacloudservice.process.ServiceState;
+import eu.metacloudservice.webserver.RestDriver;
 import eu.metacloudservice.webserver.dummys.GroupList;
 import eu.metacloudservice.webserver.dummys.WhiteList;
 import lombok.NonNull;
@@ -94,6 +96,11 @@ public class AsyncCloudAPI {
         return (Messages) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/message/default"), Messages.class);
     }
 
+    public EventDriver getEventDriver() {
+        return CloudAPI.getInstance().getEventDriver();
+    }
+
+
     public boolean addWhiteList(String username){
         if (getWhitelist().stream().noneMatch(s -> s.equals(username))){
             dispatchCommand("service whitelist add " + username);
@@ -129,6 +136,12 @@ public class AsyncCloudAPI {
 
     public void setState(ServiceState state){
         setState(state, getCurrentService().getService());
+    }
+
+
+
+    public RestDriver getRestDriver() {
+        return CloudAPI.getInstance().getRestDriver();
     }
     public PlayerPool getPlayerPool() {
         return playerPool;

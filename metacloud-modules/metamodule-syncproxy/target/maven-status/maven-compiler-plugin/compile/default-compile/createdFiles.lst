@@ -1,3 +1,4 @@
+eu\metacloudservice\moduleside\commands\SyncProxyCommand.class
 eu\metacloudservice\velocity\VeloCityBootstrap.class
 eu\metacloudservice\config\Configuration.class
 eu\metacloudservice\moduleside\MetaModule.class

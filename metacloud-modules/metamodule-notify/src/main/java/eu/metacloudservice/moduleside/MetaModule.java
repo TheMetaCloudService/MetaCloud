@@ -34,12 +34,16 @@ public class MetaModule implements IModule {
             new File("./modules/notify/").mkdirs();
             try {
                 Configuration configuration = new Configuration();
-                configuration.setProxiedServiceConnected("§8[§a▷§8] §7service: §a%service_name% §7was §aconnected §8| §b%node_name%");
-                configuration.setProxiedServiceDiconnected("§8[§c◁§8] §7service: §c%service_name% §7was §cdisconnected");
-                configuration.setProxiedServicePrepared("§8[§e▷§8] §7service: §e%service_name% §7was §ePrepared §8| §b%node_name%");
+                configuration.setProxiedServiceConnected("§8[§a▷§8] §7proxy: §a%service_name% §7was §aconnected §8| §b%node_name%");
+                configuration.setProxiedServicePrepared("§8[§b▷§8] §7proxy: §e%service_name% §7was §bPrepared §8| §b%node_name%");
+                configuration.setProxiedServiceLaunch("§8[§b▷§8] §7proxy: §e%service_name% §7was §eLaunched §8| §b%node_name%");
+                configuration.setProxiedServiceDiconnected("§8[§c◁§8] §7proxy: §c%service_name% §7was §cdisconnected");
+
                 configuration.setServiceConnected("§8[§a▷§8] §7service: §a%service_name% §7was §aconnected §8| §b%node_name%");
+                configuration.setServicePrepared("§8[§b▷§8] §7service: §e%service_name% §7was §bPrepared §8| §b%node_name%");
+                configuration.setServiceLaunch("§8[§e▷§8] §7service: §e%service_name% §7was §eLaunched §8| §b%node_name%");
                 configuration.setServiceDiconnected("§8[§c◁§8] §7service: §c%service_name% §7was §cdisconnected");
-                configuration.setServicePrepared("§8[§e▷§8] §7service: §e%service_name% §7was §ePrepared §8| §b%node_name%");
+
                 new ConfigDriver("./modules/notify/config.json").save(configuration);
 
             }catch (Exception e){
@@ -64,9 +68,10 @@ public class MetaModule implements IModule {
             rest.setServiceConnected(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getServiceConnected()));
             rest.setServiceDiconnected(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getServiceDiconnected()));
             rest.setServicePrepared(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getServicePrepared()));
+            rest.setServiceLaunch(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getServiceLaunch()));
+            rest.setProxiedServiceLaunch(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getProxiedServiceLaunch()));
             Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/notify/configuration", new ConfigDriver().convert(rest)));
         }catch (Exception e){
-            new File("./modules/notify/config.json").deleteOnExit();
             create();
             set();
         }
@@ -82,9 +87,10 @@ public class MetaModule implements IModule {
             rest.setServiceConnected(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getServiceConnected()));
             rest.setServiceDiconnected(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getServiceDiconnected()));
             rest.setServicePrepared(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getServicePrepared()));
+            rest.setServiceLaunch(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getServiceLaunch()));
+            rest.setProxiedServiceLaunch(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getProxiedServiceLaunch()));
             Driver.getInstance().getWebServer().updateRoute("/module/notify/configuration", new ConfigDriver().convert(rest));
         }catch (Exception e){
-            new File("./modules/notify/config.json").deleteOnExit();
             create();
             update();
         }

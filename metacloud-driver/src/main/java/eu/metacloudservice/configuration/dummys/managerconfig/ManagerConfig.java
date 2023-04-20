@@ -11,9 +11,7 @@ public class ManagerConfig implements IConfigAdapter {
     private String splitter;
     private String uuid;
     private boolean useProtocol;
-
     private Integer processorUsage;
-
     private Integer serviceStartupCount;
     private boolean useViaVersion;
     private boolean showConnectingPlayers;
@@ -24,12 +22,21 @@ public class ManagerConfig implements IConfigAdapter {
     private String spigotVersion;
     private Integer networkingCommunication;
     private Integer restApiCommunication;
+    private boolean copyLogs;
 
 
     private ArrayList<String> whitelist;
     private ArrayList<ManagerConfigNodes> nodes;
 
     public ManagerConfig(){
+    }
+
+    public boolean isCopyLogs() {
+        return copyLogs;
+    }
+
+    public void setCopyLogs(boolean copyLogs) {
+        this.copyLogs = copyLogs;
     }
 
     public Integer getServiceStartupCount() {

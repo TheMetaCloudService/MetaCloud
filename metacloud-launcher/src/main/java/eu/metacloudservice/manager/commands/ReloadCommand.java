@@ -33,7 +33,8 @@ public class ReloadCommand extends CommandAdapter {
                 Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNetworkIsFull()),
                 Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNetworkIsMaintenance()),
                 Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNoFallback()),
-                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickOnlyProxyJoin()));
+                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickOnlyProxyJoin()),
+                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickAlreadyOnNetwork()));
 
 
         WhiteList whitelistConfig = new WhiteList();

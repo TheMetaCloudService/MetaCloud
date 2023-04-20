@@ -252,8 +252,8 @@ public class CloudCommand implements SimpleCommand {
                     }
                 }
             }else {
-                player.sendMessage(Component.text("§7The network uses §bMetacloud§8 [§a"+Driver.getInstance().getMessageStorage().version+"§8]"));
-                player.sendMessage(Component.text("§fhttps://metacloudservice.eu/"));
+                player.sendMessage(Component.text("§8▷ §7The network uses §bMetacloud§8 [§a"+Driver.getInstance().getMessageStorage().version+"§8]"));
+                player.sendMessage(Component.text("§8▷ §fhttps://metacloudservice.eu/"));
             }
         }
     }

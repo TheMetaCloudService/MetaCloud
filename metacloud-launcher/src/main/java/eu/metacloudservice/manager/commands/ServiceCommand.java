@@ -28,7 +28,6 @@ public class ServiceCommand extends CommandAdapter {
             sendHelp();
         }else if (args.length==1){
             if (args[0].equalsIgnoreCase("list")){
-
                 if ( CloudManager.serviceDriver.getServices().isEmpty()){
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND, "Es wurden keine Services gefunden", "no services were found");
                     return;
@@ -53,7 +52,6 @@ public class ServiceCommand extends CommandAdapter {
                             "Die Gruppe '§f"+group+"§r' wurde nicht gefunden",
                             "the group '§f"+group+"§r' was not found");
                 }
-
             }else  if (args[0].equalsIgnoreCase("stop")){
                 String service = args[1];
                 if (CloudManager.serviceDriver.getService(service) != null){
@@ -114,7 +112,6 @@ public class ServiceCommand extends CommandAdapter {
                 sendHelp();
             }
         }else {
-
             if (args[0].equalsIgnoreCase("run")) {
                 String group = args[1];
                 if (Driver.getInstance().getGroupDriver().find(group)) {
@@ -122,11 +119,8 @@ public class ServiceCommand extends CommandAdapter {
                         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                                 "Der Befehl war erfolgreich",
                                 "the command was successful");
-
                         Group gdata = Driver.getInstance().getGroupDriver().load(group);
                         ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
-
-
                         if (gdata.getMaximalOnline() != -1){
                             if (gdata.getMaximalOnline() < (CloudManager.serviceDriver.getServices(group).size() + Integer.parseInt(args[2]))){
                                 Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
@@ -135,7 +129,6 @@ public class ServiceCommand extends CommandAdapter {
                                 return;
                             }
                         }
-
                         for (int i = 0; i != Integer.parseInt(args[2]); i++) {
                             String id = "";
                             if (config.getUuid().equals("INT")){
@@ -150,7 +143,6 @@ public class ServiceCommand extends CommandAdapter {
                                     gdata.getStorage().getRunningNode(), config.getUseProtocol()));
                             Driver.getInstance().getMessageStorage().canUseMemory = Driver.getInstance().getMessageStorage().canUseMemory - gdata.getUsedMemory();
                         }
-
                     } else {
                         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                                 "Du kannst nur eine zahl angeben",
@@ -161,14 +153,12 @@ public class ServiceCommand extends CommandAdapter {
                             "Die Gruppe '§f" + group + "§r' wurde nicht gefunden",
                             "the group '§f" + group + "§r' was not found");
                 }
-
             } else if (args[0].equalsIgnoreCase("execute")) {
                 StringBuilder msg = new StringBuilder();
                 String service = args[1];
                 for (int i = 2; i < args.length; i++) {
                     msg.append(args[i]).append(" ");
                 }
-
                 if (CloudManager.serviceDriver.getService(service) != null && NettyDriver.getInstance().nettyServer.isChannelFound(service)) {
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                             "der Befehl wurde an den Service '§f"+service+"§r' gesendet",
@@ -180,7 +170,6 @@ public class ServiceCommand extends CommandAdapter {
                             "the service '§f" + service + "§r' was not found");
                 }
             } else if (args[0].equalsIgnoreCase("whitelist")) {
-
                 String  option = args[1];
                 String user = args[2];
                 if (option.equalsIgnoreCase("add")){
@@ -192,6 +181,9 @@ public class ServiceCommand extends CommandAdapter {
                         whitelistConfig.setWhitelist(config.getWhitelist());
                         Driver.getInstance().getWebServer().updateRoute("/general/whitelist", new ConfigDriver().convert(whitelistConfig));
 
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "Der Spieler '§f" + user + "§r' wurde in die Whitelist aufgenommenn",
+                                "the player '§f" + user + "§r' was added to the whitelistd");
                     }else {
                         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                                 "Der Spieler '§f" + user + "§r' wurde bereits gefunden",
@@ -205,7 +197,9 @@ public class ServiceCommand extends CommandAdapter {
                         WhiteList whitelistConfig = new WhiteList();
                          whitelistConfig.setWhitelist(config.getWhitelist());
                         Driver.getInstance().getWebServer().updateRoute("/general/whitelist", new ConfigDriver().convert(whitelistConfig));
-
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "Der Spieler '§f" + user + "§r' wurde von der Whitelist entfernt",
+                                "the player '§f" + user + "§r' was removed from the whitelist");
                     }else {
                         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                                 "Der Spieler '§f" + user + "§r' wurde nicht gefunden",
@@ -214,7 +208,6 @@ public class ServiceCommand extends CommandAdapter {
                 }else {
                     sendHelp();
                 }
-
             }else {
                 sendHelp();
             }
@@ -252,29 +245,29 @@ public class ServiceCommand extends CommandAdapter {
                 " >> §fservice list §7~ zeigt dir alle laufenden Service",
                 " >> §fservice list §7~ shows you all running service");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fservice run <group> <count> §7~ um ein Service zu starten",
-                " >> §fservice run <group> <count> §7~ to start a service");
+                " >> §fservice run [group] [count] §7~ um ein Service zu starten",
+                " >> §fservice run [group] [count] §7~ to start a service");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fservice stopgroup <group> §7~ um eine ganze Gruppe stoppen",
-                " >> §fservice stopgroup <group> §7~ to stop an entire group");
+                " >> §fservice stopgroup [group] §7~ um eine ganze Gruppe stoppen",
+                " >> §fservice stopgroup [group] §7~ to stop an entire group");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fservice joinscreen <service> §7~ um einen Screen von einen Service zu joinen",
-                " >> §fservice joinscreen <service> §7~ to join a screen from a service");
+                " >> §fservice joinscreen [service] §7~ um einen Screen von einen Service zu joinen",
+                " >> §fservice joinscreen [service] §7~ to join a screen from a service");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fservice stop <service> §7~ um ein Service zu stoppen",
-                " >> §fservice stop <service> §7~ to stop a service");
+                " >> §fservice stop [service] §7~ um ein Service zu stoppen",
+                " >> §fservice stop [service] §7~ to stop a service");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fservice sync <service> §7~ um einen Service zu synchronisieren",
-                " >> §fservice sync <service> §7~ to synchronize a service");
+                " >> §fservice sync [service] §7~ um einen Service zu synchronisieren",
+                " >> §fservice sync [service] §7~ to synchronize a service");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fservice info <service> §7~ zeigt die alle Infos zu einen bestimmten Service",
-                " >> §fservice info <service> §7~ shows all the info about a particular service");
+                " >> §fservice info [service] §7~ zeigt die alle Infos zu einen bestimmten Service",
+                " >> §fservice info [service] §7~ shows all the info about a particular service");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fservice execute <service> <command> §7~ um einen Befehl auf dem Server auszuführen",
-                " >> §fservice execute <service> <command> §7~ to execute a command on the server");
+                " >> §fservice execute [service] [command] §7~ um einen Befehl auf dem Server auszuführen",
+                " >> §fservice execute [service] [command] §7~ to execute a command on the server");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fservice whitelist <add/remove> <name> §7~ um Spieler zur Whitelist hinzuzufügen oder von ihr zu entfernen",
-                " >> §fservice whitelist <add/remove> <name> §7~ to add players to the whitelist or to remove them from it");
+                " >> §fservice whitelist [add/remove] [user] §7~ um Spieler zur Whitelist hinzuzufügen oder von ihr zu entfernen",
+                " >> §fservice whitelist [add/remove] [user] §7~ to add players to the whitelist or to remove them from it");
     }
 
 }

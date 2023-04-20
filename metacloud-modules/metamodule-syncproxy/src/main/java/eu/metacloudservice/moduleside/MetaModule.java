@@ -32,7 +32,7 @@ public class MetaModule implements IModule {
     }
 
 
-    private void create(){
+    private static void create(){
         try {
             if (!new File("./modules/syncproxy/config.json").exists()) {
                 new File("./modules/syncproxy/").mkdirs();
@@ -110,7 +110,7 @@ public class MetaModule implements IModule {
 
     }
     
-    public void set(){
+    public static void set(){
 
 
         General general = new General("syncproxy", "1.0.0", "RauchigesEtwas");
@@ -186,7 +186,7 @@ public class MetaModule implements IModule {
         }
     }
 
-    public void update(){
+    public static void update(){
 
         try {
 

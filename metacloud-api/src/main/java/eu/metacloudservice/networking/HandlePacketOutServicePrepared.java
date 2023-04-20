@@ -1,9 +1,8 @@
 package eu.metacloudservice.networking;
 
 import eu.metacloudservice.CloudAPI;
-import eu.metacloudservice.Driver;
-import eu.metacloudservice.events.listeners.CloudProxyPreparedEvent;
-import eu.metacloudservice.events.listeners.CloudServicePreparedEvent;
+import eu.metacloudservice.events.listeners.services.CloudProxyPreparedEvent;
+import eu.metacloudservice.events.listeners.services.CloudServicePreparedEvent;
 import eu.metacloudservice.networking.out.service.PacketOutServicePrepared;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;

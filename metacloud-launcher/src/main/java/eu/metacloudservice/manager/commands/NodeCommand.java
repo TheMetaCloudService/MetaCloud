@@ -103,11 +103,11 @@ public class NodeCommand extends CommandAdapter {
 
     private void sendHelp(){
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fnode create <node> <address> §7~ erstelle einen neuen Node",
-                " >> §fnode create <node> <address> §7~ create a new node");
+                " >> §fnode create [node] [address] §7~ erstelle einen neuen Node",
+                " >> §fnode create [node] [address] §7~ create a new node");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fnode delete <node> §7~ bestehenden Node löschen",
-                " >> §fnode delete <node> §7~ delete existing node");
+                " >> §fnode delete [node] §7~ bestehenden Node löschen",
+                " >> §fnode delete [node] §7~ delete existing node");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fnode list §7~ zeigt alle Nodes an",
                 " >> §fnode list §7~ shows all nodes");

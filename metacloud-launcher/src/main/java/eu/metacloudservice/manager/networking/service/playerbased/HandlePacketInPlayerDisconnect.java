@@ -4,10 +4,9 @@ import eu.metacloudservice.Driver;
 import eu.metacloudservice.cloudplayer.CloudPlayerRestCache;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
-import eu.metacloudservice.events.listeners.CloudPlayerDisconnectedEvent;
+import eu.metacloudservice.events.listeners.player.CloudPlayerDisconnectedEvent;
 import eu.metacloudservice.manager.CloudManager;
 import eu.metacloudservice.networking.NettyDriver;
-import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerConnect;
 import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerDisconnect;
 import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerDisconnect;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
@@ -37,9 +36,21 @@ public class HandlePacketInPlayerDisconnect implements NettyAdaptor {
                      }
                  }
 
-                 PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/genernal"), PlayerGeneral.class);
-                 general.getCloudplayers().removeIf(s -> s.equalsIgnoreCase(UUIDDriver.getUUID(((PacketInPlayerDisconnect) packet).getName())));
-                 Driver.getInstance().getWebServer().updateRoute("/cloudplayer/genernal", new ConfigDriver().convert(general));
+                try {
+                    PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/genernal"), PlayerGeneral.class);
+                    general.getCloudplayers().removeIf(s -> s.equalsIgnoreCase(UUIDDriver.getUUID(((PacketInPlayerDisconnect) packet).getName())));
+                    Driver.getInstance().getWebServer().updateRoute("/cloudplayer/genernal", new ConfigDriver().convert(general));
+                }catch (Exception e){
+                    try {
+                        PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/genernal"), PlayerGeneral.class);
+                        general.getCloudplayers().removeIf(s -> s.equalsIgnoreCase(UUIDDriver.getUUID(((PacketInPlayerDisconnect) packet).getName())));
+                        Driver.getInstance().getWebServer().updateRoute("/cloudplayer/genernal", new ConfigDriver().convert(general));
+                    }catch (Exception exception){
+                        PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/genernal"), PlayerGeneral.class);
+                        general.getCloudplayers().removeIf(s -> s.equalsIgnoreCase(UUIDDriver.getUUID(((PacketInPlayerDisconnect) packet).getName())));
+                        Driver.getInstance().getWebServer().updateRoute("/cloudplayer/genernal", new ConfigDriver().convert(general));
+                    }
+                }
 
                  Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudPlayerDisconnectedEvent(((PacketInPlayerDisconnect) packet).getName(), UUIDDriver.getUUID(((PacketInPlayerDisconnect) packet).getName())));
 

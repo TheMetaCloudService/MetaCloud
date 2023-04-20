@@ -4,6 +4,7 @@ package eu.metacloudservice.velocity;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.permission.PermissionProvider;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -51,6 +52,7 @@ public class VelocityBootstrap {
         proxyServer.getCommandManager().register("cloud", new CloudCommand(), "metacloud", "mc");
         proxyServer.getCommandManager().register("hub", new HubCommand(), "lobby", "l", "leave");
         proxyServer.getEventManager().register(this, new CloudConnectListener(proxyServer));
+
         new TimerBase().schedule(new TimerTask() {
             @Override
             public void run() {

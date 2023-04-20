@@ -5,8 +5,8 @@ import eu.metacloudservice.bootstrap.bungee.utils.ServerDriver;
 import eu.metacloudservice.events.entrys.ICloudListener;
 import eu.metacloudservice.events.entrys.Priority;
 import eu.metacloudservice.events.entrys.Subscribe;
-import eu.metacloudservice.events.listeners.CloudServiceConnectedEvent;
-import eu.metacloudservice.events.listeners.CloudServiceDisconnectedEvent;
+import eu.metacloudservice.events.listeners.services.CloudServiceConnectedEvent;
+import eu.metacloudservice.events.listeners.services.CloudServiceDisconnectedEvent;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 

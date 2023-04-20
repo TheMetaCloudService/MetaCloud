@@ -25,7 +25,6 @@ public class HubCommand implements SimpleCommand {
                     player.createConnectionRequest(VelocityBootstrap.proxyServer.getServer(fallback.getName()).get());
                     player.sendMessage(Component.text(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getSuccessfullyConnected()).replace("%PREFIX%", Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix())).replace("%SERVICE%", fallback.getName())));
                 }
-
             }
         }
     }

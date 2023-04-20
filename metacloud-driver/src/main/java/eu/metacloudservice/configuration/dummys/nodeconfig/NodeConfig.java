@@ -18,9 +18,19 @@ public class NodeConfig implements IConfigAdapter {
     private String nodeName;
     private String nodeAddress;
 
+    private boolean copyLogs;
+
 
     public NodeConfig(){
 
+    }
+
+    public boolean isCopyLogs() {
+        return copyLogs;
+    }
+
+    public void setCopyLogs(boolean copyLogs) {
+        this.copyLogs = copyLogs;
     }
 
     public Integer getProcessorUsage() {
