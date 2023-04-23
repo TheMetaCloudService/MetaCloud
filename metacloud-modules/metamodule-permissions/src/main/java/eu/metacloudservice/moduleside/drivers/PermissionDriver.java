@@ -148,7 +148,7 @@ public class PermissionDriver implements IPermissionDriver {
 
     @Override
     public void removeInclude(String group, String include) {
-        if (!isInclude(group, include)){
+        if (isInclude(group, include)){
             GroupEntry entry = getGroup(group);
             entry.getInclude().remove(include);
             updateGroup(entry);
@@ -166,7 +166,7 @@ public class PermissionDriver implements IPermissionDriver {
 
     @Override
     public boolean hasGroupPermission(String group, String permission) {
-        return getGroup(group).getPermissions().getOrDefault(permission, false);
+        return getGroup(group).getPermissions().containsKey(permission);
     }
 
     @Override
@@ -194,12 +194,17 @@ public class PermissionDriver implements IPermissionDriver {
                 .filter(groupEntry -> groupEntry.getName().equals(name)).findFirst().orElse(null);
     }
 
+
+    @Override
+    public List<GroupEntry> getGroups() {
+        return  ((GroupConfiguration)new ConfigDriver("./modules/permissions/config.json").read(GroupConfiguration.class)).getGroups()
+                .parallelStream().collect(Collectors.toList());
+    }
     @Override
     public List<GroupEntry> getDefaults() {
         return  ((GroupConfiguration)new ConfigDriver("./modules/permissions/config.json").read(GroupConfiguration.class)).getGroups()
                 .parallelStream().filter(GroupEntry::isDefaultGroup).collect(Collectors.toList());
     }
-
     @Override
     public GroupConfiguration getGroupConfig() {
         return ((GroupConfiguration)new ConfigDriver("./modules/permissions/config.json").read(GroupConfiguration.class));

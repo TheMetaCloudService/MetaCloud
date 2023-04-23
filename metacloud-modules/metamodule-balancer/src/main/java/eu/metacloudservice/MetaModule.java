@@ -33,7 +33,6 @@ public class MetaModule implements IModule {
         instance = this;
         proxyStorage = new HashMap<>();
 
-
         General general = new General("balancer", "1.0.0", "RauchigesEtwas");
         Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/balancer/general", new ConfigDriver().convert(general)));
         ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
@@ -54,6 +53,11 @@ public class MetaModule implements IModule {
             configuration.setConnectionType(ConnectionType.RANDOM);
             configuration.setConnectionPort(25565);
             new ConfigDriver("./modules/balancer/config.json").save(configuration);
+        }
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
         Driver.getInstance().getMessageStorage().eventDriver.registerListener(new CloudListener());
         Configuration s = (Configuration) new ConfigDriver("./modules/balancer/config.json").read(Configuration.class);

@@ -4,6 +4,7 @@ import eu.metacloudservice.config.*;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.module.extention.IModule;
+import eu.metacloudservice.moduleside.commands.SyncProxyCommand;
 import eu.metacloudservice.webserver.entry.RouteEntry;
 import org.checkerframework.checker.units.qual.C;
 
@@ -14,6 +15,7 @@ import java.util.function.Consumer;
 public class MetaModule implements IModule {
     @Override
     public void load() {
+        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new SyncProxyCommand());
         create();
         set();
     }

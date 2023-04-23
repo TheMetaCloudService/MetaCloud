@@ -4,7 +4,6 @@ import eu.metacloudservice.Driver;
 import eu.metacloudservice.config.General;
 import eu.metacloudservice.config.groups.GroupConfiguration;
 import eu.metacloudservice.config.groups.entry.GroupEntry;
-import eu.metacloudservice.config.player.PlayerConfiguration;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.module.extention.IModule;
 import eu.metacloudservice.moduleside.commands.PermissionsCommand;
@@ -15,7 +14,6 @@ import eu.metacloudservice.webserver.entry.RouteEntry;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.function.Consumer;
 
 public class MetaModule implements IModule {
 
@@ -25,6 +23,12 @@ public class MetaModule implements IModule {
     public void load() {
         permissionDriver = new PermissionDriver();
         createConfigurations();
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         set();
         Driver.getInstance().getMessageStorage().eventDriver.registerListener(new CloudPlayerHandler());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new PermissionsCommand());
@@ -84,10 +88,6 @@ public class MetaModule implements IModule {
     public static void set(){
         General general = new General("permissions", "1.0.0", "RauchigesEtwas");
         Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/permissions/general", new ConfigDriver().convert(general)));
-        permissionDriver.getPlayers().forEach(configuration -> {
-            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/permissions/" + configuration.getUUID(), new ConfigDriver().convert(configuration)));
-        });
-
         Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/permissions/configuration", new ConfigDriver().convert(translate())));
 
     }

@@ -30,9 +30,8 @@ public interface IPermissionDriver {
 
     void addPermissionToGroup(String group, String permission, boolean set);
     void removePermissionFromGroup(String group, String permission);
-
-
     GroupEntry getGroup(String name);
+    List<GroupEntry> getGroups();
 
     List<GroupEntry> getDefaults();
     GroupConfiguration getGroupConfig();

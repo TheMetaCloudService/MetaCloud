@@ -107,7 +107,6 @@ public class CloudAPI {
 
     }
 
-
     public void launchService(String group){
         sendPacketSynchronized(new PacketInLaunchService(group));
     }
