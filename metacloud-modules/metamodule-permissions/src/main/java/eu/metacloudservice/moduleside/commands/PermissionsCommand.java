@@ -53,8 +53,8 @@ public class PermissionsCommand extends CommandAdapter {
                             Driver.getInstance().getTerminalDriver().log(Type.COMMAND, " - " + s + " | " + s2 );
                         });
                         Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "permissions: " );
-                        entry.getPermissions().forEach((s, aBoolean) -> {
-                            Driver.getInstance().getTerminalDriver().log(Type.COMMAND, " - " + s + " | " + aBoolean );
+                        entry.getPermissions().forEach((perms, options) -> {
+                            Driver.getInstance().getTerminalDriver().log(Type.COMMAND, " - " +perms + " | §f" + options.get("set") + " [@"+options.get("cancellationAt")+"]");
                         });
                     }
                 }else  if (args.length == 3){
@@ -123,8 +123,8 @@ public class PermissionsCommand extends CommandAdapter {
                                 MetaModule.permissionDriver.setGroupPower(group, Integer.parseInt(power));
                             }else {
                                 Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                        "Dbitte gebe als Power eine zahl an",
-                                        "please enter a number as power");
+                                        "Bitte gebe als Power eine zahl an",
+                                        "Please enter a number as power");
                             }
                         }
                     }else if (args[2].equalsIgnoreCase("delperm")){
@@ -173,35 +173,7 @@ public class PermissionsCommand extends CommandAdapter {
                         sendHelp();
                     }
                 }else if (args.length == 5){
-                    if (args[2].equalsIgnoreCase("addperm")){
-                        if (MetaModule.permissionDriver.getGroup(group) == null)
-                            Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                    "Die angegebene Gruppe '§f"+group+"§r' wurde nicht gefunden",
-                                    "The specified group '§f"+group+"§r' was not found");
-
-                        else {
-                            String permission = args[3];
-                            String bol = args[4];
-
-                            if (!MetaModule.permissionDriver.hasGroupPermission(group, permission)){
-                                if (bol.equalsIgnoreCase("TRUE") || bol.equalsIgnoreCase("FALSE")){
-                                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                            "Die Berechtigungen wurden der Gruppe '§f"+group+"§r' hinzugefügt. -> '§f"+permission+"@"+bol.equalsIgnoreCase("TRUE")+"§r'",
-                                            "The permissions have been added to the '§f"+group+"§r' group. -> '§f"+permission+"@"+bol.equalsIgnoreCase("TRUE")+"§r");
-
-                                    MetaModule.permissionDriver.addPermissionToGroup(group, permission, bol.equalsIgnoreCase("TRUE"));
-                                      }else {
-                                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                            "Bitte geben Sie ein Bolean an, das True oder False bedeutet",
-                                            "Please specify a Bolean that means True or False");
-                                }
-                            }else {
-                                Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                        "Die Gruppe hat bereits das Recht",
-                                        "The group already has the right");
-                            }
-                        }
-                    }else if (args[2].equalsIgnoreCase("include")){
+                     if (args[2].equalsIgnoreCase("include")){
                         if (MetaModule.permissionDriver.getGroup(group) == null)
                             Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                                     "Die angegebene Gruppe '§f"+group+"§r' wurde nicht gefunden",
@@ -220,13 +192,13 @@ public class PermissionsCommand extends CommandAdapter {
 
                                     }else {
                                         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                                "Die Gruppe '§f"+include+"§r' ist nun enthalten | §f"+time+" Tage",
-                                                "The '§f"+include+"§r' group is now included | §f"+time+" days");
+                                                "Die Gruppe '§f"+include+"§r' ist nun enthalten | §f"+time+" Tag(e)",
+                                                "The '§f"+include+"§r' group is now included | §f"+time+" day(s)");
                                         MetaModule.permissionDriver.addInclude(group, include, Integer.parseInt(time));
                                     }
                                 }else {
                                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                            "Bitte geben Sie die Anzahl der Tage oder LIFETIME einn",
+                                            "Bitte geben Sie die Anzahl der Tage oder LIFETIME ein",
                                             "Please enter the number of days or Lifetime");
                                 }
                             }else {
@@ -238,7 +210,46 @@ public class PermissionsCommand extends CommandAdapter {
                     }else {
                         sendHelp();
                     }
-                }else {
+                }else if (args.length == 6) {
+                    if (args[2].equalsIgnoreCase("addperm")){
+                        if (MetaModule.permissionDriver.getGroup(group) == null)
+                            Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                    "Die angegebene Gruppe '§f"+group+"§r' wurde nicht gefunden",
+                                    "The specified group '§f"+group+"§r' was not found");
+
+                        else {
+                            String permission = args[3];
+                            String bol = args[4];
+                            String timeraw = args[5];
+
+                            if (!MetaModule.permissionDriver.hasGroupPermission(group, permission)){
+                                if (timeraw.matches("[0-9]+") ||timeraw.equalsIgnoreCase("LIFETIME")){
+                                    int time = args[5].equalsIgnoreCase("LIFETIME") ? -1 : Integer.parseInt(args[5]) ;
+                                    if (bol.equalsIgnoreCase("TRUE") || bol.equalsIgnoreCase("FALSE")){
+                                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                                "Die Berechtigungen wurden der Gruppe '§f"+group+"§r' hinzugefügt. -> '§f"+permission+"@"+bol.equalsIgnoreCase("TRUE")+" ["+time+"]"+"§r'",
+                                                "The permissions have been added to the '§f"+group+"§r' group. -> '§f"+permission+"@"+bol.equalsIgnoreCase("TRUE")+" ["+time+"]"+"§r");
+
+                                        MetaModule.permissionDriver.addPermissionToGroup(group, permission, bol.equalsIgnoreCase("TRUE"), time);
+                                    }else {
+                                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                                "Bitte geben Sie ein Bolean an, das True oder False bedeutet",
+                                                "Please specify a Bolean that means True or False");
+                                    }
+                                }else {
+                                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                            "Bitte geben Sie die Anzahl der Tage oder LIFETIME ein",
+                                            "Please enter the number of days or Lifetime");
+                                }
+
+                            }else {
+                                Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                        "Die Gruppe hat bereits das Recht",
+                                        "The group already has the right");
+                            }
+                        }
+                    }
+                }else  {
                 sendHelp();
                 }
             }else {
@@ -248,7 +259,7 @@ public class PermissionsCommand extends CommandAdapter {
             if (args.length >= 2) {
                 String user = args[1];
                 if (args.length == 2){
-                    if (MetaModule.permissionDriver.getPlayer(user) == null)
+                    if (!MetaModule.permissionDriver.existsPlayer(user))
                         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                                 "Der User war noch nie auf dem Netzwerk",
                                 "The user has never been on the network");
@@ -263,10 +274,124 @@ public class PermissionsCommand extends CommandAdapter {
                         });
 
                         Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "permissions: ");
-                        configuration.getPermissions().forEach((s, aBoolean) -> {
-                            Driver.getInstance().getTerminalDriver().log(Type.COMMAND, " - " +s + " | §f" + aBoolean);
+                        configuration.getPermissions().forEach((perms, options) -> {
+                            Driver.getInstance().getTerminalDriver().log(Type.COMMAND, " - " +perms + " | §f" + options.get("set") + " [@"+options.get("cancellationAt")+"]");
                         });
                     }
+                }else if (args.length == 4){
+                    if (!MetaModule.permissionDriver.existsPlayer(user))
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "Der User war noch nie auf dem Netzwerk",
+                                "The user has never been on the network");
+                    else {
+                        if (args[2].equalsIgnoreCase("delperm")){
+                            String perms = args[3];
+                            if (MetaModule.permissionDriver.hasPermission(user, perms)){
+                                Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "Die Permission '§f"+perms+"§r' wurde '§f"+user+"§r' entfernt",
+                                        "The '§f"+perms+"§r' permission was removed from '§f"+user+"§r.");
+                                MetaModule.permissionDriver.removePermissionFromPlayer(user, perms);
+
+                            }else {
+                                Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                        "Du kannst die Permission nicht entfernen da sie nicht vergeben ist",
+                                        "You cannot remove the permission because it is not granted");
+                            }
+                        }  else    if (args[2].equalsIgnoreCase("delgroup")){
+                            String group = args[3];
+                            if (MetaModule.permissionDriver.playerHasGroup(user, group)){
+                                Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                        "Der Spieler '§f"+user+"§r' ist nun nicht mehr in der Gruppe '§f"+group+"§r'.",
+                                        "The player '§f"+user+"§r' is not longer in the group '§f"+group+"§r.");
+                                MetaModule.permissionDriver.removePlayerGroup(user, group);
+
+                            }else {
+                                Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                        "Du kannst die group nicht entfernen da sie nicht vergeben ist",
+                                        "You cannot remove the group because it is not granted");
+                            }
+                        }else {
+                            sendHelp();
+                        }
+                    }
+                }else if (args.length == 5){
+                    if (!MetaModule.permissionDriver.existsPlayer(user))
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "Der User war noch nie auf dem Netzwerk",
+                                "The user has never been on the network");
+                    else {
+                        if (args[2].equalsIgnoreCase("addgroup")){
+                            String group = args[3];
+                            String time = args[4];
+                            if (!MetaModule.permissionDriver.playerHasGroup(user, group)){
+                                if (time.matches("[0-9]+") ||time.equalsIgnoreCase("LIFETIME")){
+                                    if (MetaModule.permissionDriver.getGroup(group) == null){
+                                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                                "Die Gruppe wurde nicht gefunden",
+                                                "The group was not found");
+                                        return;
+                                    }
+                                    if (time.equalsIgnoreCase("LIFETIME")){
+                                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                                "Der User '§f"+user+"§r' ist nun in der Gruppe '§f"+group+"§r' | §fLIFETIME",
+                                                "The user '§f "+user+"§r' is now in the group '§f "+group+"§r' | §fLIFETIME");
+                                        MetaModule.permissionDriver.addRankToPlayer(user, group, -1);
+
+                                    }else {
+                                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                                "Der User '§f"+user+"§r' ist nun in der Gruppe '§f"+group+"§r' | §f"+time+" Tag(e) ",
+                                                "The user '§f "+user+"§r' is now in the group '§f "+group+"§r' | §f"+time+" day(s)");
+                                        MetaModule.permissionDriver.addRankToPlayer(user, group, Integer.parseInt(time));
+                                    }
+                                }else {
+                                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                            "Bitte geben Sie die Anzahl der Tage oder LIFETIME ein",
+                                            "Please enter the number of days or Lifetime");
+                                }
+
+                            }else {
+                                Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                        "Der User hat bereits die Gruppe",
+                                        "The user has already created the group");
+                            }
+                        }else {
+                            sendHelp();
+                        }
+                    }
+                }else if (args.length == 6){
+                    if (!MetaModule.permissionDriver.existsPlayer(user))
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "Der User war noch nie auf dem Netzwerk",
+                                "The user has never been on the network");
+                    else {
+                        if (args[2].equalsIgnoreCase("addperm")){
+                            String permission = args[3];
+                            String bol = args[4];
+                            Integer time = args[5].equalsIgnoreCase("LIFETIME") ? -1 : Integer.parseInt(args[5]) ;
+
+                            if (!MetaModule.permissionDriver.hasPermission(permission, permission)){
+                                if (bol.equalsIgnoreCase("TRUE") || bol.equalsIgnoreCase("FALSE")){
+                                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                            "Die Berechtigungen wurden den Spieler '§f"+user+"§r' hinzugefügt. -> '§f"+permission+"@"+bol.equalsIgnoreCase("TRUE")+" ["+time+"]"+"§r'",
+                                            "The permissions have been added to '§f"+user+"§r'. -> '§f"+permission+"@"+bol.equalsIgnoreCase("TRUE")+" ["+time+"]"+"§r");
+
+                                    MetaModule.permissionDriver.addPermissionToPlayer(user, permission, bol.equalsIgnoreCase("TRUE"), time);
+                                }else {
+                                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                            "Bitte geben Sie ein Bolean an, das True oder False bedeutet",
+                                            "Please specify a Bolean that means True or False");
+                                }
+                            }else {
+                                Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                        "Der Spieler hat bereits das Recht",
+                                        "The player already has the right");
+                            }
+                        }else {
+                            sendHelp();
+                        }
+                    }
+                }else {
+                    sendHelp();
                 }
             }else {
                 sendHelp();
@@ -308,6 +433,16 @@ public class PermissionsCommand extends CommandAdapter {
                                 returns.add("true");
                                 returns.add("false");
                             }
+                            if (args.length == 5){
+                                returns.add("30");
+                                returns.add("90");
+                                returns.add("120");
+                                returns.add("180");
+                                returns.add("240");
+                                returns.add("300");
+                                returns.add("360");
+                                returns.add("LIFETIME");
+                            }
                         }if (args[2].equalsIgnoreCase("include")){
                             if (args.length == 4){
                                 returns.add("30");
@@ -322,9 +457,49 @@ public class PermissionsCommand extends CommandAdapter {
                         }
                     }
                 }
+            }else if (args[0].equalsIgnoreCase("user")){
+
+                if (args.length == 2){
+                    returns.add("addperm");
+                    returns.add("delperm");
+                    returns.add("addgroup");
+                    returns.add("delgroup");
+                }else {
+                    if (args[2].equalsIgnoreCase("delgroup")){
+                        if (args.length == 3){
+                            MetaModule.permissionDriver.getGroups().forEach(groupEntry -> returns.add(groupEntry.getName()));
+                        }
+                    }else if (args[2].equalsIgnoreCase("addgroup")){
+                        if (args.length == 3){
+                            MetaModule.permissionDriver.getGroups().forEach(groupEntry -> returns.add(groupEntry.getName()));
+                        }else if (args.length == 4){
+                            returns.add("30");
+                            returns.add("90");
+                            returns.add("120");
+                            returns.add("180");
+                            returns.add("240");
+                            returns.add("300");
+                            returns.add("360");
+                            returns.add("LIFETIME");
+                        }
+                    } else if (args[2].equalsIgnoreCase("addperm")){
+                        if (args.length == 4){
+                            returns.add("true");
+                            returns.add("false");
+                        }else if (args.length == 5){
+                            returns.add("30");
+                            returns.add("90");
+                            returns.add("120");
+                            returns.add("180");
+                            returns.add("240");
+                            returns.add("300");
+                            returns.add("360");
+                            returns.add("LIFETIME");
+                        }
+                    }
+                }
             }
         }
-
         return returns;
     }
 
@@ -348,8 +523,8 @@ public class PermissionsCommand extends CommandAdapter {
                 " >> §fperms group [group] settagpower [power] §7~ ändere die Tag power einer Gruppes",
                 " >> §fperms group [group] settagpower [power] §7~ change the tag power of a group");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fperms group [group] addperm [permission] [set] §7~ füge der Gruppe eine permission hinzus",
-                " >> §fperms group [group] addperm [permission] [set] §7~ add a permission to the group");
+                " >> §fperms group [group] addperm [permission] [set] [time] §7~ füge der Gruppe eine permission hinzus",
+                " >> §fperms group [group] addperm [permission] [set] [time] §7~ add a permission to the group");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fperms group [group] delperm [permission] §7~ entfernen einer Gruppe die permission",
                 " >> §fperms group [group] delperm [permission] §7~ remove a group's permission");
@@ -365,8 +540,8 @@ public class PermissionsCommand extends CommandAdapter {
                 " >> §fperms user [user] §7~ sehe alle Informationen von einen Spieler",
                 " >> §fperms user [user] §7~ see all information from one player");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fperms user [user] addperm [permission] [set] §7~ um einem Spieler die permissions zu erteilen",
-                " >> §fperms user [user] addperm [permission] [set] §7~ to add permission to a player");
+                " >> §fperms user [user] addperm [permission] [set] [time] §7~ um einem Spieler die permissions zu erteilen",
+                " >> §fperms user [user] addperm [permission] [set] [time] §7~ to add permission to a player");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fperms user [user] delperm [permission] §7~ um einem Spieler die permissions weg zunehmen",
                 " >> §fperms user [user] delperm [permission] §7~ to take away the permissions of a player");

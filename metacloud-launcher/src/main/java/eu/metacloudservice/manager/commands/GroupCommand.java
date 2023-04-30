@@ -168,8 +168,9 @@ public class GroupCommand extends CommandAdapter {
         if (args.length == 0){
             commands.add("create");
             commands.add("list");
+            Driver.getInstance().getGroupDriver().getAll().forEach(group -> commands.add(group.getGroup()));
         }
-        if (args.length == 1){
+        if (args.length == 1 && !args[0].equalsIgnoreCase("create") && !args[0].equalsIgnoreCase("list")){
             commands.add("delete");
             commands.add("info");
             commands.add("setmaintenance");
@@ -178,10 +179,10 @@ public class GroupCommand extends CommandAdapter {
             commands.add("setminamount");
         }
         if (args.length == 2){
-            if (args[1].equalsIgnoreCase("setmaintenance")) {
+            if (args[1].equalsIgnoreCase("setmaintenance") && !args[0].equalsIgnoreCase("create") && !args[0].equalsIgnoreCase("list")) {
                 commands.add("true");
                 commands.add("false");
-            }  if (args[1].equalsIgnoreCase("settemplate")) {
+            }  if (args[1].equalsIgnoreCase("settemplate") && !args[0].equalsIgnoreCase("create") && !args[0].equalsIgnoreCase("list")) {
                 ArrayList<String> rawtemplates = Driver.getInstance().getTemplateDriver().get();
                 commands.addAll(rawtemplates);
             }

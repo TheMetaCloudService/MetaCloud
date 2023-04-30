@@ -28,7 +28,7 @@ public interface IPermissionDriver {
 
     boolean hasGroupPermission(String group, String permission);
 
-    void addPermissionToGroup(String group, String permission, boolean set);
+    void addPermissionToGroup(String group, String permission, boolean set, int days);
     void removePermissionFromGroup(String group, String permission);
     GroupEntry getGroup(String name);
     List<GroupEntry> getGroups();
@@ -42,13 +42,15 @@ public interface IPermissionDriver {
     void createPlayer(String player);
     void updatePlayer(PlayerConfiguration configuration);
     PlayerConfiguration getPlayer(String name);
+    boolean existsPlayer(String name);
     List<PlayerConfiguration> getPlayers();
 
 
-    void addPermissionToPlayer(String player, String permission, boolean set);
-    void removePermissionToPlayer(String player, String permission);
+    void addPermissionToPlayer(String player, String permission, boolean set , int days);
+    void removePermissionFromPlayer(String player, String permission);
 
     boolean playerHasGroup(String player, String group);
+    void removePlayerGroup(String player, String group);
     boolean hasPermission(String player, String permission);
 
 

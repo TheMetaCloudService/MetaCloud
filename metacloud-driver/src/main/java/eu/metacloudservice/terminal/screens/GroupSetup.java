@@ -82,7 +82,7 @@ public class GroupSetup {
             if(line.matches("[0-9]+")){
                 Driver.getInstance().getTerminalDriver().clearScreen();
                 Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("memory", line);
+                Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("memory", line.replace(" ", ""));
                 Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
                 Driver.getInstance().getTerminalDriver().log(Type.SETUP,
                         new String[] {"Gewählter GroupName: §f"+Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("group"),

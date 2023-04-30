@@ -7,6 +7,7 @@ eu\metacloudservice\bootstrap\velocity\VelocityBootstrap.class
 eu\metacloudservice\networking\HandlePacketOutServicePrepared.class
 velocity-plugin.json
 eu\metacloudservice\bootstrap\velocity\networking\HandlePacketOutAPIPlayerTitle.class
+eu\metacloudservice\codec\GameMode.class
 eu\metacloudservice\async\pool\service\entrys\CloudService.class
 eu\metacloudservice\networking\HandlePacketOutPlayerDisconnect.class
 eu\metacloudservice\networking\HandlePacketOutServiceDisconnected.class

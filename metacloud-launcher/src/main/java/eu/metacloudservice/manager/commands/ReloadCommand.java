@@ -22,54 +22,128 @@ public class ReloadCommand extends CommandAdapter {
     @Override
     public void performCommand(CommandAdapter command, String[] args) {
 
-          Driver.getInstance().getModuleDriver().reload();
-        Messages raw = (Messages) new ConfigDriver("./local/messages.json").read(Messages.class);
-        Messages msg = new Messages(Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getPrefix()),
-                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getSuccessfullyConnected()),
-                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getServiceIsFull()),
-                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getAlreadyOnFallback()),
-                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getConnectingGroupMaintenance()),
-                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getNoFallbackServer()),
-                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNetworkIsFull()),
-                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNetworkIsMaintenance()),
-                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNoFallback()),
-                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickOnlyProxyJoin()),
-                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickAlreadyOnNetwork()));
+
+        if (args.length == 0){
+            sendhelp();
+        }else if (args[0].equalsIgnoreCase("all")){
+            Driver.getInstance().getModuleDriver().reload();
+            Messages raw = (Messages) new ConfigDriver("./local/messages.json").read(Messages.class);
+            Messages msg = new Messages(Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getPrefix()),
+                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getSuccessfullyConnected()),
+                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getServiceIsFull()),
+                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getAlreadyOnFallback()),
+                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getConnectingGroupMaintenance()),
+                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getNoFallbackServer()),
+                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNetworkIsFull()),
+                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNetworkIsMaintenance()),
+                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNoFallback()),
+                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickOnlyProxyJoin()),
+                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickAlreadyOnNetwork()));
 
 
-        WhiteList whitelistConfig = new WhiteList();
-        ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
-        whitelistConfig.setWhitelist(config.getWhitelist());
-        Driver.getInstance().getWebServer().updateRoute("/default/whitelist", new ConfigDriver().convert(whitelistConfig));
-        Addresses AddressesConfig = new Addresses();
+            WhiteList whitelistConfig = new WhiteList();
+            ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+            whitelistConfig.setWhitelist(config.getWhitelist());
+            Driver.getInstance().getWebServer().updateRoute("/default/whitelist", new ConfigDriver().convert(whitelistConfig));
+            Addresses AddressesConfig = new Addresses();
 
-        ArrayList<String> addresses = new ArrayList<>();
-        config.getNodes().forEach(managerConfigNodes -> {
-            addresses.add(managerConfigNodes.getAddress());
-        });
-        AddressesConfig.setWhitelist(addresses);
-        Driver.getInstance().getWebServer().updateRoute("/default/addresses", new ConfigDriver().convert(AddressesConfig));
-        GroupList groupList = new GroupList();
-        groupList.setGroups(Driver.getInstance().getGroupDriver().getAllStrings());
-        Driver.getInstance().getWebServer().updateRoute("/cloudgroup/general", new ConfigDriver().convert(groupList));
-
-        Driver.getInstance().getWebServer().updateRoute("/message/default", new ConfigDriver().convert(msg));
-        try {
-            Driver.getInstance().getGroupDriver().getAll().forEach(group -> {
-                if (Driver.getInstance().getWebServer().getRoute("/cloudgroup/" +group.getGroup()) == null){
-                    Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudgroup/" + group.getGroup(), new ConfigDriver().convert(group)));
-
-                }else {
-                    Driver.getInstance().getWebServer().updateRoute("/cloudgroup/"  + group.getGroup(), new ConfigDriver().convert(group));
-                }
+            ArrayList<String> addresses = new ArrayList<>();
+            config.getNodes().forEach(managerConfigNodes -> {
+                addresses.add(managerConfigNodes.getAddress());
             });
-        }catch (Exception ignored){}
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND, "Die Cloud wurde mit Erfolg neu geladen", "The cloud was reloaded with success");
+            AddressesConfig.setWhitelist(addresses);
+            Driver.getInstance().getWebServer().updateRoute("/default/addresses", new ConfigDriver().convert(AddressesConfig));
+            GroupList groupList = new GroupList();
+            groupList.setGroups(Driver.getInstance().getGroupDriver().getAllStrings());
+            Driver.getInstance().getWebServer().updateRoute("/cloudgroup/general", new ConfigDriver().convert(groupList));
+
+            Driver.getInstance().getWebServer().updateRoute("/message/default", new ConfigDriver().convert(msg));
+            try {
+                Driver.getInstance().getGroupDriver().getAll().forEach(group -> {
+                    if (Driver.getInstance().getWebServer().getRoute("/cloudgroup/" +group.getGroup()) == null){
+                        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudgroup/" + group.getGroup(), new ConfigDriver().convert(group)));
+
+                    }else {
+                        Driver.getInstance().getWebServer().updateRoute("/cloudgroup/"  + group.getGroup(), new ConfigDriver().convert(group));
+                    }
+                });
+            }catch (Exception ignored){}
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND, "Die Cloud wurde mit Erfolg neu geladen", "The cloud was reloaded with success");
+
+        }else if (args[0].equalsIgnoreCase("config")){
+            Messages raw = (Messages) new ConfigDriver("./local/messages.json").read(Messages.class);
+            Messages msg = new Messages(Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getPrefix()),
+                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getSuccessfullyConnected()),
+                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getServiceIsFull()),
+                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getAlreadyOnFallback()),
+                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getConnectingGroupMaintenance()),
+                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getNoFallbackServer()),
+                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNetworkIsFull()),
+                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNetworkIsMaintenance()),
+                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNoFallback()),
+                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickOnlyProxyJoin()),
+                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickAlreadyOnNetwork()));
+
+
+            WhiteList whitelistConfig = new WhiteList();
+            ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+            whitelistConfig.setWhitelist(config.getWhitelist());
+            Driver.getInstance().getWebServer().updateRoute("/default/whitelist", new ConfigDriver().convert(whitelistConfig));
+            Addresses AddressesConfig = new Addresses();
+
+            ArrayList<String> addresses = new ArrayList<>();
+            config.getNodes().forEach(managerConfigNodes -> {
+                addresses.add(managerConfigNodes.getAddress());
+            });
+            AddressesConfig.setWhitelist(addresses);
+            Driver.getInstance().getWebServer().updateRoute("/default/addresses", new ConfigDriver().convert(AddressesConfig));
+            GroupList groupList = new GroupList();
+            groupList.setGroups(Driver.getInstance().getGroupDriver().getAllStrings());
+            Driver.getInstance().getWebServer().updateRoute("/cloudgroup/general", new ConfigDriver().convert(groupList));
+
+            Driver.getInstance().getWebServer().updateRoute("/message/default", new ConfigDriver().convert(msg));
+            try {
+                Driver.getInstance().getGroupDriver().getAll().forEach(group -> {
+                    if (Driver.getInstance().getWebServer().getRoute("/cloudgroup/" +group.getGroup()) == null){
+                        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudgroup/" + group.getGroup(), new ConfigDriver().convert(group)));
+
+                    }else {
+                        Driver.getInstance().getWebServer().updateRoute("/cloudgroup/"  + group.getGroup(), new ConfigDriver().convert(group));
+                    }
+                });
+            }catch (Exception ignored){}
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND, "Die Cloud wurde mit Erfolg neu geladen", "The cloud was reloaded with success");
+
+        }else if (args[0].equalsIgnoreCase("modules")){
+            Driver.getInstance().getModuleDriver().reload();
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND, "Die Cloud wurde mit Erfolg neu geladen", "The cloud was reloaded with success");
+
+        }
+        else {
+            sendhelp();
+        }
+
 
     }
 
     @Override
     public ArrayList<String> tabComplete(TerminalStorageLine consoleInput, String[] args) {
-        return null;
+        ArrayList<String> returns = new ArrayList<>();
+        returns.add("all");
+        returns.add("config");
+        returns.add("modules");
+        return returns;
+    }
+
+    public void sendhelp(){
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                " >> §freload all §7~ Um alles zu neu zuladen",
+                " >> §freload all §7~ To reload everything");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                " >> §freload config §7~ Um alle Konfigurationen neu zu laden",
+                " >> §freload config §7~ To reload all configurations");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                " >> §freload modules §7~ Um alle Module neu zu laden",
+                " >> §freload modules §7~ To reload all modules");
     }
 }

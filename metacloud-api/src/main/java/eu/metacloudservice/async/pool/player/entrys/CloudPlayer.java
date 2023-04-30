@@ -73,11 +73,6 @@ public class CloudPlayer {
         disconnect("§cYour kicked form the Network");
     }
 
-    public void sendMessage(@NonNull String message){
-        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerMessage(username, message));
-    }
-
-
 
     public String getSkinValue() {
         String urlString = "https://minecraft-api.com/api/uuid/" + username + "/json";
@@ -125,10 +120,18 @@ public class CloudPlayer {
         AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerActionBar(username, message));
     }
 
+    public void sendMessage(@NonNull String message){
+        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerMessage(username, message));
+    }
+
     public void sendMessage(@NonNull String... message){
         for (String msg : message){
             sendMessage(msg);
         }
+    }
+
+    public boolean isConnectedOnFallback(){
+        return getServer().isTypeLobby();
     }
 
 }

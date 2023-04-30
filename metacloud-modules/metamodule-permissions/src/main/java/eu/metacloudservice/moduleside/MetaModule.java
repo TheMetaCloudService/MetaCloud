@@ -57,8 +57,11 @@ public class MetaModule implements IModule {
 
             GroupEntry admin = new GroupEntry();
             HashMap<String, String> includes = new HashMap<>();
-            HashMap<String, Boolean> perms = new HashMap<>();
-            perms.put("*", true);
+            HashMap<String, HashMap<String, Object>> perms = new HashMap<>();
+            HashMap<String, Object> options = new HashMap<>();
+            options.put("set", true);
+            options.put("cancellationAt", "LIFETIME");
+            perms.put("*", options);
             includes.put("member", "LIFETIME");
             admin.setName("admin");
             admin.setPrefix("§bAdmin §8| §7");

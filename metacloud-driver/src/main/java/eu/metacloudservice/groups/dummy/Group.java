@@ -9,7 +9,6 @@ public class Group implements IConfigAdapter {
     private Integer usedMemory;
     private boolean maintenance;
     private boolean runStatic;
-
     private Integer priority;
     private String permission;
     private Integer maxPlayers;

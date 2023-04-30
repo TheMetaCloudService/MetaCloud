@@ -13,7 +13,6 @@ import java.util.UUID;
 
 public class MOTDListener {
 
-
     @Subscribe
     public void handel(ProxyPingEvent event){
         ServerPing.Builder ping = event.getPing().asBuilder();

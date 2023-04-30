@@ -52,7 +52,6 @@ public class MotdListener  implements Listener {
                            .replace("%proxy_group%", bungeeBootstrap.getLiveService().getGroup())
                            .replace("%memory%", ""+memory)
                            .replace("%max_memory%", ""+maxMemory)
-                            .replace("%proxy_id%",CloudAPI.getInstance().getServicePool().getService(bungeeBootstrap.getLiveService().getService()).getID())
                             .replace("%online_players%", "" + cloudAPI.getPlayerPool().getPlayers().size())
                             .replace("%max_players%", "" + bungeeBootstrap.group.getMaxPlayers()):
 
@@ -66,7 +65,6 @@ public class MotdListener  implements Listener {
                     .replace("%proxy_group%", bungeeBootstrap.getLiveService().getGroup())
                     .replace("%memory%", ""+memory)
                     .replace("%max_memory%", ""+maxMemory)
-                    .replace("%proxy_id%",CloudAPI.getInstance().getServicePool().getService(bungeeBootstrap.getLiveService().getService()).getID())
                     .replace("%online_players%", "" + cloudAPI.getPlayerPool().getPlayers().size())
                     .replace("%max_players%", "" + bungeeBootstrap.group.getMaxPlayers());
 
@@ -77,7 +75,6 @@ public class MotdListener  implements Listener {
                     .replace("%proxy_group%", bungeeBootstrap.getLiveService().getGroup())
                     .replace("%memory%", ""+memory)
                     .replace("%max_memory%", ""+maxMemory)
-                    .replace("%proxy_id%",CloudAPI.getInstance().getServicePool().getService(bungeeBootstrap.getLiveService().getService()).getID())
                     .replace("%online_players%", "" + cloudAPI.getPlayerPool().getPlayers().size())
                     .replace("%max_players%", "" + bungeeBootstrap.group.getMaxPlayers());
 

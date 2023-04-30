@@ -1,6 +1,7 @@
 package eu.metacloudservice.moduleside.commands;
 
 import eu.metacloudservice.Driver;
+import eu.metacloudservice.moduleside.MetaModule;
 import eu.metacloudservice.terminal.commands.CommandAdapter;
 import eu.metacloudservice.terminal.commands.CommandInfo;
 import eu.metacloudservice.terminal.enums.Type;
@@ -17,7 +18,7 @@ public class SyncProxyCommand extends CommandAdapter {
                     " >> §fsyncproxy reload  §7~ das gesamte Syncproxy-Modul neu laden",
                     " >> §fsyncproxy reload §7~ reload the entire Syncproxy module");
         }else if (args[0].equalsIgnoreCase("reload")){
-
+            MetaModule.update();
         }else {
             Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                     " >> §fsyncproxy reload  §7~ das gesamte Syncproxy-Modul neu laden",

@@ -3,6 +3,7 @@ package eu.metacloudservice.pool.player.entrys;
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.cloudplayer.CloudPlayerRestCache;
+import eu.metacloudservice.codec.GameMode;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.networking.in.service.playerbased.apibased.*;
 import eu.metacloudservice.pool.service.entrys.CloudService;
@@ -127,5 +128,11 @@ public class CloudPlayer {
             sendMessage(msg);
         }
     }
+
+
+    public boolean isConnectedOnFallback(){
+        return getServer().isTypeLobby();
+    }
+
 
 }

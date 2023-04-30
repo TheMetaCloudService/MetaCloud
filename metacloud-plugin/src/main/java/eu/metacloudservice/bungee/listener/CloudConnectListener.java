@@ -32,11 +32,13 @@ public class CloudConnectListener implements Listener {
 
     @EventHandler(priority = - 127)
     public void handle(final ServerConnectEvent event){
-        if (event.getPlayer().getServer() == null){
+        if (this.connected.contains(event.getPlayer().getUniqueId())) {
+            if (event.getPlayer().getServer() == null){
                 target = ProxyServer.getInstance().getServerInfo(BungeeBootstrap.getInstance().getLobby(event.getPlayer()).getName());
-            if (target != null){
-                event.setTarget(target);
-            }else event.setCancelled(true);
+                if (target != null){
+                    event.setTarget(target);
+                }else event.setCancelled(true);
+            }
         }
     }
 
@@ -73,27 +75,31 @@ public class CloudConnectListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void handle(final PlayerDisconnectEvent event) {
         if (this.connected.contains(event.getPlayer().getUniqueId())) {
+            this.connected.remove(event.getPlayer().getUniqueId());
             AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInPlayerDisconnect(event.getPlayer().getName()));
         }
     }
 
     @EventHandler
     public void handle(ServerSwitchEvent event){
-        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInPlayerSwitchService(event.getPlayer().getName(), event.getPlayer().getServer().getInfo().getName()));
+        if (this.connected.contains(event.getPlayer().getUniqueId())) {
+            AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInPlayerSwitchService(event.getPlayer().getName(), event.getPlayer().getServer().getInfo().getName()));
+        }
     }
 
     @EventHandler(priority = - 127)
     public void handle(final ServerKickEvent event) {
-        target  = ProxyServer.getInstance().getServerInfo(BungeeBootstrap.getInstance().getLobby(event.getPlayer(), event.getKickedFrom().getName()).getName());
-        if (target != null) {
-            event.setCancelServer(target);
-            event.setCancelled(true);
-        } else {
-            event.setCancelled(false);
-            event.setCancelServer(null);
-            event.getPlayer().disconnect(Driver.getInstance().getMessageStorage().base64ToUTF8(CloudAPI.getInstance().getMessages().getKickNoFallback()).replace("&", "§"));
+        if (this.connected.contains(event.getPlayer().getUniqueId())) {
+            target  = ProxyServer.getInstance().getServerInfo(BungeeBootstrap.getInstance().getLobby(event.getPlayer(), event.getKickedFrom().getName()).getName());
+            if (target != null) {
+                event.setCancelServer(target);
+                event.setCancelled(true);
+            } else {
+                event.setCancelled(false);
+                event.setCancelServer(null);
+                event.getPlayer().disconnect(Driver.getInstance().getMessageStorage().base64ToUTF8(CloudAPI.getInstance().getMessages().getKickNoFallback()).replace("&", "§"));
+            }
         }
-
     }
 
 }

@@ -295,7 +295,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                                     CloudManager.serviceDriver.getFreePort(Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName()).getGroupType().equalsIgnoreCase("PROXY")),
                                     taskedService.getEntry().getGroupName(),
                                     taskedService.getEntry().getGroupName() + config.getSplitter() + id,
-                                    "InternalNode", taskedService.getEntry().isUseProtocol()));
+                                    "InternalNode", taskedService.getEntry().isUseProtocol(), id));
                             try {
                                 Thread.sleep(100);
                             } catch (InterruptedException e) {
@@ -312,7 +312,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                                     -1,
                                     taskedService.getEntry().getGroupName(),
                                     taskedService.getEntry().getGroupName() + config.getSplitter() + id,
-                                    taskedService.getEntry().getNode(), taskedService.getEntry().isUseProtocol()));
+                                    taskedService.getEntry().getNode(), taskedService.getEntry().isUseProtocol(), id));
 
                             try {
                                 Thread.sleep(100);
@@ -383,7 +383,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                                                 CloudManager.serviceDriver.register(new TaskedEntry(getFreePort(group.getGroupType().equalsIgnoreCase("PROXY")),
                                                         group.getGroup(), group.getGroup() +
                                                         config.getSplitter() + id,
-                                                        group.getStorage().getRunningNode(), config.getUseProtocol()));
+                                                        group.getStorage().getRunningNode(), config.getUseProtocol(), id));
                                                 Driver.getInstance().getMessageStorage().canUseMemory  = Driver.getInstance().getMessageStorage().canUseMemory -
                                                         group.getUsedMemory();
 
@@ -402,7 +402,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                                             }
                                             CloudManager.serviceDriver.register(new TaskedEntry(-1, group.getGroup(), group.getGroup() +
                                                     config.getSplitter() +id, group.getStorage().getRunningNode(),
-                                                    config.getUseProtocol()));
+                                                    config.getUseProtocol(), id));
                                         }
 
                                     }

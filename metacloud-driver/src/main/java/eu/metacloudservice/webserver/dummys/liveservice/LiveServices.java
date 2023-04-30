@@ -7,16 +7,23 @@ public class LiveServices implements IConfigAdapter {
 
 
     private String name;
+    private int uuid;
     private String group;
     private int players;
     private String host;
-
     private String node;
     private int port;
-
     private ServiceState state;
 
     public LiveServices() {
+    }
+
+    public int getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(int uuid) {
+        this.uuid = uuid;
     }
 
     public String getName() {

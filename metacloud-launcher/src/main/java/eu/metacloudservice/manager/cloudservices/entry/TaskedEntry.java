@@ -16,8 +16,9 @@ public class TaskedEntry {
     private final boolean use_protocol;
     private final  long time;
     private String UUID;
+    private int usedId;
 
-    public TaskedEntry(int used_port, String group_name, String service_name, String task_node, boolean use_protocol) {
+    public TaskedEntry(int used_port, String group_name, String service_name, String task_node, boolean use_protocol, String usedId) {
         this.current_players = 0;
         this.check_interval = 0;
         this.check_interval_players = 0;
@@ -29,8 +30,13 @@ public class TaskedEntry {
         this.status = ServiceState.QUEUED;
         this.use_protocol = use_protocol;
         this.UUID = java.util.UUID.randomUUID().toString();
+        this.usedId = Integer.parseInt(usedId);
     }
 
+
+    public int getUsedId() {
+        return usedId;
+    }
 
     public String getUUID() {
         return UUID;

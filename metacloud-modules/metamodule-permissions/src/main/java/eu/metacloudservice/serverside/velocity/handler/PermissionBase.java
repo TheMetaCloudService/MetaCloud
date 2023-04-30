@@ -17,7 +17,9 @@ public class PermissionBase implements PermissionProvider{
 
         @Override
         public Tristate getPermissionValue(String permission) {
-            return null;
+
+
+            return Tristate.TRUE;
         }
     }
 

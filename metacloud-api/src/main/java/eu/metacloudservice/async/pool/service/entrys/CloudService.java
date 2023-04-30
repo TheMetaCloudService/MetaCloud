@@ -30,9 +30,10 @@ public class CloudService {
         return name;
     }
 
-    public String getID(){
-        LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/genernal"),LiveServiceList.class );
-        return name.replace(group ,"").replace(list.getCloudServiceSplitter(), "");
+    public int getID(){
+        LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
+        LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
+        return services.getUuid();
     }
     public void setState(@NonNull ServiceState state){
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInChangeState(this.name, state.toString()));

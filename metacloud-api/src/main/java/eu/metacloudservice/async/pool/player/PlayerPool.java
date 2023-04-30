@@ -1,7 +1,6 @@
 package eu.metacloudservice.async.pool.player;
 
 import eu.metacloudservice.async.pool.player.entrys.CloudPlayer;
-import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import lombok.NonNull;
 
 import java.util.ArrayList;

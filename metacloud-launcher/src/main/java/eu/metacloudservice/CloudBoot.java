@@ -3,6 +3,7 @@ package eu.metacloudservice;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
 import eu.metacloudservice.configuration.dummys.nodeconfig.NodeConfig;
+import eu.metacloudservice.events.EventDriver;
 import eu.metacloudservice.manager.CloudManager;
 import eu.metacloudservice.node.CloudNode;
 import eu.metacloudservice.terminal.TerminalDriver;
@@ -46,6 +47,7 @@ public class CloudBoot {
                 Driver.getInstance().getMessageStorage().language = config.getLanguage();
             }
         }
+        Driver.getInstance().getMessageStorage().eventDriver = new EventDriver();
         Driver.getInstance().setTerminalDriver(new TerminalDriver());
         Driver.getInstance().getTerminalDriver().clearScreen();
         Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
@@ -82,9 +84,6 @@ public class CloudBoot {
             Driver.getInstance().getTerminalDriver().log(Type.INFO, "Es wird geschaut ob die Cloud version noch aktuell ist");
             if (Driver.getInstance().getMessageStorage().checkAvailableUpdate()){
                 Driver.getInstance().getTerminalDriver().log(Type.WARN, "Eine neue Version der Metacloud wurde gefunden '§f"+Driver.getInstance().getMessageStorage().version+" >> "+Driver.getInstance().getMessageStorage().getNewVersionName()+"§r'");
-
-
-
                 try {
                     URLConnection urlConnection = new URL("https://metacloudservice.eu/download/metacloud/UPDATE.jar").openConnection();
                     urlConnection.setRequestProperty("User-Agent",
@@ -96,7 +95,6 @@ public class CloudBoot {
 
                 new File("./local/GLOBAL/EVERY/plugins/metacloud-api.jar").delete();
                 new File("./local/GLOBAL/EVERY/plugins/metacloud-plugin.jar").delete();
-
                 Driver.getInstance().getTerminalDriver().log(Type.INFO, "Update §fmetacloud-plugin.jar...");
 
                 try {

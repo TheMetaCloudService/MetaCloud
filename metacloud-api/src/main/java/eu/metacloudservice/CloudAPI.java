@@ -32,6 +32,9 @@ import eu.metacloudservice.webserver.RestDriver;
 import eu.metacloudservice.webserver.dummys.GroupList;
 import eu.metacloudservice.webserver.dummys.WhiteList;
 import lombok.NonNull;
+import net.md_5.bungee.api.ProxyServer;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
@@ -72,6 +75,7 @@ public class CloudAPI {
                 .registerHandler(new PacketOutServiceLaunch().getPacketUUID(), new HandlePacketOutServiceLaunch(), PacketOutServiceLaunch.class)
                 .registerHandler(new PacketOutGroupCreate().getPacketUUID(), new HandlePacketOutGroupCreate(), PacketOutGroupCreate.class)
                 .registerHandler(new PacketOutGroupDelete().getPacketUUID(), new HandlePacketOutGroupDelete(), PacketOutGroupDelete.class);
+
 
 
         this.eventDriver = new EventDriver();
@@ -128,8 +132,7 @@ public class CloudAPI {
     public void stopGroup(String group){
         sendPacketSynchronized(new PacketInStopGroup(group));
     }
-
-
+    
     public EventDriver getEventDriver() {
         return eventDriver;
     }

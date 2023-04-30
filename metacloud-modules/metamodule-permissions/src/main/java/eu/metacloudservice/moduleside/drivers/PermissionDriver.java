@@ -63,6 +63,7 @@ public class PermissionDriver implements IPermissionDriver {
         ArrayList<GroupEntry> entrys =  getGroupConfig().getGroups();
         Boolean finde =entrys.stream().noneMatch(groupEntry -> {
             HashMap<String, String> includes = groupEntry.getInclude();
+            HashMap<String, HashMap<String, Object>> perms = groupEntry.getPermissions();
             ArrayList<String> needRemoved = new ArrayList<>();
             includes.forEach((s, s2) -> {
                 if (s2.equalsIgnoreCase("LIFETIME")) return;
@@ -73,9 +74,41 @@ public class PermissionDriver implements IPermissionDriver {
                     needRemoved.add(s);
                 }
             });
+
+            perms.forEach((permission, options) -> {
+                if (!((String)options.get("cancellationAt")).equalsIgnoreCase("LIFETIME")){
+                    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"); // das Format des Datums und der Uhrzeit, z.B. '01.02.2022 20:00'
+                    LocalDateTime currentDateTime = LocalDateTime.now(); // das aktuelle Datum und die aktuelle Uhrzeit
+                    LocalDateTime dateTimeA = LocalDateTime.parse(((String)options.get("cancellationAt")), dateTimeFormatter);
+                    if (dateTimeA.isBefore(currentDateTime)) {
+                        needRemoved.add(permission);
+                    }
+                }
+            });
+
+
             return !needRemoved.isEmpty();
         });
         if (!finde)return;
+
+
+        List<GroupEntry> permission = entrys.stream().filter(groupEntry -> {
+            HashMap<String, HashMap<String, Object>> perms = groupEntry.getPermissions();
+            ArrayList<String> needRemoved = new ArrayList<>();
+                perms.forEach((s, options) -> {
+                    if (!((String)options.get("cancellationAt")).equalsIgnoreCase("LIFETIME")){
+                        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"); // das Format des Datums und der Uhrzeit, z.B. '01.02.2022 20:00'
+                        LocalDateTime currentDateTime = LocalDateTime.now(); // das aktuelle Datum und die aktuelle Uhrzeit
+                        LocalDateTime dateTimeA = LocalDateTime.parse(((String)options.get("cancellationAt")), dateTimeFormatter);
+                        if (dateTimeA.isBefore(currentDateTime)) {
+                            needRemoved.add(s);
+                        }
+                    }
+                });
+
+
+            return !needRemoved.isEmpty();
+        }).toList();
 
         List<GroupEntry> entries = entrys.stream().filter(groupEntry -> {
             HashMap<String, String> includes = groupEntry.getInclude();
@@ -92,7 +125,23 @@ public class PermissionDriver implements IPermissionDriver {
             return !needRemoved.isEmpty();
         }).toList();
 
-        entrys.forEach(groupEntry -> {
+
+        permission.forEach(groupEntry -> {
+            HashMap<String, HashMap<String, Object>> perms = groupEntry.getPermissions();
+            ArrayList<String> needRemoved = new ArrayList<>();
+            perms.forEach((s, options) -> {
+                if (!((String)options.get("cancellationAt")).equalsIgnoreCase("LIFETIME")){
+                    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"); // das Format des Datums und der Uhrzeit, z.B. '01.02.2022 20:00'
+                    LocalDateTime currentDateTime = LocalDateTime.now(); // das aktuelle Datum und die aktuelle Uhrzeit
+                    LocalDateTime dateTimeA = LocalDateTime.parse(((String)options.get("cancellationAt")), dateTimeFormatter);
+                    if (dateTimeA.isBefore(currentDateTime)) {
+                        needRemoved.add(s);
+                    }
+                }
+            });
+            needRemoved.forEach(s -> removePermissionFromGroup(groupEntry.getName(), s));
+        });
+        entries.forEach(groupEntry -> {
             List<String> mustBeRemove = new ArrayList<>();
             groupEntry.getInclude().forEach((s, s2) -> {
                 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"); // das Format des Datums und der Uhrzeit, z.B. '01.02.2022 20:00'
@@ -170,10 +219,23 @@ public class PermissionDriver implements IPermissionDriver {
     }
 
     @Override
-    public void addPermissionToGroup(String group, String permission, boolean set) {
+    public void addPermissionToGroup(String group, String permission, boolean set , int days) {
         if (!hasGroupPermission(group,permission)){
             GroupEntry entry = getGroup(group);
-            entry.getPermissions().put(permission, set);
+            String formattedDateTime;
+            if (days != -1){
+                LocalDateTime currentDateTime = LocalDateTime.now(); // das aktuelle Datum und die aktuelle Uhrzeit
+                LocalDateTime calculatedDateTime = currentDateTime.plusDays(days); // berechne das Datum und die Uhrzeit, indem Tage zum aktuellen Datum und zur aktuellen Uhrzeit hinzugefügt werden
+
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+                formattedDateTime = calculatedDateTime.format(dateTimeFormatter);
+            }else {
+                formattedDateTime = "LIFETIME";
+            }
+            HashMap<String, Object> options = new HashMap<>();
+            options.put("set", set);
+            options.put("cancellationAt", formattedDateTime);
+            entry.getPermissions().put(permission, options);
            updateGroup(entry);
         }
     }
@@ -213,27 +275,52 @@ public class PermissionDriver implements IPermissionDriver {
     @Override
     public void updateRanks(String player) {
         if (player == null) return;
-        List<GivenGroup> ranks = getPlayer(player).getGroups().stream().filter(givenGroup -> !givenGroup.getCancellationAt().equalsIgnoreCase("LIFETOME")).toList();
-        if (ranks.isEmpty()) return;
-        List<String> mustBeRemoved = new ArrayList<>();
-        PlayerConfiguration config = getPlayer(player);
+        List<GivenGroup> ranks = getPlayer(player).getGroups().stream().filter(givenGroup -> {
 
-
-        ranks.forEach(givenGroup -> {
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"); // das Format des Datums und der Uhrzeit, z.B. '01.02.2022 20:00'
-            LocalDateTime currentDateTime = LocalDateTime.now(); // das aktuelle Datum und die aktuelle Uhrzeit
-            LocalDateTime dateTimeA = LocalDateTime.parse(givenGroup.getCancellationAt(), dateTimeFormatter); // konvertiere das Datum und die Uhrzeit A in ein LocalDateTime-Objekt
-
-            if (dateTimeA.isBefore(currentDateTime)){
-                mustBeRemoved.add(givenGroup.getGroup());
+            if (!givenGroup.getCancellationAt().equalsIgnoreCase("LIFETIME")) {
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"); // das Format des Datums und der Uhrzeit, z.B. '01.02.2022 20:00'
+                LocalDateTime currentDateTime = LocalDateTime.now(); // das aktuelle Datum und die aktuelle Uhrzeit
+                LocalDateTime dateTimeA = LocalDateTime.parse(givenGroup.getCancellationAt(), dateTimeFormatter);
+                if (dateTimeA.isBefore(currentDateTime)) {
+                    return true;
+                }else {
+                    return false;
+                }
+              }else {
+                return false;
+            }
+        }).toList();
+        List<String> perms = new ArrayList<>();
+        getPlayer(player).getPermissions().forEach((permission, options) -> {
+            if (!((String) options.get("cancellationAt")).equalsIgnoreCase("LIFETIME")) {
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"); // das Format des Datums und der Uhrzeit, z.B. '01.02.2022 20:00'
+                LocalDateTime currentDateTime = LocalDateTime.now(); // das aktuelle Datum und die aktuelle Uhrzeit
+                LocalDateTime dateTimeA = LocalDateTime.parse(((String) options.get("cancellationAt")), dateTimeFormatter);
+                if (dateTimeA.isBefore(currentDateTime)) {
+                    perms.add(permission);
+                }
             }
 
         });
+        if (perms.isEmpty() && ranks.isEmpty())return;
 
-        mustBeRemoved.forEach(s -> {
-            config.getGroups().removeIf(givenGroup -> givenGroup.getGroup().equalsIgnoreCase(s));
-        });
-        updatePlayer(config);
+        if (!perms.isEmpty()){
+            PlayerConfiguration config = getPlayer(player);
+            perms.forEach(s -> {
+                config.getPermissions().remove(s);
+            });
+
+            updatePlayer(config);
+        }
+
+        if (!ranks.isEmpty()){
+            PlayerConfiguration config = getPlayer(player);
+            ranks.forEach(s -> {
+                config.getGroups().removeIf(givenGroup -> givenGroup.getGroup().equalsIgnoreCase(s.getGroup()));
+            });
+            updatePlayer(config);
+        }
+
     }
 
     @Override
@@ -265,7 +352,7 @@ public class PermissionDriver implements IPermissionDriver {
 
     @Override
     public void createPlayer(String player) {
-        if (getPlayer(player) == null){
+        if (!new File("./modules/permissions/cloudplayers/" + UUIDDriver.getUUID(player) + ".json").exists()){
             PlayerConfiguration configuration = new PlayerConfiguration();
             ArrayList<GivenGroup> groups  = new ArrayList<>();
 
@@ -278,6 +365,7 @@ public class PermissionDriver implements IPermissionDriver {
             configuration.setGroups(groups);
             configuration.setPermissions(new HashMap<>());
             configuration.setUUID(UUIDDriver.getUUID(player));
+            new ConfigDriver("./modules/permissions/cloudplayers/" +UUIDDriver.getUUID(player)+ ".json").save(configuration);
             MetaModule.update();
         }
     }
@@ -300,6 +388,11 @@ public class PermissionDriver implements IPermissionDriver {
     }
 
     @Override
+    public boolean existsPlayer(String name) {
+        return new File("./modules/permissions/cloudplayers/" + UUIDDriver.getUUID(name) + ".json").exists();
+    }
+
+    @Override
     public List<PlayerConfiguration> getPlayers() {
         File file = new File("./modules/permissions/cloudplayers/");
         File[] files = file.listFiles();
@@ -314,16 +407,29 @@ public class PermissionDriver implements IPermissionDriver {
     }
 
     @Override
-    public void addPermissionToPlayer(String player, String permission, boolean set) {
+    public void addPermissionToPlayer(String player, String permission, boolean set , int days) {
         if (!hasPermission(player, permission)){
             PlayerConfiguration playerConfiguration = getPlayer(player);
-            playerConfiguration.getPermissions().put(permission, set);
+            String formattedDateTime;
+            if (days != -1){
+                LocalDateTime currentDateTime = LocalDateTime.now(); // das aktuelle Datum und die aktuelle Uhrzeit
+                LocalDateTime calculatedDateTime = currentDateTime.plusDays(days); // berechne das Datum und die Uhrzeit, indem Tage zum aktuellen Datum und zur aktuellen Uhrzeit hinzugefügt werden
+
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+                formattedDateTime = calculatedDateTime.format(dateTimeFormatter);
+            }else {
+                formattedDateTime = "LIFETIME";
+            }
+            HashMap<String, Object> options = new HashMap<>();
+            options.put("set", set);
+            options.put("cancellationAt", formattedDateTime);
+            playerConfiguration.getPermissions().put(permission, options);
             updatePlayer(playerConfiguration);
         }
     }
 
     @Override
-    public void removePermissionToPlayer(String player, String permission) {
+    public void removePermissionFromPlayer(String player, String permission) {
         if (hasPermission(player, permission)){
             PlayerConfiguration playerConfiguration = getPlayer(player);
             playerConfiguration.getPermissions().remove(permission);
@@ -338,8 +444,17 @@ public class PermissionDriver implements IPermissionDriver {
     }
 
     @Override
+    public void removePlayerGroup(String player, String group) {
+        if (playerHasGroup(player, group)){
+            PlayerConfiguration playerConfiguration = getPlayer(player);
+            playerConfiguration.getGroups().removeIf(givenGroup -> givenGroup.getGroup().equalsIgnoreCase(group));
+            updatePlayer(playerConfiguration);
+        }
+    }
+
+    @Override
     public boolean hasPermission(String player, String permission) {
-        return getPlayer(player).getPermissions().getOrDefault(permission, false);
+        return getPlayer(player).getPermissions().containsKey(permission);
     }
 
 }

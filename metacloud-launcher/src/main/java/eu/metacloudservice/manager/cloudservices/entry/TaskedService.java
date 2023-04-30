@@ -43,6 +43,7 @@ public class TaskedService implements ITaskedService {
         liveServices.setHost(config.getNodes().stream().filter(managerConfigNodes -> managerConfigNodes.getName().equals(entry.getNode())).toList().get(0).getAddress());
         liveServices.setNode(entry.getNode());
         liveServices.setPort(-1);
+        liveServices.setUuid(entry.getUsedId());
         liveServices.setState(ServiceState.QUEUED);
 
         LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudManager.restDriver.get("/cloudservice/general"), LiveServiceList.class);
@@ -223,11 +224,13 @@ public class TaskedService implements ITaskedService {
                 int memoryAfter = freeMemory- Driver.getInstance().getGroupDriver().load(entry.getGroupName()).getUsedMemory();
 
                 if (memoryAfter >= 0){
+                    Integer id = CloudManager.serviceDriver.getFreeUUID(entry.getGroupName());
+
                     TaskedService taskedService = CloudManager.serviceDriver.register(new TaskedEntry(
                             CloudManager.serviceDriver.getFreePort(Driver.getInstance().getGroupDriver().load(entry.getGroupName()).getGroupType().equalsIgnoreCase("PROXY")),
                             getEntry().getGroupName(),
-                            getEntry().getGroupName() + config.getSplitter() + CloudManager.serviceDriver.getFreeUUID(entry.getGroupName()),
-                            "InternalNode", getEntry().isUseProtocol()));
+                            getEntry().getGroupName() + config.getSplitter() + id,
+                            "InternalNode", getEntry().isUseProtocol(), String.valueOf(id)));
                     Driver.getInstance().getMessageStorage().canUseMemory  =Driver.getInstance().getMessageStorage().canUseMemory -  Driver.getInstance().getGroupDriver().load(entry.getGroupName()).getUsedMemory();
                     taskedService.handelLaunch();
                 }

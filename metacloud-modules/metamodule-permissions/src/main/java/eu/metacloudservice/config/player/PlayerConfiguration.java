@@ -11,8 +11,10 @@ public class PlayerConfiguration implements IConfigAdapter {
     private String UUID;
 
     private ArrayList<GivenGroup> groups;
-    private HashMap<String, Boolean> permissions;
+    private HashMap<String, HashMap<String, Object>> permissions;
 
+    public PlayerConfiguration() {
+    }
 
     public String getUUID() {
         return UUID;
@@ -30,11 +32,11 @@ public class PlayerConfiguration implements IConfigAdapter {
         this.groups = groups;
     }
 
-    public HashMap<String, Boolean> getPermissions() {
+    public HashMap<String, HashMap<String, Object>> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(HashMap<String, Boolean> permissions) {
+    public void setPermissions(HashMap<String, HashMap<String, Object>> permissions) {
         this.permissions = permissions;
     }
 }

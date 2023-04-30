@@ -6,6 +6,7 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
+import eu.metacloudservice.api.CloudPermsPool;
 
 @Plugin(id = "metacloudpermissions", name = "MetaCloud-Permissions", authors = "RauchigesEtwas", version = "1.0.0")
 public class VeloCityBootstrap {
@@ -20,6 +21,7 @@ public class VeloCityBootstrap {
 
     @Subscribe
     private void handle(ProxyInitializeEvent event){
+        new CloudPermsPool();
 
     }
 

@@ -592,7 +592,6 @@ public class MainSetup {
                     Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
                             "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB" ,
                             "Which bungeecord version do you want to use?", "Possible answers: §fBUNGEECORD, WATERFALL, VELOCITY, TRAVERTINE, HEXACORD");
-
                 }else {
                     Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "please enter a Ram number e.g. 512");
                 }

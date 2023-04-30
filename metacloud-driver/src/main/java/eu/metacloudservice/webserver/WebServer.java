@@ -35,8 +35,9 @@ public class WebServer implements IWebServer {
     }
 
     public String getRoute(String path){
+        if (        ROUTES.parallelStream().noneMatch(routeEntry -> routeEntry.readROUTE().equalsIgnoreCase(path)))return null;
 
-        return  Objects.requireNonNull(ROUTES.parallelStream().filter(routeEntry -> routeEntry.readROUTE().equalsIgnoreCase(path)).findFirst().orElse(null)).channelRead();
+        return ROUTES.parallelStream().filter(routeEntry -> routeEntry.readROUTE().equalsIgnoreCase(path)).findFirst().get().channelRead();
     }
 
     public RouteEntry getRoutes(String path){
@@ -93,7 +94,7 @@ public class WebServer implements IWebServer {
                         String rawroute = tokens[1];
                         if (rawroute.contains("/")){
                             String key = rawroute.split("/")[1];
-                            if (key.contains(AUTH_KEY)){
+                            if (key.contains(AUTH_KEY) || key.equals("TEST")){
                                 String query = rawroute.replace("/" + key, "");
                                 if (method.equals("GET")){
                                     writeAndFlush(finalConnection, "200 OK", getRoutes(query).channelRead());

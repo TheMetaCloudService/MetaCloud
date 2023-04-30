@@ -11,5 +11,6 @@ public class PermissionBase implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void handel(PermissionCheckEvent event){
         String permission = event.getPermission();
+        event.setHasPermission(true);
     }
 }

@@ -97,8 +97,6 @@ public class TabListListener implements Listener {
         double memory = CloudAPI.getInstance().getUsedMemory();
         double maxMemory = CloudAPI.getInstance().getUsedMemory();
         int maxPlayers = bungeeBootstrap.group.getMaxPlayers();
-        String serviceID = CloudAPI.getInstance().getServicePool().getService(serviceName).getID();
-        String proxyID = CloudAPI.getInstance().getServicePool().getService(proxyName).getID();
         int playerPing = player.getPing();
         String time = dtf.format(LocalDateTime.now());
         Calendar cal = Calendar.getInstance();
@@ -111,8 +109,6 @@ public class TabListListener implements Listener {
         String footer = rawFooter.replace("&", "§")
                 .replace("%service_name%", serviceName)
                 .replace("%time%", time)
-                .replace("%service_id%", serviceID)
-                .replace("%proxy_id%", proxyID)
                 .replace("%memory%", ""+memory)
                 .replace("%max_memory%", ""+maxMemory)
                 .replace("%proxy_node%", proxyNode)
@@ -134,8 +130,6 @@ public class TabListListener implements Listener {
                 .replace("%memory%", ""+memory)
                 .replace("%max_memory%", ""+maxMemory)
                 .replace("%proxy_node%", proxyNode)
-                .replace("%service_id%", serviceID)
-                .replace("%proxy_id%", proxyID)
                 .replace("%cloud_version%",version)
                 .replace("%service_node%", serviceNode)
                 .replace("%service_group_name%", serviceGroupName)

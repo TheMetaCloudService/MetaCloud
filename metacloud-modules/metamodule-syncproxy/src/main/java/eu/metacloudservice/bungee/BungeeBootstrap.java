@@ -38,12 +38,17 @@ public class BungeeBootstrap extends Plugin {
         tabCount = 0;
         motdCount = 0;
         instance = this;
+
         liveService = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         restDriver = new RestDriver(liveService.getManagerAddress(), liveService.getRestPort());
         Configuration conf = (Configuration) new ConfigDriver().convert(BungeeBootstrap.getInstance().getRestDriver().get("/module/syncproxy/configuration"), Configuration.class);
         if (conf.getConfiguration().stream().anyMatch(designConfig -> designConfig.getTargetGroup().equalsIgnoreCase(liveService.getGroup()))){
             configuration = conf.getConfiguration().stream().filter(designConfig -> designConfig.getTargetGroup().equalsIgnoreCase(liveService.getGroup())).findFirst().get();
         }
+
+        group = CloudAPI.getInstance().getGroups().stream()
+                .filter(group1 -> group1.getGroup().equalsIgnoreCase(getLiveService().getGroup()))
+                .findFirst().get();
         ProxyServer.getInstance().getPluginManager().registerListener(this, new MotdListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new TabListListener());
         updater();

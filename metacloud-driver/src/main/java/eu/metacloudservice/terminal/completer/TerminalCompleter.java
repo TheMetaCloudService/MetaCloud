@@ -41,7 +41,16 @@ public class TerminalCompleter  implements Completer {
                     result.add("LOBBY");
                     result.add("PROXY");
                     result.add("GAME");
-                }if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 3){
+                }
+                if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 2){
+                    result.add("256");
+                    result.add("512");
+                    result.add("1024");
+                    result.add("2048");
+                    result.add("4096");
+                    result.add("8192");
+                }
+                if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 3){
                     result.add("y");
                     result.add("n");
                 }if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 10){

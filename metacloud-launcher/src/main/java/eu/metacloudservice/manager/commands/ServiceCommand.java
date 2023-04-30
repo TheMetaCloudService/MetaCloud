@@ -140,7 +140,7 @@ public class ServiceCommand extends CommandAdapter {
                                     CloudManager.serviceDriver.getFreePort(gdata.getGroupType().equalsIgnoreCase("PROXY")),
                                     gdata.getGroup(),
                                     gdata.getGroup() + config.getSplitter() + id,
-                                    gdata.getStorage().getRunningNode(), config.getUseProtocol()));
+                                    gdata.getStorage().getRunningNode(), config.getUseProtocol(), id));
                             Driver.getInstance().getMessageStorage().canUseMemory = Driver.getInstance().getMessageStorage().canUseMemory - gdata.getUsedMemory();
                         }
                     } else {

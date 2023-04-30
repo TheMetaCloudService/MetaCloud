@@ -11,7 +11,6 @@ public class HandlePacketOutGroupCreate  implements NettyAdaptor {
     @Override
     public void handle(Channel channel, Packet packet) {
         if (packet instanceof PacketOutGroupCreate){
-
             CloudAPI.getInstance().getEventDriver().executeEvent(new CloudGroupCreateEvent(((PacketOutGroupCreate) packet).getGroup()));
         }
     }

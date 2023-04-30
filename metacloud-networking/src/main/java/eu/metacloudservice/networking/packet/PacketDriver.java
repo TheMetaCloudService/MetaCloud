@@ -39,14 +39,6 @@ public class PacketDriver {
         return this;
 
     }
-    public PacketDriver registerPacket(Class<? extends Packet> pc) {
-        try {
-            this.packets.put(pc.newInstance().getPacketUUID(), pc);
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return this;
-    }
     public Class<? extends Packet> getPacket(int id) {
         return this.packets.get(id);
     }

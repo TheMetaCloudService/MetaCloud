@@ -19,6 +19,7 @@ E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacl
 E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacloudservice\networking\HandlePacketOutPlayerDisconnect.java
 E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacloudservice\pool\player\PlayerPool.java
 E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacloudservice\async\AsyncCloudAPI.java
+E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacloudservice\codec\GameMode.java
 E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacloudservice\CloudAPI.java
 E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacloudservice\networking\HandlePacketOutGroupDelete.java
 E:\CloudSystems\MetaCloud\MetacloudService\metacloud-api\src\main\java\eu\metacloudservice\bootstrap\bungee\networking\HandlePacketOutAPIPlayerDispactchCommand.java

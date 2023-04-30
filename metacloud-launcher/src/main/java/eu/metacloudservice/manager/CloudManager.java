@@ -69,6 +69,7 @@ public class CloudManager {
     public static boolean shutdown;
 
     public CloudManager() {
+
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Es wird versucht, den '§fCloud Manager§r' zu starten",
                 "An attempt is made to start the '§fcloud manager§r'");
 
@@ -83,6 +84,8 @@ public class CloudManager {
             Driver.getInstance().getMessageStorage().packetLoader.loadModules();
         }
 
+
+
         new File("./local/GLOBAL/EVERY/plugins/").mkdirs();
         new File("./local/GLOBAL/EVERY_SERVER/plugins/").mkdirs();
         new File("./local/GLOBAL/EVERY_PROXY/plugins/").mkdirs();
@@ -95,14 +98,11 @@ public class CloudManager {
             key.setKey(k);
             new ConfigDriver("./connection.key").save(key);
         }
-        Driver.getInstance().getMessageStorage().canUseMemory = config.getCanUsedMemory();
+        Driver.getInstance().getMessageStorage().canUseMemory = config.getCanUsedMemory() -250;
         System.setProperty("log4j.configurationFile", "log4j2.properties");
         initNetty(config);
-        Driver.getInstance().getMessageStorage().eventDriver = new EventDriver();
         restDriver = new RestDriver(config.getManagerAddress(), config.getRestApiCommunication());
         initRestService();
-
-
 
         if (!new File("./local/messages.json").exists()){
             new ConfigDriver("./local/messages.json").save(new Messages("§8▷ §bMetaCloud §8▌ §7",
@@ -117,7 +117,6 @@ public class CloudManager {
                     "§8▷ §cpleas connect over the main proxy",
                     "§8▷ §cYou are already on the Network"));
         }
-
 
         if (!new File("./local/server-icon.png").exists()){
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Versuche die Datei '§fserver-icon.png§r' herunter zuladen",
@@ -315,7 +314,6 @@ public class CloudManager {
             e.printStackTrace();
         }
         Driver.getInstance().getWebServer().close();
-
         NettyDriver.getInstance().nettyServer.close();
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Danke für die Nutzung von MetaCloud ;->",
                 "Thank you for using MetaCloud ;->");
