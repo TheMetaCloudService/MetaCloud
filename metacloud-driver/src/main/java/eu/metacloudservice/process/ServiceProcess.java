@@ -391,27 +391,20 @@ public class ServiceProcess {
         if (new File("./service.json").exists()){
             ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
             if (config.isCopyLogs()){
-                if (new File("./local/logs/services/"+group+"/" + service + ".json").exists()){
-                    new File("./local/logs/services/" +group+"/"+ service + ".json").delete();
-                    new File("./local/logs/services/"+group+"/").mkdirs();
-                    FileUtils.copyFile(new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/logs/latest.log"), new File("./local/logs/services/"+group+"/" + service + ".json"));
-                }else {
-                    new File("./local/logs/services/"+group+"/").mkdirs();
-                    FileUtils.copyFile(new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/logs/latest.log"), new File("./local/logs/services/"+group+"/" + service + ".json"));
+                if (new File("./local/logs/services/"+group.getGroup()+"/" + service + ".json").exists()){
+                    new File("./local/logs/services/" +group.getGroup()+"/"+ service + ".json").delete();
                 }
+                new File("./local/logs/services/"+group.getGroup()+"/").mkdirs();
+                FileUtils.copyFile(new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/logs/latest.log"), new File("./local/logs/services/"+group.getGroup()+"/" + service + ".json"));
             }
         }else {
             NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
             if (config.isCopyLogs()){
-                if (new File("./local/logs/services/"+group+"/" + service + ".json").exists()){
-                    new File("./local/logs/services/" +group+"/"+ service + ".json").delete();
-                    new File("./local/logs/services/"+group+"/").mkdirs();
-                    FileUtils.copyFile(new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/logs/latest.log"), new File("./local/logs/services/"+group+"/" + service + ".json"));
-                }else {
-                    new File("./local/logs/services/"+group+"/").mkdirs();
-                    FileUtils.copyFile(new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/logs/latest.log"), new File("./local/logs/services/"+group+"/" + service + ".json"));
-
+                if (new File("./local/logs/services/"+group.getGroup()+"/" + service + ".json").exists()){
+                    new File("./local/logs/services/" +group.getGroup()+"/"+ service + ".json").delete();
                 }
+                new File("./local/logs/services/"+group.getGroup()+"/").mkdirs();
+                FileUtils.copyFile(new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/logs/latest.log"), new File("./local/logs/services/"+group.getGroup()+"/" + service + ".json"));
             }
         }
 

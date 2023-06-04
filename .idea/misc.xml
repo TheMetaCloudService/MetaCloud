@@ -28,6 +28,7 @@
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/metacloud-cloudupdater/pom.xml" />
+        <option value="$PROJECT_DIR$/metacloud-modules/metamodule-balancer/pom.xml" />
         <option value="$PROJECT_DIR$/metacloud-updater/pom.xml" />
       </set>
     </option>

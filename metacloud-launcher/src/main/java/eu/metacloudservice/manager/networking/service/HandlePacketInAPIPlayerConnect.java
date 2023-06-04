@@ -11,7 +11,7 @@ public class HandlePacketInAPIPlayerConnect implements NettyAdaptor {
     @Override
     public void handle(Channel channel, Packet packet) {
         if (packet instanceof PacketInAPIPlayerConnect){
-            NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutAPIPlayerConnect(((PacketInAPIPlayerConnect) packet).getUsername(), ((PacketInAPIPlayerConnect) packet).getService()));
+            NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutAPIPlayerConnect(((PacketInAPIPlayerConnect) packet).getUsername(), ((PacketInAPIPlayerConnect) packet).getService()));
         }
     }
 }

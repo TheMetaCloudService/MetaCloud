@@ -15,13 +15,14 @@
         <module name="metamodule-notify" />
         <module name="metamodule-permissions" />
         <module name="metacloud-driver" />
-        <module name="metamodule-balancer" />
         <module name="metamodule-syncproxy" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="metacloud-cloudupdater" target="17" />
       <module name="metacloud-updater" target="16" />
+      <module name="metamodule-balancer" target="16" />
+      <module name="metamodule-cloudflare" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>

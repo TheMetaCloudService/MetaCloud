@@ -23,7 +23,7 @@ public class HandlePacketInPlayerDisconnect implements NettyAdaptor {
     public void handle(Channel channel, Packet packet) {
          if (packet instanceof PacketInPlayerDisconnect){
              if (!CloudManager.shutdown){
-                 NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutPlayerDisconnect(((PacketInPlayerDisconnect) packet).getName()));
+                 NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutPlayerDisconnect(((PacketInPlayerDisconnect) packet).getName()));
                  CloudPlayerRestCache restCech = (CloudPlayerRestCache)(new RestDriver()).convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/" + UUIDDriver.getUUID(((PacketInPlayerDisconnect) packet).getName())), CloudPlayerRestCache.class);
                  ManagerConfig config = (ManagerConfig)(new ConfigDriver("./service.json")).read(ManagerConfig.class);
                  if (CloudManager.serviceDriver.getService(restCech.getCloudplayerproxy()) != null){

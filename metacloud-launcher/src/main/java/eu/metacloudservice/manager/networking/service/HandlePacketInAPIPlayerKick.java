@@ -12,7 +12,7 @@ public class HandlePacketInAPIPlayerKick implements NettyAdaptor {
     public void handle(Channel channel, Packet packet) {
 
         if (packet instanceof PacketInAPIPlayerKick){
-            NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutAPIPlayerKick(((PacketInAPIPlayerKick) packet).getUsername(), ((PacketInAPIPlayerKick) packet).getMessage()));
+            NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutAPIPlayerKick(((PacketInAPIPlayerKick) packet).getUsername(), ((PacketInAPIPlayerKick) packet).getMessage()));
         }
 
     }

@@ -37,7 +37,7 @@ public class HandlePacketInPlayerSwitchService implements NettyAdaptor {
 
                 String from = restCech.getCloudplayerservice();
 
-                NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutPlayerSwitchService(((PacketInPlayerSwitchService) packet).getName(), ((PacketInPlayerSwitchService) packet).getServer(), from));
+                NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutPlayerSwitchService(((PacketInPlayerSwitchService) packet).getName(), ((PacketInPlayerSwitchService) packet).getServer(), from));
 
                 Driver.getInstance().getMessageStorage().eventDriver .executeEvent(new CloudPlayerSwitchEvent(((PacketInPlayerSwitchService) packet).getName(), UUIDDriver.getUUID(((PacketInPlayerSwitchService) packet).getName()), restCech.getCloudplayerservice(), ((PacketInPlayerSwitchService) packet).getServer()));
                 CloudManager.serviceDriver.getService(((PacketInPlayerSwitchService) packet).getServer()).handelCloudPlayerConnection(true);

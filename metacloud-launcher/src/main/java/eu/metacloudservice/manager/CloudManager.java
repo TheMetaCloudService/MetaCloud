@@ -180,7 +180,6 @@ public class CloudManager {
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new ServiceCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new NodeCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new ReloadCommand());
-        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new ModuleCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new MetaCloudCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new QueueCommand());
 
@@ -307,6 +306,7 @@ public class CloudManager {
         shutdown = true;
         NettyDriver.getInstance().packetDriver.getAdaptor().clear();
         serviceDriver.getServicesFromNode("InternalNode").forEach(TaskedService::handelQuit);
+        Driver.getInstance().getModuleDriver().unload();
 
         try {
             Thread.sleep(500);

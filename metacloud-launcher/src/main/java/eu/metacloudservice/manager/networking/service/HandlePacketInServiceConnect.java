@@ -39,21 +39,21 @@ public class HandlePacketInServiceConnect implements NettyAdaptor {
 
 
                 if (group.getGroupType().equals("PROXY")){
-                    NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutServiceConnected(((PacketInServiceConnect) packet).getService(), group.getGroup()));
+                    NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutServiceConnected(((PacketInServiceConnect) packet).getService(), group.getGroup()));
                     CloudManager.serviceDriver.getServices().forEach(taskedService -> {
                         if (!taskedService.getEntry().getServiceName().equals(((PacketInServiceConnect) packet).getService()) && taskedService.getEntry().getStatus() != ServiceState.STARTED  && taskedService.getEntry().getStatus() != ServiceState.QUEUED) {
-                            NettyDriver.getInstance().nettyServer.sendPacketSynchronized(((PacketInServiceConnect) packet).getService(), new PacketOutServiceConnected(taskedService.getEntry().getServiceName(),taskedService.getEntry().getGroupName()));
+                            NettyDriver.getInstance().nettyServer.sendPacketAsynchronous(((PacketInServiceConnect) packet).getService(), new PacketOutServiceConnected(taskedService.getEntry().getServiceName(),taskedService.getEntry().getGroupName()));
                         }
                     });
 
                     Driver.getInstance().getMessageStorage().eventDriver .executeEvent(new CloudProxyConnectedEvent(((PacketInServiceConnect) packet).getService(), entry.getNode(), entry.getUsedPort(), config.getNodes().stream().filter(managerConfigNodes -> managerConfigNodes.getName().equals(entry.getNode())).toList().get(0).getAddress(), entry.getGroupName()));
 
                 }else {
-                    NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutServiceConnected(((PacketInServiceConnect) packet).getService(), group.getGroup()));
+                    NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutServiceConnected(((PacketInServiceConnect) packet).getService(), group.getGroup()));
                     Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudServiceConnectedEvent(((PacketInServiceConnect) packet).getService(), entry.getNode(), entry.getUsedPort(), config.getNodes().stream().filter(managerConfigNodes -> managerConfigNodes.getName().equals(entry.getNode())).toList().get(0).getAddress(), entry.getGroupName()));
                     CloudManager.serviceDriver.getServices().forEach(taskedService -> {
                         if (!taskedService.getEntry().getServiceName().equals(((PacketInServiceConnect) packet).getService()) && taskedService.getEntry().getStatus() != ServiceState.STARTED  && taskedService.getEntry().getStatus() != ServiceState.QUEUED) {
-                            NettyDriver.getInstance().nettyServer.sendPacketSynchronized(((PacketInServiceConnect) packet).getService(), new PacketOutServiceConnected(taskedService.getEntry().getServiceName(),taskedService.getEntry().getGroupName()));
+                            NettyDriver.getInstance().nettyServer.sendPacketAsynchronous(((PacketInServiceConnect) packet).getService(), new PacketOutServiceConnected(taskedService.getEntry().getServiceName(),taskedService.getEntry().getGroupName()));
                         }
                     });
 
