@@ -39,7 +39,7 @@ public class QueueCommand extends CommandAdapter {
                 LinkedList<String> start =  CloudManager.queueDriver.getQueue_startup();
                 LinkedList<String> stop =  CloudManager.queueDriver.getQueue_shutdown();
 
-                if (stop.stream().noneMatch(s -> s.equalsIgnoreCase(service))&& start.stream().noneMatch(s -> s.equalsIgnoreCase(s))){
+                if (stop.stream().noneMatch(s -> s.equalsIgnoreCase(service))&& start.stream().noneMatch(s -> s.equals(s))){
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                             "Der service ist in keiner Warteschlange vertreten",
                             "The service is not represented in any queue");

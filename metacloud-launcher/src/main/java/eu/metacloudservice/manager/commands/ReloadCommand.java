@@ -3,6 +3,7 @@ package eu.metacloudservice.manager.commands;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
+import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfigNodes;
 import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.terminal.commands.CommandAdapter;
 import eu.metacloudservice.terminal.commands.CommandInfo;
@@ -14,6 +15,7 @@ import eu.metacloudservice.webserver.dummys.WhiteList;
 import eu.metacloudservice.webserver.entry.RouteEntry;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @CommandInfo(command = "reload", DEdescription = "lade alle module sowie weiter daten neu", ENdescription = "reload all modules and further data", aliases = {"rl"})
 public class ReloadCommand extends CommandAdapter {
@@ -24,7 +26,7 @@ public class ReloadCommand extends CommandAdapter {
 
 
         if (args.length == 0){
-            sendhelp();
+            sendHelp();
         }else if (args[0].equalsIgnoreCase("all")){
             Driver.getInstance().getModuleDriver().reload();
             Messages raw = (Messages) new ConfigDriver("./local/messages.json").read(Messages.class);
@@ -47,10 +49,7 @@ public class ReloadCommand extends CommandAdapter {
             Driver.getInstance().getWebServer().updateRoute("/default/whitelist", new ConfigDriver().convert(whitelistConfig));
             Addresses AddressesConfig = new Addresses();
 
-            ArrayList<String> addresses = new ArrayList<>();
-            config.getNodes().forEach(managerConfigNodes -> {
-                addresses.add(managerConfigNodes.getAddress());
-            });
+            ArrayList<String> addresses = config.getNodes().stream().map(ManagerConfigNodes::getAddress).collect(Collectors.toCollection(ArrayList::new));
             AddressesConfig.setWhitelist(addresses);
             Driver.getInstance().getWebServer().updateRoute("/default/addresses", new ConfigDriver().convert(AddressesConfig));
             GroupList groupList = new GroupList();
@@ -91,10 +90,7 @@ public class ReloadCommand extends CommandAdapter {
             Driver.getInstance().getWebServer().updateRoute("/default/whitelist", new ConfigDriver().convert(whitelistConfig));
             Addresses AddressesConfig = new Addresses();
 
-            ArrayList<String> addresses = new ArrayList<>();
-            config.getNodes().forEach(managerConfigNodes -> {
-                addresses.add(managerConfigNodes.getAddress());
-            });
+            ArrayList<String> addresses = config.getNodes().stream().map(ManagerConfigNodes::getAddress).collect(Collectors.toCollection(ArrayList::new));
             AddressesConfig.setWhitelist(addresses);
             Driver.getInstance().getWebServer().updateRoute("/default/addresses", new ConfigDriver().convert(AddressesConfig));
             GroupList groupList = new GroupList();
@@ -120,7 +116,7 @@ public class ReloadCommand extends CommandAdapter {
 
         }
         else {
-            sendhelp();
+            sendHelp();
         }
 
 
@@ -135,7 +131,7 @@ public class ReloadCommand extends CommandAdapter {
         return returns;
     }
 
-    public void sendhelp(){
+    public void sendHelp(){
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §freload all §7~ Um alles zu neu zuladen",
                 " >> §freload all §7~ To reload everything");

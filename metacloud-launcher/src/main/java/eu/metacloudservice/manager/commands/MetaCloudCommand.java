@@ -22,8 +22,8 @@ public class MetaCloudCommand extends CommandAdapter {
         MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
 
         OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
-        double usedMemory = memoryMXBean.getHeapMemoryUsage().getUsed() / 1048576;
-        double maxMemory =    memoryMXBean.getHeapMemoryUsage().getMax() / 1048576;
+        double usedMemory = (double) memoryMXBean.getHeapMemoryUsage().getUsed() / 1048576;
+        double maxMemory =    (double) memoryMXBean.getHeapMemoryUsage().getMax() / 1048576;
         int processors =    operatingSystemMXBean.getAvailableProcessors() ;
         int loadedClassCount = ManagementFactory.getClassLoadingMXBean().getLoadedClassCount();
         long totalLoadedClassCount = ManagementFactory.getClassLoadingMXBean().getTotalLoadedClassCount();

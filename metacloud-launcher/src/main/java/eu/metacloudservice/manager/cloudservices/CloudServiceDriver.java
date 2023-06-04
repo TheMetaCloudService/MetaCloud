@@ -78,7 +78,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
         return IntStream.range(1, maximalTasks)
                 .filter(i -> !getServices(group).stream()
                         .map(s -> Integer.parseInt(s.getEntry().getServiceName().replace(group, "").replace(config.getSplitter(), "")))
-                        .collect(Collectors.toList())
+                        .toList()
                         .contains(i))
                 .findFirst()
                 .orElse(0);
@@ -106,7 +106,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                 .map(TaskedService::getEntry)
                 .filter(sEntry -> sEntry.getNode().equals("InternalNode"))
                 .map(TaskedEntry::getUsedPort)
-                .collect(Collectors.toList());
+                .toList();
         return IntStream.range(proxy ? this.config.getBungeecordPort() : this.config.getSpigotPort(), Integer.MAX_VALUE)
                 .filter(p -> !ports.contains(p))
                 .findFirst()
@@ -116,7 +116,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
 
     @Override
     public void shutdown(ArrayList<String> tasks) {
-        this.services.stream().filter(service1 -> tasks.contains(service1.getEntry().getServiceName())).collect(Collectors.toList()).forEach(TaskedService::handelQuit);
+        this.services.stream().filter(service1 -> tasks.contains(service1.getEntry().getServiceName())).toList().forEach(TaskedService::handelQuit);
     }
 
     @Override
@@ -132,7 +132,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                 public void run() {
 
                     if (Driver.getInstance().getMessageStorage().getCPULoad() <= config.getProcessorUsage()){
-                        if (getServices().stream().filter(taskedService -> taskedService.getEntry().getStatus() == ServiceState.STARTED).collect(Collectors.toList()).size() <= config.getServiceStartupCount()){
+                        if (getServices().stream().filter(taskedService -> taskedService.getEntry().getStatus() == ServiceState.STARTED).toList().size() <= config.getServiceStartupCount()){
                             if (!CloudManager.queueDriver.getQueue_startup().isEmpty()){
                                 String service = CloudManager.queueDriver.getQueue_startup().removeFirst();
                                 if (
@@ -196,16 +196,12 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                             .filter(taskedService -> {
                                 int time = Integer.parseInt(String.valueOf(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - taskedService.getEntry().getTime())));
 
-                                if (time >= 120){
-                                    return true;
-                                }else {
-                                    return false;
-                                }
+                                return time >= 120;
 
                             })
-                            .collect(Collectors.toList());
+                            .toList();
 
-                    services.stream().sorted(Comparator.comparingInt(o -> Integer.parseInt(String.valueOf(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - o.getEntry().getTime()))))).collect(Collectors.toList()).forEach(taskedService -> {
+                    services.stream().sorted(Comparator.comparingInt(o -> Integer.parseInt(String.valueOf(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - o.getEntry().getTime()))))).toList().forEach(taskedService -> {
                         Group group = Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName());
 
                         int minonline = 0;
@@ -239,9 +235,9 @@ public class CloudServiceDriver implements ICloudServiceDriver {
 
                     List<TaskedService> servicess = getServices().stream()
                             .filter(taskedService -> taskedService.getEntry().getStatus() == ServiceState.LOBBY)
-                            .collect(Collectors.toList());
+                            .toList();
 
-                    servicess.stream().sorted(Comparator.comparingInt(o -> o.getEntry().getCurrentPlayers())).collect(Collectors.toList()).forEach(taskedService -> {
+                    servicess.stream().sorted(Comparator.comparingInt(o -> o.getEntry().getCurrentPlayers())).toList().forEach(taskedService -> {
                         Group group = Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName());
                         int minonline = 0;
 
@@ -255,7 +251,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                             minonline = group.getOver100AtGroup()*entry.group_player_potency.get(group.getGroup());
                         }
 
-                        int inStoppedQueue = CloudManager.queueDriver.getQueue_shutdown().stream().filter(s -> getService(s).getEntry().getGroupName().equalsIgnoreCase(taskedService.getEntry().getGroupName())).collect(Collectors.toList()).size();
+                        int inStoppedQueue = CloudManager.queueDriver.getQueue_shutdown().stream().filter(s -> getService(s).getEntry().getGroupName().equalsIgnoreCase(taskedService.getEntry().getGroupName())).toList().size();
 
                         if (getLobbiedServices(taskedService.getEntry().getGroupName())-1-inStoppedQueue >=  minonline){
                             unregister(taskedService.getEntry().getServiceName());
@@ -267,7 +263,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                         }
                     });
 
-                    servicess.stream().filter(taskedService -> !taskedService.hasStartedNew).collect(Collectors.toList()).stream().filter(taskedService -> {
+                    servicess.stream().filter(taskedService -> !taskedService.hasStartedNew).toList().stream().filter(taskedService -> {
 
                         Group group = Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName());
                         final double need_players = ((double) group.getMaxPlayers() / (double) 100) * (double) group.getStartNewPercent();
@@ -276,7 +272,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                         }else {
                             return false;
                         }
-                    }).collect(Collectors.toList()).forEach(taskedService -> {
+                    }).toList().forEach(taskedService -> {
 
                         taskedService.hasStartedNew = true;
                         if (taskedService.getEntry().getNode().equals("InternalNode")) {
@@ -428,7 +424,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
 
     @Override
     public TaskedService getService(String service) {
-        if (this.services.stream().filter(service1 -> service1.getEntry().getServiceName().equals(service)).collect(Collectors.toList()).isEmpty()){
+        if (this.services.stream().noneMatch(service1 -> service1.getEntry().getServiceName().equals(service))){
             return null;
         }else {
             return this.services.stream().filter(service1 -> service1.getEntry().getServiceName().equals(service)).findFirst().get();
