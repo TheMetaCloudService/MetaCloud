@@ -6,7 +6,7 @@ import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;
 import io.netty.channel.Channel;
 
-public class HandlePacketOutAPIPlayerDispactchCommand implements NettyAdaptor {
+public class HandlePacketOutAPIPlayerDispatchCommand implements NettyAdaptor {
     @Override
     public void handle(Channel channel, Packet packet) {
         if (packet instanceof PacketOutAPIPlayerDispactchCommand){
