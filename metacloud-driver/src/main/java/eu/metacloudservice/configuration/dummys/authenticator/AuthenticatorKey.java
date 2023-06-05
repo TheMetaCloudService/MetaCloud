@@ -4,14 +4,9 @@ import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
 
 public class AuthenticatorKey implements IConfigAdapter {
 
+    @lombok.Setter
+    @lombok.Getter
     private String key;
     public AuthenticatorKey() {}
 
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
 }

@@ -3,23 +3,14 @@ package eu.metacloudservice.events.listeners.services;
 import eu.metacloudservice.events.entrys.IEventAdapter;
 
 public class CloudProxyPreparedEvent extends IEventAdapter {
+    @lombok.Getter
     private final String name;
 
+    @lombok.Getter
     private final String group;
 
+    @lombok.Getter
     private final String node;
-
-    public String getName() {
-        return this.name;
-    }
-
-    public String getGroup() {
-        return this.group;
-    }
-
-    public String getNode() {
-        return this.node;
-    }
 
     public CloudProxyPreparedEvent(String name, String group, String node) {
         this.name = name;

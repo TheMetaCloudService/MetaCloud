@@ -4,35 +4,20 @@ package eu.metacloudservice.events.listeners.services;
 import eu.metacloudservice.events.entrys.IEventAdapter;
 
 public class CloudServiceConnectedEvent extends IEventAdapter {
+    @lombok.Getter
     private final String name;
 
+    @lombok.Getter
     private final String node;
 
+    @lombok.Getter
     private final Integer port;
 
+    @lombok.Getter
     private final String host;
 
+    @lombok.Getter
     private final String group;
-
-    public String getName() {
-        return this.name;
-    }
-
-    public String getNode() {
-        return this.node;
-    }
-
-    public Integer getPort() {
-        return this.port;
-    }
-
-    public String getHost() {
-        return this.host;
-    }
-
-    public String getGroup() {
-        return this.group;
-    }
 
     public CloudServiceConnectedEvent(String name, String node, Integer port, String host, String group) {
         this.name = name;

@@ -7,6 +7,7 @@ import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.manager.networking.node.HandlePacketInNodeActionSuccess;
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.in.node.PacketInNodeActionSuccess;
+import eu.metacloudservice.node.CloudNode;
 import eu.metacloudservice.node.cloudservices.entry.QueueEntry;
 import eu.metacloudservice.process.ServiceProcess;
 import eu.metacloudservice.timebaser.TimerBase;
@@ -71,7 +72,7 @@ public class CloudServiceDriver {
         base.schedule(new TimerTask() {
             @Override
             public void run() {
-                NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
+                NodeConfig config = CloudNode.config;
 
                 if (Driver.getInstance().getMessageStorage().getCPULoad() <= config.getProcessorUsage()){
                     if (!queue.isEmpty()){
@@ -82,13 +83,9 @@ public class CloudServiceDriver {
                             String  service = entry.getService();
                             if (processes.stream().noneMatch(serviceProcess -> serviceProcess.getService().equalsIgnoreCase(service))){
                                 int port = getFreePort(group.getGroupType().equalsIgnoreCase("PROXY"));
-
                                 processes.add(new ServiceProcess(group, service, port , entry.isUseProtocol()));
                                 processes.stream().filter(serviceProcess -> serviceProcess.getService().equalsIgnoreCase(service)).findFirst().get().handelLaunch();
-
-
                                 NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInNodeActionSuccess(true, service, config.getNodeName(), port));
-
                             }
                         }else {
                             String service = entry.getService();
@@ -96,11 +93,9 @@ public class CloudServiceDriver {
                                 processes.stream().filter(serviceProcess -> serviceProcess.getService().equalsIgnoreCase(service)).findFirst().get().handelShutdown();
                                 try {Thread.sleep(1000);} catch (InterruptedException ignored) {}
                                 processes.removeIf(serviceProcess -> serviceProcess.getService().equalsIgnoreCase(service));
-
                                 NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInNodeActionSuccess(false, service, config.getNodeName(), 0));
                             }
                         }
-
                     }
                 }
 
@@ -112,7 +107,7 @@ public class CloudServiceDriver {
     private Integer getFreePort(boolean proxy) {
         List<Integer> ports = processes.stream()
                 .map(ServiceProcess::getPort)
-                .collect(Collectors.toList());
+                .toList();
         return IntStream.range(proxy ? this.config.getBungeecordPort() : this.config.getSpigotPort(), Integer.MAX_VALUE)
                 .filter(p -> !ports.contains(p))
                 .findFirst()

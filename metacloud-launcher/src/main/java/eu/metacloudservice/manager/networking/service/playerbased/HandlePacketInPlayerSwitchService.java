@@ -2,8 +2,6 @@ package eu.metacloudservice.manager.networking.service.playerbased;
 
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.cloudplayer.CloudPlayerRestCache;
-import eu.metacloudservice.configuration.ConfigDriver;
-import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
 import eu.metacloudservice.events.listeners.player.CloudPlayerSwitchEvent;
 import eu.metacloudservice.manager.CloudManager;
 import eu.metacloudservice.networking.NettyDriver;
@@ -22,8 +20,8 @@ public class HandlePacketInPlayerSwitchService implements NettyAdaptor {
         if (packet instanceof PacketInPlayerSwitchService){
             if (!CloudManager.shutdown){
                 CloudPlayerRestCache restCech = (CloudPlayerRestCache)(new RestDriver()).convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/" + UUIDDriver.getUUID(((PacketInPlayerSwitchService) packet).getName())), CloudPlayerRestCache.class);
-                ManagerConfig config = (ManagerConfig)(new ConfigDriver("./service.json")).read(ManagerConfig.class);
-                if (config.isShowConnectingPlayers()){
+
+                if (CloudManager.config.isShowConnectingPlayers()){
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der Spieler '"+ ((PacketInPlayerSwitchService) packet).getName() + "@" + UUIDDriver.getUUID(((PacketInPlayerSwitchService) packet).getName())  + "§f' hat sich mit dem Server '"+ ((PacketInPlayerSwitchService) packet).getServer() + "§r' verbunden",
                             "The player '"+ ((PacketInPlayerSwitchService) packet).getName()+ "@" + UUIDDriver.getUUID(((PacketInPlayerSwitchService) packet).getName()) + "§f' has connected to the '"+ ((PacketInPlayerSwitchService) packet).getServer()+ "§r' server");
                 }

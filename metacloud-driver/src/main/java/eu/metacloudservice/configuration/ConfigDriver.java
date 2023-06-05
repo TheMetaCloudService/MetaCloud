@@ -1,5 +1,6 @@
 package eu.metacloudservice.configuration;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -28,8 +29,13 @@ public class ConfigDriver {
     @SneakyThrows
     public IConfigAdapter read(Class<? extends IConfigAdapter> tClass){
 
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(new File(this.location), tClass);
+        try (InputStream inputStream = new FileInputStream(this.location)) {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            return mapper.readValue(inputStream, tClass);
+        } catch (IOException e) {
+            return null;
+        }
     }
 
 
@@ -56,16 +62,19 @@ public class ConfigDriver {
     public void save(IConfigAdapter IConfigAdapter){
         CompletableFuture.runAsync(() -> {
             try {
-                if (!exists()) {
-                    new File(this.location).createNewFile();
+                File file = new File(this.location);
+
+                if (!file.exists()) {
+                    file.createNewFile();
                 }
-                try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(this.location), StandardCharsets.UTF_8)) {
+
+                try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
                     GSON.toJson(IConfigAdapter, writer);
+                    writer.flush(); // Manuell Puffer leeren, um sicherzustellen, dass Daten geschrieben werden
                 }
-            } catch (IOException e) {
-                Driver.getInstance().getTerminalDriver().log(Type.ERROR, e.getMessage());
-            }
+            } catch (IOException ignored) {}
         });
+
     }
 
 }

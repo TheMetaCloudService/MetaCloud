@@ -25,7 +25,7 @@ public class HandlePacketInPlayerDisconnect implements NettyAdaptor {
              if (!CloudManager.shutdown){
                  NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutPlayerDisconnect(((PacketInPlayerDisconnect) packet).getName()));
                  CloudPlayerRestCache restCech = (CloudPlayerRestCache)(new RestDriver()).convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/" + UUIDDriver.getUUID(((PacketInPlayerDisconnect) packet).getName())), CloudPlayerRestCache.class);
-                 ManagerConfig config = (ManagerConfig)(new ConfigDriver("./service.json")).read(ManagerConfig.class);
+
                  if (CloudManager.serviceDriver.getService(restCech.getCloudplayerproxy()) != null){
                      CloudManager.serviceDriver.getService(restCech.getCloudplayerproxy()).handelCloudPlayerConnection(false);
                  }
@@ -55,7 +55,7 @@ public class HandlePacketInPlayerDisconnect implements NettyAdaptor {
                  Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudPlayerDisconnectedEvent(((PacketInPlayerDisconnect) packet).getName(), UUIDDriver.getUUID(((PacketInPlayerDisconnect) packet).getName())));
 
                  Driver.getInstance().getWebServer().removeRoute("/cloudplayer/" + UUIDDriver.getUUID(((PacketInPlayerDisconnect) packet).getName()));
-                 if (config.isShowConnectingPlayers()){
+                 if (CloudManager.config.isShowConnectingPlayers()){
                      Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der Spieler '"+ ((PacketInPlayerDisconnect) packet).getName() + "@" + UUIDDriver.getUUID(((PacketInPlayerDisconnect) packet).getName()) + "§r' hat das Netzwerk verlassen",
                              "The player '"+ ((PacketInPlayerDisconnect) packet).getName()  + "@" + UUIDDriver.getUUID(((PacketInPlayerDisconnect) packet).getName()) + "§r' has left the network");
                  }

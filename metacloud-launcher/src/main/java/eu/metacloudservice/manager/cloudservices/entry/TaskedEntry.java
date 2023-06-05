@@ -12,11 +12,16 @@ public class TaskedEntry {
     private final String group_name;
     private final String service_name;
     private final String task_node;
+    @lombok.Setter
+    @lombok.Getter
     private ServiceState status;
     private final boolean use_protocol;
+    @lombok.Getter
     private final  long time;
-    private String UUID;
-    private int usedId;
+    @lombok.Getter
+    private final String UUID;
+    @lombok.Getter
+    private final int usedId;
 
     public TaskedEntry(int used_port, String group_name, String service_name, String task_node, boolean use_protocol, String usedId) {
         this.current_players = 0;
@@ -33,14 +38,6 @@ public class TaskedEntry {
         this.usedId = Integer.parseInt(usedId);
     }
 
-
-    public int getUsedId() {
-        return usedId;
-    }
-
-    public String getUUID() {
-        return UUID;
-    }
 
     public void setUsedPort(int used_port) {
         this.used_port = used_port;
@@ -78,14 +75,6 @@ public class TaskedEntry {
         return task_node;
     }
 
-    public ServiceState getStatus() {
-        return status;
-    }
-
-    public void setStatus(ServiceState status) {
-        this.status = status;
-    }
-
     public int getUsedPort() {
         return used_port;
     }
@@ -98,7 +87,4 @@ public class TaskedEntry {
         this.check_interval_players = check_interval_players;
     }
 
-    public long getTime() {
-        return time;
-    }
 }

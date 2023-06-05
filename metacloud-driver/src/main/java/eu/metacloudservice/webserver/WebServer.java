@@ -4,6 +4,9 @@ import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.authenticator.AuthenticatorKey;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
+import eu.metacloudservice.events.listeners.restapi.CloudRestAPIPutEvent;
+import eu.metacloudservice.networking.NettyDriver;
+import eu.metacloudservice.networking.out.service.PacketOutRestAPIPut;
 import eu.metacloudservice.webserver.entry.RouteEntry;
 import eu.metacloudservice.webserver.interfaces.IWebServer;
 import lombok.SneakyThrows;
@@ -70,6 +73,9 @@ public class WebServer implements IWebServer {
         char[] body = new char[contentLength];
         in.read(body, 0, contentLength);
         String data = new String(body);
+        NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutRestAPIPut(path, data));
+        Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudRestAPIPutEvent(path, data));
+
         getRoutes(path).channelWrite(data);
         writeAndFlush(clientSocket, "200 OK", "{\"reason\":\"data received\"}");
     }

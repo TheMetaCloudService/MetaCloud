@@ -1,13 +1,6 @@
 package eu.metacloudservice.manager.cloudservices.queue;
 
-import eu.metacloudservice.Driver;
-import eu.metacloudservice.manager.CloudManager;
-import eu.metacloudservice.process.ServiceState;
-import eu.metacloudservice.timebaser.TimerBase;
-import eu.metacloudservice.timebaser.utils.TimeUtil;
-
 import java.util.LinkedList;
-import java.util.TimerTask;
 
 public class QueueDriver {
 

@@ -5,6 +5,7 @@ import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfigNodes;
 import eu.metacloudservice.configuration.dummys.message.Messages;
+import eu.metacloudservice.manager.CloudManager;
 import eu.metacloudservice.terminal.commands.CommandAdapter;
 import eu.metacloudservice.terminal.commands.CommandInfo;
 import eu.metacloudservice.terminal.enums.Type;
@@ -44,12 +45,13 @@ public class ReloadCommand extends CommandAdapter {
 
 
             WhiteList whitelistConfig = new WhiteList();
-            ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
-            whitelistConfig.setWhitelist(config.getWhitelist());
+            CloudManager.config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+
+            whitelistConfig.setWhitelist(CloudManager.config.getWhitelist());
             Driver.getInstance().getWebServer().updateRoute("/default/whitelist", new ConfigDriver().convert(whitelistConfig));
             Addresses AddressesConfig = new Addresses();
 
-            ArrayList<String> addresses = config.getNodes().stream().map(ManagerConfigNodes::getAddress).collect(Collectors.toCollection(ArrayList::new));
+            ArrayList<String> addresses = CloudManager.config.getNodes().stream().map(ManagerConfigNodes::getAddress).collect(Collectors.toCollection(ArrayList::new));
             AddressesConfig.setWhitelist(addresses);
             Driver.getInstance().getWebServer().updateRoute("/default/addresses", new ConfigDriver().convert(AddressesConfig));
             GroupList groupList = new GroupList();
@@ -70,6 +72,9 @@ public class ReloadCommand extends CommandAdapter {
             Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND, "Die Cloud wurde mit Erfolg neu geladen", "The cloud was reloaded with success");
 
         }else if (args[0].equalsIgnoreCase("config")){
+
+
+
             Messages raw = (Messages) new ConfigDriver("./local/messages.json").read(Messages.class);
             Messages msg = new Messages(Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getPrefix()),
                     Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getSuccessfullyConnected()),
@@ -85,12 +90,13 @@ public class ReloadCommand extends CommandAdapter {
 
 
             WhiteList whitelistConfig = new WhiteList();
-            ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
-            whitelistConfig.setWhitelist(config.getWhitelist());
+            CloudManager.config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+
+            whitelistConfig.setWhitelist(CloudManager.config.getWhitelist());
             Driver.getInstance().getWebServer().updateRoute("/default/whitelist", new ConfigDriver().convert(whitelistConfig));
             Addresses AddressesConfig = new Addresses();
 
-            ArrayList<String> addresses = config.getNodes().stream().map(ManagerConfigNodes::getAddress).collect(Collectors.toCollection(ArrayList::new));
+            ArrayList<String> addresses = CloudManager.config.getNodes().stream().map(ManagerConfigNodes::getAddress).collect(Collectors.toCollection(ArrayList::new));
             AddressesConfig.setWhitelist(addresses);
             Driver.getInstance().getWebServer().updateRoute("/default/addresses", new ConfigDriver().convert(AddressesConfig));
             GroupList groupList = new GroupList();

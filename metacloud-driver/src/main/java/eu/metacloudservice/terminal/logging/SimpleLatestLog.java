@@ -53,42 +53,32 @@ public class SimpleLatestLog {
             e.printStackTrace();
         }
 
-        try (PrintWriter printWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(this.latestLog), StandardCharsets.UTF_8)), true)) {
-            // write any initial data here
-        } catch (IOException e) {
-            // handle the exception or rethrow it
-            e.printStackTrace();
-        }
 
     }
 
 
 
     public void log( String line) {
-        String lineToLog = line;
-        this.logs.add(line);
         try (Writer output = new BufferedWriter(new FileWriter(this.latestLog, true))) {
-            output.write(lineToLog);
-            output.write("\n");
+            output.append(line).append("\n");
         } catch (IOException e) {
-            // handle the exception or rethrow it
             e.printStackTrace();
         }
+
 
     }
 
     public void saveLogs(){
-        try (PrintWriter w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(this.latestLog, true), StandardCharsets.UTF_8), true)) {
+        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(this.latestLog, true), StandardCharsets.UTF_8)), true)) {
             for (String loggedLine : this.logs) {
                 if (loggedLine != null) {
-                    w.println(loggedLine);
+                    writer.println(loggedLine);
                 }
             }
-            w.flush();
         } catch (IOException e) {
-            // handle the exception or rethrow it
             e.printStackTrace();
         }
+
     }
 
 

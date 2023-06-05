@@ -33,10 +33,10 @@ public class HandlePacketInPlayerConnect implements NettyAdaptor {
                 cache.handleConnect(service);
                 cache.setCloudplayerservice("");
                 Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudplayer/" + UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()), (new RestDriver()).convert(cache)));
-                ManagerConfig config = (ManagerConfig)(new ConfigDriver("./service.json")).read(ManagerConfig.class);
+
                 NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutPlayerConnect(((PacketInPlayerConnect) packet).getName()));
                 Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudPlayerConnectedEvent(((PacketInPlayerConnect) packet).getName(), service, UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName())));
-                if (config.isShowConnectingPlayers()){
+                if (CloudManager.config.isShowConnectingPlayers()){
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der Spieler '"+ ((PacketInPlayerConnect) packet).getName() + "@" + UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()) +"§f' ist mit dem Proxy '"+ service + "§r' verbunden",
                             "The player '"+ ((PacketInPlayerConnect) packet).getName()+ "@" + UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()) + "§f' is connected to the proxy '"+ service+ "§r'");
                 }

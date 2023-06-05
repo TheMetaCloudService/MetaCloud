@@ -4,23 +4,14 @@ import eu.metacloudservice.events.entrys.IEventAdapter;
 
 public class CloudProxyLaunchEvent extends IEventAdapter {
 
+    @lombok.Getter
     private final String name;
 
+    @lombok.Getter
     private final String group;
 
+    @lombok.Getter
     private final String node;
-
-    public String getName() {
-        return this.name;
-    }
-
-    public String getGroup() {
-        return this.group;
-    }
-
-    public String getNode() {
-        return this.node;
-    }
 
     public CloudProxyLaunchEvent(String name, String group, String node) {
         this.name = name;

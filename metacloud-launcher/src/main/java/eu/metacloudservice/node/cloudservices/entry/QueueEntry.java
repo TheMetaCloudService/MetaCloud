@@ -3,9 +3,13 @@ package eu.metacloudservice.node.cloudservices.entry;
 public class QueueEntry {
 
 
-    private boolean run;
-    private String service;
+    @lombok.Getter
+    private final boolean run;
+    @lombok.Getter
+    private final String service;
+    @lombok.Getter
     private String group;
+    @lombok.Getter
     private boolean useProtocol;
 
     public QueueEntry(String service, String group, boolean useProtocol) {
@@ -20,19 +24,4 @@ public class QueueEntry {
         this.service = service;
     }
 
-    public boolean isRun() {
-        return run;
-    }
-
-    public String getService() {
-        return service;
-    }
-
-    public String getGroup() {
-        return group;
-    }
-
-    public boolean isUseProtocol() {
-        return useProtocol;
-    }
 }

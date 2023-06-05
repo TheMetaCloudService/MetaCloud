@@ -32,8 +32,7 @@ public class ServiceCommand extends CommandAdapter {
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND, "Es wurden keine Services gefunden", "no services were found");
                     return;
                 }
-                ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
-                config.getNodes().stream().filter(managerConfigNodes -> managerConfigNodes.getName().equalsIgnoreCase("InternalNode") || NettyDriver.getInstance().nettyServer.isChannelFound(managerConfigNodes.getName())).forEach(managerConfigNodes -> {
+               CloudManager.config.getNodes().stream().filter(managerConfigNodes -> managerConfigNodes.getName().equalsIgnoreCase("InternalNode") || NettyDriver.getInstance().nettyServer.isChannelFound(managerConfigNodes.getName())).forEach(managerConfigNodes -> {
                     Driver.getInstance().getTerminalDriver().log(Type.COMMAND, managerConfigNodes.getName()+": ");
                     CloudManager.serviceDriver.getServices().stream().filter(taskedService -> taskedService.getEntry().getNode().equalsIgnoreCase(managerConfigNodes.getName())).forEach(taskedService -> {
                         Driver.getInstance().getTerminalDriver().log(Type.COMMAND, " > "+taskedService.getEntry().getServiceName() + "~" + taskedService.getEntry().getStatus().toString() + "-" + taskedService.getEntry().getUsedPort() +" §r(players: §f"+taskedService.getEntry().getCurrentPlayers()+"§r) ");
@@ -120,7 +119,7 @@ public class ServiceCommand extends CommandAdapter {
                                 "Der Befehl war erfolgreich",
                                 "the command was successful");
                         Group gdata = Driver.getInstance().getGroupDriver().load(group);
-                        ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+
                         if (gdata.getMaximalOnline() != -1){
                             if (gdata.getMaximalOnline() < (CloudManager.serviceDriver.getServices(group).size() + Integer.parseInt(args[2]))){
                                 Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
@@ -131,16 +130,16 @@ public class ServiceCommand extends CommandAdapter {
                         }
                         for (int i = 0; i != Integer.parseInt(args[2]); i++) {
                             String id = "";
-                            if (config.getUuid().equals("INT")){
+                            if (CloudManager.config.getUuid().equals("INT")){
                                 id = String.valueOf(CloudManager.serviceDriver.getFreeUUID( group));
-                            }else if (config.getUuid().equals("RANDOM")){
+                            }else if (CloudManager.config.getUuid().equals("RANDOM")){
                                 id = CloudManager.serviceDriver.getFreeUUID();
                             }
                                     CloudManager.serviceDriver.register(new TaskedEntry(
                                     CloudManager.serviceDriver.getFreePort(gdata.getGroupType().equalsIgnoreCase("PROXY")),
                                     gdata.getGroup(),
-                                    gdata.getGroup() + config.getSplitter() + id,
-                                    gdata.getStorage().getRunningNode(), config.getUseProtocol(), id));
+                                    gdata.getGroup() + CloudManager.config.getSplitter() + id,
+                                    gdata.getStorage().getRunningNode(), CloudManager.config.getUseProtocol(), id));
                             Driver.getInstance().getMessageStorage().canUseMemory = Driver.getInstance().getMessageStorage().canUseMemory - gdata.getUsedMemory();
                         }
                     } else {
@@ -173,12 +172,11 @@ public class ServiceCommand extends CommandAdapter {
                 String  option = args[1];
                 String user = args[2];
                 if (option.equalsIgnoreCase("add")){
-                    ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
-                    if (!config.getWhitelist().contains(user)){
-                        config.getWhitelist().add(user);
-                        new ConfigDriver("./service.json").save(config);
+                    if (!CloudManager.config.getWhitelist().contains(user)){
+                        CloudManager.config.getWhitelist().add(user);
+                        new ConfigDriver("./service.json").save(CloudManager.config);
                         WhiteList whitelistConfig = new WhiteList();
-                        whitelistConfig.setWhitelist(config.getWhitelist());
+                        whitelistConfig.setWhitelist(CloudManager.config.getWhitelist());
                         Driver.getInstance().getWebServer().updateRoute("/general/whitelist", new ConfigDriver().convert(whitelistConfig));
 
                         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
@@ -190,12 +188,11 @@ public class ServiceCommand extends CommandAdapter {
                                 "the player '§f" + user + "§r' was already found");
                     }
                 }else if (option.equalsIgnoreCase("remove")){
-                    ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
-                    if (config.getWhitelist().contains(user)){
-                        config.getWhitelist().remove(user);
-                        new ConfigDriver("./service.json").save(config);
+                    if (CloudManager.config.getWhitelist().contains(user)){
+                        CloudManager. config.getWhitelist().remove(user);
+                        new ConfigDriver("./service.json").save(CloudManager.config);
                         WhiteList whitelistConfig = new WhiteList();
-                         whitelistConfig.setWhitelist(config.getWhitelist());
+                         whitelistConfig.setWhitelist(CloudManager.config.getWhitelist());
                         Driver.getInstance().getWebServer().updateRoute("/general/whitelist", new ConfigDriver().convert(whitelistConfig));
                         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                                 "Der Spieler '§f" + user + "§r' wurde von der Whitelist entfernt",

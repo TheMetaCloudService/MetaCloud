@@ -13,6 +13,13 @@ public class BungeeBootstrap extends Plugin {
 
     private static BungeeBootstrap instance;
 
+
+    @Override
+    public void onLoad() {
+        new AsyncCloudAPI();
+        new CloudAPI(false);
+    }
+
     @Override
     public void onEnable() {
         instance = this;
@@ -20,8 +27,7 @@ public class BungeeBootstrap extends Plugin {
         ProxyServer.getInstance().getConsole().sendMessage("[§bMetaCloud§r] > THE METACLOUD has been loaded with Succsess");
         ProxyServer.getInstance().getConsole().sendMessage("[§bMetaCloud§r] > This registered all Classes & files..");
         ProxyServer.getInstance().getConsole().sendMessage("[§bMetaCloud§r] >");
-        new AsyncCloudAPI();
-        new CloudAPI(false);
+
 
 
     }

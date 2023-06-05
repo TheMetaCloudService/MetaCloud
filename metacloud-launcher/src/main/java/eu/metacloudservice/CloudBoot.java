@@ -23,19 +23,12 @@ public class CloudBoot {
 
     public static void main(String[] args) {
 
-
-        String version = System.getProperty("java.version");
-        int majorVersion = Integer.parseInt(version.split("\\.")[0]);
-        if (majorVersion < 17) {
-            System.out.println("Pleas user Java 17 or higher");
-            System.exit(0);
-            return;
-        }
-        if (new File("./OLD.jar").exists()){
-            new File("./OLD.jar").delete();
-        }
-
         new Driver();
+
+
+
+
+
         if (!new File("./service.json").exists()  && !new File("./nodeservice.json").exists()){
             Driver.getInstance().getMessageStorage().language = "EN";
         }else {
@@ -51,6 +44,26 @@ public class CloudBoot {
         Driver.getInstance().setTerminalDriver(new TerminalDriver());
         Driver.getInstance().getTerminalDriver().clearScreen();
         Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
+        String version = System.getProperty("java.version");
+        int majorVersion = Integer.parseInt(version.split("\\.")[0]);
+        if (majorVersion < 17) {
+            System.out.println("Pleas user Java 17 or higher");
+            System.exit(0);
+            return;
+        }
+        if (!hasSufficientMemory( Runtime.getRuntime().maxMemory())){
+            System.out.println("You need a server with a minimum of 3GB Memory to start the cloud");
+            System.exit(0);
+            return;
+        }
+        if (isRootUser(System.getProperty("user.name"))){
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "es ist nicht vorteilhaft, die cloud mit dem Root user laufen zulassen", "it is not advantageous to run the cloud with the root user");
+        }
+
+        if (new File("./OLD.jar").exists()){
+            new File("./OLD.jar").delete();
+        }
+
         if (Driver.getInstance().getMessageStorage().language.equalsIgnoreCase("DE")){
             Driver.getInstance().getTerminalDriver().log(Type.INFO, "Es wird geprüft, ob die Cloud bereits eingerichtet ist");
             if (!new File("./service.json").exists() && !new File("./nodeservice.json").exists()){
@@ -77,6 +90,19 @@ public class CloudBoot {
                 }
         }
     }
+
+
+    private static boolean hasSufficientMemory(long availableMemory) {
+        // Vergleichen des verfügbaren Speichers mit 3 GB (in Bytes)
+        long requiredMemory = 3L * 1024 * 1024 * 1024; // 3 GB in Bytes
+        return availableMemory >= requiredMemory;
+    }
+
+    private static boolean isRootUser(String username) {
+        // Vergleichen des Benutzernamens mit "root" oder anderen bekannten Namen für den Root-Benutzer
+        return username.equalsIgnoreCase("root");
+
+}
 
     public static void runClient(){
 

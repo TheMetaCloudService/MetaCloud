@@ -4,136 +4,51 @@ import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
 
 public class NodeConfig implements IConfigAdapter {
 
+    @lombok.Setter
+    @lombok.Getter
     private String language;
+    @lombok.Setter
+    @lombok.Getter
     private String managerAddress;
+    @lombok.Setter
+    @lombok.Getter
     private Integer processorUsage;
+    @lombok.Setter
+    @lombok.Getter
     private boolean useViaVersion;
+    @lombok.Setter
+    @lombok.Getter
     private Integer canUsedMemory;
+    @lombok.Setter
+    @lombok.Getter
     private String bungeecordVersion;
+    @lombok.Setter
+    @lombok.Getter
     private Integer bungeecordPort;
+    @lombok.Setter
+    @lombok.Getter
     private String spigotVersion;
+    @lombok.Setter
+    @lombok.Getter
     private Integer spigotPort;
+    @lombok.Setter
+    @lombok.Getter
     private Integer networkingCommunication;
+    @lombok.Setter
+    @lombok.Getter
     private Integer restApiCommunication;
+    @lombok.Setter
+    @lombok.Getter
     private String nodeName;
+    @lombok.Setter
+    @lombok.Getter
     private String nodeAddress;
-
+    @lombok.Setter
+    @lombok.Getter
     private boolean copyLogs;
-
 
     public NodeConfig(){
 
     }
 
-    public boolean isCopyLogs() {
-        return copyLogs;
-    }
-
-    public void setCopyLogs(boolean copyLogs) {
-        this.copyLogs = copyLogs;
-    }
-
-    public Integer getProcessorUsage() {
-        return processorUsage;
-    }
-
-    public void setProcessorUsage(Integer processorUsage) {
-        this.processorUsage = processorUsage;
-    }
-
-    public boolean isUseViaVersion() {
-        return useViaVersion;
-    }
-
-    public void setUseViaVersion(boolean useViaVersion) {
-        this.useViaVersion = useViaVersion;
-    }
-
-    public Integer getBungeecordPort() {
-        return bungeecordPort;
-    }
-
-    public void setBungeecordPort(Integer bungeecordPort) {
-        this.bungeecordPort = bungeecordPort;
-    }
-
-    public Integer getSpigotPort() {
-        return spigotPort;
-    }
-
-    public void setSpigotPort(Integer spigotPort) {
-        this.spigotPort = spigotPort;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public String getManagerAddress() {
-        return managerAddress;
-    }
-
-    public void setManagerAddress(String managerAddress) {
-        this.managerAddress = managerAddress;
-    }
-
-    public Integer getCanUsedMemory() {
-        return canUsedMemory;
-    }
-
-    public void setCanUsedMemory(Integer canUsedMemory) {
-        this.canUsedMemory = canUsedMemory;
-    }
-
-    public String getBungeecordVersion() {
-        return bungeecordVersion;
-    }
-
-    public void setBungeecordVersion(String bungeecordVersion) {
-        this.bungeecordVersion = bungeecordVersion;
-    }
-
-    public String getSpigotVersion() {
-        return spigotVersion;
-    }
-
-    public void setSpigotVersion(String spigotVersion) {
-        this.spigotVersion = spigotVersion;
-    }
-
-    public Integer getNetworkingCommunication() {
-        return networkingCommunication;
-    }
-
-    public void setNetworkingCommunication(Integer networkingCommunication) {
-        this.networkingCommunication = networkingCommunication;
-    }
-
-    public Integer getRestApiCommunication() {
-        return restApiCommunication;
-    }
-
-    public void setRestApiCommunication(Integer restApiCommunication) {
-        this.restApiCommunication = restApiCommunication;
-    }
-
-    public String getNodeName() {
-        return nodeName;
-    }
-
-    public void setNodeName(String nodeName) {
-        this.nodeName = nodeName;
-    }
-
-    public String getNodeAddress() {
-        return nodeAddress;
-    }
-
-    public void setNodeAddress(String nodeAddress) {
-        this.nodeAddress = nodeAddress;
-    }
 }

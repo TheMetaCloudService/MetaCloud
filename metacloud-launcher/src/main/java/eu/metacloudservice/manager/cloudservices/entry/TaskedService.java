@@ -2,13 +2,16 @@ package eu.metacloudservice.manager.cloudservices.entry;
 
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
-import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
+import eu.metacloudservice.events.listeners.services.CloudProxyChangeStateEvent;
 import eu.metacloudservice.events.listeners.services.CloudProxyPreparedEvent;
+import eu.metacloudservice.events.listeners.services.CloudServiceChangeStateEvent;
 import eu.metacloudservice.events.listeners.services.CloudServicePreparedEvent;
 import eu.metacloudservice.manager.CloudManager;
 import eu.metacloudservice.manager.cloudservices.interfaces.ITaskedService;
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.out.node.*;
+import eu.metacloudservice.networking.out.service.PacketOutCloudProxyChangeState;
+import eu.metacloudservice.networking.out.service.PacketOutCloudServiceChangeState;
 import eu.metacloudservice.networking.out.service.PacketOutServiceDisconnected;
 import eu.metacloudservice.networking.out.service.PacketOutServicePrepared;
 import eu.metacloudservice.process.ServiceProcess;
@@ -35,12 +38,12 @@ public class TaskedService implements ITaskedService {
         this.entry = entry;
         hasStartedNew = false;
         base = new Timer();
-        ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+
         LiveServices liveServices = new LiveServices();
         liveServices.setGroup(entry.getGroupName());
         liveServices.setName(entry.getServiceName());
         liveServices.setPlayers(0);
-        liveServices.setHost(config.getNodes().stream().filter(managerConfigNodes -> managerConfigNodes.getName().equals(entry.getNode())).toList().get(0).getAddress());
+        liveServices.setHost(CloudManager.config.getNodes().stream().filter(managerConfigNodes -> managerConfigNodes.getName().equals(entry.getNode())).toList().get(0).getAddress());
         liveServices.setNode(entry.getNode());
         liveServices.setPort(-1);
         liveServices.setUuid(entry.getUsedId());
@@ -49,13 +52,13 @@ public class TaskedService implements ITaskedService {
         LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudManager.restDriver.get("/cloudservice/general"), LiveServiceList.class);
         list.getCloudServices().add(entry.getServiceName());
         Driver.getInstance().getWebServer().updateRoute("/cloudservice/general", new ConfigDriver().convert(list));
-        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudservice/" + entry.getServiceName().replace(config.getSplitter(), "~"), new ConfigDriver().convert(liveServices)));
+        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudservice/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~"), new ConfigDriver().convert(liveServices)));
 
         if (Driver.getInstance().getGroupDriver().load(entry.getGroupName()).getGroupType().equals("PROXY")){
-            NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutServicePrepared(entry.getServiceName(), true, entry.getGroupName(), entry.getNode()));
+            NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutServicePrepared(entry.getServiceName(), true, entry.getGroupName(), entry.getNode()));
             Driver.getInstance().getMessageStorage().eventDriver .executeEvent(new CloudProxyPreparedEvent(entry.getServiceName(), entry.getGroupName(), entry.getNode()));
         }else {
-            NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutServicePrepared(entry.getServiceName(), false, entry.getGroupName(), entry.getNode()));
+            NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutServicePrepared(entry.getServiceName(), false, entry.getGroupName(), entry.getNode()));
             Driver.getInstance().getMessageStorage().eventDriver .executeEvent(new CloudServicePreparedEvent(entry.getServiceName(), entry.getGroupName(), entry.getNode()));
         }
 
@@ -69,7 +72,7 @@ public class TaskedService implements ITaskedService {
            process.getProcess().getOutputStream().write((line + "\n").getBytes());
            process.getProcess().getOutputStream().flush();
        }else {
-             NettyDriver.getInstance().nettyServer.sendPacketSynchronized(entry.getNode(), new PacketOutSendCommand(line, entry.getServiceName()));
+             NettyDriver.getInstance().nettyServer.sendPacketAsynchronous(entry.getNode(), new PacketOutSendCommand(line, entry.getServiceName()));
        }
 
     }
@@ -80,7 +83,7 @@ public class TaskedService implements ITaskedService {
             this.process.sync();
            }else {
             PacketOutSyncService sync = new PacketOutSyncService(getEntry().getServiceName());
-            NettyDriver.getInstance().nettyServer.sendPacketSynchronized(getEntry().getNode(), sync);
+            NettyDriver.getInstance().nettyServer.sendPacketAsynchronous(getEntry().getNode(), sync);
         }
     }
 
@@ -89,16 +92,16 @@ public class TaskedService implements ITaskedService {
         if (this.getEntry().getNode().equals("InternalNode")){
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+getEntry().getServiceName()+"§r' wird gestartet 'node: §f"+entry.getNode()+"§r, port: §f"+entry.getUsedPort()+"§r'",
                     "The service '§f"+getEntry().getServiceName()+"§r' is starting 'node: §f"+entry.getNode()+"§r, port: §f"+entry.getUsedPort()+"§r'");
-            ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
-            LiveServices liveServices = (LiveServices) new ConfigDriver().convert(CloudManager.restDriver.get("/cloudservice/" + entry.getServiceName().replace(config.getSplitter(), "~")), LiveServices.class);
+
+            LiveServices liveServices = (LiveServices) new ConfigDriver().convert(CloudManager.restDriver.get("/cloudservice/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~")), LiveServices.class);
             liveServices.setPort(entry.getUsedPort());
-            Driver.getInstance().getWebServer().updateRoute("/cloudservice/" + entry.getServiceName().replace(config.getSplitter(), "~"), new ConfigDriver().convert(liveServices));
+            Driver.getInstance().getWebServer().updateRoute("/cloudservice/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~"), new ConfigDriver().convert(liveServices));
 
             process = new ServiceProcess(Driver.getInstance().getGroupDriver().load(getEntry().getGroupName()), getEntry().getServiceName(), entry.getUsedPort(), entry.isUseProtocol());
             process.handelLaunch();
         }else {
             PacketOutLaunchService launch = new PacketOutLaunchService(entry.getServiceName(), new ConfigDriver().convert(Driver.getInstance().getGroupDriver().load(getEntry().getGroupName())), entry.isUseProtocol());
-            NettyDriver.getInstance().nettyServer.sendPacketSynchronized(getEntry().getNode(), launch);
+            NettyDriver.getInstance().nettyServer.sendPacketAsynchronous(getEntry().getNode(), launch);
         }
     }
 
@@ -145,13 +148,13 @@ public class TaskedService implements ITaskedService {
         }else {
             if (Driver.getInstance().getMessageStorage().openServiceScreen){
                 base.cancel();
-                NettyDriver.getInstance().nettyServer.sendPacketSynchronized(entry.getNode(), new PacketOutDisableConsole(entry.getServiceName()));
+                NettyDriver.getInstance().nettyServer.sendPacketAsynchronous(entry.getNode(), new PacketOutDisableConsole(entry.getServiceName()));
                 Driver.getInstance().getTerminalDriver().leaveSetup();
 
             }else {
                 Driver.getInstance().getMessageStorage().openServiceScreen = true;
                 Driver.getInstance().getTerminalDriver().clearScreen();
-                NettyDriver.getInstance().nettyServer.sendPacketSynchronized(entry.getNode(), new PacketOutEnableConsole(entry.getServiceName()));
+                NettyDriver.getInstance().nettyServer.sendPacketAsynchronous(entry.getNode(), new PacketOutEnableConsole(entry.getServiceName()));
                 base = new Timer();
                 base.schedule(new TimerTask() {
                     @Override
@@ -174,8 +177,8 @@ public class TaskedService implements ITaskedService {
 
     @Override
     public void handelQuit() {
-        ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
-        Driver.getInstance().getWebServer().removeRoute("/cloudservice/" + entry.getServiceName().replace(config.getSplitter(), "~"));
+
+        Driver.getInstance().getWebServer().removeRoute("/cloudservice/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~"));
         NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutServiceDisconnected(this.getEntry().getServiceName(), Driver.getInstance().getGroupDriver().load(getEntry().getGroupName()).getGroupType().equalsIgnoreCase("PROXY")));
         LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudManager.restDriver.get("/cloudservice/general"), LiveServiceList.class);
         list.remove(entry.getServiceName());
@@ -204,7 +207,7 @@ public class TaskedService implements ITaskedService {
                     "The service '§f"+getEntry().getServiceName()+"§r' is stopping");
             if (  NettyDriver.getInstance().nettyServer.isChannelFound(entry.getNode())){
 
-                NettyDriver.getInstance().nettyServer.sendPacketSynchronized(getEntry().getNode(), exit);
+                NettyDriver.getInstance().nettyServer.sendPacketAsynchronous(getEntry().getNode(), exit);
             }
         }
     }
@@ -213,10 +216,17 @@ public class TaskedService implements ITaskedService {
     @Override
     public void handelStatusChange(ServiceState status) {
         this.entry.setStatus(status);
-        ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
-        LiveServices liveServices = (LiveServices) new ConfigDriver().convert(CloudManager.restDriver.get("/cloudservice/" + entry.getServiceName().replace(config.getSplitter(), "~")), LiveServices.class);
+
+        LiveServices liveServices = (LiveServices) new ConfigDriver().convert(CloudManager.restDriver.get("/cloudservice/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~")), LiveServices.class);
         liveServices.setState(status);
-        Driver.getInstance().getWebServer().updateRoute("/cloudservice/" + entry.getServiceName().replace(config.getSplitter(), "~"), new ConfigDriver().convert(liveServices));
+        if (Driver.getInstance().getGroupDriver().load(entry.getGroupName()).getGroupType().equals("PROXY")){
+            Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudProxyChangeStateEvent(entry.getServiceName(), status.toString()));
+            NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutCloudProxyChangeState(entry.getServiceName(), status.toString()));
+        }else {
+            Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudServiceChangeStateEvent(entry.getServiceName(), status.toString()));
+            NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutCloudServiceChangeState(entry.getServiceName(), status.toString()));
+        }
+        Driver.getInstance().getWebServer().updateRoute("/cloudservice/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~"), new ConfigDriver().convert(liveServices));
         if (status == ServiceState.IN_GAME){
              hasStartedNew = true;
             if (entry.getNode().equals("InternalNode")){
@@ -229,7 +239,7 @@ public class TaskedService implements ITaskedService {
                     TaskedService taskedService = CloudManager.serviceDriver.register(new TaskedEntry(
                             CloudManager.serviceDriver.getFreePort(Driver.getInstance().getGroupDriver().load(entry.getGroupName()).getGroupType().equalsIgnoreCase("PROXY")),
                             getEntry().getGroupName(),
-                            getEntry().getGroupName() + config.getSplitter() + id,
+                            getEntry().getGroupName() + CloudManager.config.getSplitter() + id,
                             "InternalNode", getEntry().isUseProtocol(), String.valueOf(id)));
                     Driver.getInstance().getMessageStorage().canUseMemory  =Driver.getInstance().getMessageStorage().canUseMemory -  Driver.getInstance().getGroupDriver().load(entry.getGroupName()).getUsedMemory();
                     taskedService.handelLaunch();
@@ -242,17 +252,17 @@ public class TaskedService implements ITaskedService {
     public void handelCloudPlayerConnection(boolean connect) {
         if (connect){
             entry.setCurrentPlayers(entry.getCurrentPlayers() + 1);
-            ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
-            LiveServices liveServices = (LiveServices) new ConfigDriver().convert(CloudManager.restDriver.get("/cloudservice/" + entry.getServiceName().replace(config.getSplitter(), "~")), LiveServices.class);
+
+            LiveServices liveServices = (LiveServices) new ConfigDriver().convert(CloudManager.restDriver.get("/cloudservice/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~")), LiveServices.class);
             liveServices.setPlayers(entry.getCurrentPlayers());
-            Driver.getInstance().getWebServer().updateRoute("/cloudservice/" + entry.getServiceName().replace(config.getSplitter(), "~"), new ConfigDriver().convert(liveServices));
+            Driver.getInstance().getWebServer().updateRoute("/cloudservice/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~"), new ConfigDriver().convert(liveServices));
 
         }else {
             entry.setCurrentPlayers(entry.getCurrentPlayers()-1);
-            ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
-            LiveServices liveServices = (LiveServices) new ConfigDriver().convert(CloudManager.restDriver.get("/cloudservice/" + entry.getServiceName().replace(config.getSplitter(), "~")), LiveServices.class);
+
+            LiveServices liveServices = (LiveServices) new ConfigDriver().convert(CloudManager.restDriver.get("/cloudservice/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~")), LiveServices.class);
             liveServices.setPlayers(entry.getCurrentPlayers());
-            Driver.getInstance().getWebServer().updateRoute("/cloudservice/" + entry.getServiceName().replace(config.getSplitter(), "~"), new ConfigDriver().convert(liveServices));
+            Driver.getInstance().getWebServer().updateRoute("/cloudservice/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~"), new ConfigDriver().convert(liveServices));
 
         }
 

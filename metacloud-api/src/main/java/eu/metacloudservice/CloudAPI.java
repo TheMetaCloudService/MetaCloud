@@ -14,12 +14,10 @@ import eu.metacloudservice.networking.client.NettyClient;
 import eu.metacloudservice.networking.in.service.PacketInServiceConnect;
 import eu.metacloudservice.networking.in.service.cloudapi.*;
 import eu.metacloudservice.networking.in.service.playerbased.apibased.PacketOutAPIPlayerDispactchCommand;
-import eu.metacloudservice.networking.out.service.PacketOutServiceConnected;
-import eu.metacloudservice.networking.out.service.PacketOutServiceDisconnected;
-import eu.metacloudservice.networking.out.service.PacketOutServiceLaunch;
-import eu.metacloudservice.networking.out.service.PacketOutServicePrepared;
+import eu.metacloudservice.networking.out.service.*;
 import eu.metacloudservice.networking.out.service.group.PacketOutGroupCreate;
 import eu.metacloudservice.networking.out.service.group.PacketOutGroupDelete;
+import eu.metacloudservice.networking.out.service.group.PacketOutGroupEdit;
 import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerConnect;
 import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerDisconnect;
 import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerSwitchService;
@@ -74,7 +72,11 @@ public class CloudAPI {
                 .registerHandler(new PacketOutPlayerSwitchService().getPacketUUID(), new HandlePacketOutPlayerSwitchService(), PacketOutPlayerSwitchService.class)
                 .registerHandler(new PacketOutServiceLaunch().getPacketUUID(), new HandlePacketOutServiceLaunch(), PacketOutServiceLaunch.class)
                 .registerHandler(new PacketOutGroupCreate().getPacketUUID(), new HandlePacketOutGroupCreate(), PacketOutGroupCreate.class)
-                .registerHandler(new PacketOutGroupDelete().getPacketUUID(), new HandlePacketOutGroupDelete(), PacketOutGroupDelete.class);
+                .registerHandler(new PacketOutGroupDelete().getPacketUUID(), new HandlePacketOutGroupDelete(), PacketOutGroupDelete.class)
+                .registerHandler(new PacketOutGroupEdit().getPacketUUID(), new HandlePacketOutGroupEdit(), PacketOutGroupEdit.class)
+                .registerHandler(new PacketOutCloudServiceChangeState().getPacketUUID(), new HandlePacketOutCloudServiceChangeState(), PacketOutCloudServiceChangeState.class)
+                .registerHandler(new PacketOutCloudProxyChangeState().getPacketUUID(), new HandlePacketOutCloudProxyChangeState(), PacketOutCloudProxyChangeState.class)
+                .registerHandler(new PacketOutRestAPIPut().getPacketUUID(), new HandlePacketOutRestAPIPut(), PacketOutRestAPIPut.class);
 
 
 

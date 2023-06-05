@@ -66,6 +66,7 @@ public class CloudManager {
     public static CloudServiceDriver serviceDriver;
     public static QueueDriver queueDriver;
     public static RestDriver restDriver;
+    public static ManagerConfig config;
     public static boolean shutdown;
 
     public CloudManager() {
@@ -91,7 +92,7 @@ public class CloudManager {
         new File("./local/GLOBAL/EVERY_PROXY/plugins/").mkdirs();
         new File("./local/groups/").mkdirs();
         new File( "./local/templates/").mkdirs();
-        ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+        config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
         if (!new File("./connection.key").exists()){
             AuthenticatorKey key = new AuthenticatorKey();
             String  k = Driver.getInstance().getMessageStorage().utf8ToUBase64(UUID.randomUUID() + UUID.randomUUID().toString()+ UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID());
@@ -133,7 +134,6 @@ public class CloudManager {
             Driver.getInstance().getMessageStorage().packetLoader.loadPlugin();
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
                     "The download was successful");
-        }else {
         }
 
 
@@ -163,9 +163,6 @@ public class CloudManager {
             Driver.getInstance().getMessageStorage().packetLoader.loadAPI();
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
                     "The download was successful");
-        }else {
-            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Die Datei '§fmetacloud-api.jar§r' wurde gefunden",
-                    "the '§fmetacloud-api.jar§r' file was found");
         }
 
 
@@ -285,7 +282,7 @@ public class CloudManager {
                 .registerHandler(new PacketInAPIPlayerTitle().getPacketUUID(), new HandlePacketInAPIPlayerTitle(), PacketInAPIPlayerTitle.class)
                 .registerHandler(new PacketInAPIPlayerActionBar().getPacketUUID(), new HandlePacketInAPIPlayerActionBar(), PacketInAPIPlayerActionBar.class)
                 .registerHandler(new PacketInAPIPlayerTab().getPacketUUID(), new HandlePacketInAPIPlayerTab(), PacketInAPIPlayerTab.class)
-                .registerHandler(new PacketOutAPIPlayerDispactchCommand().getPacketUUID(), new HandlePacketOutAPIPlayerDispactchCommand(), PacketOutAPIPlayerDispactchCommand.class)
+                .registerHandler(new PacketOutAPIPlayerDispactchCommand().getPacketUUID(), new HandlePacketOutAPIPlayerDispatchCommand(), PacketOutAPIPlayerDispactchCommand.class)
 
                 //PLAYER
                 .registerHandler(new PacketInPlayerConnect().getPacketUUID(), new HandlePacketInPlayerConnect(), PacketInPlayerConnect.class)

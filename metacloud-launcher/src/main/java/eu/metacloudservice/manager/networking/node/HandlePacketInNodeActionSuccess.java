@@ -17,12 +17,12 @@ public class HandlePacketInNodeActionSuccess implements NettyAdaptor {
     public void handle(Channel channel, Packet packet) {
         if (packet instanceof PacketInNodeActionSuccess){
             if (((PacketInNodeActionSuccess) packet).isLaunched()){
-                ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+
                 TaskedEntry entry = CloudManager.serviceDriver.getService(((PacketInNodeActionSuccess) packet).getService()).getEntry();
                 entry.setUsedPort(((PacketInNodeActionSuccess) packet).getPort());
-                LiveServices liveServices = (LiveServices) new ConfigDriver().convert(CloudManager.restDriver.get("/services/" + entry.getServiceName().replace(config.getSplitter(), "~")), LiveServices.class);
+                LiveServices liveServices = (LiveServices) new ConfigDriver().convert(CloudManager.restDriver.get("/services/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~")), LiveServices.class);
                 liveServices.setPort(((PacketInNodeActionSuccess) packet).getPort());
-                Driver.getInstance().getWebServer().updateRoute("/services/" + entry.getServiceName().replace(config.getSplitter(), "~"), new ConfigDriver().convert(liveServices));
+                Driver.getInstance().getWebServer().updateRoute("/services/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~"), new ConfigDriver().convert(liveServices));
 
                 Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+((PacketInNodeActionSuccess) packet).getService()+"§r' wird gestartet 'node: §f"+((PacketInNodeActionSuccess) packet).getNode()+"§r, port: §f"+((PacketInNodeActionSuccess) packet).getPort()+"§r'",
                         "The service '§f"+((PacketInNodeActionSuccess) packet).getService()+"§r' is starting 'node: §f"+((PacketInNodeActionSuccess) packet).getNode()+"§r, port: §f"+((PacketInNodeActionSuccess) packet).getPort()+"§r'");

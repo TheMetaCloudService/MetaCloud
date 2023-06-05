@@ -57,33 +57,33 @@ public class MessageStorage {
         if (Driver.getInstance().getTerminalDriver().isInSetup()){
             if (language.equalsIgnoreCase("DE")){
                 return
-                        "           _  _ ____ ___ ____ ____ _    ____ _  _ ___\n" +
-                                "       §bTHE§7 |\\/| |___  |  |__| |    |    |  | |  | |  \\ \n" +
-                                "           |  | |___  |  |  | |___ |___ |__| |__| |__/ [§b" + version + "§7]\n\n" +
+                        "           _  _ ____ ___ ____ ____ _    §f____ _  _ ___§r\n" +
+                                "       §bTHE§7 |\\/| |___  |  |__| §f|    |    |  | |  | |  \\ §r\n" +
+                                "           |  | |___  |  |  | |___ §f|___ |__| |__| |__/ §r[§b" + version + "§7]\n\n" +
                                 "     <§b!§r> zum verlassen des Screens, gebe `§bleave§r` in die Console ein\n" +
-                                "     <§b!§r> support: §fmetacloudservice.eu §r(§b@TheMetaCloud§r)\n\n";
+                                "     <§b!§r> support: §fhttps://metacloudservice.eu/\n\n";
 
             }else return
-                    "           _  _ ____ ___ ____ ____ _    ____ _  _ ___\n" +
-                            "       §bTHE§7 |\\/| |___  |  |__| |    |    |  | |  | |  \\ \n" +
-                            "           |  | |___  |  |  | |___ |___ |__| |__| |__/ [§b" + version + "§7]\n\n" +
+                    "           _  _ ____ ___ ____ ____ _    §f____ _  _ ___§r\n" +
+                            "       §bTHE§7 |\\/| |___  |  |__| §f|    |    |  | |  | |  \\ §r\n" +
+                            "           |  | |___  |  |  | §f|___ |___ |__| |__| |__/ §r[§b" + version + "§7]\n\n" +
                             "     <§b!§r> to leave this screen again, type `§bleave§r` in the console \n" +
-                            "     <§b!§r> support: §fmetacloudservice.eu §r(§b@TheMetaCloud§r)\n\n";
+                            "     <§b!§r> support: §fhttps://metacloudservice.eu/\n\n";
         }else {
             if (language.equalsIgnoreCase("DE")){
                 return
-                        "           _  _ ____ ___ ____ ____ _    ____ _  _ ___\n" +
-                                "       §bTHE§7 |\\/| |___  |  |__| |    |    |  | |  | |  \\ \n" +
-                                "           |  | |___  |  |  | |___ |___ |__| |__| |__/ [§b" + version + "§7]\n\n" +
-                                "     <§b!§r> Willkommen bei Metacloud, ready for future?§r\n" +
-                                "     <§b!§r> support: §fmetacloudservice.eu §r(§b@TheMetaCloud§r)\n\n";
+                        "           _  _ ____ ___ ____ ____ _    §f____ _  _ ___§r\n" +
+                                "       §bTHE§7 |\\/| |___  |  |__| §f|    |    |  | |  | |  \\ §r\n" +
+                                "           |  | |___  |  |  | |___ §f|___ |__| |__| |__/ §r[§b" + version + "§7]\n\n" +
+                                "     <§b!§r> Willkommen bei Metacloud, §bready§r for future?§r\n" +
+                                "     <§b!§r> support: §fhttps://metacloudservice.eu/\n\n";
 
             }else return
-                    "           _  _ ____ ___ ____ ____ _    ____ _  _ ___\n" +
-                            "       §bTHE§7 |\\/| |___  |  |__| |    |    |  | |  | |  \\ \n" +
-                            "           |  | |___  |  |  | |___ |___ |__| |__| |__/ [§b" + version + "§7]\n\n" +
-                            "     <§b!§r> welcome to Metacloud ready for future?§r\n" +
-                            "     <§b!§r> support: §fmetacloudservice.eu §r(§b@TheMetaCloud§r)\n\n";
+                    "           _  _ ____ ___ ____ ____ _   §f ____ _  _ ___§r\n" +
+                            "       §bTHE§7 |\\/| |___  |  |__|§f |    |    |  | |  | |  \\ §r\n" +
+                            "           |  | |___  |  |  | |___ §f|___ |__| |__| |__/§r [§b" + version + "§7]\n\n" +
+                            "     <§b!§r> welcome to Metacloud §bready§r for future?§r\n" +
+                            "     <§b!§r> support: §fhttps://metacloudservice.eu/\n\n";
         }
 
     }

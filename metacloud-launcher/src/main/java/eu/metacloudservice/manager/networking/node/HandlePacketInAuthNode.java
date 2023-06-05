@@ -4,6 +4,7 @@ import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.authenticator.AuthenticatorKey;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
+import eu.metacloudservice.manager.CloudManager;
 import eu.metacloudservice.networking.in.node.PacketInAuthNode;
 import eu.metacloudservice.networking.out.node.PacketOutAuthSuccess;
 import eu.metacloudservice.networking.NettyDriver;
@@ -16,11 +17,11 @@ public class HandlePacketInAuthNode implements NettyAdaptor {
     @Override
     public void handle(Channel channel, Packet packet) {
         if (packet instanceof PacketInAuthNode){
-            ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+
             AuthenticatorKey authConfig = (AuthenticatorKey) new ConfigDriver("./connection.key").read(AuthenticatorKey.class);
             Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der node '§f"+((PacketInAuthNode) packet).getNode()+"§r' versucht, eine Verbindung zur Cloud herzustellen",
                     "The node '§f"+((PacketInAuthNode) packet).getNode()+"§r' tries to connect to the cloud");
-            if (config.getNodes().parallelStream().noneMatch(managerConfigNodes -> managerConfigNodes.getName().equals(((PacketInAuthNode) packet).getNode()))){
+            if (CloudManager.config.getNodes().parallelStream().noneMatch(managerConfigNodes -> managerConfigNodes.getName().equals(((PacketInAuthNode) packet).getNode()))){
                 Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der angegebene Node wurde nicht gefunden, die Verbindung wird getrennt",
                         "The specified node was not found, disconnect the connection");
                 channel.disconnect();

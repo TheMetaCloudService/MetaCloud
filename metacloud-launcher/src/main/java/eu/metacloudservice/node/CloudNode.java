@@ -26,6 +26,7 @@ import java.nio.file.Paths;
 public class CloudNode {
 
     public  static  CloudServiceDriver cloudServiceDriver;
+    public static NodeConfig config;
 
     public CloudNode() {
         if (!new File("./modules/").exists()){
@@ -38,7 +39,7 @@ public class CloudNode {
         cloudServiceDriver = new CloudServiceDriver();
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Es wird versucht, den '§fCloud Node§r' zu starten",
                 "An attempt is made to start the '§fcloud node§r'");
-        NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
+        config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
         System.setProperty("log4j.configurationFile", "log4j2.properties");
         if (!new File("./connection.key").exists()){
             Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Die '§fconnection.key§r' config wurde nicht gefunden!", "the '§fconnection.key§r' config was not found!");
@@ -67,7 +68,6 @@ public class CloudNode {
             Driver.getInstance().getMessageStorage().packetLoader.loadPlugin();
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
                     "The download was successful");
-        }else {
         }
         initNetty(config);
 
@@ -86,8 +86,6 @@ public class CloudNode {
                 }
                 Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
                         "The download was successful");
-            }else {
-
             }
         }
 

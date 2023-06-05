@@ -4,11 +4,13 @@ import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.events.listeners.group.CloudGroupCreateEvent;
 import eu.metacloudservice.events.listeners.group.CloudGroupDeleteEvent;
+import eu.metacloudservice.events.listeners.group.CloudGroupUpdateEditEvent;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.groups.interfaces.IGroupDriver;
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.out.service.group.PacketOutGroupCreate;
 import eu.metacloudservice.networking.out.service.group.PacketOutGroupDelete;
+import eu.metacloudservice.networking.out.service.group.PacketOutGroupEdit;
 import eu.metacloudservice.terminal.enums.Type;
 import eu.metacloudservice.webserver.dummys.GroupList;
 import eu.metacloudservice.webserver.entry.RouteEntry;
@@ -56,7 +58,7 @@ public class GroupDriver implements IGroupDriver {
                 }
             }
             Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudGroupCreateEvent(group.getGroup()));
-            NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutGroupCreate(group.getGroup()));
+            NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutGroupCreate(group.getGroup()));
             new ConfigDriver("./local/groups/" + group.getGroup()+ ".json").save(group);
             GroupList groupList = (GroupList) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudgroup/general"), GroupList.class);
             groupList.getGroups().add(group.getGroup());
@@ -73,7 +75,7 @@ public class GroupDriver implements IGroupDriver {
             GroupList groupList = (GroupList) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudgroup/general"), GroupList.class);
             groupList.getGroups().removeIf(s -> s.equalsIgnoreCase(group));
             Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudGroupDeleteEvent(group));
-            NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutGroupDelete(group));
+            NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutGroupDelete(group));
             Driver.getInstance().getWebServer().updateRoute("/cloudgroup/general", new ConfigDriver().convert(groupList));
             Driver.getInstance().getWebServer().removeRoute("/cloudgroup/" + group);
         }
@@ -132,6 +134,8 @@ public class GroupDriver implements IGroupDriver {
     @Override
     public void update(String name, Group group) {
         if (find(name)){
+            Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudGroupUpdateEditEvent(group.getGroup()));
+            NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutGroupEdit(group.getGroup()));
             new ConfigDriver("./local/groups/" + name+ ".json").save(group);
         }
     }

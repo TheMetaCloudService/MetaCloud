@@ -6,184 +6,70 @@ import java.util.ArrayList;
 
 public class ManagerConfig implements IConfigAdapter {
 
+    @lombok.Setter
+    @lombok.Getter
     private String managerAddress;
+    @lombok.Setter
+    @lombok.Getter
     private String language;
+    @lombok.Setter
+    @lombok.Getter
     private String splitter;
+    @lombok.Setter
+    @lombok.Getter
     private String uuid;
+    @lombok.Setter
     private boolean useProtocol;
+    @lombok.Setter
+    @lombok.Getter
     private Integer processorUsage;
+    @lombok.Setter
+    @lombok.Getter
     private Integer serviceStartupCount;
+    @lombok.Setter
+    @lombok.Getter
     private boolean useViaVersion;
+    @lombok.Setter
+    @lombok.Getter
     private boolean showConnectingPlayers;
+    @lombok.Setter
+    @lombok.Getter
     private Integer canUsedMemory;
+    @lombok.Setter
+    @lombok.Getter
     private Integer bungeecordPort;
+    @lombok.Setter
+    @lombok.Getter
     private Integer spigotPort;
+    @lombok.Setter
+    @lombok.Getter
     private String bungeecordVersion;
+    @lombok.Setter
+    @lombok.Getter
     private String spigotVersion;
+    @lombok.Setter
+    @lombok.Getter
     private Integer networkingCommunication;
+    @lombok.Setter
+    @lombok.Getter
     private Integer restApiCommunication;
+    @lombok.Setter
+    @lombok.Getter
     private boolean copyLogs;
 
 
+    @lombok.Setter
+    @lombok.Getter
     private ArrayList<String> whitelist;
+    @lombok.Setter
+    @lombok.Getter
     private ArrayList<ManagerConfigNodes> nodes;
 
     public ManagerConfig(){
-    }
-
-    public boolean isCopyLogs() {
-        return copyLogs;
-    }
-
-    public void setCopyLogs(boolean copyLogs) {
-        this.copyLogs = copyLogs;
-    }
-
-    public Integer getServiceStartupCount() {
-        return serviceStartupCount;
-    }
-
-    public void setServiceStartupCount(Integer dd) {
-        serviceStartupCount = dd;
-    }
-
-    public Integer getProcessorUsage() {
-        return processorUsage;
-    }
-
-    public void setProcessorUsage(Integer processorUsage) {
-        this.processorUsage = processorUsage;
-    }
-
-    public boolean isUseProtocol() {
-        return useProtocol;
-    }
-
-    public boolean isUseViaVersion() {
-        return useViaVersion;
-    }
-
-    public void setUseViaVersion(boolean useViaVersion) {
-        this.useViaVersion = useViaVersion;
-    }
-
-    public ArrayList<String> getWhitelist() {
-        return whitelist;
-    }
-
-    public void setWhitelist(ArrayList<String> whitelist) {
-        this.whitelist = whitelist;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public boolean isShowConnectingPlayers() {
-        return showConnectingPlayers;
-    }
-
-    public void setShowConnectingPlayers(boolean showConnectingPlayers) {
-        this.showConnectingPlayers = showConnectingPlayers;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
     }
 
     public boolean getUseProtocol() {
         return useProtocol;
     }
 
-    public void setUseProtocol(boolean userProtocol) {
-        this.useProtocol = userProtocol;
-    }
-
-    public Integer getBungeecordPort() {
-        return bungeecordPort;
-    }
-
-    public void setBungeecordPort(Integer bungeecordPort) {
-        this.bungeecordPort = bungeecordPort;
-    }
-
-    public Integer getSpigotPort() {
-        return spigotPort;
-    }
-
-    public void setSpigotPort(Integer spigotPort) {
-        this.spigotPort = spigotPort;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public String getSplitter() {
-        return splitter;
-    }
-
-    public void setSplitter(String splitter) {
-        this.splitter = splitter;
-    }
-
-    public String getManagerAddress() {
-        return managerAddress;
-    }
-
-    public void setManagerAddress(String managerAddress) {
-        this.managerAddress = managerAddress;
-    }
-
-    public Integer getCanUsedMemory() {
-        return canUsedMemory;
-    }
-
-    public void setCanUsedMemory(Integer canUsedMemory) {
-        this.canUsedMemory = canUsedMemory;
-    }
-
-    public String getBungeecordVersion() {
-        return bungeecordVersion;
-    }
-
-    public void setBungeecordVersion(String bungeecordVersion) {
-        this.bungeecordVersion = bungeecordVersion;
-    }
-
-    public String getSpigotVersion() {
-        return spigotVersion;
-    }
-
-    public void setSpigotVersion(String spigotVersion) {
-        this.spigotVersion = spigotVersion;
-    }
-
-    public Integer getNetworkingCommunication() {
-        return networkingCommunication;
-    }
-
-    public void setNetworkingCommunication(Integer networkingCommunication) {
-        this.networkingCommunication = networkingCommunication;
-    }
-
-    public Integer getRestApiCommunication() {
-        return restApiCommunication;
-    }
-
-    public void setRestApiCommunication(Integer restApiCommunication) {
-        this.restApiCommunication = restApiCommunication;
-    }
-
-    public ArrayList<ManagerConfigNodes> getNodes() {
-        return nodes;
-    }
-
-    public void setNodes(ArrayList<ManagerConfigNodes> nodes) {
-        this.nodes = nodes;
-    }
 }

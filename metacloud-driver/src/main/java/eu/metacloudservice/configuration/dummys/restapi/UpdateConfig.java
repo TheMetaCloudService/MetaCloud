@@ -4,17 +4,12 @@ import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
 
 public class UpdateConfig implements IConfigAdapter {
 
+    @lombok.Setter
+    @lombok.Getter
     private String latestReleasedVersion;
 
     public UpdateConfig(){
 
     }
 
-    public String getLatestReleasedVersion() {
-        return latestReleasedVersion;
-    }
-
-    public void setLatestReleasedVersion(String latestReleasedVersion) {
-        this.latestReleasedVersion = latestReleasedVersion;
-    }
 }
