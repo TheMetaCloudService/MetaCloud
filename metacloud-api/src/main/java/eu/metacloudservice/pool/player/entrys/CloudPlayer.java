@@ -17,19 +17,14 @@ import java.util.Random;
 
 public class CloudPlayer {
 
-    private String username, UniqueId;
+    @lombok.Getter
+    private final String username;
+    @lombok.Getter
+    private final String UniqueId;
 
     public CloudPlayer(@NonNull String username,@NonNull String uniqueId) {
         this.username = username;
         UniqueId = uniqueId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getUniqueId() {
-        return UniqueId;
     }
 
     public CloudService getProxyServer(){
@@ -118,7 +113,6 @@ public class CloudPlayer {
     public void sendActionBar(String message){
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInAPIPlayerActionBar(username, message));
     }
-
     public void sendMessage(@NonNull String message){
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInAPIPlayerMessage(username, message));
     }
@@ -128,7 +122,6 @@ public class CloudPlayer {
             sendMessage(msg);
         }
     }
-
 
     public boolean isConnectedOnFallback(){
         return getServer().isTypeLobby();

@@ -30,9 +30,6 @@ import eu.metacloudservice.webserver.RestDriver;
 import eu.metacloudservice.webserver.dummys.GroupList;
 import eu.metacloudservice.webserver.dummys.WhiteList;
 import lombok.NonNull;
-import net.md_5.bungee.api.ProxyServer;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
@@ -55,7 +52,7 @@ public class CloudAPI {
         new Driver();
         service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         new NettyDriver();
-        this.playerPool = new PlayerPool(service);
+        this.playerPool = new PlayerPool();
         this.servicePool = new ServicePool();
 
         restDriver = new RestDriver(service.getManagerAddress(), service.getRestPort());

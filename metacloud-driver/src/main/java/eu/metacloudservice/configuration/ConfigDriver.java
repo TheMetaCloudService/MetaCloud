@@ -18,7 +18,6 @@ public class ConfigDriver {
     protected static final Gson GSON = (new GsonBuilder()).serializeNulls().setPrettyPrinting().disableHtmlEscaping().create();
     private String location;
 
-
     public ConfigDriver(String location) {
         this.location = location;
     }
@@ -38,11 +37,9 @@ public class ConfigDriver {
         }
     }
 
-
     public boolean exists(){
         return new File(this.location).exists();
     }
-
 
     @SneakyThrows
     public IConfigAdapter convert(String json, Class<? extends IConfigAdapter> tClass){
@@ -76,5 +73,4 @@ public class ConfigDriver {
         });
 
     }
-
 }

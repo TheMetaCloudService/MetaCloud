@@ -4,6 +4,7 @@ import eu.metacloudservice.Driver;
 import eu.metacloudservice.config.*;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.module.extention.IModule;
+import eu.metacloudservice.moduleside.events.RestUpdate;
 import eu.metacloudservice.webserver.entry.RouteEntry;
 
 import java.io.File;
@@ -16,6 +17,7 @@ MetaModule implements IModule {
     @Override
     public void load() {
         create();
+        Driver.getInstance().getMessageStorage().eventDriver.registerListener(new RestUpdate());
         set();
     }
     @Override
@@ -90,7 +92,7 @@ MetaModule implements IModule {
             General general = new General("signs", "1.0.0", "RauchigesEtwas");
             Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/signs/general", new ConfigDriver().convert(general)));
             Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/signs/configuration", new ConfigDriver().convert(getConfigAsBase64())));
-            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/signs/locations", new ConfigDriver().convert(new ConfigDriver("./modules/signs/locations.json").read(Configuration.class))));
+            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/signs/locations", new ConfigDriver().convert(new ConfigDriver("./modules/signs/locations.json").read(Locations.class))));
         }catch (Exception e){
         }
     }

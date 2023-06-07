@@ -1,6 +1,5 @@
 package eu.metacloudservice.pool.player;
 
-import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.pool.player.entrys.CloudPlayer;
 import lombok.NonNull;
 
@@ -14,7 +13,7 @@ public class PlayerPool {
 
     private final ArrayList<CloudPlayer> connectedPlayers;
 
-    public PlayerPool(@NonNull LiveService liveService) {
+    public PlayerPool() {
         this.connectedPlayers = new ArrayList<>();
     }
 
@@ -22,11 +21,11 @@ public class PlayerPool {
         return connectedPlayers;
     }
     public CloudPlayer getPlayer(@NonNull String username){
-        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUsername().equals(username)).collect(Collectors.toList()).get(0);
+        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUsername().equals(username)).toList().get(0);
     }
 
     public CloudPlayer getPlayer(@NonNull UUID uniqueId){
-        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString())).collect(Collectors.toList()).get(0);
+        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString())).toList().get(0);
     }
 
     public List<CloudPlayer> getPlayersFromService(@NonNull String service){
@@ -52,12 +51,9 @@ public class PlayerPool {
         return connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.getUsername().equals(username));
     }
 
-    public boolean registerPlayer(@NonNull CloudPlayer cloudPlayer){
+    public void registerPlayer(@NonNull CloudPlayer cloudPlayer){
         if (connectedPlayers.stream().noneMatch(cloudPlayer1 -> cloudPlayer1.getUniqueId().equals(cloudPlayer.getUniqueId()))){
             connectedPlayers.add(cloudPlayer);
-            return true;
-        }else {
-            return false;
         }
     }
 

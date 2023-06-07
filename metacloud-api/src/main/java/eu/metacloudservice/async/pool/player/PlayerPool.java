@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 public class PlayerPool {
 
-
     private final ArrayList<CloudPlayer> connectedPlayers;
 
     public PlayerPool() {
@@ -51,12 +50,9 @@ public class PlayerPool {
         return connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.getUsername().equals(username));
     }
 
-    public boolean registerPlayer(@NonNull CloudPlayer cloudPlayer){
+    public void registerPlayer(@NonNull CloudPlayer cloudPlayer){
         if (connectedPlayers.stream().noneMatch(cloudPlayer1 -> cloudPlayer1.getUniqueId().equals(cloudPlayer.getUniqueId()))){
             connectedPlayers.add(cloudPlayer);
-            return true;
-        }else {
-            return false;
         }
     }
 

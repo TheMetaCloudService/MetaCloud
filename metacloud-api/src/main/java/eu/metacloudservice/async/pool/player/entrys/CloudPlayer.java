@@ -16,21 +16,14 @@ import java.util.Random;
 
 public class CloudPlayer {
 
-    private String username, UniqueId;
-
-    public CloudPlayer(@NonNull String username,@NonNull String uniqueId) {
+    @lombok.Getter
+    private final String username;
+    @lombok.Getter
+    private final String UniqueId;
+    public CloudPlayer(@NonNull String username, @NonNull String uniqueId) {
         this.username = username;
         UniqueId = uniqueId;
     }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getUniqueId() {
-        return UniqueId;
-    }
-
     public CloudService getProxyServer(){
         CloudPlayerRestCache cech = (CloudPlayerRestCache) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/" + getUniqueId()), CloudPlayerRestCache.class);
         return  AsyncCloudAPI.getInstance().getServicePool().getService(cech.getCloudplayerproxy());

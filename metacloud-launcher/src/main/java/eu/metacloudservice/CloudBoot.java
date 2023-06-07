@@ -22,13 +22,7 @@ public class CloudBoot {
 
 
     public static void main(String[] args) {
-
         new Driver();
-
-
-
-
-
         if (!new File("./service.json").exists()  && !new File("./nodeservice.json").exists()){
             Driver.getInstance().getMessageStorage().language = "EN";
         }else {
