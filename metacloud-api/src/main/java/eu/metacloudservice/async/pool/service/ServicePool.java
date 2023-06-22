@@ -37,6 +37,7 @@ public class ServicePool {
     }
 
 
+
     public boolean registerService(CloudService service){
         if (connectedServices.stream().noneMatch(service1 -> service1.getName().equals(service.getName()))){
             connectedServices.add(service);

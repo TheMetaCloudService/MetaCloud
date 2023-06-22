@@ -4,16 +4,20 @@ import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.cloudplayer.CloudPlayerRestCache;
 import eu.metacloudservice.codec.GameMode;
+import eu.metacloudservice.codec.sounds.Sounds;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.networking.in.service.playerbased.apibased.*;
 import eu.metacloudservice.pool.service.entrys.CloudService;
+import eu.metacloudservice.process.ServiceState;
 import lombok.NonNull;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Comparator;
 import java.util.Random;
+import java.util.function.Consumer;
 
 public class CloudPlayer {
 
@@ -27,11 +31,50 @@ public class CloudPlayer {
         UniqueId = uniqueId;
     }
 
+
+    public void performMore(Consumer<CloudPlayer> cloudPlayerConsumer) {
+        cloudPlayerConsumer.accept(this);
+    }
+
     public CloudService getProxyServer(){
         CloudPlayerRestCache cech = (CloudPlayerRestCache) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/" + getUniqueId()), CloudPlayerRestCache.class);
         return  CloudAPI.getInstance().getServicePool().getService(cech.getCloudplayerproxy());
     }
 
+
+    public void playSound(Sounds sound, int volume, int pitch) {
+        getServer().dispatchCommand("playsound " + sound.toString().toUpperCase() + " " + this.username + " " + volume + " " + pitch);
+    }
+
+    public void teleport(@NonNull String player) {
+        getServer().dispatchCommand("tp " + this.username + " " + player);
+    }
+
+    public void teleport(int posX, int posY, int posZ) {
+        getServer().dispatchCommand("tp " + this.username + " " + posX + " " + posY + " " + posZ);
+    }
+
+
+
+    public void connectRanked(String group) {
+        CloudAPI.getInstance()
+                .getServicePool()
+                .getServicesByGroup(group)
+                .stream()
+                .filter(cloudService -> (cloudService.getState() == ServiceState.LOBBY))
+                .min(Comparator.comparingInt(CloudService::getPlayercount))
+                .ifPresent(service -> CloudAPI.getInstance().sendPacketSynchronized(new PacketInAPIPlayerConnect(this.username, service.getName())));
+    }
+
+
+    public void changeGameMode(GameMode gameMode) {
+        switch (gameMode) {
+            case ADVENTURE -> getServer().dispatchCommand("gamemode ADVENTURE " + this.username);
+            case CREATIVE -> getServer().dispatchCommand("gamemode CREATIVE " + this.username);
+            case SURVIVAL -> getServer().dispatchCommand("gamemode SURVIVAL " + this.username);
+            case SPECTATOR -> getServer().dispatchCommand("gamemode SPECTATOR " + this.username);
+        }
+    }
     public long getCurrentPlayTime(){
         CloudPlayerRestCache cech = (CloudPlayerRestCache) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/" + getUniqueId()), CloudPlayerRestCache.class);
         return  cech.getCloudplayerconnect();

@@ -24,6 +24,7 @@ import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class CloudService {
 
@@ -33,6 +34,10 @@ public class CloudService {
     public CloudService(String name, String group) {
         this.name = name;
         this.group = group;
+    }
+
+    public void performMore(Consumer<CloudService> cloudServiceConsumer) {
+        cloudServiceConsumer.accept(this);
     }
 
     public String getName() {
@@ -74,6 +79,13 @@ public class CloudService {
         return getGroup().getGroupType().equalsIgnoreCase("GAME");
     }
 
+
+
+    public int getPlayercount() {
+        if (getGroup().getGroupType().equalsIgnoreCase("PROXY"))
+            return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromProxy(this.name).size();
+        return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromService(this.name).size();
+    }
     public ServiceState getState(){
         LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
         LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);

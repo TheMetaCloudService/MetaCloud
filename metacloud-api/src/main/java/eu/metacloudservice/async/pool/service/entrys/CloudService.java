@@ -15,6 +15,7 @@ import lombok.NonNull;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class CloudService {
 
@@ -30,6 +31,10 @@ public class CloudService {
         return name;
     }
 
+
+    public void performMore(Consumer<CloudService> cloudServiceConsumer) {
+        cloudServiceConsumer.accept(this);
+    }
     public int getID(){
         LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
         LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
@@ -88,6 +93,12 @@ public class CloudService {
             return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromService(name);
         }
 
+    }
+
+    public int getPlayercount() {
+        if (getGroup().getGroupType().equalsIgnoreCase("PROXY"))
+            return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromProxy(this.name).size();
+        return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromService(this.name).size();
     }
 
 }
