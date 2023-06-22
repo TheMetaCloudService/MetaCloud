@@ -15,7 +15,6 @@ import java.util.TimerTask;
 public class StopCommand extends CommandAdapter {
     @Override
     public void performCommand(CommandAdapter command, String[] args) {
-
         if (Driver.getInstance().getMessageStorage().shutdownAccept){
             CloudManager.shutdownHook();
         }else {

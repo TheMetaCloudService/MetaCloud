@@ -15,6 +15,7 @@ import eu.metacloudservice.webserver.entry.RouteEntry;
 import lombok.SneakyThrows;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.impl.DefaultParser;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.InfoCmp;
@@ -61,23 +62,26 @@ public class TerminalDriver {
         this.isInSetup = false;
         this.terminal = TerminalBuilder.builder()
                 .system(true)
-                .streams(System.in, System.out)
                 .encoding(StandardCharsets.UTF_8)
-                .dumb(true)
                 .name("META-CONSOLE")
                 .build();
 
         this.lineReader = LineReaderBuilder.builder()
                 .terminal(this.terminal)
                 .completer(new TerminalCompleter())
-                .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
-                .option(LineReader.Option.AUTO_REMOVE_SLASH, false)
-                .option(LineReader.Option.INSERT_TAB, false)
                 .appName("META-READER")
+                .option(LineReader.Option.AUTO_REMOVE_SLASH, true)
+                .option(LineReader.Option.HISTORY_IGNORE_SPACE, true)
+                .option(LineReader.Option.HISTORY_REDUCE_BLANKS, true)
+                .option(LineReader.Option.HISTORY_IGNORE_DUPS, true)
+                .option(LineReader.Option.EMPTY_WORD_OPTIONS, false)
+                .option(LineReader.Option.HISTORY_TIMESTAMPED, false)
+                .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
+                .option(LineReader.Option.INSERT_TAB, false)
+                .variable(LineReader.HISTORY_SIZE, 500)
+                .parser(new DefaultParser().eofOnUnclosedQuote(true))
                 .build();
-        this.lineReader.option(LineReader.Option.EMPTY_WORD_OPTIONS, false);
-        this.lineReader.option(LineReader.Option.HISTORY_TIMESTAMPED, false);
-        this.lineReader.option(LineReader.Option.DISABLE_EVENT_EXPANSION, true);
+
 
 
         Thread consoleReadingThread = new TerminalReader(this);
