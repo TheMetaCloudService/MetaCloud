@@ -40,7 +40,7 @@ public class CloudService {
     }
 
     public void sync(){
-        CloudAPI.getInstance().dispatchCommand("service sync " + name);
+        AsyncCloudAPI.getInstance().dispatchCommand("service sync " + name);
     }
 
     public void shutdown(){
@@ -52,6 +52,9 @@ public class CloudService {
 
     public boolean isTypeLobby(){
         return getGroup().getGroupType().equalsIgnoreCase("LOBBY");
+    }
+    public boolean isTypeGame(){
+        return getGroup().getGroupType().equalsIgnoreCase("GAME");
     }
 
     public Group getGroup(){

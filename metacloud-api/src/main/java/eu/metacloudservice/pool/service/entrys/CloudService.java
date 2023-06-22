@@ -70,7 +70,9 @@ public class CloudService {
     public boolean isTypeLobby(){
         return getGroup().getGroupType().equalsIgnoreCase("LOBBY");
     }
-
+    public boolean isTypeGame(){
+        return getGroup().getGroupType().equalsIgnoreCase("GAME");
+    }
 
     public ServiceState getState(){
         LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);

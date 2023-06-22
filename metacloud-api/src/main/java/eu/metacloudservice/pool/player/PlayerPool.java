@@ -1,6 +1,7 @@
 package eu.metacloudservice.pool.player;
 
 import eu.metacloudservice.pool.player.entrys.CloudPlayer;
+import eu.metacloudservice.process.ServiceState;
 import lombok.NonNull;
 
 import java.util.ArrayList;
@@ -42,6 +43,19 @@ public class PlayerPool {
     public List<CloudPlayer> getPlayersByServiceGroup(@NonNull String group){
         return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getServer().getGroup().getGroup().equals(group)).collect(Collectors.toList());
     }
+
+    public List<CloudPlayer> getPlayersFromServiceGroupByState(@NonNull String group, ServiceState state){
+        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getServer().getGroup().getGroup().equals(group))
+                .filter(cloudPlayer -> cloudPlayer.getServer().getState() == state)
+                .collect(Collectors.toList());
+    }
+
+    public List<CloudPlayer> getPlayersFromProxyGroupByState(@NonNull String group, ServiceState state){
+        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getProxyServer().getGroup().getGroup().equals(group))
+                .filter(cloudPlayer -> cloudPlayer.getProxyServer().getState() == state)
+                .collect(Collectors.toList());
+    }
+
 
     public boolean playerIsNotNull(@NonNull UUID uniqueId){
         return connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString()));

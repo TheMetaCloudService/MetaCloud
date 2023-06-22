@@ -8,6 +8,7 @@ import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.events.EventDriver;
 import eu.metacloudservice.events.entrys.ICloudListener;
+import eu.metacloudservice.events.listeners.player.CloudPlayerConnectedEvent;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.networking.*;
 import eu.metacloudservice.networking.client.NettyClient;
@@ -24,10 +25,13 @@ import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerSwi
 import eu.metacloudservice.networking.out.service.playerbased.apibased.*;
 import eu.metacloudservice.networking.packet.Packet;
 import eu.metacloudservice.pool.player.PlayerPool;
+import eu.metacloudservice.pool.player.entrys.CloudPlayer;
 import eu.metacloudservice.pool.service.ServicePool;
 import eu.metacloudservice.process.ServiceState;
+import eu.metacloudservice.storage.UUIDDriver;
 import eu.metacloudservice.webserver.RestDriver;
 import eu.metacloudservice.webserver.dummys.GroupList;
+import eu.metacloudservice.webserver.dummys.PlayerGeneral;
 import eu.metacloudservice.webserver.dummys.WhiteList;
 import lombok.NonNull;
 
@@ -38,17 +42,15 @@ import java.util.List;
 public class CloudAPI {
 
     private static CloudAPI instance;
-    private boolean isVelo;
-    private LiveService service;
+    private final LiveService service;
 
-    private PlayerPool playerPool;
-    private ServicePool servicePool;
-    private RestDriver restDriver;
-    private EventDriver eventDriver;
+    private final PlayerPool playerPool;
+    private final ServicePool servicePool;
+    private final RestDriver restDriver;
+    private final EventDriver eventDriver;
 
     public CloudAPI(boolean isVelo) {
         instance = this;
-        isVelo = isVelo;
         new Driver();
         service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         new NettyDriver();
@@ -80,6 +82,13 @@ public class CloudAPI {
         this.eventDriver = new EventDriver();
 
         Group group = (Group) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/" + service.getGroup()), Group.class);
+        PlayerGeneral players = (PlayerGeneral) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/genernal"), PlayerGeneral.class);
+        players.getCloudplayers().forEach(s -> {
+            if (!CloudAPI.getInstance().getPlayerPool().playerIsNotNull(s)){
+                AsyncCloudAPI.getInstance().getPlayerPool().registerPlayer(new eu.metacloudservice.async.pool.player.entrys.CloudPlayer(s, UUIDDriver.getUUID(s)));
+                getPlayerPool().registerPlayer(new CloudPlayer(s, UUIDDriver.getUUID(s)));
+            }
+        });
         if (group.getGroupType().equals("PROXY")){
             if (isVelo){
                 eventDriver.registerListener(new eu.metacloudservice.bootstrap.velocity.listener.CloudEvents());
@@ -104,7 +113,6 @@ public class CloudAPI {
                         .registerHandler(new PacketOutAPIPlayerTab().getPacketUUID(), new HandlePacketOutAPIPlayerTab(), PacketOutAPIPlayerTab.class);
             }
         }
-
 
         NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInServiceConnect(service.getService()));
 
