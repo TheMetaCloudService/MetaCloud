@@ -60,6 +60,15 @@ public class ServiceCommand extends CommandAdapter {
                             "Der Service '§f"+service+"§r' wurde nicht gefunden",
                             "the service '§f"+service+"§r' was not found");
                 }
+            }else  if (args[0].equalsIgnoreCase("restart")){
+                String service = args[1];
+                if (CloudManager.serviceDriver.getService(service) != null){
+                    CloudManager.serviceDriver.getService(service).handelRestart();
+                }else {
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                            "Der Service '§f"+service+"§r' wurde nicht gefunden",
+                            "the service '§f"+service+"§r' was not found");
+                }
             }else  if (args[0].equalsIgnoreCase("joinscreen")){
                 String service = args[1];
                 if (CloudManager.serviceDriver.getService(service) != null && CloudManager.serviceDriver.getService(service).getEntry().getStatus() != ServiceState.QUEUED){
@@ -220,6 +229,7 @@ public class ServiceCommand extends CommandAdapter {
             commands.add("run");
             commands.add("stopgroup");
             commands.add("joinscreen");
+            commands.add("restart");
             commands.add("stop");
             commands.add("sync");
             commands.add("info");
@@ -253,6 +263,10 @@ public class ServiceCommand extends CommandAdapter {
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fservice stop [service] §7~ um ein Service zu stoppen",
                 " >> §fservice stop [service] §7~ to stop a service");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                " >> §fservice restart [service] §7~ um ein Service zu stoppen",
+                " >> §fservice restart [service] §7~ to stop a service");
+
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fservice sync [service] §7~ um einen Service zu synchronisieren",
                 " >> §fservice sync [service] §7~ to synchronize a service");

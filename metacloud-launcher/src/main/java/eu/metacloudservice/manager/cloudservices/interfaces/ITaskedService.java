@@ -9,6 +9,7 @@ public interface ITaskedService {
   void handelLaunch();
   void handelScreen();
   void handelQuit();
+  void handelRestart();
   void handelStatusChange(ServiceState status);
   void handelCloudPlayerConnection(boolean connect);
 

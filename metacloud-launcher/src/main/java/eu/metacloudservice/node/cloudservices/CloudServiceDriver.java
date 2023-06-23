@@ -52,6 +52,12 @@ public class CloudServiceDriver {
     }
 
 
+
+    public void handleRestart(String service){
+        ServiceProcess process = processes.stream().filter(serviceProcess -> serviceProcess.getService().equalsIgnoreCase(service)).findFirst().get();
+        process.handleRestart();
+    }
+
     public void handleConsole(String service){
         ServiceProcess process = processes.stream().filter(serviceProcess -> serviceProcess.getService().equalsIgnoreCase(service)).findFirst().get();
         process.handelConsole();

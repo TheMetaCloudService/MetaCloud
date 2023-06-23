@@ -28,9 +28,6 @@ public class ManagerConfig implements IConfigAdapter {
     private Integer serviceStartupCount;
     @lombok.Setter
     @lombok.Getter
-    private boolean useViaVersion;
-    @lombok.Setter
-    @lombok.Getter
     private boolean showConnectingPlayers;
     @lombok.Setter
     @lombok.Getter

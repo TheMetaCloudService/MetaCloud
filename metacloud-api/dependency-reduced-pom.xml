@@ -63,18 +63,6 @@
           <groupId>com.moandjiezana.toml</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>adventure-api</artifactId>
-          <groupId>net.kyori</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>adventure-text-serializer-gson</artifactId>
-          <groupId>net.kyori</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>adventure-text-serializer-legacy</artifactId>
-          <groupId>net.kyori</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>adventure-text-serializer-plain</artifactId>
           <groupId>net.kyori</groupId>
         </exclusion>

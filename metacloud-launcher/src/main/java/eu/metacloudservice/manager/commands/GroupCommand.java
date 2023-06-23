@@ -131,7 +131,28 @@ public class GroupCommand extends CommandAdapter {
                                 "die Gruppe '§f"+group+"§r' wurde nicht gefunden",
                                 "the group '§f"+group+"§r' was not found");
                     }
-                }else if (args[1].equalsIgnoreCase("setJavaEnvironment")) {
+                }else  if (args[1].equalsIgnoreCase("setpriority")) {
+                    String group = args[0];
+                    if (Driver.getInstance().getGroupDriver().find(group)){
+                        if(args[2].matches("[0-9]+")){
+                            Group raw = Driver.getInstance().getGroupDriver().load(group);
+                            raw.setPriority(Integer.valueOf(args[2]));
+                            Driver.getInstance().getGroupDriver().update(group, raw);
+                            Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS,
+                                    "Die Priorität würde geändert werden",
+                                    "The priority would be changed");
+                            Driver.getInstance().getWebServer().updateRoute("/cloudgroup/" + raw.getGroup(), new ConfigDriver().convert(raw));
+                        }else {
+                            Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                    "du kannst nur eine zahl angeben",
+                                    "you can only specify one number");
+                        }
+                    }else {
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "die Gruppe '§f"+group+"§r' wurde nicht gefunden",
+                                "the group '§f"+group+"§r' was not found");
+                    }
+                }else  if (args[1].equalsIgnoreCase("setJavaEnvironment")) {
                     String group = args[0];
                     if (Driver.getInstance().getGroupDriver().find(group)){
                         Group raw = Driver.getInstance().getGroupDriver().load(group);
@@ -192,7 +213,8 @@ public class GroupCommand extends CommandAdapter {
             commands.add("setmaxplayers");
             commands.add("settemplate");
             commands.add("setminamount");
-            commands.add("setJavaEnvironment");
+            commands.add("setjavaenvironment");
+            commands.add("setpriority");
         }
         if (args.length == 2){
             if (args[1].equalsIgnoreCase("setmaintenance") && !args[0].equalsIgnoreCase("create") && !args[0].equalsIgnoreCase("list")) {
@@ -227,11 +249,17 @@ public class GroupCommand extends CommandAdapter {
                 " >> §fgroup [group] setmaxplayers [count] §7~ um die maximalen Spielerzahlen ändern",
                 " >> §fgroup [group] setmaxplayers [count] §7~ to change the maximum number of players");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fgroup [group] setminamount [count> §7~ die Anzahl der Server festlegen, die immer online sein sollen",
+                " >> §fgroup [group] setminamount [count] §7~ die Anzahl der Server festlegen, die immer online sein sollen",
                 " >> §fgroup [group] setminamount [count] §7~ set the number of servers that should always be online");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fgroup [group] settemplate [template] §7~ um die Wartung ein- und wieder auszuschalten",
                 " >> §fgroup [group] settemplate [template] §7~ to switch the maintenance on and off again");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                " >> §fgroup [group] setjavaenvironment [path] §7~ setze die java umgebung neu",
+                " >> §fgroup [group] setjavaenvironment [path] §7~ reset the java environment");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                " >> §fgroup [group] setpriority [priority] §7~ die Priorität einer Gruppe festlegen",
+                " >> §fgroup [group] setpriority [priority] §7~ set the priority of a group");
 
     }
 }

@@ -380,6 +380,231 @@ public class ServiceProcess {
         }
     }
 
+    public void handleRestart(){
+        if (process != null && process.isAlive()){
+            process.destroy();
+            process.destroyForcibly().destroy();
+        }
+
+
+        LiveService liveService = new LiveService();
+        liveService.setService(service);
+
+        liveService.setGroup(group.getGroup());
+        liveService.setPort(port);
+        if (new File("./service.json").exists()){
+            ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+            liveService.setManagerAddress(config.getManagerAddress());
+            liveService.setRunningNode("InternalNode");
+            liveService.setRestPort(config.getRestApiCommunication());
+            liveService.setNetworkPort(config.getNetworkingCommunication());
+            useVelocity = config.getBungeecordVersion().equalsIgnoreCase("VELOCITY");
+        }else {
+            NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
+            liveService.setManagerAddress(config.getManagerAddress());
+            liveService.setRestPort(config.getRestApiCommunication());
+            liveService.setRunningNode(config.getNodeName());
+            liveService.setNetworkPort(config.getNetworkingCommunication());
+            useVelocity = config.getBungeecordVersion().equalsIgnoreCase("VELOCITY");
+        }
+        new ConfigDriver("./live/" + group.getGroup() + "/" + service + "/CLOUDSERVICE.json").save(liveService);
+
+
+        try {
+            FileUtils.copyDirectory( new File("./local/GLOBAL/EVERY/"),
+                    new File("./live/" + group.getGroup() + "/" + service +"/"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            FileUtils.copyFile(new File("./connection.key"), new File("./live/" + group.getGroup() + "/" + service+ "/connection.key"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.directory(new File("./live/" + group.getGroup() + "/" + service + "/"));
+        if (!group.getStorage().getJavaEnvironment().isEmpty()){
+            processBuilder.environment().put("JAVA_HOME",group.getStorage().getJavaEnvironment());
+        }
+
+        if (group.getGroupType().equals("PROXY")) {
+
+            if (!new File("./live/" + group.getGroup() + "/" + service+ "/server-icon.png").exists()){
+                try {
+                    FileUtils.copyFile(new File("./local/server-icon.png"), new File("./live/" + group.getGroup() + "/" + service+ "/server-icon.png"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            try {
+                FileUtils.copyDirectory( new File("./local/GLOBAL/EVERY_PROXY/"),
+                        new File("./live/" + group.getGroup() + "/" + service +"/"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (useVelocity){
+                String[] command = new String[]{
+                        "java",
+                        "-XX:+UseG1GC",
+                        "-XX:MaxGCPauseMillis=50",
+                        "-XX:-UseAdaptiveSizePolicy",
+                        "-XX:CompileThreshold=100",
+                        "-Dio.netty.recycler.maxCapacity=0",
+                        "-Dio.netty.recycler.maxCapacity.default=0",
+                        "-Djline.terminal=jline.UnsupportedTerminal",
+                        "-Xmx" + group.getUsedMemory() + "M",
+                        "-jar",
+                        "server.jar"
+                };
+                File configFile = new File(System.getProperty("user.dir") + "/live/" + group.getGroup()+ "/" + service + "/", "velocity.toml");
+                final FileWriter fileWriter;
+                try {
+                    fileWriter = new FileWriter(configFile);
+                    fileWriter.write(Driver.getInstance().getMessageStorage().getVelocityToml(port, getGroup().getMaxPlayers(), useProtocol));
+                    fileWriter.flush();
+                    fileWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                int leftLimit = 97; // letter 'a'
+                int rightLimit = 122; // letter 'z'
+                int targetStringLength = 10;
+                Random random = new Random();
+
+                String generatedString = random.ints(leftLimit, rightLimit + 1)
+                        .limit(targetStringLength)
+                        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                        .toString();
+                File configFile2 = new File(System.getProperty("user.dir") + "/live/" + group.getGroup()+ "/" + service + "/", "forwarding.secret");
+                final FileWriter fileWriter2;
+                try {
+                    fileWriter2 = new FileWriter(configFile2);
+                    fileWriter2.write(generatedString);
+                    fileWriter2.flush();
+                    fileWriter2.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+
+                processBuilder.command(command);
+                try {
+                    process = processBuilder.start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            }else {
+                String[] command = new String[]{
+                        "java",
+                        "-XX:+UseG1GC",
+                        "-XX:MaxGCPauseMillis=50",
+                        "-XX:-UseAdaptiveSizePolicy",
+                        "-XX:CompileThreshold=100",
+                        "-Dio.netty.recycler.maxCapacity=0",
+                        "-Dio.netty.recycler.maxCapacity.default=0",
+                        "-Djline.terminal=jline.UnsupportedTerminal",
+                        "-Xmx" + group.getUsedMemory() + "M",
+                        "-jar",
+                        "server.jar"
+                };
+                File configFile = new File(System.getProperty("user.dir") + "/live/" + group.getGroup()+ "/" + service + "/", "config.yml");
+                final FileWriter fileWriter;
+                try {
+                    fileWriter = new FileWriter(configFile);
+                    fileWriter.write(Driver.getInstance().getMessageStorage().getBungeeCordConfiguration(port, group.getMaxPlayers(), useProtocol));
+                    fileWriter.flush();
+                    fileWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                processBuilder.command(command);
+                try {
+                    process = processBuilder.start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        } else {
+
+            try {
+                FileUtils.copyDirectory(new File("./local/GLOBAL/EVERY_SERVER/"),
+                        new File("./live/" + group.getGroup() + "/" + service + "/"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            String[] command = new String[]{
+                    "java",
+                    "-XX:+UseG1GC",
+                    "-XX:MaxGCPauseMillis=50",
+                    "-XX:-UseAdaptiveSizePolicy",
+                    "-XX:CompileThreshold=100",
+                    "-Dcom.mojang.eula.agree=true",
+                    "-Dio.netty.recycler.maxCapacity=0",
+                    "-Dio.netty.recycler.maxCapacity.default=0",
+                    "-Djline.terminal=jline.UnsupportedTerminal",
+                    "-Xmx" + group.getUsedMemory() + "M",
+                    "-jar",
+                    "server.jar",
+                    "--nogui",
+                    "--nojline"
+            };
+            File configFile = new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/", "server.properties");
+            try {
+                final FileWriter fileWriter = new FileWriter(configFile);
+                fileWriter.write(Driver.getInstance().getMessageStorage().getSpigotProperty(port));
+                fileWriter.flush();
+                fileWriter.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (!new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/bukkit.yml").exists()) {
+                File configFile2 = new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/", "bukkit.yml");
+                try {
+                    final FileWriter fileWriter2 = new FileWriter(configFile2);
+                    fileWriter2.write(Driver.getInstance().getMessageStorage().getSpigotConfiguration());
+                    fileWriter2.flush();
+                    fileWriter2.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            if (!new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/spigot.yml").exists()) {
+                File configFile3 = new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/", "spigot.yml");
+                try {
+                    final FileWriter fileWriter3 = new FileWriter(configFile3);
+                    fileWriter3.write(Driver.getInstance().getMessageStorage().getSoigotYML(useVelocity));
+                    fileWriter3.flush();
+                    fileWriter3.close();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            processBuilder.command(command);
+            try {
+                process = processBuilder.start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+         }
+        }
+
     @SneakyThrows
     public void handelShutdown(){
 

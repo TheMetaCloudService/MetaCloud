@@ -66,6 +66,10 @@
           <artifactId>spigot-api</artifactId>
           <groupId>org.spigotmc</groupId>
         </exclusion>
+        <exclusion>
+          <artifactId>adventure-platform-bungeecord</artifactId>
+          <groupId>net.kyori</groupId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>

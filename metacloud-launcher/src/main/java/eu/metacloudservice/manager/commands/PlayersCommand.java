@@ -45,7 +45,9 @@ public class PlayersCommand extends CommandAdapter {
 
             for (int i = 0; i < sortedPlayers.size(); i++) {
                 String player = sortedPlayers.get(i);
-                builder.append(player);
+                CloudPlayerRestCache cache = (CloudPlayerRestCache)(new RestDriver()).convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/" +player), CloudPlayerRestCache.class);
+
+                builder.append(cache.getCloudplayername());
 
                 if (i < sortedPlayers.size() - 1) {
                     builder.append(", ");
@@ -154,7 +156,6 @@ public class PlayersCommand extends CommandAdapter {
         }
         return returns;
     }
-
 
     private void sendHelp() {
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,

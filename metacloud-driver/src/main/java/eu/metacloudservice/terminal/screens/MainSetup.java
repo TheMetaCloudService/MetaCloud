@@ -2153,7 +2153,6 @@ public class MainSetup {
 
                 managerConfig.setServiceStartupCount(5);
                 managerConfig.setProcessorUsage(90);
-                managerConfig.setUseViaVersion(false);
                 managerConfig.setBungeecordPort(25565);
                 managerConfig.setShowConnectingPlayers(true);
                 managerConfig.setSpigotPort(5000);
@@ -2185,7 +2184,7 @@ public class MainSetup {
                 managerConfig.setProcessorUsage(90);
                 managerConfig.setServiceStartupCount(3);
                 managerConfig.setRestApiCommunication(8097);
-                managerConfig.setUseViaVersion(false);
+
                 managerConfig.setShowConnectingPlayers(true);
                 managerConfig.setUuid("INT");
                 managerConfig.setBungeecordPort(25565);
@@ -2210,7 +2209,6 @@ public class MainSetup {
                 config.setBungeecordPort(25565);
                 config.setProcessorUsage(90);
                 config.setSpigotPort(5000);
-                config.setUseViaVersion(false);
                 config.setNodeAddress(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress").toString());
                 config.setNodeName( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename").toString());
                 new ConfigDriver("./nodeservice.json").save(config);
@@ -2230,7 +2228,6 @@ public class MainSetup {
                 config.setProcessorUsage(90);
                 config.setSpigotPort(5000);
                 config.setCopyLogs(true);
-                config.setUseViaVersion(false);
                 config.setNodeAddress(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress").toString());
                 config.setNodeName( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename").toString());
                 new ConfigDriver("./nodeservice.json").save(config);

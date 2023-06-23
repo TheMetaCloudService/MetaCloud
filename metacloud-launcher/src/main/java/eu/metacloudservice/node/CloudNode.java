@@ -71,24 +71,6 @@ public class CloudNode {
         }
         initNetty(config);
 
-        if (config.isUseViaVersion()){
-            if (!new File("./local/GLOBAL/EVERY/plugins/viaversion-latest.jar").exists()){
-                Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Versuche die Datei '§fviaversion-latest.jar§r' herunter zuladen",
-                        "Try to download the file '§fviaversion-latest.jar§r'.");
-                try {
-                    URLConnection urlConnection = new URL("https://github.com/ViaVersion/ViaVersion/releases/download/4.5.1/ViaVersion-4.5.1.jar").openConnection();
-                    urlConnection.setRequestProperty("User-Agent",
-                            "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
-                    urlConnection.connect();
-                    Files.copy(urlConnection.getInputStream(), Paths.get("local/GLOBAL/EVERY/plugins/viaversion-latest.jar"));
-                } catch (IOException ignored) {
-
-                }
-                Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
-                        "The download was successful");
-            }
-        }
-
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Es wird versucht, alle Befehle zu laden und ihre Bereitstellung deutlich zu machen",
                 "It is tried to load all commands and to make the provision of them clear");
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new HelpCommand());
@@ -141,6 +123,7 @@ public class CloudNode {
                 .registerHandler(new PacketOutLaunchService().getPacketUUID(), new HandlePacketOutLaunchService(), PacketOutLaunchService.class)
                 .registerHandler(new PacketOutShutdownNode().getPacketUUID(), new HandlePacketOutShutdownNode(), PacketOutShutdownNode.class)
                 .registerHandler(new PacketOutSyncService().getPacketUUID(), new HandlePacketOutSyncService(), PacketOutSyncService.class)
+                .registerHandler(new PacketOutRestartService().getPacketUUID(), new HandlePacketOutRestartService(), PacketOutRestartService.class)
                 .registerHandler(new PacketOutSendCommand().getPacketUUID(), new HandlePacketOutSendCommand(), PacketOutSendCommand.class);
         Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "der '§fNetty-Client§r' wurde erfolgreich verbunden '§f"+config.getManagerAddress()+"~"+config.getNetworkingCommunication()+"§r' angebunden", "The '§fNetty-client§r' was successfully connected '§f"+config.getManagerAddress()+"~"+config.getNetworkingCommunication()+"§r'");
 

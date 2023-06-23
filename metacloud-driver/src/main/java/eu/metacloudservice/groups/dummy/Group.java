@@ -16,6 +16,7 @@ public class Group implements IConfigAdapter {
     private boolean maintenance;
     @Getter
     private boolean runStatic;
+    @Setter
     @Getter
     private Integer priority;
     @Getter
@@ -29,6 +30,7 @@ public class Group implements IConfigAdapter {
     @Setter
     @Getter
     private Integer  maximalOnline;
+    @Setter
     @Getter
     private Integer startNewPercent;
     @Getter

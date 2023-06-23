@@ -137,26 +137,6 @@ public class CloudManager {
         }
 
 
-        if (config.isUseViaVersion()){
-            if (!new File("./local/GLOBAL/EVERY/plugins/viaversion-latest.jar").exists()){
-                Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Versuche die Datei '§fviaversion-latest.jar§r' herunter zuladen",
-                        "Try to download the file '§fviaversion-latest.jar§r'.");
-                try {
-                    URLConnection urlConnection = new URL("https://github.com/ViaVersion/ViaVersion/releases/download/4.5.1/ViaVersion-4.5.1.jar").openConnection();
-                    urlConnection.setRequestProperty("User-Agent",
-                            "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
-                    urlConnection.connect();
-                    Files.copy(urlConnection.getInputStream(), Paths.get("local/GLOBAL/EVERY/plugins/viaversion-latest.jar"));
-                } catch (IOException ignored) {
-
-                }
-                Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
-                        "The download was successful");
-            }else {
-
-            }
-        }
-
         if (!new File("./local/GLOBAL/EVERY/plugins/metacloud-api.jar").exists()){
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Versuche die Datei '§fmetacloud-api.jar§r' herunter zuladen",
                     "Try to download the file '§fmetacloud-api.jar§r'.");
@@ -164,7 +144,6 @@ public class CloudManager {
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
                     "The download was successful");
         }
-
 
         Driver.getInstance().getModuleDriver().load();
 

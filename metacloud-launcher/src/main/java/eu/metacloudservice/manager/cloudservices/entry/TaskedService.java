@@ -212,6 +212,15 @@ public class TaskedService implements ITaskedService {
         }
     }
 
+    @Override
+    public void handelRestart() {
+        if (this.getEntry().getNode().equals("InternalNode")){
+            process.handleRestart();
+        }else {
+            NettyDriver.getInstance().nettyServer.sendPacketAsynchronous(entry.getNode(), new PacketOutRestartService(getEntry().getServiceName()));
+        }
+    }
+
 
     @Override
     public void handelStatusChange(ServiceState status) {
