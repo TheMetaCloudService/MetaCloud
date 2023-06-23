@@ -21,6 +21,7 @@ public class PlayerPool {
     public List<CloudPlayer> getPlayers(){
         return connectedPlayers;
     }
+
     public CloudPlayer getPlayer(@NonNull String username){
         return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUsername().equals(username)).toList().get(0);
     }
@@ -40,6 +41,7 @@ public class PlayerPool {
     public List<CloudPlayer> getPlayersByProxyGroup(@NonNull String group){
         return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getProxyServer().getGroup().getGroup().equals(group)).collect(Collectors.toList());
     }
+
     public List<CloudPlayer> getPlayersByServiceGroup(@NonNull String group){
         return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getServer().getGroup().getGroup().equals(group)).collect(Collectors.toList());
     }
@@ -74,6 +76,7 @@ public class PlayerPool {
     public void unregisterPlayer(@NonNull String username){
         connectedPlayers.removeIf(cloudPlayer -> cloudPlayer.getUsername().equalsIgnoreCase(username));
     }
+
     public boolean unregisterPlayer(@NonNull UUID uniqueId){
         if (connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString()))){
             connectedPlayers.removeIf(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString()));

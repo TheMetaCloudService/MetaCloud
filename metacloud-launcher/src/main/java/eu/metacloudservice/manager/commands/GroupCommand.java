@@ -232,5 +232,6 @@ public class GroupCommand extends CommandAdapter {
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fgroup [group] settemplate [template] §7~ um die Wartung ein- und wieder auszuschalten",
                 " >> §fgroup [group] settemplate [template] §7~ to switch the maintenance on and off again");
+
     }
 }

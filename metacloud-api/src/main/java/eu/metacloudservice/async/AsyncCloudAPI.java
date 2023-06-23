@@ -59,14 +59,15 @@ public class AsyncCloudAPI {
 
 
     public double getUsedMemory(){
-        return  ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1048576;
+        return  (double) ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1048576;
 
     }
 
     public double getMaxMemory(){
-        return  ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getMax() / 1048576;
+        return  (double) ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getMax() / 1048576;
 
     }
+
     public ArrayList<Group> getGroups(){
         ArrayList<Group> groups = new ArrayList<>();
         GroupList cech = (GroupList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/general"), GroupList.class);
@@ -99,7 +100,6 @@ public class AsyncCloudAPI {
     public EventDriver getEventDriver() {
         return CloudAPI.getInstance().getEventDriver();
     }
-
 
     public boolean addWhiteList(String username){
         if (getWhitelist().stream().noneMatch(s -> s.equals(username))){
@@ -138,11 +138,10 @@ public class AsyncCloudAPI {
         setState(state, getCurrentService().getService());
     }
 
-
-
     public RestDriver getRestDriver() {
         return CloudAPI.getInstance().getRestDriver();
     }
+
     public PlayerPool getPlayerPool() {
         return playerPool;
     }

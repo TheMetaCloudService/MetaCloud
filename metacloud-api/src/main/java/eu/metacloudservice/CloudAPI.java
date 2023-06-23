@@ -146,7 +146,6 @@ public class CloudAPI {
         return eventDriver;
     }
 
-
     public ArrayList<Group> getGroups(){
         ArrayList<Group> groups = new ArrayList<>();
         GroupList cech = (GroupList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/general"), GroupList.class);
@@ -214,13 +213,14 @@ public class CloudAPI {
         return  ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getMax() / 1048576;
 
     }
+
     public AsyncCloudAPI getAsyncAPI(){
         return AsyncCloudAPI.getInstance();
     }
+
     public void sendPacketSynchronized(Packet packet){
         NettyDriver.getInstance().nettyClient.sendPacketSynchronized(packet);
     }
-    
 
     public RestDriver getRestDriver() {
         return restDriver;

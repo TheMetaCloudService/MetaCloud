@@ -57,9 +57,11 @@ public class CloudService {
     public void sync(){
         CloudAPI.getInstance().dispatchCommand("service sync " + name);
     }
+
     public Group getGroup(){
     return (Group) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/" + group), Group.class);
     }
+
     public void dispatchCommand(@NonNull String command){
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInDispatchCommand(this.name, command));
     }
@@ -75,32 +77,35 @@ public class CloudService {
     public boolean isTypeLobby(){
         return getGroup().getGroupType().equalsIgnoreCase("LOBBY");
     }
+
     public boolean isTypeGame(){
         return getGroup().getGroupType().equalsIgnoreCase("GAME");
     }
-
-
 
     public int getPlayercount() {
         if (getGroup().getGroupType().equalsIgnoreCase("PROXY"))
             return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromProxy(this.name).size();
         return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromService(this.name).size();
     }
+
     public ServiceState getState(){
         LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
         LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
         return services.getState();
     }
+
     public String getAddress(){
         LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
         LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
         return services.getHost();
     }
+
     public Integer getPort(){
         LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
         LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
         return services.getPort();
     }
+
     public List<CloudPlayer> getPlayers(){
         if (getGroup().getGroupType().equalsIgnoreCase("PROXY")){
             return CloudAPI.getInstance().getPlayerPool().getPlayersFromProxy(name);
@@ -108,6 +113,10 @@ public class CloudService {
             return CloudAPI.getInstance().getPlayerPool().getPlayersFromService(name);
         }
 
+    }
+
+    public String toString(){
+        return "name='"+name+"', group='"+group+"', id='"+getID()+"', state='"+getState()+"', address='"+getAddress()+"', port='"+getPort()+"', playerCount='"+getPlayercount()+"'";
     }
 
 }

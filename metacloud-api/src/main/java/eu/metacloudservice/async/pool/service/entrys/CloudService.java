@@ -31,15 +31,16 @@ public class CloudService {
         return name;
     }
 
-
     public void performMore(Consumer<CloudService> cloudServiceConsumer) {
         cloudServiceConsumer.accept(this);
     }
+
     public int getID(){
         LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
         LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
         return services.getUuid();
     }
+
     public void setState(@NonNull ServiceState state){
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInChangeState(this.name, state.toString()));
     }
@@ -51,6 +52,7 @@ public class CloudService {
     public void shutdown(){
         AsyncCloudAPI.getInstance().stopService(name);
     }
+
     public boolean isTypeProxy(){
         return getGroup().getGroupType().equalsIgnoreCase("PROXY");
     }
@@ -58,6 +60,7 @@ public class CloudService {
     public boolean isTypeLobby(){
         return getGroup().getGroupType().equalsIgnoreCase("LOBBY");
     }
+
     public boolean isTypeGame(){
         return getGroup().getGroupType().equalsIgnoreCase("GAME");
     }
@@ -81,11 +84,13 @@ public class CloudService {
         LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
         return services.getHost();
     }
+
     public Integer getPort(){
         LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
         LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
         return services.getPort();
     }
+
     public List<CloudPlayer> getPlayers(){
         if (getGroup().getGroupType().equalsIgnoreCase("PROXY")){
             return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromProxy(name);
@@ -99,6 +104,10 @@ public class CloudService {
         if (getGroup().getGroupType().equalsIgnoreCase("PROXY"))
             return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromProxy(this.name).size();
         return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromService(this.name).size();
+    }
+
+    public String toString(){
+        return "name='"+name+"', group='"+group+"', id='"+getID()+"', state='"+getState()+"', address='"+getAddress()+"', port='"+getPort()+"', playerCount='"+getPlayercount()+"'";
     }
 
 }

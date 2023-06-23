@@ -27,10 +27,10 @@ public class CloudPlayer {
     @lombok.Getter
     private final String username;
     @lombok.Getter
-    private final String UniqueId;
+    private final String uniqueId;
     public CloudPlayer(@NonNull String username, @NonNull String uniqueId) {
         this.username = username;
-        UniqueId = uniqueId;
+        this.uniqueId = uniqueId;
     }
 
     public void performMore(Consumer<CloudPlayer> cloudPlayerConsumer) {
@@ -41,6 +41,7 @@ public class CloudPlayer {
         CloudPlayerRestCache cech = (CloudPlayerRestCache) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/" + getUniqueId()), CloudPlayerRestCache.class);
         return  AsyncCloudAPI.getInstance().getServicePool().getService(cech.getCloudplayerproxy());
     }
+
     public CloudService getServer(){
         CloudPlayerRestCache cech = (CloudPlayerRestCache) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/" + getUniqueId()), CloudPlayerRestCache.class);
 
@@ -70,6 +71,7 @@ public class CloudPlayer {
     public void sendTabList(String header, String footer){
         AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerTab(username, header, footer));
     }
+
     public long getCurrentPlayTime(){
         CloudPlayerRestCache cech = (CloudPlayerRestCache) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/" + getUniqueId()), CloudPlayerRestCache.class);
         return  cech.getCloudplayerconnect();
@@ -159,7 +161,6 @@ public class CloudPlayer {
         AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerTitle(title.getTitle(), title.getSubtitle(), title.getFadeIn(), title.getStay(), title.getFadeOut(), username));
     }
 
-
     public void sendActionBar(String message){
         AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerActionBar(username, message));
     }
@@ -176,6 +177,10 @@ public class CloudPlayer {
 
     public boolean isConnectedOnFallback(){
         return getServer().isTypeLobby();
+    }
+
+    public String toString(){
+        return "username='"+username+"', uniqueId='"+uniqueId+"', proxy='"+getProxyServer().getName()+"', service='"+getServer().getName()+"', skinValue='"+getSkinValue()+"', skinSignature='"+getSkinSignature()+"', isConnectedOnFallback='"+isConnectedOnFallback()+"', currentPlayTime='"+getCurrentPlayTime()+"'";
     }
 
 }

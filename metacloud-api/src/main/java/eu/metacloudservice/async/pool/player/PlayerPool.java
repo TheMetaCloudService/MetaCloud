@@ -20,6 +20,7 @@ public class PlayerPool {
     public List<CloudPlayer> getPlayers(){
         return connectedPlayers;
     }
+
     public CloudPlayer getPlayer(@NonNull String username){
         return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUsername().equals(username)).toList().get(0);
     }
@@ -51,6 +52,7 @@ public class PlayerPool {
     public List<CloudPlayer> getPlayersByProxyGroup(@NonNull String group){
         return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getProxyServer().getGroup().getGroup().equals(group)).collect(Collectors.toList());
     }
+
     public List<CloudPlayer> getPlayersByServiceGroup(@NonNull String group){
         return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getServer().getGroup().getGroup().equals(group)).collect(Collectors.toList());
     }
