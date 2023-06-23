@@ -1,7 +1,6 @@
 package eu.metacloudservice.async.pool.player;
 
 import eu.metacloudservice.async.pool.player.entrys.CloudPlayer;
-import eu.metacloudservice.codec.GameMode;
 import eu.metacloudservice.process.ServiceState;
 import lombok.NonNull;
 

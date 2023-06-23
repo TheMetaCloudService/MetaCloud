@@ -73,8 +73,8 @@ public class ServiceCommand extends CommandAdapter {
                 String service = args[1];
                 if (CloudManager.serviceDriver.getService(service) != null){
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                            "Der Service '§f"+service+"§r' ist sincronisiert ",
-                            "the service '§f"+service+"§r' is sincronized ");
+                            "Der Service '§f"+service+"§r' ist syncronisiert ",
+                            "the service '§f"+service+"§r' is syncronized ");
                     CloudManager.serviceDriver.getService(service).handelSync();
                 }else {
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,

@@ -1,8 +1,10 @@
-package eu.metacloudservice.networking.in.service.playerbased.apibased;
+package eu.metacloudservice.networking.out.service.playerbased.apibased;
 
 import eu.metacloudservice.networking.packet.NettyBuffer;
 import eu.metacloudservice.networking.packet.Packet;
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
+import org.checkerframework.checker.units.qual.C;
 
 
 public class PacketOutCloudPlayerComponent extends Packet {
@@ -25,7 +27,7 @@ public class PacketOutCloudPlayerComponent extends Packet {
 
     @Override
     public void readPacket(NettyBuffer buffer) {
-        component = (CloudComponent) buffer.readClass(CloudComponent.class);
+        component = (Component) buffer.readClass(Component.class);
         player = buffer.readString();
     }
 

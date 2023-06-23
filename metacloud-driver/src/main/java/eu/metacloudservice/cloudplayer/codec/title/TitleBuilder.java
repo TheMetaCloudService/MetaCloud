@@ -1,4 +1,4 @@
-package eu.metacloudservice.codec.title;
+package eu.metacloudservice.cloudplayer.codec.title;
 
 public class TitleBuilder {
     private String title;

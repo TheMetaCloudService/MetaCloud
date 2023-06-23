@@ -3,13 +3,16 @@ package eu.metacloudservice.pool.player.entrys;
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.cloudplayer.CloudPlayerRestCache;
-import eu.metacloudservice.codec.GameMode;
-import eu.metacloudservice.codec.sounds.Sounds;
+import eu.metacloudservice.cloudplayer.codec.gamemode.GameMode;
+import eu.metacloudservice.cloudplayer.codec.sounds.Sounds;
+import eu.metacloudservice.cloudplayer.codec.teleport.Teleport;
+import eu.metacloudservice.cloudplayer.codec.title.Title;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.networking.in.service.playerbased.apibased.*;
 import eu.metacloudservice.pool.service.entrys.CloudService;
 import eu.metacloudservice.process.ServiceState;
 import lombok.NonNull;
+import net.kyori.adventure.text.Component;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -46,15 +49,18 @@ public class CloudPlayer {
         getServer().dispatchCommand("playsound " + sound.toString().toUpperCase() + " " + this.username + " " + volume + " " + pitch);
     }
 
-    public void teleport(@NonNull String player) {
-        getServer().dispatchCommand("tp " + this.username + " " + player);
+
+
+
+    public void teleport(Teleport teleport) {
+        if (teleport.getPlayer() != null){
+            getServer().dispatchCommand("tp " + this.username + " " + teleport.getPlayer());
+
+        }else {
+            getServer().dispatchCommand("tp " + this.username + " " + teleport.getPosX() + " " + teleport.getPosY() + " " + teleport.getPosZ());
+        }
+
     }
-
-    public void teleport(int posX, int posY, int posZ) {
-        getServer().dispatchCommand("tp " + this.username + " " + posX + " " + posY + " " + posZ);
-    }
-
-
 
     public void connectRanked(String group) {
         CloudAPI.getInstance()
@@ -145,11 +151,9 @@ public class CloudPlayer {
     public void disconnect(){
         disconnect("§cYour kicked form the Network");
     }
-
-    public void sendTitle(String title, String subTitle, int fadeIn, int stay, int fadeOut){
-        CloudAPI.getInstance().sendPacketSynchronized(new PacketInAPIPlayerTitle(title, subTitle, fadeIn, stay, fadeOut, username));
+    public void sendTitle(@NonNull Title title){
+        CloudAPI.getInstance().sendPacketSynchronized(new PacketInAPIPlayerTitle(title.getTitle(), title.getSubtitle(), title.getFadeIn(), title.getStay(), title.getFadeOut(), username));
     }
-
     public void sendTabList(String header, String footer){
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInAPIPlayerTab(username, header, footer));
     }
@@ -159,16 +163,16 @@ public class CloudPlayer {
     public void sendMessage(@NonNull String message){
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInAPIPlayerMessage(username, message));
     }
-
     public void sendMessage(@NonNull String... message){
         for (String msg : message){
             sendMessage(msg);
         }
     }
-
+    public void sendComponent(Component component){
+        CloudAPI.getInstance().sendPacketSynchronized(new PacketInCloudPlayerComponent(component, username));
+    }
     public boolean isConnectedOnFallback(){
         return getServer().isTypeLobby();
     }
-
 
 }

@@ -1,4 +1,4 @@
-package eu.metacloudservice.codec.teleport;
+package eu.metacloudservice.cloudplayer.codec.teleport;
 
 import lombok.Getter;
 

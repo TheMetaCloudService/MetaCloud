@@ -35,22 +35,20 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
 
         boolean isEpoll = Epoll.isAvailable();
 
-        // get runtime processors for thread-size
         int cores = Runtime.getRuntime().availableProcessors();
+        int bossThreads = Math.max(1, cores / 2);
+        int workerThreads = Math.max(1, cores / 2);
+        this.BOSS = isEpoll ? new EpollEventLoopGroup(bossThreads) : new NioEventLoopGroup(bossThreads);
+        this.WORKER = isEpoll ? new EpollEventLoopGroup(workerThreads) : new NioEventLoopGroup(workerThreads);
 
-        // Check for eventloop-groups
-        this.BOSS = isEpoll ? new EpollEventLoopGroup(2 * cores) : new NioEventLoopGroup(2 * cores);
-        this.WORKER = isEpoll ? new EpollEventLoopGroup(10 * cores) : new NioEventLoopGroup(10 * cores);
 
         ServerBootstrap bootstrap = new ServerBootstrap()
                 .group(BOSS, WORKER)
                 .channel(isEpoll ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
                 .childHandler(this)
                 .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-                .childOption(ChannelOption.IP_TOS, 24)
                 .childOption(ChannelOption.TCP_NODELAY, true)
-                .childOption(ChannelOption.SO_KEEPALIVE, true)
-                .childOption(ChannelOption.SO_REUSEADDR, true);
+                .childOption(ChannelOption.SO_KEEPALIVE, true);
 
         if(isEpoll) {
             bootstrap

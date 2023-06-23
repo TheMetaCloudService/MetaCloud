@@ -4,12 +4,15 @@ import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.async.pool.service.entrys.CloudService;
 import eu.metacloudservice.cloudplayer.CloudPlayerRestCache;
-import eu.metacloudservice.codec.GameMode;
-import eu.metacloudservice.codec.sounds.Sounds;
+import eu.metacloudservice.cloudplayer.codec.gamemode.GameMode;
+import eu.metacloudservice.cloudplayer.codec.sounds.Sounds;
+import eu.metacloudservice.cloudplayer.codec.teleport.Teleport;
+import eu.metacloudservice.cloudplayer.codec.title.Title;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.networking.in.service.playerbased.apibased.*;
 import eu.metacloudservice.process.ServiceState;
 import lombok.NonNull;
+import net.kyori.adventure.text.Component;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -52,6 +55,10 @@ public class CloudPlayer {
         AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketOutAPIPlayerDispactchCommand(username, command));
     }
 
+    public void sendComponent(Component component){
+        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInCloudPlayerComponent(component, username));
+    }
+
     public void connectRandom(String group){
         CloudService cloudService = AsyncCloudAPI.getInstance().getServicePool().getServicesByGroup(group).get(new Random().nextInt(AsyncCloudAPI.getInstance().getServicePool().getServicesByGroup(group).size()));
         AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerConnect(username, cloudService.getName()));
@@ -80,12 +87,15 @@ public class CloudPlayer {
         getServer().dispatchCommand("playsound " + sound.toString().toUpperCase() + " " + this.username + " " + volume + " " + pitch);
     }
 
-    public void teleport(@NonNull String player) {
-        getServer().dispatchCommand("tp " + this.username + " " + player);
-    }
+    public void teleport(Teleport teleport) {
 
-    public void teleport(int posX, int posY, int posZ) {
-        getServer().dispatchCommand("tp " + this.username + " " + posX + " " + posY + " " + posZ);
+        if (teleport.getPlayer() != null){
+            getServer().dispatchCommand("tp " + this.username + " " + teleport.getPlayer());
+
+        }else {
+            getServer().dispatchCommand("tp " + this.username + " " + teleport.getPosX() + " " + teleport.getPosY() + " " + teleport.getPosZ());
+        }
+
     }
 
     public void connectRanked(String group) {
@@ -145,9 +155,10 @@ public class CloudPlayer {
         return null;
     }
 
-    public void sendTitle(String title, String subTitle, int fadeIn, int stay, int fadeOut){
-        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerTitle(title, subTitle, fadeIn, stay, fadeOut, username));
+    public void sendTitle(@NonNull Title title){
+        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerTitle(title.getTitle(), title.getSubtitle(), title.getFadeIn(), title.getStay(), title.getFadeOut(), username));
     }
+
 
     public void sendActionBar(String message){
         AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerActionBar(username, message));

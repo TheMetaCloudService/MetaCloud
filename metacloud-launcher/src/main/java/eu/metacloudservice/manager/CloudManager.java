@@ -179,6 +179,7 @@ public class CloudManager {
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new ReloadCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new MetaCloudCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new QueueCommand());
+        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new PlayersCommand());
 
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Es wurden '§f"+Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().size()+" Befehle§r' gefunden und geladen",
                 "There were '§f"+Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().size()+" commands§r' found and loaded");
@@ -282,6 +283,7 @@ public class CloudManager {
                 .registerHandler(new PacketInAPIPlayerTitle().getPacketUUID(), new HandlePacketInAPIPlayerTitle(), PacketInAPIPlayerTitle.class)
                 .registerHandler(new PacketInAPIPlayerActionBar().getPacketUUID(), new HandlePacketInAPIPlayerActionBar(), PacketInAPIPlayerActionBar.class)
                 .registerHandler(new PacketInAPIPlayerTab().getPacketUUID(), new HandlePacketInAPIPlayerTab(), PacketInAPIPlayerTab.class)
+                .registerHandler(new PacketInCloudPlayerComponent().getPacketUUID(), new HandlePacketInCloudPlayerComponent(), PacketInCloudPlayerComponent.class)
                 .registerHandler(new PacketOutAPIPlayerDispactchCommand().getPacketUUID(), new HandlePacketOutAPIPlayerDispatchCommand(), PacketOutAPIPlayerDispactchCommand.class)
 
                 //PLAYER
@@ -290,13 +292,11 @@ public class CloudManager {
                 .registerHandler(new PacketInPlayerSwitchService().getPacketUUID(), new HandlePacketInPlayerSwitchService(), PacketInPlayerSwitchService.class);
 
     }
-
-
     public void initRestService(){
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Es wird versucht, den Webserver zu laden und zu starten",
                 "An attempt is made to load the web server and start it");
         Driver.getInstance().runWebServer();
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Webserver wurde §ferfolgreich§r geladen und gestartet", "The web server is §fsuccessfully§r loaded and started");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Webserver wurde §ferfolgreich§r geladen und gestartet auf '§f" + config.getRestApiCommunication() +"§r'", "The web server is §fsuccessfully§r loaded and started on '§f" + config.getRestApiCommunication() +"§r'");
     }
 
     public static void shutdownHook(){

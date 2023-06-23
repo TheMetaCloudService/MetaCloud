@@ -38,7 +38,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
 
     @Override
     public TaskedService register(TaskedEntry entry) {
-        if (getService(entry.getServiceName()) != null) {
+        if (getService(entry.getServiceName()) != null && entry.getUsedId() != 0) {
             return getService(entry.getServiceName());
         }
         if (!this.entry.group_player_potency.containsKey(entry.getGroupName())){

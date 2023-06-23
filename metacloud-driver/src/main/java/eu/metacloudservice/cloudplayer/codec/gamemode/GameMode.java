@@ -1,4 +1,4 @@
-package eu.metacloudservice.codec;
+package eu.metacloudservice.cloudplayer.codec.gamemode;
 
 public enum GameMode {
     /**

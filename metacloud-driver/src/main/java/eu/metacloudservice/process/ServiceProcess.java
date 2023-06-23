@@ -200,6 +200,10 @@ public class ServiceProcess {
 
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.directory(new File("./live/" + group.getGroup() + "/" + service + "/"));
+        if (!group.getStorage().getJavaEnvironment().isEmpty()){
+            processBuilder.environment().put("JAVA_HOME",group.getStorage().getJavaEnvironment());
+        }
+
         if (group.getGroupType().equals("PROXY")) {
 
             if (!new File("./live/" + group.getGroup() + "/" + service+ "/server-icon.png").exists()){

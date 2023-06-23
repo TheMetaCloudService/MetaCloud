@@ -131,6 +131,21 @@ public class GroupCommand extends CommandAdapter {
                                 "die Gruppe '§f"+group+"§r' wurde nicht gefunden",
                                 "the group '§f"+group+"§r' was not found");
                     }
+                }else if (args[1].equalsIgnoreCase("setJavaEnvironment")) {
+                    String group = args[0];
+                    if (Driver.getInstance().getGroupDriver().find(group)){
+                        Group raw = Driver.getInstance().getGroupDriver().load(group);
+                        raw.getStorage().setJavaEnvironment(args[2]);
+                        Driver.getInstance().getGroupDriver().update(group, raw);
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS,
+                                "Die Java-Umgebung wurde auf '§f"+args[2]+"§r' gesetzt",
+                                "The Java environment was set to '§f"+args[2]+"§r'");
+                        Driver.getInstance().getWebServer().updateRoute("/cloudgroup/" + raw.getGroup(), new ConfigDriver().convert(raw));
+                    }else {
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "die Gruppe '§f"+group+"§r' wurde nicht gefunden",
+                                "the group '§f"+group+"§r' was not found");
+                    }
                 }else  if (args[1].equalsIgnoreCase("setmaxplayers")) {
                     String group = args[0];
                     if (Driver.getInstance().getGroupDriver().find(group)){
@@ -177,6 +192,7 @@ public class GroupCommand extends CommandAdapter {
             commands.add("setmaxplayers");
             commands.add("settemplate");
             commands.add("setminamount");
+            commands.add("setJavaEnvironment");
         }
         if (args.length == 2){
             if (args[1].equalsIgnoreCase("setmaintenance") && !args[0].equalsIgnoreCase("create") && !args[0].equalsIgnoreCase("list")) {

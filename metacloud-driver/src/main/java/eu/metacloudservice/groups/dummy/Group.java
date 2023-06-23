@@ -1,22 +1,42 @@
 package eu.metacloudservice.groups.dummy;
 
 import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
+import lombok.Getter;
+import lombok.Setter;
 
 public class Group implements IConfigAdapter {
-
+    @Getter
     private String group;
+    @Getter
     private String groupType;
+    @Getter
     private Integer usedMemory;
+    @Getter
+    @Setter
     private boolean maintenance;
+    @Getter
     private boolean runStatic;
+    @Getter
     private Integer priority;
+    @Getter
     private String permission;
+    @Setter
+    @Getter
     private Integer maxPlayers;
+    @Setter
+    @Getter
     private Integer minimalOnline;
+    @Setter
+    @Getter
     private Integer  maximalOnline;
+    @Getter
     private Integer startNewPercent;
+    @Getter
     private Integer over100AtGroup;
+    @Getter
     private Integer over100AtNetwork;
+    @Setter
+    @Getter
     private GroupStorage storage;
 
 
@@ -39,75 +59,4 @@ public class Group implements IConfigAdapter {
         this.storage = storage;
     }
 
-    public void setMaintenance(boolean maintenance) {
-        this.maintenance = maintenance;
-    }
-
-    public void setMaxPlayers(Integer maxPlayers) {
-        this.maxPlayers = maxPlayers;
-    }
-
-    public void setMinimalOnline(Integer minimalOnline) {
-        this.minimalOnline = minimalOnline;
-    }
-
-    public Integer getPriority() {
-        return priority;
-    }
-
-    public String getPermission() {
-        return permission;
-    }
-
-    public Integer getMinimalOnline() {
-        return minimalOnline;
-    }
-
-    public Integer getMaximalOnline() {
-        return maximalOnline;
-    }
-
-    public String getGroup() {
-        return group;
-    }
-
-    public String getGroupType() {
-        return groupType;
-    }
-
-    public Integer getUsedMemory() {
-        return usedMemory;
-    }
-
-    public boolean isMaintenance() {
-        return maintenance;
-    }
-
-    public boolean isRunStatic() {
-        return runStatic;
-    }
-
-    public Integer getMaxPlayers() {
-        return maxPlayers;
-    }
-
-    public Integer getStartNewPercent() {
-        return startNewPercent;
-    }
-
-    public Integer getOver100AtGroup() {
-        return over100AtGroup;
-    }
-
-    public Integer getOver100AtNetwork() {
-        return over100AtNetwork;
-    }
-
-    public GroupStorage getStorage() {
-        return storage;
-    }
-
-    public void setStorage(GroupStorage storage) {
-        this.storage = storage;
-    }
 }
