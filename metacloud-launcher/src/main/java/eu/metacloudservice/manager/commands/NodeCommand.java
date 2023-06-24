@@ -14,7 +14,7 @@ import eu.metacloudservice.terminal.utils.TerminalStorageLine;
 import java.util.ArrayList;
 
 
-@CommandInfo(command = "node", DEdescription = "hier mit werden die Nodes verwaltet", ENdescription = "here with the nodes are administered", aliases = {"nodes", "cluster"})
+@CommandInfo(command = "node", DEdescription = "hier mit werden die Nodes verwaltet", ENdescription = "here with the nodes are administered", aliases = {"nodes", "cluster", "wrapper"})
 public class NodeCommand extends CommandAdapter {
 
     @Override

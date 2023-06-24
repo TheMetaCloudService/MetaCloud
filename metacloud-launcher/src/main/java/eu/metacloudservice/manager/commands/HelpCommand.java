@@ -8,7 +8,7 @@ import eu.metacloudservice.terminal.utils.TerminalStorageLine;
 
 import java.util.ArrayList;
 
-@CommandInfo(command = "help", DEdescription = "sehe alle commands auf einen blick ", ENdescription = "see all commands at a glance", aliases = {"?", "hilfe", "ls"})
+@CommandInfo(command = "help", DEdescription = "sehe alle commands auf einen blick ", ENdescription = "see all commands at a glance", aliases = {"?", "hilfe", "ls", "commands"})
 public class HelpCommand extends CommandAdapter {
 
 

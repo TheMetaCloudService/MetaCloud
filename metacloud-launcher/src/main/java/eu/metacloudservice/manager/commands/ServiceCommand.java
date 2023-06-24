@@ -18,7 +18,7 @@ import eu.metacloudservice.webserver.dummys.WhiteList;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-@CommandInfo(command = "service", DEdescription = "verwalte alle Services", ENdescription = "manage all services", aliases = {"serv", "task"})
+@CommandInfo(command = "service", DEdescription = "verwalte alle Services", ENdescription = "manage all services", aliases = {"serv", "task", "start"})
 public class ServiceCommand extends CommandAdapter {
 
 
@@ -266,7 +266,6 @@ public class ServiceCommand extends CommandAdapter {
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fservice restart [service] §7~ um ein Service zu stoppen",
                 " >> §fservice restart [service] §7~ to stop a service");
-
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fservice sync [service] §7~ um einen Service zu synchronisieren",
                 " >> §fservice sync [service] §7~ to synchronize a service");

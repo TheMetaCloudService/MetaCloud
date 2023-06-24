@@ -8,7 +8,7 @@ import eu.metacloudservice.terminal.utils.TerminalStorageLine;
 
 import java.util.ArrayList;
 
-@CommandInfo(command = "clear", DEdescription = "dieser Befehl löscht die gesamte Konsole", ENdescription = "this command clears the whole console", aliases = {"cls", "cc"})
+@CommandInfo(command = "clear", DEdescription = "dieser Befehl löscht die gesamte Konsole", ENdescription = "this command clears the whole console", aliases = {"cls", "cc", "clearline"})
 public class ClearCommand extends CommandAdapter {
 
 

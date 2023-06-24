@@ -10,7 +10,7 @@ import eu.metacloudservice.terminal.utils.TerminalStorageLine;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-@CommandInfo(command = "queue", DEdescription = "Verwalte die Warteschlange, Sehe was startet", ENdescription = "Manage the queue, See what starts", aliases = {"servicequeue"})
+@CommandInfo(command = "queue", DEdescription = "Verwalte die Warteschlange, Sehe was startet", ENdescription = "Manage the queue, See what starts", aliases = {"servicequeue", "waitingline"})
 public class QueueCommand extends CommandAdapter {
     @Override
     public void performCommand(CommandAdapter command, String[] args) {
