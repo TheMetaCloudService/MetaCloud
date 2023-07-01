@@ -4,7 +4,11 @@ import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.bungee.BungeeBootstrap;
 import eu.metacloudservice.config.Motd;
+import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.ServerPing;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -32,7 +36,6 @@ public class MotdListener  implements Listener {
             Motd motd = bungeeBootstrap.group.isMaintenance() ? bungeeBootstrap.configuration.getMaintenancen().get(motdIndex) : bungeeBootstrap.configuration.getDefaults().get(motdIndex);
             double memory = CloudAPI.getInstance().getUsedMemory();
             double maxMemory = CloudAPI.getInstance().getUsedMemory();
-
 
             ServerPing.PlayerInfo[] playerInfos = motd.getPlayerinfos().stream()
                     .map(info -> new ServerPing.PlayerInfo(
@@ -79,8 +82,7 @@ public class MotdListener  implements Listener {
                     .replace("%max_players%", "" + bungeeBootstrap.group.getMaxPlayers());
 
             String description = firstLine + "\n" + secondLine;
-
-            ping.setDescription(description);
+            ping.setDescriptionComponent(BungeeComponentSerializer.get().serialize(Component.text(description))[0]);
             ping.setVersion(serverProtocol);
             ping.setPlayers(players);
 

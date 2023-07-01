@@ -7,8 +7,13 @@ import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.in.service.PacketInServiceDisconnect;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 public class BungeeBootstrap extends Plugin {
 
@@ -29,8 +34,6 @@ public class BungeeBootstrap extends Plugin {
         ProxyServer.getInstance().getConsole().sendMessage("[§bMetaCloud§r] > THE METACLOUD has been loaded with Succsess");
         ProxyServer.getInstance().getConsole().sendMessage("[§bMetaCloud§r] > This registered all Classes & files..");
         ProxyServer.getInstance().getConsole().sendMessage("[§bMetaCloud§r] >");
-
-
 
     }
 

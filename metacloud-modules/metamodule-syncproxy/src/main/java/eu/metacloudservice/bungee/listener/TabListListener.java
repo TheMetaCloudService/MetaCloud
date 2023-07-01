@@ -63,17 +63,12 @@ public class TabListListener implements Listener {
             if (!BungeeBootstrap.getInstance().configuration.isTabEnabled()) {
                 return;
             } else {
-                try {
-                    Tablist tab = BungeeBootstrap.getInstance().configuration.getTablist().get(BungeeBootstrap.getInstance().tabCount);
-                    String[] config = readConfigs(tab, player);
+                Tablist tab = BungeeBootstrap.getInstance().configuration.getTablist().get(BungeeBootstrap.getInstance().tabCount);
+                String[] config = readConfigs(tab, player);
 
-                    player.setTabHeader(TextComponent.fromLegacyText(config[0]), TextComponent.fromLegacyText(config[1]));
-
-                } catch (Exception ignored) {}
+                player.setTabHeader(TextComponent.fromLegacyText(config[0]), TextComponent.fromLegacyText(config[1]));
             }
-
-}
-
+        }
 
     }
     private static String[] readConfigs(Tablist tablist, ProxiedPlayer player) {
