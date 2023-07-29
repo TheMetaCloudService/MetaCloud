@@ -9,11 +9,11 @@
     <br>
     ► <a href="https://discord.com/invite/4kKEcaP9WC">Discord</a>
     •
-    <a href="https://invis-cloud.de">Our Partner</a>
+    <a href="https://vortexhost.de">Our Partner</a>
     •
     <a href="https://metacloudservice.eu">Website</a>
     •
-    <a href="https://metacloudservice.eu/download/metacloud/metacloud-latest.zip">Download</a>
+    <a href="https://metacloudservice.eu/download/metacloud-latest.zip">Download</a>
      ◄
   </p>
 </p>
