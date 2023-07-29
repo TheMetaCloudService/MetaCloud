@@ -38,7 +38,7 @@ minimal requirements:
 ```
 + Download the zip data
 ```bash
-  wget https://metacloudservice.eu/download/metacloud/metacloud-latest.zip
+  wget https://metacloudservice.eu/download/metacloud-latest.zip
 ```
  + Unzip the **metacloud-latest.zip** in your folder
 ```bash
