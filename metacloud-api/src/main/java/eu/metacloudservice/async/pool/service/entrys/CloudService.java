@@ -12,8 +12,13 @@ import eu.metacloudservice.webserver.dummys.liveservice.LiveServiceList;
 import eu.metacloudservice.webserver.dummys.liveservice.LiveServices;
 import lombok.NonNull;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -109,5 +114,38 @@ public class CloudService {
     public String toString(){
         return "name='"+name+"', group='"+group+"', id='"+getID()+"', state='"+getState()+"', address='"+getAddress()+"', port='"+getPort()+"', playerCount='"+getPlayercount()+"'";
     }
+
+    public String getMOTD() {
+        try (Socket socket = new Socket()) {
+            socket.connect(new InetSocketAddress(getAddress(), getPort()));
+
+            InputStream in = socket.getInputStream();
+            OutputStream out = socket.getOutputStream();
+
+            out.write(254);
+
+            StringBuilder sb = new StringBuilder();
+
+            int i;
+
+            while ((i = in.read()) != -1) {
+                if ((i != 0) && (i > 16) && (i != 255) && (i != 23) && (i != 24)) {
+                    sb.append((char) i);
+                }
+            }
+
+            String[] data = sb.toString().split("§");
+
+            if (data.length > 0) {
+                String motd = data[0];
+                return motd;
+            }
+
+        } catch (IOException error) {
+            error.printStackTrace();
+        }
+        return "";
+    }
+
 
 }

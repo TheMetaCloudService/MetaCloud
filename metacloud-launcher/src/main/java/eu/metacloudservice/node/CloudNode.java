@@ -13,6 +13,7 @@ import eu.metacloudservice.networking.client.NettyClient;
 import eu.metacloudservice.node.cloudservices.CloudServiceDriver;
 import eu.metacloudservice.node.commands.HelpCommand;
 import eu.metacloudservice.node.commands.StopCommand;
+import eu.metacloudservice.node.commands.UpdateCommand;
 import eu.metacloudservice.node.networking.*;
 import eu.metacloudservice.terminal.enums.Type;
 
@@ -31,7 +32,6 @@ public class CloudNode {
     public CloudNode() {
         if (!new File("./modules/").exists()){
             new File("./modules/").mkdirs();
-            Driver.getInstance().getMessageStorage().packetLoader.loadModules();
         }
 
         new File("./local/GLOBAL/plugins/").mkdirs();
@@ -75,6 +75,7 @@ public class CloudNode {
                 "It is tried to load all commands and to make the provision of them clear");
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new HelpCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new StopCommand());
+        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new UpdateCommand());
 
 
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Es wurden '§f"+Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().size()+" Befehle§r' gefunden und geladen",

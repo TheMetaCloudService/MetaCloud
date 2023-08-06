@@ -3,6 +3,7 @@ package eu.metacloudservice.manager.commands;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
+import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfigNodes;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.manager.CloudManager;
 import eu.metacloudservice.manager.cloudservices.entry.TaskedEntry;
@@ -17,6 +18,7 @@ import eu.metacloudservice.webserver.dummys.WhiteList;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 @CommandInfo(command = "service", DEdescription = "verwalte alle Services", ENdescription = "manage all services", aliases = {"serv", "task", "start"})
 public class ServiceCommand extends CommandAdapter {
@@ -80,15 +82,47 @@ public class ServiceCommand extends CommandAdapter {
                 }
             }else  if (args[0].equalsIgnoreCase("sync")){
                 String service = args[1];
-                if (CloudManager.serviceDriver.getService(service) != null){
-                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                            "Der Service '§f"+service+"§r' ist syncronisiert ",
-                            "the service '§f"+service+"§r' is syncronized ");
-                    CloudManager.serviceDriver.getService(service).handelSync();
+                if (CloudManager.serviceDriver.getService(service) != null || service.equalsIgnoreCase("--all")){
+
+                    if (service.equalsIgnoreCase("--all")){
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "Alle Services wurden syncronisiert ",
+                                "All services were synchronized");
+                        CloudManager.serviceDriver.getServices().forEach(TaskedService::handelSync);
+                    }else {
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "Der Service '§f"+service+"§r' ist syncronisiert ",
+                                "the service '§f"+service+"§r' is syncronized ");
+                        CloudManager.serviceDriver.getService(service).handelSync();
+                    }
                 }else {
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                             "Der Service '§f"+service+"§r' wurde nicht gefunden",
                             "the service '§f"+service+"§r' was not found");
+                }
+            }else  if (args[0].equalsIgnoreCase("restartgroup")){
+                String service = args[1];
+                if (Driver.getInstance().getGroupDriver().load(service) != null){
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                            "Der Gruppe '§f"+service+"§r' wurde neu gestartet ",
+                            "the group '§f"+service+"§r' was restarted ");
+                    CloudManager.serviceDriver.getServices(service).forEach(TaskedService::handelRestart);
+                }else {
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                            "Die Gruppe '§f"+service+"§r' wurde nicht gefunden",
+                            "the group '§f"+service+"§r' was not found");
+                }
+            }else  if (args[0].equalsIgnoreCase("restartnode")){
+                String service = args[1];
+                if (((ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class)).getNodes().contains(service)){
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                            "Der Node '§f"+service+"§r' wurde neu gestartet ",
+                            "the node '§f"+service+"§r' was restarted ");
+                    CloudManager.serviceDriver.getServicesFromNode(service).forEach(TaskedService::handelRestart);
+                }else {
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                            "Die Gruppe '§f"+service+"§r' wurde nicht gefunden",
+                            "the group '§f"+service+"§r' was not found");
                 }
             }else  if (args[0].equalsIgnoreCase("info")){
                 String service = args[1];
@@ -167,11 +201,20 @@ public class ServiceCommand extends CommandAdapter {
                 for (int i = 2; i < args.length; i++) {
                     msg.append(args[i]).append(" ");
                 }
-                if (CloudManager.serviceDriver.getService(service) != null && NettyDriver.getInstance().nettyServer.isChannelFound(service)) {
-                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                            "der Befehl wurde an den Service '§f"+service+"§r' gesendet",
-                            "the command was sent to the service '§f"+service+"§r' ");
-                    CloudManager.serviceDriver.getService(service).handelExecute(msg.toString());
+                if (CloudManager.serviceDriver.getService(service) != null && NettyDriver.getInstance().nettyServer.isChannelFound(service) || service.equalsIgnoreCase("--all")) {
+
+                  if ( service.equalsIgnoreCase("--all")){
+                      Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                              "Der Befehl wurde an alle Services gesendet",
+                              "The command was sent to all services");
+                      CloudManager.serviceDriver.getServices().forEach(taskedService -> taskedService.handelExecute(msg.toString()));
+                  }else {
+                      Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                              "der Befehl wurde an den Service '§f"+service+"§r' gesendet",
+                              "the command was sent to the service '§f"+service+"§r' ");
+                      CloudManager.serviceDriver.getService(service).handelExecute(msg.toString());
+                  }
+
                 } else {
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                             "Der Service '§f" + service + "§r' wurde nicht gefunden",
@@ -234,15 +277,28 @@ public class ServiceCommand extends CommandAdapter {
             commands.add("sync");
             commands.add("info");
             commands.add("execute");
+            commands.add("restartgroup");
+            commands.add("restartnode");
             commands.add("whitelist");
-        }else if (args.length == 1 && !args[0].equalsIgnoreCase("list") && !args[0].equalsIgnoreCase("stopgroup")&& !args[0].equalsIgnoreCase("run")){
+        }else if (args.length == 1 && !args[0].equalsIgnoreCase("list") && !args[0].equalsIgnoreCase("stopgroup")&& !args[0].equalsIgnoreCase("run") && !args[0].equalsIgnoreCase("restartgroup") && !args[0].equalsIgnoreCase("restartnode")){
             CloudManager.serviceDriver.getServices().forEach(taskedService -> commands.add(taskedService.getEntry().getServiceName()));
+            if (args[0].equalsIgnoreCase("execute") || args[0].equalsIgnoreCase("sync")){
+                commands.add("--all");
+            }
+
         }else if (args.length == 1 && args[0].equalsIgnoreCase("whitelist")){
             commands.add("add");
             commands.add("remove");
-        }else if (args.length== 1){
+        }else if (args.length== 1 && args[0].equalsIgnoreCase("restartnode")) {
+
+            ((ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class)).getNodes().forEach(managerConfigNodes -> {
+                commands.add(managerConfigNodes.getName());
+            });
+        }else if (args.length== 1 ){
             Driver.getInstance().getGroupDriver().getAll().forEach(group -> commands.add(group.getGroup()));
         }
+
+
         return commands;
     }
 
@@ -261,20 +317,26 @@ public class ServiceCommand extends CommandAdapter {
                 " >> §fservice joinscreen [service] §7~ um einen Screen von einen Service zu joinen",
                 " >> §fservice joinscreen [service] §7~ to join a screen from a service");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fservice stop [service] §7~ um ein Service zu stoppen",
-                " >> §fservice stop [service] §7~ to stop a service");
+                " >> §fservice stop [service] §7~ um ein service neu zustarten",
+                " >> §fservice stop [service] §7~ to restart a service");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fservice restart [service] §7~ um ein Service zu stoppen",
                 " >> §fservice restart [service] §7~ to stop a service");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fservice sync [service] §7~ um einen Service zu synchronisieren",
-                " >> §fservice sync [service] §7~ to synchronize a service");
+                " >> §fservice restartgroup [group] §7~ um ein Gruppe neu zustarten",
+                " >> §fservice restartgroup [group] §7~ to restart a group");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                " >> §fservice restartnode [node] §7~ um einen Node neu zustarten",
+                " >> §fservice restartnode [node] §7~ to restart a node");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                " >> §fservice sync [service/--all] §7~ um einen Service zu synchronisieren",
+                " >> §fservice sync [service/--all] §7~ to synchronize a service");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fservice info [service] §7~ zeigt die alle Infos zu einen bestimmten Service",
                 " >> §fservice info [service] §7~ shows all the info about a particular service");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fservice execute [service] [command] §7~ um einen Befehl auf dem Server auszuführen",
-                " >> §fservice execute [service] [command] §7~ to execute a command on the server");
+                " >> §fservice execute [service/--all] [command] §7~ um einen Befehl auf dem Server auszuführen",
+                " >> §fservice execute [service/--all] [command] §7~ to execute a command on the server");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fservice whitelist [add/remove] [user] §7~ um Spieler zur Whitelist hinzuzufügen oder von ihr zu entfernen",
                 " >> §fservice whitelist [add/remove] [user] §7~ to add players to the whitelist or to remove them from it");

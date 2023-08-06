@@ -12,6 +12,8 @@ public abstract class CommandAdapter {
     private final String DEdescription;
     private final String ENdescription;
 
+    private final String permission;
+
 
     public CommandAdapter(){
         final var annotation = getClass().getAnnotation(CommandInfo.class);
@@ -20,6 +22,7 @@ public abstract class CommandAdapter {
         this.aliases = annotation.aliases();
         this.ENdescription = annotation.ENdescription();
         this.DEdescription = annotation.DEdescription();
+        this.permission = annotation.permission();
     }
 
     public abstract void performCommand(CommandAdapter command, String[] args);
@@ -44,4 +47,7 @@ public abstract class CommandAdapter {
         return resuls;
     }
 
+    public String getPermission() {
+        return permission;
+    }
 }

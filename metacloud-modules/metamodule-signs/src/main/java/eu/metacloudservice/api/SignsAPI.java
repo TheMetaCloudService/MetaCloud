@@ -1,6 +1,8 @@
 package eu.metacloudservice.api;
 
+import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
+import eu.metacloudservice.config.Configuration;
 import eu.metacloudservice.config.Locations;
 import eu.metacloudservice.config.SignLocation;
 import eu.metacloudservice.configuration.ConfigDriver;
@@ -14,8 +16,8 @@ public class SignsAPI {
 
     public SignsAPI() {}
 
-    private ArrayList<SignLocation> getSigns(){
-       return ((Locations) new ConfigDriver().convert( BukkitBootstrap.getInstance().getRestDriver().get("/module/signs/locations"), Locations.class)).getLocations();
+    public ArrayList<SignLocation> getSigns(){
+       return ((Locations) new ConfigDriver().convert( CloudAPI.getInstance().getRestDriver().get("/module/signs/locations"), Locations.class)).getLocations();
     }
 
     public String getUUIDFormLocation(int x, int y, int z, String world){
@@ -26,22 +28,27 @@ public class SignsAPI {
             return finalLoc.getSignUUID();
         }
     }
-    
+
+
+    public Configuration getConfig(){
+        return ((Configuration) new ConfigDriver().convert( CloudAPI.getInstance().getRestDriver().get("/module/signs/configuration"), Configuration.class));
+    }
+
     public void createSign(SignLocation location){
         if (getSigns().stream().noneMatch(location1 -> location1.getSignUUID().equals(location.getSignUUID()))){
             ArrayList<SignLocation> update = getSigns();
-            Locations l =  (Locations) new ConfigDriver().convert(new RestDriver().get("/module/signs/locations"), Locations.class);
+            Locations l =  (Locations) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/module/signs/locations"), Locations.class);
             l.getLocations().add(location);
-            BukkitBootstrap.getInstance().getRestDriver().put("/module/signs/locations", new ConfigDriver().convert(l));
+            CloudAPI.getInstance().getRestDriver().put("/module/signs/locations", new ConfigDriver().convert(l));
         }
     }
 
     public void removeSign(String  signUUID){
         if (getSigns().stream().anyMatch(location1 -> location1.getSignUUID().equals(signUUID))){
             ArrayList<SignLocation> update = getSigns();
-            Locations l =  (Locations) new ConfigDriver().convert(new RestDriver().get("/module/signs/locations"), Locations.class);
+            Locations l =  (Locations) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/module/signs/locations"), Locations.class);
             l.getLocations().removeIf(location -> location.getSignUUID().equals(signUUID));
-            BukkitBootstrap.getInstance().getRestDriver().put("/module/signs/locations", new ConfigDriver().convert(l));
+            CloudAPI.getInstance().getRestDriver().put("/module/signs/locations", new ConfigDriver().convert(l));
         }
     }
 }

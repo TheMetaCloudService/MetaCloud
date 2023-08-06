@@ -6,12 +6,6 @@ import java.util.HashMap;
 
 public class GeneralConfig implements IConfigAdapter {
 
-    @lombok.Setter
-    @lombok.Getter
-    private String latestReleasedVersion;
-    @lombok.Setter
-    @lombok.Getter
-    private HashMap<String, String> modules;
 
     @lombok.Setter
     @lombok.Getter
@@ -22,6 +16,11 @@ public class GeneralConfig implements IConfigAdapter {
     @lombok.Setter
     @lombok.Getter
     private String api;
+
+    @lombok.Setter
+    @lombok.Getter
+    private String latestReleasedVersion;
+
 
     public GeneralConfig(){
 

@@ -12,11 +12,14 @@ import eu.metacloudservice.networking.out.service.group.PacketOutGroupCreate;
 import eu.metacloudservice.networking.out.service.group.PacketOutGroupDelete;
 import eu.metacloudservice.networking.out.service.group.PacketOutGroupEdit;
 import eu.metacloudservice.terminal.enums.Type;
+import eu.metacloudservice.timebaser.TimerBase;
+import eu.metacloudservice.timebaser.utils.TimeUtil;
 import eu.metacloudservice.webserver.dummys.GroupList;
 import eu.metacloudservice.webserver.entry.RouteEntry;
 import lombok.SneakyThrows;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.TimerTask;
 
 public class GroupDriver implements IGroupDriver {
 
@@ -71,13 +74,20 @@ public class GroupDriver implements IGroupDriver {
     @Override
     public void delete(String group) {
         if (find(group)){
-            new File("./local/groups/" + group+ ".json").delete();
+
             GroupList groupList = (GroupList) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudgroup/general"), GroupList.class);
             groupList.getGroups().removeIf(s -> s.equalsIgnoreCase(group));
             Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudGroupDeleteEvent(group));
             NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutGroupDelete(group));
             Driver.getInstance().getWebServer().updateRoute("/cloudgroup/general", new ConfigDriver().convert(groupList));
             Driver.getInstance().getWebServer().removeRoute("/cloudgroup/" + group);
+            TimerBase base = new TimerBase();
+            base.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    new File("./local/groups/" + group+ ".json").delete();
+                }
+            }, 10, TimeUtil.SECONDS);
         }
     }
 

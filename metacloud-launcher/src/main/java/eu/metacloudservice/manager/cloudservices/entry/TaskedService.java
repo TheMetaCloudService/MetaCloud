@@ -115,7 +115,7 @@ public class TaskedService implements ITaskedService {
 
             }else {
                 Driver.getInstance().getMessageStorage().openServiceScreen = true;
-                Driver.getInstance().getMessageStorage().setuptype = this.entry.getServiceName();
+                Driver.getInstance().getMessageStorage().setupType = this.entry.getServiceName();
                 Driver.getInstance().getTerminalDriver().clearScreen();
                 process.handelConsole();
                 base = new Timer();
@@ -214,9 +214,39 @@ public class TaskedService implements ITaskedService {
 
     @Override
     public void handelRestart() {
+        LiveServices liveServices = (LiveServices) new ConfigDriver().convert(CloudManager.restDriver.get("/cloudservice/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~")), LiveServices.class);
+        liveServices.setState(ServiceState.STARTED);
+        Driver.getInstance().getWebServer().updateRoute("/cloudservice/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~"), new ConfigDriver().convert(liveServices));
+        NettyDriver.getInstance().nettyServer.removeChannel(getEntry().getServiceName());
+        getEntry().setStatus(ServiceState.STARTED);
         if (this.getEntry().getNode().equals("InternalNode")){
+            if (Driver.getInstance().getMessageStorage().openServiceScreen){
+                Driver.getInstance().getTerminalDriver().leaveSetup();
+                process.handelConsole();
+                base.cancel();
+            }
+
+
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+getEntry().getServiceName()+"/"+getEntry().getUUID()+"§r' wird angehalten",
+                    "The service '§f"+getEntry().getServiceName()+"§r' is stopping");
+         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+getEntry().getServiceName()+"§r' wird gestartet 'node: §f"+entry.getNode()+"§r, port: §f"+entry.getUsedPort()+"§r'",
+                    "The service '§f"+getEntry().getServiceName()+"§r' is starting 'node: §f"+entry.getNode()+"§r, port: §f"+entry.getUsedPort()+"§r'");
+
             process.handleRestart();
+
         }else {
+
+            if (Driver.getInstance().getMessageStorage().openServiceScreen){
+                Driver.getInstance().getTerminalDriver().leaveSetup();
+                process.handelConsole();
+                base.cancel();
+            }
+
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+getEntry().getServiceName()+"/"+getEntry().getUUID()+"§r' wird angehalten",
+                    "The service '§f"+getEntry().getServiceName()+"§r' is stopping");
+            Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+getEntry().getServiceName()+"§r' wird gestartet 'node: §f"+entry.getNode()+"§r, port: §f"+entry.getUsedPort()+"§r'",
+                    "The service '§f"+getEntry().getServiceName()+"§r' is starting 'node: §f"+entry.getNode()+"§r, port: §f"+entry.getUsedPort()+"§r'");
+
             NettyDriver.getInstance().nettyServer.sendPacketAsynchronous(entry.getNode(), new PacketOutRestartService(getEntry().getServiceName()));
         }
     }

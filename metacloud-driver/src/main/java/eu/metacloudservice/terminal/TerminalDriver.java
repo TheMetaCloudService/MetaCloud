@@ -25,7 +25,6 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.TimeUnit;
 
 public class TerminalDriver {
 
@@ -94,6 +93,10 @@ public class TerminalDriver {
     }
 
 
+    public Terminal getTerminal() {
+        return terminal;
+    }
+
     public LineReader getLineReader() {
         return lineReader;
     }
@@ -114,7 +117,7 @@ public class TerminalDriver {
         if (!new File("./service.json").exists() && !new File("./nodeservice.json").exists()){
             Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP, "Welche Sprache möchten Sie haben?", "What language would you like to have?");
             Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP, "Mögliche Antworten: §fDE, §fEN", "Possible answers: §fDE, §fEN");
-        }else if (Driver.getInstance().getMessageStorage().setuptype.equalsIgnoreCase("GROUP")){
+        }else if (Driver.getInstance().getMessageStorage().setupType.equalsIgnoreCase("GROUP")){
 
             Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP, "Wie soll die Gruppe heißen?", "What should the group be called?");
         }
@@ -126,7 +129,7 @@ public class TerminalDriver {
             Driver.getInstance().getMessageStorage().openServiceScreen = false;
         }
         this.isInSetup = false;
-        if (Driver.getInstance().getMessageStorage().setuptype.equalsIgnoreCase("GROUP")){
+        if (Driver.getInstance().getMessageStorage().setupType.equalsIgnoreCase("GROUP")){
             Driver.getInstance().getGroupDriver().getAll().forEach(group -> {
                 if (Driver.getInstance().getWebServer().getRoute("/"+group.getGroup()) == null){
                     Driver.getInstance().getWebServer().addRoute(new RouteEntry("/" + group.getGroup(), new ConfigDriver().convert(group)));
@@ -135,7 +138,42 @@ public class TerminalDriver {
                 }
             });
         }
-        Driver.getInstance().getMessageStorage().setuptype = "";
+        Driver.getInstance().getMessageStorage().setupType = "";
+        this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
+        if ( this.mainScreenStorage.size() > 200){
+            for (int i =  this.mainScreenStorage.size()-200; i != this.mainScreenStorage.size(); i++) {
+                TerminalStorage storage = this.mainScreenStorage.get(i);
+
+                if (storage.getType() == Type.EMPTY){
+                    String msg = storage.getMessage();
+                    this.terminal.writer().println("\r" + getColoredString(msg + Color.RESET.getAnsiCode()));
+                }else {
+                    this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+storage.getType().toString().toUpperCase()+"§7: §r" + storage.getMessage() + Color.RESET.getAnsiCode()));
+                }
+            }
+        }else {
+            for (int i =  this.mainScreenStorage.size() > 60 ? this.mainScreenStorage.size()-30 : 0; i != this.mainScreenStorage.size(); i++) {
+                TerminalStorage storage = this.mainScreenStorage.get(i);
+                if (storage.getType() == Type.EMPTY){
+                    String msg = storage.getMessage();
+                    this.terminal.writer().println("\r" + getColoredString(msg + Color.RESET.getAnsiCode()));
+                }else {
+                    this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+storage.getType().toString().toUpperCase()+"§7: §r" + storage.getMessage() + Color.RESET.getAnsiCode()));
+                }
+            }
+        }
+
+        this.lineReader.getTerminal().flush();
+        if (!this.lineReader.isReading()) return;
+        this.lineReader.callWidget(LineReader.REDRAW_LINE);
+        this.lineReader.callWidget(LineReader.REDISPLAY);
+
+    }
+
+    public void redirect(){
+        this.terminal.puts(InfoCmp.Capability.clear_screen);
+        this.terminal.flush();
+        this.redraw();
         this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
         if ( this.mainScreenStorage.size() > 200){
             for (int i =  this.mainScreenStorage.size()-200; i != this.mainScreenStorage.size(); i++) {
@@ -183,6 +221,7 @@ public class TerminalDriver {
             this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
             for (int i = 0; i != de.length; i++){
                 this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase().replace("INFORMATION", "§bINFORMATION")
+
                         .replace("ERROR", "§cERROR").replace("WARNING", "§eWARN")+"§7: §r" + de[i] +Color.RESET.getAnsiCode()));
                 simpleLatestLog.log(getClearSting("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase()+"§7: §r" + de[i] ));
                 
@@ -376,7 +415,7 @@ public class TerminalDriver {
     public String getColoredString(String text) {
 
         for (Color consoleColour : Color.values()) {
-            text = text.replace('§' + "" + consoleColour.getIndex(), consoleColour.getAnsiCode());
+            text = text.replace('§' + String.valueOf(consoleColour.getIndex()), consoleColour.getAnsiCode());
         }
 
         return text;

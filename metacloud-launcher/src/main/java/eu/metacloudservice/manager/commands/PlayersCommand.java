@@ -20,10 +20,9 @@ import eu.metacloudservice.terminal.utils.TerminalStorageLine;
 import eu.metacloudservice.webserver.RestDriver;
 import eu.metacloudservice.webserver.dummys.PlayerGeneral;
 
-import java.util.Arrays;
-import java.util.Collections;
-
-import java.util.ArrayList;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 
 @CommandInfo(command = "cloudplayers", DEdescription = "Verwalten aller Spieler der Cloud", ENdescription = "Manage all players of the cloud", aliases = {"players", "cp"})
@@ -47,7 +46,7 @@ public class PlayersCommand extends CommandAdapter {
                 String player = sortedPlayers.get(i);
                 CloudPlayerRestCache cache = (CloudPlayerRestCache)(new RestDriver()).convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/" +player), CloudPlayerRestCache.class);
 
-                builder.append(cache.getCloudplayername());
+                builder.append(cache.getCloudplayername()).append(" (").append(cache.getCloudplayeruuid()).append(")");
 
                 if (i < sortedPlayers.size() - 1) {
                     builder.append(", ");
@@ -57,13 +56,18 @@ public class PlayersCommand extends CommandAdapter {
         }else {
             if (args.length == 1){
                 PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/genernal"), PlayerGeneral.class);
-                if (general.getCloudplayers().stream().anyMatch(s -> s.equalsIgnoreCase(args[0]))){
+                if (general.getCloudplayers().stream().anyMatch(s -> s.equalsIgnoreCase(UUIDDriver.getUUID(args[0])))){
                     CloudPlayerRestCache player = (CloudPlayerRestCache)(new RestDriver()).convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/" + UUIDDriver.getUUID(args[0])), CloudPlayerRestCache.class);
                     Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "name: " + player.getCloudplayername());
                     Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "uuid: " + player.getCloudplayeruuid());
                     Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "proxy: " + player.getCloudplayerproxy());
                     Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "server: " + player.getCloudplayerservice());
-                    Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "time: " + player.getCloudplayerconnect());
+
+
+
+                    int time = Integer.parseInt(String.valueOf(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - player.getCloudplayerconnect())));
+
+                    Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "time: " +   time + " Second(s)");
                 }else {
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                             "Es wurde kein Spieler mit diesem Namen gefunden",
@@ -91,7 +95,7 @@ public class PlayersCommand extends CommandAdapter {
                     }
                 }else if (args[1].equalsIgnoreCase("sendMessage")){
                     PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/genernal"), PlayerGeneral.class);
-                    if (general.getCloudplayers().stream().anyMatch(s -> s.equalsIgnoreCase(args[0]))){
+                    if (general.getCloudplayers().stream().anyMatch(s -> s.equalsIgnoreCase(UUIDDriver.getUUID(args[0])))){
                         if (args.length >= 3) {
                             CloudPlayerRestCache player = (CloudPlayerRestCache)(new RestDriver()).convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/" + UUIDDriver.getUUID(args[0])), CloudPlayerRestCache.class);
                             String message = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
@@ -110,7 +114,7 @@ public class PlayersCommand extends CommandAdapter {
                     }
                 }else if (args[1].equalsIgnoreCase("connect")){
                     PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/genernal"), PlayerGeneral.class);
-                    if (general.getCloudplayers().stream().anyMatch(s -> s.equalsIgnoreCase(args[0]))){
+                    if (general.getCloudplayers().stream().anyMatch(s -> s.equalsIgnoreCase(UUIDDriver.getUUID(args[0])))){
                         if (args.length == 3) {
                             CloudPlayerRestCache player = (CloudPlayerRestCache)(new RestDriver()).convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/" + UUIDDriver.getUUID(args[0])), CloudPlayerRestCache.class);
 
@@ -127,7 +131,47 @@ public class PlayersCommand extends CommandAdapter {
                                 "No player with this name was found");
                     }
 
-                }else {
+                }else if (args[1].equalsIgnoreCase("op")) {
+
+                    PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/genernal"), PlayerGeneral.class);
+                    if (general.getCloudplayers().stream().anyMatch(s -> s.equalsIgnoreCase(UUIDDriver.getUUID(args[0])))){
+                        if (args.length == 2) {
+                            CloudPlayerRestCache player = (CloudPlayerRestCache)(new RestDriver()).convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/" + UUIDDriver.getUUID(args[0])), CloudPlayerRestCache.class);
+
+                            CloudManager.serviceDriver.getService(player.getCloudplayerservice()).handelExecute("op " + player.getCloudplayername());
+
+                            Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                    "Der Spieler ist nun in op",
+                                    "The player is now op.");
+                        }else {
+                            sendHelp();
+                        }
+                    }else {
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "Es wurde kein Spieler mit diesem Namen gefunden",
+                                "No player with this name was found");
+                    }
+                }else if (args[1].equalsIgnoreCase("deop")) {
+
+                    PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/genernal"), PlayerGeneral.class);
+                    if (general.getCloudplayers().stream().anyMatch(s -> s.equalsIgnoreCase(UUIDDriver.getUUID(args[0])))){
+                        if (args.length == 2) {
+                            CloudPlayerRestCache player = (CloudPlayerRestCache)(new RestDriver()).convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/" + UUIDDriver.getUUID(args[0])), CloudPlayerRestCache.class);
+
+                            CloudManager.serviceDriver.getService(player.getCloudplayerservice()).handelExecute("deop " + player.getCloudplayername());
+
+                            Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                    "Der Spieler ist nun nicht mehr op",
+                                    "The player is not longer op.");
+                        }else {
+                            sendHelp();
+                        }
+                    }else {
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "Es wurde kein Spieler mit diesem Namen gefunden",
+                                "No player with this name was found");
+                    }
+                }else{
                     sendHelp();
                 }
             }
@@ -140,11 +184,13 @@ public class PlayersCommand extends CommandAdapter {
         if (args.length == 0){
             returns.add("list");
             PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/genernal"), PlayerGeneral.class);
-            returns.addAll(general.getCloudplayers());
+            general.getCloudplayers().forEach(s -> returns.add(UUIDDriver.getUsername(s)));
         }else if (args.length == 1){
             if (!args[0].equalsIgnoreCase("list")){
                 returns.add("kick");
                 returns.add("sendMessage");
+                returns.add("op");
+                returns.add("deop");
                 returns.add("connect");
             }
         }else {
@@ -167,8 +213,17 @@ public class PlayersCommand extends CommandAdapter {
                 " >> §fcloudplayers [name] §7~ displays all information from one player");
 
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                " >> §fcloudplayers [name] op §7~ Gib einen Spieler auf seinen server op",
+                " >> §fcloudplayers [name] op §7~ Give a player on his server op");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                " >> §fcloudplayers [name] deop §7~ Ziehe einen Spieler den op status ab",
+                " >> §fcloudplayers [name] deop §7~ Subtract op status from a player");
+
+
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fcloudplayers [name] kick [reason] §7~ kicke ein Spieler vom Netzwerk",
                 " >> §fcloudplayers [name] kick [reason] §7~ kick a player from the network");
+
 
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fcloudplayers [name] sendMessage [message] §7~ sende einen Spieler eine Nachricht",

@@ -157,6 +157,11 @@ public class CloudPlayer {
         return null;
     }
 
+
+    public void setXp(int amount){
+        getServer().dispatchCommand("xp " + username + " " + amount);
+    }
+
     public void sendTitle(@NonNull Title title){
         AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerTitle(title.getTitle(), title.getSubtitle(), title.getFadeIn(), title.getStay(), title.getFadeOut(), username));
     }

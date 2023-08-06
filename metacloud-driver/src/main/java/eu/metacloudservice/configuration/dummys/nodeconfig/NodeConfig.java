@@ -15,6 +15,9 @@ public class NodeConfig implements IConfigAdapter {
     private Integer processorUsage;
     @lombok.Setter
     @lombok.Getter
+    private boolean autoUpdate;
+    @lombok.Setter
+    @lombok.Getter
     private Integer canUsedMemory;
     @lombok.Setter
     @lombok.Getter

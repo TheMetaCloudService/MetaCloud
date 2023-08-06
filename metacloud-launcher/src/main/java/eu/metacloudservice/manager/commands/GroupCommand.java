@@ -4,6 +4,7 @@ import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.manager.CloudManager;
+import eu.metacloudservice.terminal.animation.AnimationDriver;
 import eu.metacloudservice.terminal.commands.CommandAdapter;
 import eu.metacloudservice.terminal.commands.CommandInfo;
 import eu.metacloudservice.terminal.enums.Type;
@@ -21,7 +22,7 @@ public class GroupCommand extends CommandAdapter {
             sendHelp();
         }else if (args.length == 1){
             if (args[0].equalsIgnoreCase("create")){
-                Driver.getInstance().getMessageStorage().setuptype= "GROUP";
+                Driver.getInstance().getMessageStorage().setupType = "GROUP";
                 Driver.getInstance().getTerminalDriver().joinSetup();
 
             }else if (args[0].equalsIgnoreCase("list")){
@@ -45,10 +46,12 @@ public class GroupCommand extends CommandAdapter {
                     String group = args[0];
                     if (Driver.getInstance().getGroupDriver().find(group)){
                         Driver.getInstance().getGroupDriver().delete(group);
+                        CloudManager.serviceDriver.delete.add(group);
+                        CloudManager.serviceDriver.getServices(group).forEach(taskedService -> CloudManager.serviceDriver.unregister(taskedService.getEntry().getServiceName()));
                         Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS,
                                 "die angegebene Gruppe '§f"+group+"§r' wurde erfolgreich gelöscht",
                                 "the specified group '§f"+group+"§r' was successfully deleted");
-                        CloudManager.serviceDriver.getServices(group).forEach(taskedService -> CloudManager.serviceDriver.unregister(taskedService.getEntry().getServiceName()));
+
                     }else {
                         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                                 "die Gruppe '§f"+group+"§r' wurde nicht gefunden",
@@ -188,8 +191,75 @@ public class GroupCommand extends CommandAdapter {
                                 "die Gruppe '§f"+group+"§r' wurde nicht gefunden",
                                 "the group '§f"+group+"§r' was not found");
                     }
+                }else  if (args[1].equalsIgnoreCase("setstartnewpercen")) {
+                    String group = args[0];
+                    if (Driver.getInstance().getGroupDriver().find(group)){
+                        if(args[2].matches("[0-9]+")){
+                            Group raw = Driver.getInstance().getGroupDriver().load(group);
+                            raw.setStartNewPercent(Integer.valueOf(args[2]));
+                            Driver.getInstance().getGroupDriver().update(group, raw);
+                            Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS,
+                                    "Die Prozent zahl würde erfolgreich für die Gruppe geändert",
+                                    "The percentage number would be successfully changed for the group");
+                            Driver.getInstance().getWebServer().updateRoute("/cloudgroup/" + raw.getGroup(), new ConfigDriver().convert(raw));
+                        }else {
+                            Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                    "du kannst nur eine zahl angeben",
+                                    "you can only specify one number");
+                        }
+                    }else {
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "die Gruppe '§f"+group+"§r' wurde nicht gefunden",
+                                "the group '§f"+group+"§r' was not found");
+                    }
+
+                }else if (args[1].equalsIgnoreCase("setpermission")) {
+                    String group = args[0];
+                    if (Driver.getInstance().getGroupDriver().find(group)){
+                        if(args[2].contains(".") ){
+                            Group raw = Driver.getInstance().getGroupDriver().load(group);
+                            raw.setPermission(args[2]);
+                            Driver.getInstance().getGroupDriver().update(group, raw);
+                            Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS,
+                                    "Die Berechtigung für die Gruppe wurde erfolgreich geändert",
+                                    "The permission was successfully changed for the group");
+                            Driver.getInstance().getWebServer().updateRoute("/cloudgroup/" + raw.getGroup(), new ConfigDriver().convert(raw));
+                        }else {
+                            Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                    "die Erlaubnis muss mit einem Punkt versehen sein",
+                                    "the permission must have a dot included");
+                        }
+                    }else {
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "die Gruppe '§f"+group+"§r' wurde nicht gefunden",
+                                "the group '§f"+group+"§r' was not found");
+                    }
+
+                }else  if (args[1].equalsIgnoreCase("setmaxamount")) {
+                    String group = args[0];
+                    if (Driver.getInstance().getGroupDriver().find(group)){
+                        if(args[2].matches("[0-9]+") || args[2].equalsIgnoreCase("-1")){
+                            Group raw = Driver.getInstance().getGroupDriver().load(group);
+                            raw.setMinimalOnline(Integer.valueOf(args[2]));
+                            Driver.getInstance().getGroupDriver().update(group, raw);
+                            Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS,
+                                    "Die maximale Anzahl von Servern, die online sein können, wurde für die Gruppe geändert",
+                                    "The maximum number of servers that can be online has been changed for the group");
+                            Driver.getInstance().getWebServer().updateRoute("/cloudgroup/" + raw.getGroup(), new ConfigDriver().convert(raw));
+                        }else {
+                            Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                    "du kannst nur eine zahl angeben",
+                                    "you can only specify one number");
+                        }
+                    }else {
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "die Gruppe '§f"+group+"§r' wurde nicht gefunden",
+                                "the group '§f"+group+"§r' was not found");
+                    }
+
                 }else {
-                    sendHelp();
+                        sendHelp();
+
                 }
             }else {
                 sendHelp();
@@ -215,6 +285,9 @@ public class GroupCommand extends CommandAdapter {
             commands.add("setminamount");
             commands.add("setjavaenvironment");
             commands.add("setpriority");
+            commands.add("setstartnewpercen");
+            commands.add("setpermission");
+            commands.add("setmaxamount");
         }
         if (args.length == 2){
             if (args[1].equalsIgnoreCase("setmaintenance") && !args[0].equalsIgnoreCase("create") && !args[0].equalsIgnoreCase("list")) {
@@ -252,6 +325,9 @@ public class GroupCommand extends CommandAdapter {
                 " >> §fgroup [group] setminamount [count] §7~ die Anzahl der Server festlegen, die immer online sein sollen",
                 " >> §fgroup [group] setminamount [count] §7~ set the number of servers that should always be online");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                " >> §fgroup [group] setmaxamount [count] §7~ die Anzahl der Server festlegen, die maximal online sein sollen",
+                " >> §fgroup [group] setmaxamount [count] §7~ set the maximum number of servers that should be online");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fgroup [group] settemplate [template] §7~ um die Wartung ein- und wieder auszuschalten",
                 " >> §fgroup [group] settemplate [template] §7~ to switch the maintenance on and off again");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
@@ -260,6 +336,13 @@ public class GroupCommand extends CommandAdapter {
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fgroup [group] setpriority [priority] §7~ die Priorität einer Gruppe festlegen",
                 " >> §fgroup [group] setpriority [priority] §7~ set the priority of a group");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                " >> §fgroup [group] setpermission [permission] §7~ die Beitrittserlaubnis für die Gruppe festlegen",
+                " >> §fgroup [group] setpermission [permission] §7~ set the join permission of the group");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                " >> §fgroup [group] setstartnewpercen [startnewpercen] §7~ die Zahl in Prozent festlegen, wann ein neuer Server gestartet werden soll",
+                " >> §fgroup [group] setstartnewpercen [startnewpercen] §7~ set the number in percent when to start a new server");
+
 
     }
 }

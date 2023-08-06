@@ -2,7 +2,6 @@ package eu.metacloudservice.pool.service.entrys;
 
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.async.AsyncCloudAPI;
-import eu.metacloudservice.cloudplayer.CloudPlayerRestCache;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.networking.in.service.cloudapi.PacketInChangeState;
@@ -11,17 +10,15 @@ import eu.metacloudservice.pool.player.entrys.CloudPlayer;
 import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.webserver.dummys.liveservice.LiveServiceList;
 import eu.metacloudservice.webserver.dummys.liveservice.LiveServices;
-import io.netty.channel.unix.Socket;
 import lombok.NonNull;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.OperatingSystemMXBean;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.function.Consumer;
@@ -81,6 +78,39 @@ public class CloudService {
     public boolean isTypeGame(){
         return getGroup().getGroupType().equalsIgnoreCase("GAME");
     }
+
+    public String getMOTD() {
+        try (Socket socket = new Socket()) {
+            socket.connect(new InetSocketAddress(getAddress(), getPort()));
+
+            InputStream in = socket.getInputStream();
+            OutputStream out = socket.getOutputStream();
+
+            out.write(254);
+
+            StringBuilder sb = new StringBuilder();
+
+            int i;
+
+            while ((i = in.read()) != -1) {
+                if ((i != 0) && (i > 16) && (i != 255) && (i != 23) && (i != 24)) {
+                    sb.append((char) i);
+                }
+            }
+
+            String[] data = sb.toString().split("§");
+
+            if (data.length > 0) {
+                String motd = data[0];
+                return motd;
+            }
+
+        } catch (IOException error) {
+            error.printStackTrace();
+        }
+        return "";
+    }
+
 
     public int getPlayercount() {
         if (getGroup().getGroupType().equalsIgnoreCase("PROXY"))

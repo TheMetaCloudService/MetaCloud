@@ -5,11 +5,15 @@ import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfigNodes;
 import eu.metacloudservice.configuration.dummys.nodeconfig.NodeConfig;
+import eu.metacloudservice.storage.PacketLoader;
 import eu.metacloudservice.terminal.enums.Type;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.Collectors;
 
 public class MainSetup {
 
@@ -35,62 +39,43 @@ public class MainSetup {
                 Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "pleas chose §fDE §7or §fEN");
             }
         }else if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 1){
-            if (Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("language").toString().equalsIgnoreCase("DE")){
-                if (line.equalsIgnoreCase("MANAGER") || line.equalsIgnoreCase("MANAGER ")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("type", "MANAGER");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
 
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewähltes setup: §fMANAGER", "Wie lautet die Adresse des Managers?");
-                }else if (line.equalsIgnoreCase("NODE") || line.equalsIgnoreCase("NODE ")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("type", "NODE");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewähltes setup: §fNODE", "Wie lautet die Adresse des Managers?");
-                }else {
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "Bitte wählen Sie §fMANAGER §7 oder §fNODE");
-                }
+
+            if (line.equalsIgnoreCase("MANAGER") || line.equalsIgnoreCase("MANAGER ")){
+                Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
+                Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("type", "MANAGER");
+                Driver.getInstance().getTerminalDriver().clearScreen();
+                Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
+
+                Driver.getInstance().getTerminalDriver().log(Type.SETUP, new String[] {"Gewählte Sprache: §fDE", "Gewähltes setup: §fMANAGER", "Wie lautet die Adresse des Managers?"},new String[] {"Selected language: §fEN", "Selected setup: §fMANAGER", "What is the manager's address?"});
+            }else if (line.equalsIgnoreCase("NODE") || line.equalsIgnoreCase("NODE ")){
+                Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
+                Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("type", "NODE");
+                Driver.getInstance().getTerminalDriver().clearScreen();
+                Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
+                Driver.getInstance().getTerminalDriver().log(Type.SETUP, new String[] {"Gewählte Sprache: §fDE", "Gewähltes setup: §fNODE", "Wie lautet die Adresse des Managers?"},new String[] {"Selected language: §fEN", "Selected setup: §fNODE", "What is the manager's address?"});
+
+                Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewähltes setup: §fNODE", "Wie lautet die Adresse des Managers?");
             }else {
-                if (line.equalsIgnoreCase("MANAGER") || line.equalsIgnoreCase("MANAGER ")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("type", "MANAGER");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §fMANAGER", "What is the manager's address?");
-                }else if (line.equalsIgnoreCase("NODE") || line.equalsIgnoreCase("NODE ")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("type", "NODE");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §fNODE", "What is the manager's address?");
-                }else {
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "Pleas chose §fMANAGER §7or §fNODE");
-                }
+                Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP_ERROR, "Bitte wählen Sie §fMANAGER §7 oder §fNODE", "Pleas chose §fMANAGER §7or §fNODE");
             }
-
         }else if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 2){
             if (line.contains(".")){
                 Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
                 Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("address", line.replace(" ", ""));
                 Driver.getInstance().getTerminalDriver().clearScreen();
                 Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                if (Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("language").toString().equalsIgnoreCase("DE")){
 
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Wie viel Arbeitsspeicher darf diese Instanz in Anspruch nehmen? (in MB)");
+                String[] de = new String[]{"Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Wie viel Arbeitsspeicher darf diese Instanz in Anspruch nehmen? (in MB)"};
 
-                }else {
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "How much memory is this instance allowed to draw? (in MB)");
-                }
+                String[] en = new String[]{"Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "How much memory is this instance allowed to draw? (in MB)"};
+                Driver.getInstance().getTerminalDriver().log(Type.SETUP,  de, en);
+
             }else {
-                if (Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("language").toString().equalsIgnoreCase("DE")){
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "Ihre IP-Adresse muss Punkte beinhalten");
-                }else {
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "Your IP address must contain dots");
-                }
+                Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP_ERROR, "Ihre IP-Adresse muss Punkte beinhalten", "Your IP address must contain dots");
+
             }
         }else {
             if (Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("MANAGER")){
@@ -103,2027 +88,473 @@ public class MainSetup {
 
 
     private void handelSetUpManager(String  line){
-        if (Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("language").toString().equalsIgnoreCase("DE")){
-            if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 3){
-                if(line.matches("[0-9]+")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("memory", line);
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Welche Bungeecord version möchtest du verwenden?", "Mögliche antworten: §fBUNGEECORD, WATERFALL, VELOCITY, TRAVERTINE, HEXACORD");
 
-                }else {
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "bitte gebe eine Ram anzahl an z.b. 512");
-                }
-            }else  if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 4){
-                if (line.equalsIgnoreCase("HEXACORD") | line.equalsIgnoreCase("HEXACORD ")){
+        if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 3){
+            if(line.matches("[0-9]+")){
+
                 Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "HEXACORD");
+                Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("memory", line);
+                Driver.getInstance().getTerminalDriver().clearScreen();
+                Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
+
+
+                List<String> bungees = new ArrayList<>(new PacketLoader().availableBungeecords());
+                StringBuilder available = new StringBuilder();
+                if (bungees.size() == 1){
+                    available = new StringBuilder(bungees.get(0));
+                }else {
+
+                    for (int i = 0; i != bungees.size(); i++){
+                        if (i == 0){
+                            available = new StringBuilder(bungees.get(0));
+                        }else {
+                            available.append(", ").append(bungees.get(i));
+                        }
+                    }
+                }
+
+
+                String[] de = new String[]{"Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                        "Welche Bungeecord version möchtest du verwenden?", "Mögliche antworten: §f" + available};
+
+                String[] en = new String[]{"Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB" ,
+                        "Which bungeecord version do you want to use?", "Possible answers: §f" + available};
+
+                Driver.getInstance().getTerminalDriver().log(Type.SETUP, de, en);
+
+            }else {
+                Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP_ERROR, "bitte gebe eine Ram anzahl an z.b. 512",  "please enter a Ram number e.g. 512");
+            }
+        }else if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 4){
+            List<String> bungees = new PacketLoader().availableBungeecords();
+            if (bungees.stream().anyMatch(s -> s.equalsIgnoreCase(line) || s.replace(s, s+ " ").equalsIgnoreCase(line))){
+
+                Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
+                Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", line.replace(" ", "").toUpperCase());
                 Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
                 Driver.getInstance().getTerminalDriver().clearScreen();
                 Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+
+                List<String> spigots = new PacketLoader().availableSpigots();
+                List<String> mainSpigots = new ArrayList<>();
+                spigots.forEach(s -> {
+                    if (!mainSpigots.contains(s.split("-")[0])){
+                        mainSpigots.add(s.split("-")[0]);
+                    }
+                });
+
+                StringBuilder available = new StringBuilder();
+                if (mainSpigots.size() == 1){
+                    available = new StringBuilder(mainSpigots.get(0));
+                }else {
+
+                    for (int i = 0; i != mainSpigots.size(); i++){
+                        if (i == 0){
+                            available = new StringBuilder(mainSpigots.get(0));
+                        }else {
+                            available.append(", ").append(mainSpigots.get(i));
+                        }
+                    }
+                }
+
+                String[] de = new String[]{"Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
                         "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
                         "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
                         "Welche spigot version möchtest du benutzen?",
-                        "Mögliche antworten: §fSPIGOT, PAPER, PURPUR, FOLIA");
+                        "Mögliche antworten: §f" + available};
 
+                String[] en = new String[] {"Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"),
+                        "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                        "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
+                        "Which spigot version do you want to use?",
+                        "Possible answers: §f" + available};
 
-            }else
-                if (line.equalsIgnoreCase("TRAVERTINE") | line.equalsIgnoreCase("TRAVERTINE ")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "TRAVERTINE");
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "Welche spigot version möchtest du benutzen?",
-                            "Mögliche antworten: §fSPIGOT, PAPER, PURPUR, FOLIA");
+                Driver.getInstance().getTerminalDriver().log(Type.SETUP, de, en);
 
-
-                }else
-                if (line.equalsIgnoreCase("WATERFALL") | line.equalsIgnoreCase("WATERFALL ")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "WATERFALL");
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "Welche spigot version möchtest du benutzen?",
-                            "Mögliche antworten: §fSPIGOT, PAPER, PURPUR, FOLIA");
-
-
-                }else if (line.equalsIgnoreCase("BUNGEECORD") || line.equalsIgnoreCase("BUNGEECORD ")){
-
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "BUNGEECORD");
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "Welche spigot version möchtest du benutzen?",
-                            "Mögliche antworten: §fSPIGOT, PAPER, PURPUR, FOLIA");
-                }else if (line.equalsIgnoreCase("VELOCITY") || line.equalsIgnoreCase("VELOCITY ")){
-
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "VELOCITY");
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "Welche spigot version möchtest du benutzen?",
-                            "Mögliche antworten: §fSPIGOT, PAPER, PURPUR, FOLIA");
-                }else {
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "Die version wurde nicht gefunden");
-                }
-
-            }else if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 5){
-                if (  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("none")){
-                    if (line.equalsIgnoreCase("FOLIA") || line.equalsIgnoreCase("FOLIA ")){
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "FOLIA");
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Sie haben '§fFOLIA§r' ausgewählt, aber welchen wollen Sie genau?",
-                                "Mögliche antworten: §fFOLIA-1.19.4, BACKTOMAIN");
-                    }else
-                    if (line.equalsIgnoreCase("SPIGOT") || line.equalsIgnoreCase("SPIGOT ")){
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "SPIGOT");
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Sie haben '§fSPIGOT§r' ausgewählt, aber welchen wollen Sie genau?",
-                                "Mögliche antworten: §fSPIGOT-1.16.5, SPIGOT-1.17.1, SPIGOT-1.18.2, SPIGOT-1.19.2, SPIGOT-1.19.3, SPIGOT-1.19.4, BACKTOMAIN");
-                    }else
-                    if (line.equalsIgnoreCase("PAPER") || line.equalsIgnoreCase("PAPER ")){
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "PAPER");
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Sie haben '§fPAPER§r' ausgewählt, aber welchen wollen Sie genau?",
-                                "Mögliche antworten: §fPAPER-1.16.5, PAPER-1.17.1, PAPER-1.18.2, PAPER-1.19.2, PAPER-1.19.3, PAPER-1.19.4, BACKTOMAIN");
-                    }else if (line.equalsIgnoreCase("PURPUR") || line.equalsIgnoreCase("PURPUR ")){
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "PURPUR");
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Sie haben '§fPURPUR§r' ausgewählt, aber welchen wollen Sie genau?",
-                                "Mögliche antworten: §fPURPUR-1.16.5, PURPUR-1.17.1, PURPUR-1.18.2, PURPUR-1.19.2, PURPUR-1.19.3, PURPUR-1.19.4, BACKTOMAIN");
-                    }else {
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "Die version wurde nicht gefunden");
-                    }
-                }else
-                if (  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("FOLIA")){
-                    if (line.equalsIgnoreCase("BACKTOMAIN") || line.equalsIgnoreCase("BACKTOMAIN ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Welche spigot version möchtest du benutzen?",
-                                "Mögliche antworten: §fSPIGOT, PAPER, PURPUR, FOLIA");
-                    }else
-                    if ( line.equalsIgnoreCase("FOLIA-1.19.4") || line.equalsIgnoreCase("FOLIA-1.19.4 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "FOLIA-1.19.4");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-
-                    }
-                }else
-                    if (  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("SPIGOT")){
-                    if (line.equalsIgnoreCase("BACKTOMAIN") || line.equalsIgnoreCase("BACKTOMAIN ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Welche spigot version möchtest du benutzen?",
-                                "Mögliche antworten: §fSPIGOT, PAPER, PURPUR, FOLIA");
-                    }else
-                    if ( line.equalsIgnoreCase("SPIGOT-1.19.4") || line.equalsIgnoreCase("SPIGOT-1.19.4 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.19.4");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-
-                    } else  if (line.equalsIgnoreCase("SPIGOT-1.16.5") || line.equalsIgnoreCase("SPIGOT-1.16.5 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.16.5");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-                    } else  if (line.equalsIgnoreCase("SPIGOT-1.17.1") || line.equalsIgnoreCase("SPIGOT-1.17.1 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.17.1");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-                    } else if (line.equalsIgnoreCase("SPIGOT-1.18.2") || line.equalsIgnoreCase("SPIGOT-1.18.2 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.18.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-                    } else if (line.equalsIgnoreCase("SPIGOT-1.19.2") || line.equalsIgnoreCase("SPIGOT-1.19.2 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.19.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-                    } else if ( line.equalsIgnoreCase("SPIGOT-1.19.3") || line.equalsIgnoreCase("SPIGOT-1.19.3 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.19.3");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-
-                    }else {
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "Die version wurde nicht gefunden");
-                    }
-                }else if (  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("PAPER")){
-                    if (line.equalsIgnoreCase("BACKTOMAIN") || line.equalsIgnoreCase("BACKTOMAIN ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Welche spigot version möchtest du benutzen?",
-                                "Mögliche antworten: §fSPIGOT, PAPER, PURPUR, FOLIA");
-                    }else if ( line.equalsIgnoreCase("PAPER-1.19.4") || line.equalsIgnoreCase("PAPER-1.19.4 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.19.4");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-
-                    }else if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.16.5");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-                    } else  if (line.equalsIgnoreCase("PAPER-1.17.1") || line.equalsIgnoreCase("PAPER-1.17.1 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.17.1");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-                    } else if (line.equalsIgnoreCase("PAPER-1.18.2") || line.equalsIgnoreCase("PAPER-1.18.2 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.18.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-                    } else if (line.equalsIgnoreCase("PAPER-1.19.2") || line.equalsIgnoreCase("PAPER-1.19.2 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.19.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-                    } else if ( line.equalsIgnoreCase("PAPER-1.19.3") || line.equalsIgnoreCase("PAPER-1.19.3 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.19.3");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-                    }else{
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "Die version wurde nicht gefunden");
-                    }
-                }else if (  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("PURPUR")){
-                    if (line.equalsIgnoreCase("BACKTOMAIN") || line.equalsIgnoreCase("BACKTOMAIN ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Welche spigot version möchtest du benutzen?",
-                                "Mögliche antworten: §fSPIGOT, PAPER, PURPUR, FOLIA");
-                    return;
-                    }else if ( line.equalsIgnoreCase("PURPUR-1.19.4") || line.equalsIgnoreCase("PURPUR-1.19.4 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.19.4");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-
-                    }  if ( line.equalsIgnoreCase("PURPUR-1.19.3") || line.equalsIgnoreCase("PURPUR-1.19.3 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.19.3");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-
-                    } else if ( line.equalsIgnoreCase("PURPUR-1.19.2") || line.equalsIgnoreCase("PURPUR-1.19.2 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.19.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-
-                    } else if ( line.equalsIgnoreCase("PURPUR-1.18.2") || line.equalsIgnoreCase("PURPUR-1.18.2 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.18.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-
-                    }else if ( line.equalsIgnoreCase("PURPUR-1.17.1") || line.equalsIgnoreCase("PURPUR-1.17.1 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.17.1");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-
-                    }else if ( line.equalsIgnoreCase("PURPUR-1.16.5") || line.equalsIgnoreCase("PURPUR-1.16.5 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.16.5");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-
-                    }else {
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "Die version wurde nicht gefunden");
-                    }
-                }
+            }else {
+                Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP_ERROR, "Die Version wurde nicht gefunden","The version was not found");
             }
-        }else {
-            if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 3){
-                if(line.matches("[0-9]+")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("memory", line);
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB" ,
-                            "Which bungeecord version do you want to use?", "Possible answers: §fBUNGEECORD, WATERFALL, VELOCITY, TRAVERTINE, HEXACORD");
-                }else {
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "please enter a Ram number e.g. 512");
+        }else if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 5){
+
+            List<String> mainSpigots = new ArrayList<>();
+            new PacketLoader().availableSpigots().forEach(s -> {
+                if (!mainSpigots.contains(s.split("-")[0])){
+                    mainSpigots.add(s.split("-")[0]);
                 }
-            }else if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 4){
-                if (line.equalsIgnoreCase("HEXACORD") | line.equalsIgnoreCase("HEXACORD ")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "HEXACORD");
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
+            });
 
+            if (Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("none")) {
+
+                if (mainSpigots.stream().anyMatch(s -> s.equalsIgnoreCase(line) || s.replace(s, s + " ").equalsIgnoreCase(line))) {
+
+                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", line.replace(" ", "").toUpperCase());
                     Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
 
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "Which spigot version do you want to use?",
-                            "Possible answers:  §fSPIGOT, PAPER, PURPUR, FOLIA");
+                    List<String> spigots = new PacketLoader().availableSpigots();
+                    List<String> found = new ArrayList<>();
+                    spigots.forEach(s -> {
+                       if (s.startsWith(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString())){
+                           found.add(s);
+                       }
+                    });
 
-                }else
-                if (line.equalsIgnoreCase("TRAVERTINE") | line.equalsIgnoreCase("TRAVERTINE ")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "TRAVERTINE");
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "Which spigot version do you want to use?",
-                            "Possible answers:  §fSPIGOT, PAPER, PURPUR, FOLIA");
-
-                }else
-                if (line.equalsIgnoreCase("Waterfall") | line.equalsIgnoreCase("Waterfall ")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "WATERFALL");
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "Which spigot version do you want to use?",
-                            "Possible answers:  §fSPIGOT, PAPER, PURPUR, FOLIA");
-
-                }else if (line.equalsIgnoreCase("BUNGEECORD") || line.equalsIgnoreCase("BUNGEECORD ")){
-
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "BUNGEECORD");
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "Which spigot version do you want to use?",
-                            "Possible answers:  §fSPIGOT, PAPER, PURPUR, FOLIA");
-
-                }else if (line.equalsIgnoreCase("VELOCITY") || line.equalsIgnoreCase("VELOCITY ")){
-
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "VELOCITY");
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "Which spigot version do you want to use?",
-                            "Possible answers:  §fSPIGOT, PAPER, PURPUR, FOLIA");
-
-                }else {
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "The version was not found");
-                }
-
-            }else if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 5){
-
-                if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("none")){
-                    if (line.equalsIgnoreCase("FOLIA") || line.equalsIgnoreCase("FOLIA ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "FOLIA");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "you have Selected '§fFOLIA§r', but which one do you want exactly? ",
-                                "Possible answers:  §fFOLIA-1.19.4, BACKTOMAIN");
-                    } else
-                    if (line.equalsIgnoreCase("SPIGOT") || line.equalsIgnoreCase("SPIGOT ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "SPIGOT");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "you have Selected '§fSPIGOT§r', but which one do you want exactly? ",
-                                "Possible answers:  §fSPIGOT-1.16.5, SPIGOT-1.17.1, SPIGOT-1.18.2, SPIGOT-1.19.2, SPIGOT-1.19.3, SPIGOT-1.19.4, BACKTOMAIN");
-                    } else if (line.equalsIgnoreCase("PAPER") || line.equalsIgnoreCase("PAPER ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "PAPER");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "you have Selected '§fPAPER§r', but which one do you want exactly? ",
-                                "Possible answers:  §fPAPER-1.16.5, PAPER-1.17.1, PAPER-1.18.2, PAPER-1.19.2, PAPER-1.19.3, PAPER-1.19.4, BACKTOMAIN");
-                    }else if (line.equalsIgnoreCase("PURPUR") || line.equalsIgnoreCase("PURPUR ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "PURPUR");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "you have Selected '§fPURPUR§r', but which one do you want exactly? ",
-                                "Possible answers:  §fPURPUR-1.16.5, PURPUR-1.17.1, PURPUR-1.18.2, PURPUR-1.19.2, PURPUR-1.19.3, PURPUR-1.19.4, BACKTOMAIN");
+                    StringBuilder available2 = new StringBuilder();
+                    if (found.size() == 1){
+                        available2 = new StringBuilder(found.get(0));
                     }else {
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "The version was not found");
+
+                        for (int i = 0; i != found.size(); i++){
+                            if (i == 0){
+                                available2 = new StringBuilder(found.get(0));
+                            }else {
+                                available2.append(", ").append(found.get(i));
+                            }
+                        }
                     }
+                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
+                    String[] de = new String[]{"Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                            "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                            "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
+                            "Sie haben '§f"+Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString()+"§r' ausgewählt, aber welchen wollen Sie genau?",
+                            "Mögliche antworten: §f"+available2+" , BACKTOMAIN"};
 
-                }else
-                if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("FOLIA")){
+                    String[] en = new String[] {"Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                            "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"),
+                            "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                            "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
+                            "you have Selected '§f"+Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString()+"§r', but which one do you want exactly? ",
+                            "Possible answers:  §f"+available2+", BACKTOMAIN"};
 
-                    if (line.equalsIgnoreCase("BACKTOMAIN") || line.equalsIgnoreCase("BACKTOMAIN ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Which spigot version do you want to use?",
-                                "Possible answers:  §fSPIGOT, PAPER, PURPUR, FOLIA");
-                    }else if (line.equalsIgnoreCase("FOLIA-1.19.4") || line.equalsIgnoreCase("FOLIA-1.19.4 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "FOLIA-1.19.4");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
+                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, de, en);
 
-                    }else {
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "The version was not found");
+
+                } else {
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP_ERROR, "Die Version wurde nicht gefunden","The version was not found");
+                }
+            }else if ( new PacketLoader().availableSpigots().stream()
+                    .filter(s -> s.startsWith(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString()))
+                    .collect(Collectors.toList()).stream().anyMatch(s -> s.equalsIgnoreCase(line) || s.replace(s, s+ " ").equalsIgnoreCase(line))){
+
+                Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", line.replace(" ", "").toUpperCase());
+
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        createConfiguration();
                     }
-                }else
-                    if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("SPIGOT")){
+                }, 2000);
+                Driver.getInstance().getTerminalDriver().clearScreen();
+                Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
 
+                String[] de = new String[]{"Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                        "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
+                        "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
+                        "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet"};
 
-                    if (line.equalsIgnoreCase("BACKTOMAIN") || line.equalsIgnoreCase("BACKTOMAIN ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Which spigot version do you want to use?",
-                                "Possible answers:  §fSPIGOT, PAPER, PURPUR, FOLIA");
-                    }else if (line.equalsIgnoreCase("SPIGOT-1.19.4") || line.equalsIgnoreCase("SPIGOT-1.19.4 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.19.4");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
+                String[] en = new String[]{"Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                        "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
+                        "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
+                        "The setup is finished, the screen will be closed and the cloud will be started"};
 
-                    }else  if (line.equalsIgnoreCase("SPIGOT-1.16.5") || line.equalsIgnoreCase("SPIGOT-1.16.5 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.16.5");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-                    } else  if (line.equalsIgnoreCase("SPIGOT-1.17.1") || line.equalsIgnoreCase("SPIGOT-1.17.1 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.17.1");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-                    } else if (line.equalsIgnoreCase("SPIGOT-1.18.2") || line.equalsIgnoreCase("SPIGOT-1.18.2 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.18.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-                    } else if (line.equalsIgnoreCase("SPIGOT-1.19.2") || line.equalsIgnoreCase("SPIGOT-1.19.2 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.19.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-                    } else if ( line.equalsIgnoreCase("SPIGOT-1.19.3") || line.equalsIgnoreCase("SPIGOT-1.19.3 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.19.3");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
+                Driver.getInstance().getTerminalDriver().log(Type.SETUP, de, en);
 
-                    } else{
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "The version was not found");
-                    }
+            }else if (line.equalsIgnoreCase("BACKTOMAIN") || line.equalsIgnoreCase("BACKTOMAIN ")) {
+                Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
+                Driver.getInstance().getTerminalDriver().clearScreen();
+                Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
 
-                }else  if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("PAPER")){
+                StringBuilder available = new StringBuilder();
+                if (mainSpigots.size() == 1){
+                    available = new StringBuilder(mainSpigots.get(0));
+                }else {
 
-                    if (line.equalsIgnoreCase("BACKTOMAIN") || line.equalsIgnoreCase("BACKTOMAIN ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Which spigot version do you want to use?",
-                                "Possible answers:  §fSPIGOT, PAPER, PURPUR, FOLIA");
-                    }else if (line.equalsIgnoreCase("PAPER-1.19.4") || line.equalsIgnoreCase("PAPER-1.19.4 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.19.4");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-
-                    } else if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.16.5");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-
-                    } else  if (line.equalsIgnoreCase("PAPER-1.17.1") || line.equalsIgnoreCase("PAPER-1.17.1 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.17.1");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-                    } else if (line.equalsIgnoreCase("PAPER-1.18.2") || line.equalsIgnoreCase("PAPER-1.18.2 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.18.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-                    } else if (line.equalsIgnoreCase("PAPER-1.19.2") || line.equalsIgnoreCase("PAPER-1.19.2 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.19.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-                    } else if ( line.equalsIgnoreCase("PAPER-1.19.3") || line.equalsIgnoreCase("PAPER-1.19.3 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.19.3");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-                    } else{
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "The version was not found");
-                    }
-                }else  if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("PURPUR")){
-                    if (line.equalsIgnoreCase("BACKTOMAIN") || line.equalsIgnoreCase("BACKTOMAIN ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Which spigot version do you want to use?",
-                                "Possible answers:  §fSPIGOT, PAPER, PURPUR, FOLIA");
-                    }else  if (line.equalsIgnoreCase("PURPUR-1.19.4") || line.equalsIgnoreCase("PURPUR-1.19.4 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.19.4");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-
-                    } else
-                    if (line.equalsIgnoreCase("PURPUR-1.19.3") || line.equalsIgnoreCase("PURPUR-1.19.3 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.19.3");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-
-                    } else   if (line.equalsIgnoreCase("PURPUR-1.19.2") || line.equalsIgnoreCase("PURPUR-1.19.2 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.19.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-
-                    } else   if (line.equalsIgnoreCase("PURPUR-1.18.2") || line.equalsIgnoreCase("PURPUR-1.18.2 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.18.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-
-                    } else   if (line.equalsIgnoreCase("PURPUR-1.17.1") || line.equalsIgnoreCase("PURPUR-1.17.1 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.17.1");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-
-                    } else if (line.equalsIgnoreCase("PURPUR-1.16.5") || line.equalsIgnoreCase("PURPUR-1.16.5 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.16.5");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-
-                    } else{
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "The version was not found");
+                    for (int i = 0; i != mainSpigots.size(); i++){
+                        if (i == 0){
+                            available = new StringBuilder(mainSpigots.get(0));
+                        }else {
+                            available.append(", ").append(mainSpigots.get(i));
+                        }
                     }
                 }
+
+                String[] de = new String[]{"Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                        "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
+                        "Welche spigot version möchtest du benutzen?",
+                        "Mögliche antworten: §f" + available};
+
+                String[] en = new String[] {"Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"),
+                        "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                        "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
+                        "Which spigot version do you want to use?",
+                        "Possible answers: §f" + available};
+
+                Driver.getInstance().getTerminalDriver().log(Type.SETUP, de, en);
+            }else {
+
+                Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP_ERROR, "Die Version wurde nicht gefunden","The version was not found");
             }
         }
+
     }
 
 
     private void handelSetUpNode(String  line){
-        if (Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("language").toString().equalsIgnoreCase("DE")){
-            if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 3){
-                if(line.matches("[0-9]+")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("memory", line);
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Wie soll der Node heißen?");
-                    return;
-
-                }else {
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "bitte gebe eine Ram anzahl an z.b. 512");
-                }
-            } if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 4){
+        if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 3){
+            if(line.matches("[0-9]+")){
                 Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("nodename", line);
+                Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("memory", line);
                 Driver.getInstance().getTerminalDriver().clearScreen();
                 Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                String[] de = new String[] {"Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
                         "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                        "Gewählte Node Name: §f"  + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
-                        "Was ist die Address von diesen Node?");
+                        "Wie soll der Node heißen?"};
+                String[] en = new String[] {"Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                        "What should the node be called?"};
+
+                Driver.getInstance().getTerminalDriver().log(Type.SETUP, de, en);
                 return;
 
-            } if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 5){
-                if (line.contains(".")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("nodeaddress", line);
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Gewählte Node Name: §f"  + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
-                            "Gewählte Node Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
-                            "Welche Bungeecord version möchtest du verwenden?", "Mögliche antworten: §fBUNGEECORD, WATERFALL, VELOCITY, TRAVERTINE, HEXACORD");
-                    return;
-                }else {
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "Ihre IP-Adresse muss Punkte beinhalten");
-                }
-            } if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 6){
-                if (line.equalsIgnoreCase("HEXACORD") | line.equalsIgnoreCase("HEXACORD ")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "HEXACORD");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Gewählte Node Name: §f"  + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
-                            "Gewählte Node Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
-                            "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "Welche spigot version möchtest du benutzen?",
-                            "Mögliche antworten: §fSPIGOT, PAPER, PURPUR, FOLIA");
-
-                    return;
-                }else
-                if (line.equalsIgnoreCase("TRAVERTINE") | line.equalsIgnoreCase("TRAVERTINE ")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "TRAVERTINE");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Gewählte Node Name: §f"  + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
-                            "Gewählte Node Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
-                            "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "Welche spigot version möchtest du benutzen?",
-                            "Mögliche antworten: §fSPIGOT, PAPER, PURPUR, FOLIA");
-
-                    return;
-                }else
-                if (line.equalsIgnoreCase("VELOCITY") | line.equalsIgnoreCase("VELOCITY ")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "VELOCITY");
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Gewählte Node Name: §f"  + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
-                            "Gewählte Node Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
-                            "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "Welche spigot version möchtest du benutzen?",
-                            "Mögliche antworten: §fSPIGOT, PAPER, PURPUR, FOLIA");
-
-                    return;
-                }else    if (line.equalsIgnoreCase("WATERFALL") | line.equalsIgnoreCase("WATERFALL ")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "WATERFALL");
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Gewählte Node Name: §f"  + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
-                            "Gewählte Node Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
-                            "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "Welche spigot version möchtest du benutzen?",
-                            "Mögliche antworten: §fSPIGOT, PAPER, PURPUR, FOLIA");
-
-                    return;
-                }else if (line.equalsIgnoreCase("BUNGEECORD") || line.equalsIgnoreCase("BUNGEECORD ")){
-
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "BUNGEECORD");
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Gewählte Node Name: §f"  + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
-                            "Gewählte Node Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
-                            "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "Welche spigot version möchtest du benutzen?",
-                            "Mögliche antworten: §fSPIGOT, PAPER, PURPUR, FOLIA");
-                    return;
-                }else {
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "Die version wurde nicht gefunden");
-                }
-            } if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 7){
-                if (  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("none")){
-                    if (line.equalsIgnoreCase("FOLIA") || line.equalsIgnoreCase("FOLIA ")){
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "FOLIA");
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Sie haben '§fFOLIA§r' ausgewählt, aber welchen wollen Sie genau?",
-                                "Mögliche antworten: §fFOLIA-1.19.4, BACKTOMAIN");
-                    }else
-                    if (line.equalsIgnoreCase("SPIGOT") || line.equalsIgnoreCase("SPIGOT ")){
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "SPIGOT");
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Sie haben '§fSPIGOT§r' ausgewählt, aber welchen wollen Sie genau?",
-                                "Mögliche antworten: §fSPIGOT-1.16.5, SPIGOT-1.17.1, SPIGOT-1.18.2, SPIGOT-1.19.2, SPIGOT-1.19.3, SPIGOT-1.19.4, BACKTOMAIN");
-                    }else
-                    if (line.equalsIgnoreCase("PAPER") || line.equalsIgnoreCase("PAPER ")){
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "PAPER");
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Sie haben '§fPAPER§r' ausgewählt, aber welchen wollen Sie genau?",
-                                "Mögliche antworten: §fPAPER-1.16.5, PAPER-1.17.1, PAPER-1.18.2, PAPER-1.19.2, PAPER-1.19.3, PAPER-1.19.4, BACKTOMAIN");
-                    }else if (line.equalsIgnoreCase("PURPUR") || line.equalsIgnoreCase("PURPUR ")){
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "PURPUR");
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Sie haben '§fPURPUR§r' ausgewählt, aber welchen wollen Sie genau?",
-                                "Mögliche antworten: §fPURPUR-1.16.5, PURPUR-1.17.1, PURPUR-1.18.2, PURPUR-1.19.2, PURPUR-1.19.3, PURPUR-1.19.4, BACKTOMAIN");
-                    }else {
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "Die version wurde nicht gefunden");
-                    }
-                }else
-                    if (  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("FOLIA")){
-                        if (line.equalsIgnoreCase("BACKTOMAIN") || line.equalsIgnoreCase("BACKTOMAIN ")){
-                            Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                            Driver.getInstance().getTerminalDriver().clearScreen();
-                            Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                            Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                    "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                    "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                    "Welche spigot version möchtest du benutzen?",
-                                    "Mögliche antworten: §fSPIGOT, PAPER, PURPUR, FOLIA");
-                        }else
-                        if ( line.equalsIgnoreCase("FOLIA-1.19.4") || line.equalsIgnoreCase("FOLIA-1.19.4 ") ){
-                            Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "FOLIA-1.19.4");
-                            new Timer().schedule(new TimerTask() {
-                                @Override
-                                public void run() {
-                                    createConfiguration();
-                                }
-                            }, 2000);
-                            Driver.getInstance().getTerminalDriver().clearScreen();
-                            Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                            Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                    "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                    "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                    "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                    "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-
-                        }
-                    }else
-                    if (  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("SPIGOT")){
-                    if (line.equalsIgnoreCase("BACKTOMAIN") || line.equalsIgnoreCase("BACKTOMAIN ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Welche spigot version möchtest du benutzen?",
-                                "Mögliche antworten: §fSPIGOT, PAPER, PURPUR, FOLIA");
-                    }else
-                    if ( line.equalsIgnoreCase("SPIGOT-1.19.4") || line.equalsIgnoreCase("SPIGOT-1.19.4 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.19.4");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-
-                    } else  if (line.equalsIgnoreCase("SPIGOT-1.16.5") || line.equalsIgnoreCase("SPIGOT-1.16.5 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.16.5");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-                    } else  if (line.equalsIgnoreCase("SPIGOT-1.17.1") || line.equalsIgnoreCase("SPIGOT-1.17.1 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.17.1");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-                    } else if (line.equalsIgnoreCase("SPIGOT-1.18.2") || line.equalsIgnoreCase("SPIGOT-1.18.2 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.18.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-                    } else if (line.equalsIgnoreCase("SPIGOT-1.19.2") || line.equalsIgnoreCase("SPIGOT-1.19.2 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.19.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-                    } else if ( line.equalsIgnoreCase("SPIGOT-1.19.3") || line.equalsIgnoreCase("SPIGOT-1.19.3 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.19.3");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-
-                    }else {
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "Die version wurde nicht gefunden");
-                    }
-                }else if (  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("PAPER")){
-                    if (line.equalsIgnoreCase("BACKTOMAIN") || line.equalsIgnoreCase("BACKTOMAIN ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Welche spigot version möchtest du benutzen?",
-                                "Mögliche antworten: §fSPIGOT, PAPER, PURPUR, FOLIA");
-                    }else if ( line.equalsIgnoreCase("PAPER-1.19.4") || line.equalsIgnoreCase("PAPER-1.19.4 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.19.4");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-
-                    }else if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.16.5");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-                    } else  if (line.equalsIgnoreCase("PAPER-1.17.1") || line.equalsIgnoreCase("PAPER-1.17.1 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.17.1");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-                    } else if (line.equalsIgnoreCase("PAPER-1.18.2") || line.equalsIgnoreCase("PAPER-1.18.2 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.18.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-                    } else if (line.equalsIgnoreCase("PAPER-1.19.2") || line.equalsIgnoreCase("PAPER-1.19.2 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.19.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-                    } else if ( line.equalsIgnoreCase("PAPER-1.19.3") || line.equalsIgnoreCase("PAPER-1.19.3 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.19.3");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-                    }else{
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "Die version wurde nicht gefunden");
-                    }
-                }else if (  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("PURPUR")){
-                    if (line.equalsIgnoreCase("BACKTOMAIN") || line.equalsIgnoreCase("BACKTOMAIN ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Welche spigot version möchtest du benutzen?",
-                                "Mögliche antworten: §fSPIGOT, PAPER, PURPUR, FOLIA");
-                    }else if ( line.equalsIgnoreCase("PURPUR-1.19.4") || line.equalsIgnoreCase("PURPUR-1.19.4 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.19.4");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-
-                    }  if ( line.equalsIgnoreCase("PURPUR-1.19.3") || line.equalsIgnoreCase("PURPUR-1.19.3 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.19.3");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-
-                    } else if ( line.equalsIgnoreCase("PURPUR-1.19.2") || line.equalsIgnoreCase("PURPUR-1.19.2 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.19.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-
-                    } else if ( line.equalsIgnoreCase("PURPUR-1.18.2") || line.equalsIgnoreCase("PURPUR-1.18.2 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.18.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-
-                    }else if ( line.equalsIgnoreCase("PURPUR-1.17.1") || line.equalsIgnoreCase("PURPUR-1.17.1 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.17.1");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-
-                    }else if ( line.equalsIgnoreCase("PURPUR-1.16.5") || line.equalsIgnoreCase("PURPUR-1.16.5 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.16.5");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet");
-
-                    }else {
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "Die version wurde nicht gefunden");
-                    }
-                }
+            }else {
+                Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP_ERROR, "bitte gebe eine Ram anzahl an z.b. 512", "please enter a Ram number e.g. 512");
             }
-
-        }else {
-            if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 3){
-                if(line.matches("[0-9]+")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("memory", line);
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "What should the node be called?");
-                    return;
-                }else {
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "please enter a Ram number e.g. 512");
-                }
-            }    if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 4){
+        }  if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 4){
+            Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
+            Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("nodename", line);
+            Driver.getInstance().getTerminalDriver().clearScreen();
+            Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
+            String[] de = new String[] {"Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                    "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"),
+                    "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                    "Gewählter name: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
+                    "Was ist die Address von diesem Node?"};
+            String[] en = new String[] {"Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                    "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                    "Selected node name: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
+                    "What is the address of this node?"};
+            Driver.getInstance().getTerminalDriver().log(Type.SETUP, de, en);
+        } if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 5){
+            if (line.contains(".")){
                 Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("nodename", line);
+                Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("nodeaddress", line);
+
+
+                List<String> bungees = new PacketLoader().availableBungeecords();
+                StringBuilder available = new StringBuilder();
+                if (bungees.size() == 1){
+                    available = new StringBuilder(bungees.get(0));
+                }else {
+
+                    for (int i = 0; i != bungees.size(); i++){
+                        if (i == 0){
+                            available = new StringBuilder(bungees.get(0));
+                        }else {
+                            available.append(", ").append(bungees.get(i));
+                        }
+                    }
+                }
                 Driver.getInstance().getTerminalDriver().clearScreen();
-                Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                String[] de = new String[] {"Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"),
+                        "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                        "Gewählter name: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
+                        "Welche Bungeecord version möchtest du verwenden?", "Mögliche antworten: §f" + available};
+                String[] en = new String[] {"Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
                         "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
                         "Selected node name: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
-                        "What is the address of this node?");
+                        "Selected node address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
+                        "Which bungeecord version do you want to use?", "Possible answers: §f" + available};
+                Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
+                Driver.getInstance().getTerminalDriver().log(Type.SETUP, de, en);
                 return;
-            }  if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 5){
-                if (line.contains(".")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("nodeaddress", line);
+            }else {
+                Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP_ERROR, "", "your IP address must contain dots");
+            }
+        } if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 6) {
+            List<String> bungees = new PacketLoader().availableBungeecords();
+            if (bungees.stream().anyMatch(s -> s.equalsIgnoreCase(line) || s.replace(s, s + " ").equalsIgnoreCase(line))) {
+
+                Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
+                Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", line.replace(" ", "").toUpperCase());
+                Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
+                Driver.getInstance().getTerminalDriver().clearScreen();
+                Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
+
+                List<String> spigots = new PacketLoader().availableSpigots();
+                List<String> mainSpigots = new ArrayList<>();
+                spigots.forEach(s -> {
+                    if (!mainSpigots.contains(s.split("-")[0])) {
+                        mainSpigots.add(s.split("-")[0]);
+                    }
+                });
+
+                StringBuilder available = new StringBuilder();
+                if (mainSpigots.size() == 1) {
+                    available = new StringBuilder(mainSpigots.get(0));
+                } else {
+
+                    for (int i = 0; i != mainSpigots.size() ; i++) {
+                        if (i == 0) {
+                            available = new StringBuilder(mainSpigots.get(0));
+                        } else {
+                            available.append(", ").append(mainSpigots.get(i));
+                        }
+                    }
+                }
+                String[] de = new String[]{"Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"),
+                        "Gewählter Arbeitsspeicher: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                        "Gewählter name: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
+                        "Gewählte node Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
+                        "Welche Spigot version möchtest du verwenden?",
+                        "Mögliche antworten: §f" + available};
+
+                String[] en = new String[]{"Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                        "Selected node name: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
+                        "Selected node address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
+                        "Which spigot version do you want to use?",
+                        "Possible answers: §f" + available};
+                Driver.getInstance().getTerminalDriver().log(Type.SETUP, de, en);
+            }
+        } if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 7) {
+            List<String> mainSpigots = new ArrayList<>();
+            new PacketLoader().availableSpigots().forEach(s -> {
+                if (!mainSpigots.contains(s.split("-")[0])){
+                    mainSpigots.add(s.split("-")[0]);
+                }
+            });
+
+            if (Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("none")) {
+
+                if (mainSpigots.stream().anyMatch(s -> s.equalsIgnoreCase(line) || s.replace(s, s + " ").equalsIgnoreCase(line))) {
+
+                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", line.replace(" ", "").toUpperCase());
                     Driver.getInstance().getTerminalDriver().clearScreen();
+
+                    List<String> spigots = new PacketLoader().availableSpigots();
+                    List<String> found = new ArrayList<>();
+                    spigots.forEach(s -> {
+                        if (s.startsWith(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString())){
+                            found.add(s);
+                        }
+                    });
+
+                    StringBuilder available2 = new StringBuilder();
+                    if (found.size() == 1){
+                        available2 = new StringBuilder(found.get(0));
+                    }else {
+
+                        for (int i = 0; i != found.size(); i++){
+                            if (i == 0){
+                                available2 = new StringBuilder(found.get(0));
+                            }else {
+                                available2.append(", ").append(found.get(i));
+                            }
+                        }
+                    }
                     Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                    String[] de = new String[]{"Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                            "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"),
+                            "Gewählter Arbeitsspeicher: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                            "Gewählter name: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
+                            "Gewählte node Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
+                            "Gewählter name: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
+                            "Sie haben '§f"+Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString()+"§r' ausgewählt, aber welchen wollen Sie genau?",
+                            "Mögliche antworten: §f"+available2+" , BACKTOMAIN"};
+
+                    String[] en = new String[] {"Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
                             "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
                             "Selected node name: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
                             "Selected node address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
-                            "Which bungeecord version do you want to use?", "Possible answers: §fBUNGEECORD, WATERFALL, VELOCITY, TRAVERTINE, HEXACORD");
-                    return;
+                            "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),toString()+"§r', but which one do you want exactly? ",
+                            "Possible answers: §f"+available2+", BACKTOMAIN"};
+
+                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, de, en);
+
+
+                } else {
+                    Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP_ERROR, "Die Version wurde nicht gefunden","The version was not found");
+                }
+            }else if ( new PacketLoader().availableSpigots().stream()
+                    .filter(s -> s.startsWith(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString()))
+                    .collect(Collectors.toList()).stream().anyMatch(s -> s.equalsIgnoreCase(line) || s.replace(s, s+ " ").equalsIgnoreCase(line))){
+
+                Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", line.replace(" ", "").toUpperCase());
+
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        createConfiguration();
+                    }
+                }, 2000);
+                Driver.getInstance().getTerminalDriver().clearScreen();
+                Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
+
+                String[] de = new String[]{"Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                        "Gewählter name: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
+                        "Gewählte node Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
+                        "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
+                        "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
+                        "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet"};
+
+                String[] en = new String[]{"Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                        "Selected node name: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
+                        "Selected node address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
+                        "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
+                        "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
+
+                        "The setup is finished, the screen will be closed and the cloud will be started"};
+
+                Driver.getInstance().getTerminalDriver().log(Type.SETUP, de, en);
+
+            }else if (line.equalsIgnoreCase("BACKTOMAIN") || line.equalsIgnoreCase("BACKTOMAIN ")) {
+                Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
+                Driver.getInstance().getTerminalDriver().clearScreen();
+                Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
+
+                StringBuilder available = new StringBuilder();
+                if (mainSpigots.size() == 1){
+                    available = new StringBuilder(mainSpigots.get(0));
                 }else {
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "your IP address must contain dots");
-                }
-            } if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 6){
-                if (line.equalsIgnoreCase("HEXACORD") | line.equalsIgnoreCase("HEXACORD ")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "HEXACORD");
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
 
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Selected node name: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
-                            "Selected node address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
-                            "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "Which spigot version do you want to use?",
-                            "Possible answers:  §fSPIGOT, PAPER, PURPUR, FOLIA");
-                    return;
-                }else
-                if (line.equalsIgnoreCase("TRAVERTINE") | line.equalsIgnoreCase("TRAVERTINE ")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "TRAVERTINE");
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Selected node name: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
-                            "Selected node address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
-                            "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "Which spigot version do you want to use?",
-                            "Possible answers:  §fSPIGOT, PAPER, PURPUR, FOLIA");
-                    return;
-                }else
-                if (line.equalsIgnoreCase("VELOCITY") | line.equalsIgnoreCase("VELOCITY ")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "VELOCITY");
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Selected node name: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
-                            "Selected node address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
-                            "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "Which spigot version do you want to use?",
-                            "Possible answers:  §fSPIGOT, PAPER, PURPUR, FOLIA");
-                    return;
-                }else
-                if (line.equalsIgnoreCase("Waterfall") | line.equalsIgnoreCase("Waterfall ")){
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "WATERFALL");
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Selected node name: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
-                            "Selected node address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
-                            "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "Which spigot version do you want to use?",
-                            "Possible answers:  §fSPIGOT, PAPER, PURPUR, FOLIA");
-                    return;
-                }else  if (line.equalsIgnoreCase("BUNGEECORD") || line.equalsIgnoreCase("BUNGEECORD ")){
-
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("version", "BUNGEECORD");
-                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                    Driver.getInstance().getTerminalDriver().clearScreen();
-                    Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                            "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                            "Selected node name: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
-                            "Selected node address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
-                            "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                            "Which spigot version do you want to use?",
-                            "Possible answers:  §fSPIGOT, PAPER, PURPUR, FOLIA");
-                    return;
-                }else  {
-                    Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "The version was not found");
-                }
-            }if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 7){
-
-                if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("none")){
-                    if (line.equalsIgnoreCase("SPIGOT") || line.equalsIgnoreCase("FOLIA ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "FOLIA");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "you have Selected '§fSPIGOT§r', but which one do you want exactly? ",
-                                "Possible answers:  §fSPIGOT-1.16.5, SPIGOT-1.17.1, SPIGOT-1.18.2, SPIGOT-1.19.2, SPIGOT-1.19.3, SPIGOT-1.19.4, BACKTOMAIN");
-                    } else if (line.equalsIgnoreCase("SPIGOT") || line.equalsIgnoreCase("SPIGOT ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "SPIGOT");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "you have Selected '§fSPIGOT§r', but which one do you want exactly? ",
-                                "Possible answers:  §fSPIGOT-1.16.5, SPIGOT-1.17.1, SPIGOT-1.18.2, SPIGOT-1.19.2, SPIGOT-1.19.3, SPIGOT-1.19.4, BACKTOMAIN");
-                    } else if (line.equalsIgnoreCase("PAPER") || line.equalsIgnoreCase("PAPER ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "PAPER");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "you have Selected '§fPAPER§r', but which one do you want exactly? ",
-                                "Possible answers:  §fPAPER-1.16.5, PAPER-1.17.1, PAPER-1.18.2, PAPER-1.19.2, PAPER-1.19.3, PAPER-1.19.4, BACKTOMAIN");
-                    }else if (line.equalsIgnoreCase("PURPUR") || line.equalsIgnoreCase("PURPUR ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "PURPUR");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "you have Selected '§fPURPUR§r', but which one do you want exactly? ",
-                                "Possible answers:  §fPURPUR-1.16.5, PURPUR-1.17.1, PURPUR-1.18.2, PURPUR-1.19.2, PURPUR-1.19.3, PURPUR-1.19.4, BACKTOMAIN");
-                    }else if (line.equalsIgnoreCase("BUKKIT") || line.equalsIgnoreCase("BUKKIT ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "BUKKIT");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "you have Selected '§fBUKKIT§r', but which one do you want exactly? ",
-                                "Possible answers:  §fBUKKIT-1.16.5, BUKKIT-1.17.1, BUKKIT-1.18.2, BUKKIT-1.19.2, BUKKIT-1.19.3, BUKKIT-1.19.4, BACKTOMAIN");
-                    }else {
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "The version was not found");
-                    }
-
-                }else   if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("FOLIA")){
-                    if (line.equalsIgnoreCase("BACKTOMAIN") || line.equalsIgnoreCase("BACKTOMAIN ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Which spigot version do you want to use?",
-                                "Possible answers:  §fSPIGOT, PAPER, PURPUR, FOLIA");
-                        return;
-                    }else if (line.equalsIgnoreCase("FOLIA-1.19.4") || line.equalsIgnoreCase("FOLIA-1.19.4 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "FOLIA-1.19.4");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-
-                    }else {
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "The version was not found");
-                    }
-                }else if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("SPIGOT")){
-
-
-                    if (line.equalsIgnoreCase("BACKTOMAIN") || line.equalsIgnoreCase("BACKTOMAIN ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Which spigot version do you want to use?",
-                                "Possible answers:  §fSPIGOT, PAPER, PURPUR, FOLIA");
-                        return;
-                    }else if (line.equalsIgnoreCase("SPIGOT-1.19.4") || line.equalsIgnoreCase("SPIGOT-1.19.4 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.19.4");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-
-                    }else  if (line.equalsIgnoreCase("SPIGOT-1.16.5") || line.equalsIgnoreCase("SPIGOT-1.16.5 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.16.5");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-                    } else  if (line.equalsIgnoreCase("SPIGOT-1.17.1") || line.equalsIgnoreCase("SPIGOT-1.17.1 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.17.1");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-                    } else if (line.equalsIgnoreCase("SPIGOT-1.18.2") || line.equalsIgnoreCase("SPIGOT-1.18.2 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.18.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-                    } else if (line.equalsIgnoreCase("SPIGOT-1.19.2") || line.equalsIgnoreCase("SPIGOT-1.19.2 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.19.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-                    } else if ( line.equalsIgnoreCase("SPIGOT-1.19.3") || line.equalsIgnoreCase("SPIGOT-1.19.3 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "SPIGOT-1.19.3");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-
-                    } else{
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "The version was not found");
-                    }
-
-                }else   if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("PAPER")){
-
-                    if (line.equalsIgnoreCase("BACKTOMAIN") || line.equalsIgnoreCase("BACKTOMAIN ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Which spigot version do you want to use?",
-                                "Possible answers:  §fSPIGOT, PAPER, PURPUR, FOLIA");
-                        return;
-                    }else if (line.equalsIgnoreCase("PAPER-1.19.4") || line.equalsIgnoreCase("PAPER-1.19.4 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.19.4");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-
-                    } else if (line.equalsIgnoreCase("PAPER-1.16.5") || line.equalsIgnoreCase("PAPER-1.16.5 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.16.5");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-
-                    } else  if (line.equalsIgnoreCase("PAPER-1.17.1") || line.equalsIgnoreCase("PAPER-1.17.1 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.17.1");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-                    } else if (line.equalsIgnoreCase("PAPER-1.18.2") || line.equalsIgnoreCase("PAPER-1.18.2 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.18.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-                    } else if (line.equalsIgnoreCase("PAPER-1.19.2") || line.equalsIgnoreCase("PAPER-1.19.2 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.19.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-                    } else if ( line.equalsIgnoreCase("PAPER-1.19.3") || line.equalsIgnoreCase("PAPER-1.19.3 ") ){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PAPER-1.19.3");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-                    } else{
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "The version was not found");
-                    }
-                }else  if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("PURPUR")){
-                    if (line.equalsIgnoreCase("BACKTOMAIN") || line.equalsIgnoreCase("BACKTOMAIN ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("chosespigot", "none");
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Which spigot version do you want to use?",
-                                "Possible answers:  §fSPIGOT, PAPER, PURPUR, FOLIA");
-                        return;
-                    }else  if (line.equalsIgnoreCase("PURPUR-1.19.4") || line.equalsIgnoreCase("PURPUR-1.19.4 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.19.4");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-
-                    } else
-                    if (line.equalsIgnoreCase("PURPUR-1.19.3") || line.equalsIgnoreCase("PURPUR-1.19.3 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.19.3");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-
-                    } else   if (line.equalsIgnoreCase("PURPUR-1.19.2") || line.equalsIgnoreCase("PURPUR-1.19.2 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.19.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-
-                    } else   if (line.equalsIgnoreCase("PURPUR-1.18.2") || line.equalsIgnoreCase("PURPUR-1.18.2 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.18.2");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-
-                    } else   if (line.equalsIgnoreCase("PURPUR-1.17.1") || line.equalsIgnoreCase("PURPUR-1.17.1 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.17.1");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-
-                    } else if (line.equalsIgnoreCase("PURPUR-1.16.5") || line.equalsIgnoreCase("PURPUR-1.16.5 ")){
-                        Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", "PURPUR-1.16.5");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                createConfiguration();
-                            }
-                        }, 2000);
-                        Driver.getInstance().getTerminalDriver().clearScreen();
-                        Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP, "Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
-                                "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
-                                "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
-                                "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                                "The setup is finished, the screen will be closed and the cloud will be started");
-
-                    } else{
-                        Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "The version was not found");
+                    for (int i = 0; i != mainSpigots.size(); i++){
+                        if (i == 0){
+                            available = new StringBuilder(mainSpigots.get(0));
+                        }else {
+                            available.append(", ").append(mainSpigots.get(i));
+                        }
                     }
                 }
+
+                String[] de = new String[]{"Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"),
+                        "Gewählter Arbeitsspeicher: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                        "Gewählter name: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
+                        "Gewählte node Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
+                        "Welche Spigot version möchtest du verwenden?",
+                        "Mögliche antworten: §f" + available};
+
+                String[] en = new String[]{"Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                        "Selected node name: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename"),
+                        "Selected node address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress"),
+                        "Which spigot version do you want to use?",
+                        "Possible answers: §f" + available};
+
+                Driver.getInstance().getTerminalDriver().log(Type.SETUP, de, en);
+            }else {
+
+                Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP_ERROR, "Die Version wurde nicht gefunden", "The version was not found");
             }
         }
     }
@@ -2150,12 +581,12 @@ public class MainSetup {
                 managerConfig.setNetworkingCommunication(7002);
                 managerConfig.setRestApiCommunication(8097);
                 managerConfig.setCopyLogs(true);
-
                 managerConfig.setServiceStartupCount(5);
                 managerConfig.setProcessorUsage(90);
                 managerConfig.setBungeecordPort(25565);
                 managerConfig.setShowConnectingPlayers(true);
                 managerConfig.setSpigotPort(5000);
+                managerConfig.setAutoUpdate(true);
                 managerConfig.setUuid("INT");
                 managerConfig.setSplitter("-");
                 managerConfig.setWhitelist(new ArrayList<>());
@@ -2178,17 +609,17 @@ public class MainSetup {
                 managerConfig.setBungeecordVersion(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version").toString());
                 managerConfig.setSpigotVersion( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion").toString());
                 managerConfig.setNetworkingCommunication(7002);
-                managerConfig.setSplitter("-");
+                managerConfig.setSplitter("#");
                 managerConfig.setUseProtocol(false);
                 managerConfig.setCopyLogs(true);
                 managerConfig.setProcessorUsage(90);
                 managerConfig.setServiceStartupCount(3);
                 managerConfig.setRestApiCommunication(8097);
-
                 managerConfig.setShowConnectingPlayers(true);
                 managerConfig.setUuid("INT");
                 managerConfig.setBungeecordPort(25565);
                 managerConfig.setSpigotPort(5000);
+                managerConfig.setAutoUpdate(true);
                 managerConfig.setWhitelist(new ArrayList<>());
                 managerConfig.setNodes(nodes);
                 new ConfigDriver("./service.json").save(managerConfig);
@@ -2196,26 +627,26 @@ public class MainSetup {
                 Driver.getInstance().getTerminalDriver().leaveSetup();
             }
         }else {
-            if (Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("language").toString().equalsIgnoreCase("DE")){
+            if (Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("language").toString().equalsIgnoreCase("DE")) {
                 NodeConfig config = new NodeConfig();
                 config.setLanguage("DE");
                 config.setManagerAddress(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address").toString());
                 config.setCanUsedMemory(Integer.parseInt(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory").toString()));
                 config.setBungeecordVersion(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version").toString());
-                config.setSpigotVersion( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion").toString());
+                config.setSpigotVersion(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion").toString());
                 config.setNetworkingCommunication(7002);
                 config.setRestApiCommunication(8097);
                 config.setCopyLogs(true);
                 config.setBungeecordPort(25565);
                 config.setProcessorUsage(90);
+                config.setAutoUpdate(true);
                 config.setSpigotPort(5000);
                 config.setNodeAddress(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress").toString());
-                config.setNodeName( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename").toString());
+                config.setNodeName(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename").toString());
                 new ConfigDriver("./nodeservice.json").save(config);
-
                 Driver.getInstance().getMessageStorage().language = "DE";
                 Driver.getInstance().getTerminalDriver().leaveSetup();
-            }else {
+            } else {
                 NodeConfig config = new NodeConfig();
                 config.setLanguage("EN");
                 config.setManagerAddress(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address").toString());
@@ -2227,9 +658,10 @@ public class MainSetup {
                 config.setBungeecordPort(25565);
                 config.setProcessorUsage(90);
                 config.setSpigotPort(5000);
+                config.setAutoUpdate(true);
                 config.setCopyLogs(true);
                 config.setNodeAddress(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress").toString());
-                config.setNodeName( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename").toString());
+                config.setNodeName(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename").toString());
                 new ConfigDriver("./nodeservice.json").save(config);
                 Driver.getInstance().getMessageStorage().language = "EN";
                 Driver.getInstance().getTerminalDriver().leaveSetup();

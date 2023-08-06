@@ -4,8 +4,12 @@ import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.bungee.BungeeBootstrap;
 import eu.metacloudservice.config.Tablist;
+import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PostLoginEvent;
@@ -13,6 +17,7 @@ import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import org.checkerframework.checker.units.qual.C;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -65,12 +70,12 @@ public class TabListListener implements Listener {
             } else {
                 Tablist tab = BungeeBootstrap.getInstance().configuration.getTablist().get(BungeeBootstrap.getInstance().tabCount);
                 String[] config = readConfigs(tab, player);
-
                 player.setTabHeader(TextComponent.fromLegacyText(config[0]), TextComponent.fromLegacyText(config[1]));
             }
         }
-
     }
+
+
     private static String[] readConfigs(Tablist tablist, ProxiedPlayer player) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
 
@@ -100,43 +105,40 @@ public class TabListListener implements Listener {
         String playtime =  (cal.get(Calendar.HOUR_OF_DAY) + ":"
                 + cal.get(Calendar.MINUTE));
 
-
         String footer = rawFooter.replace("&", "§")
                 .replace("%service_name%", serviceName)
                 .replace("%time%", time)
-                .replace("%memory%", ""+memory)
-                .replace("%max_memory%", ""+maxMemory)
+                .replace("%memory%", String.valueOf(memory))
+                .replace("%max_memory%", String.valueOf(maxMemory))
                 .replace("%proxy_node%", proxyNode)
                 .replace("%cloud_version%",version)
                 .replace("%service_node%", serviceNode)
                 .replace("%service_group_name%", serviceGroupName)
                 .replace("%proxy_name%", proxyName)
-                .replace("%online_players%", "" + onlinePlayers)
-                .replace("%max_players%", "" + maxPlayers)
-                .replace("%player_ping%", "" + playerPing)
+                .replace("%online_players%", String.valueOf(onlinePlayers))
+                .replace("%max_players%", String.valueOf(maxPlayers))
+                .replace("%player_ping%", String.valueOf(playerPing))
                 .replace("%player_name%", playerName)
                 .replace("%player_playtime%", playtime)
                 .replace("%player_uuid%", playerUuid)
                 .replace("%proxy_group_name%", proxyGroupName);
-
         String header = rawHeader.replace("&", "§")
                 .replace("%service_name%", serviceName)
                 .replace("%time%", time)
-                .replace("%memory%", ""+memory)
-                .replace("%max_memory%", ""+maxMemory)
+                .replace("%memory%", String.valueOf(memory))
+                .replace("%max_memory%", String.valueOf(maxMemory))
                 .replace("%proxy_node%", proxyNode)
                 .replace("%cloud_version%",version)
                 .replace("%service_node%", serviceNode)
                 .replace("%service_group_name%", serviceGroupName)
                 .replace("%proxy_name%", proxyName)
-                .replace("%online_players%", "" + onlinePlayers)
-                .replace("%max_players%", "" + maxPlayers)
-                .replace("%player_ping%", "" + playerPing)
-                .replace("%player_playtime%", playtime)
+                .replace("%online_players%", String.valueOf(onlinePlayers))
+                .replace("%max_players%", String.valueOf(maxPlayers))
+                .replace("%player_ping%", String.valueOf(playerPing))
                 .replace("%player_name%", playerName)
+                .replace("%player_playtime%", playtime)
                 .replace("%player_uuid%", playerUuid)
                 .replace("%proxy_group_name%", proxyGroupName);
-
         return new String[]{header, footer};
 
 

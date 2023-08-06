@@ -27,11 +27,13 @@ public class CloudServiceDriver implements ICloudServiceDriver {
 
     private final ArrayList<TaskedService> services;
     public ArrayList<String> reaction;
+    public final ArrayList<String> delete;
     public final NetworkEntry entry;
 
     public CloudServiceDriver() {
         entry = new NetworkEntry();
         services = new ArrayList<>();
+        delete = new ArrayList<>();
         reaction = new ArrayList<>();
         handelServices();
     }
@@ -272,6 +274,8 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                         }
                     }).toList().forEach(taskedService -> {
 
+
+
                         taskedService.hasStartedNew = true;
                         if (taskedService.getEntry().getNode().equals("InternalNode")) {
                             try {
@@ -358,11 +362,32 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                                         minonline = group.getOver100AtGroup()*entry.group_player_potency.get(group.getGroup());
                                     }
 
-                                    int minimal =  minonline - getActiveServices(group.getGroup());
-                                    for (int i = 0; i != minimal ; i++) {
-                                        if (group.getStorage().getRunningNode().equals("InternalNode")){
-                                            int memoryAfter = Driver.getInstance().getMessageStorage().canUseMemory- group.getUsedMemory();
-                                            if (memoryAfter >= 0){
+                                    if (!delete.contains(group.getGroup())){
+                                        int minimal =  minonline - getActiveServices(group.getGroup());
+                                        for (int i = 0; i != minimal ; i++) {
+                                            if (group.getStorage().getRunningNode().equals("InternalNode")){
+                                                int memoryAfter = Driver.getInstance().getMessageStorage().canUseMemory- group.getUsedMemory();
+                                                if (memoryAfter >= 0){
+                                                    try {
+                                                        Thread.sleep(1000);
+                                                    } catch (InterruptedException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    String id = "";
+                                                    if (CloudManager.config.getUuid().equals("INT")){
+                                                        id = String.valueOf(CloudManager.serviceDriver.getFreeUUID( group.getGroup()));
+                                                    }else if (CloudManager.config.getUuid().equals("RANDOM")){
+                                                        id = getFreeUUID();
+                                                    }
+                                                    CloudManager.serviceDriver.register(new TaskedEntry(getFreePort(group.getGroupType().equalsIgnoreCase("PROXY")),
+                                                            group.getGroup(), group.getGroup() +
+                                                            CloudManager.config.getSplitter() + id,
+                                                            group.getStorage().getRunningNode(), CloudManager.config.getUseProtocol(), id));
+                                                    Driver.getInstance().getMessageStorage().canUseMemory  = Driver.getInstance().getMessageStorage().canUseMemory -
+                                                            group.getUsedMemory();
+
+                                                }
+                                            }else {
                                                 try {
                                                     Thread.sleep(1000);
                                                 } catch (InterruptedException e) {
@@ -374,37 +399,19 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                                                 }else if (CloudManager.config.getUuid().equals("RANDOM")){
                                                     id = getFreeUUID();
                                                 }
-                                                CloudManager.serviceDriver.register(new TaskedEntry(getFreePort(group.getGroupType().equalsIgnoreCase("PROXY")),
-                                                        group.getGroup(), group.getGroup() +
-                                                        CloudManager.config.getSplitter() + id,
-                                                        group.getStorage().getRunningNode(), CloudManager.config.getUseProtocol(), id));
-                                                Driver.getInstance().getMessageStorage().canUseMemory  = Driver.getInstance().getMessageStorage().canUseMemory -
-                                                        group.getUsedMemory();
+                                                CloudManager.serviceDriver.register(new TaskedEntry(-1, group.getGroup(), group.getGroup() +
+                                                        CloudManager.config.getSplitter() +id, group.getStorage().getRunningNode(),
+                                                        CloudManager.config.getUseProtocol(), id));
+                                            }
 
-                                            }
-                                        }else {
-                                            try {
-                                                Thread.sleep(1000);
-                                            } catch (InterruptedException e) {
-                                                e.printStackTrace();
-                                            }
-                                            String id = "";
-                                            if (CloudManager.config.getUuid().equals("INT")){
-                                                id = String.valueOf(CloudManager.serviceDriver.getFreeUUID( group.getGroup()));
-                                            }else if (CloudManager.config.getUuid().equals("RANDOM")){
-                                                id = getFreeUUID();
-                                            }
-                                            CloudManager.serviceDriver.register(new TaskedEntry(-1, group.getGroup(), group.getGroup() +
-                                                    CloudManager.config.getSplitter() +id, group.getStorage().getRunningNode(),
-                                                    CloudManager.config.getUseProtocol(), id));
                                         }
+                                        try {
+                                            Thread.sleep(1000);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
 
-                                    }
-                                    try {
-                                        Thread.sleep(1000);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
 
                                 });
                     }catch (Exception ignored){}

@@ -1,8 +1,9 @@
-package eu.metacloudservice.manager.commands;
+package eu.metacloudservice.node.commands;
 
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.terminal.animation.AnimationDriver;
 import eu.metacloudservice.terminal.commands.CommandAdapter;
+import eu.metacloudservice.terminal.commands.CommandInfo;
 import eu.metacloudservice.terminal.enums.Type;
 import eu.metacloudservice.terminal.utils.TerminalStorageLine;
 
@@ -13,7 +14,7 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-
+@CommandInfo(command = "update", DEdescription = "Aktualisierung des gesamten Cloudsystems", ENdescription = "Update the hole cloudsystem", aliases = {"upgrade"})
 public class UpdateCommand extends CommandAdapter {
     @Override
     public void performCommand(CommandAdapter command, String[] args) {

@@ -3,7 +3,7 @@ package eu.metacloudservice.storage;
 import com.google.common.io.BaseEncoding;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
-import eu.metacloudservice.configuration.dummys.restapi.UpdateConfig;
+import eu.metacloudservice.configuration.dummys.restapi.GeneralConfig;
 import eu.metacloudservice.events.EventDriver;
 import lombok.SneakyThrows;
 
@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 
 public class MessageStorage {
-    public String version = "BETA-1.0.6";
+    public String version = "BETA-1.0.7";
     public String language;
     public Integer canUseMemory = 0;
     public PacketLoader packetLoader;
@@ -29,7 +29,7 @@ public class MessageStorage {
 
     public LinkedList<String> consoleInput;
 
-    public String setuptype = "";
+    public String setupType = "";
 
     public MessageStorage() {
         packetLoader = new PacketLoader();
@@ -99,7 +99,7 @@ public class MessageStorage {
     @SneakyThrows
     public boolean checkAvailableUpdate() {
 
-        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/cloudversion.php").openStream()) {
+        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=general").openStream()) {
             final StringBuilder builder = new StringBuilder();
             BufferedReader bufferedReader;
 
@@ -109,7 +109,7 @@ public class MessageStorage {
                 builder.append((char) counter);
             }
             final String rawJson = builder.toString();
-            UpdateConfig updateConfig = (UpdateConfig) new ConfigDriver().convert(rawJson, UpdateConfig.class);
+            GeneralConfig updateConfig = (GeneralConfig) new ConfigDriver().convert(rawJson, GeneralConfig.class);
             if (!updateConfig.getLatestReleasedVersion().equalsIgnoreCase(version)) {
                 return true;
             }
@@ -124,7 +124,7 @@ public class MessageStorage {
     @SneakyThrows
     public String  getNewVersionName() {
 
-        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/cloudversion.php").openStream()) {
+        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=general").openStream()) {
             final StringBuilder builder = new StringBuilder();
             BufferedReader bufferedReader;
 
@@ -134,7 +134,7 @@ public class MessageStorage {
                 builder.append((char) counter);
             }
             final String rawJson = builder.toString();
-            UpdateConfig updateConfig = (UpdateConfig) new ConfigDriver().convert(rawJson, UpdateConfig.class);
+            GeneralConfig updateConfig = (GeneralConfig) new ConfigDriver().convert(rawJson, GeneralConfig.class);
             if (!updateConfig.getLatestReleasedVersion().equalsIgnoreCase(version)) {
                 return updateConfig.getLatestReleasedVersion();
             }

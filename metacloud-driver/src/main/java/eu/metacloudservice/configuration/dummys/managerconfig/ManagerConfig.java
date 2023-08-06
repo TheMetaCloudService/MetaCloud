@@ -19,7 +19,11 @@ public class ManagerConfig implements IConfigAdapter {
     @lombok.Getter
     private String uuid;
     @lombok.Setter
+    @lombok.Getter
     private boolean useProtocol;
+    @lombok.Setter
+    @lombok.Getter
+    private boolean autoUpdate;
     @lombok.Setter
     @lombok.Getter
     private Integer processorUsage;

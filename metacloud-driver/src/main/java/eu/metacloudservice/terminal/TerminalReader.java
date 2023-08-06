@@ -5,6 +5,7 @@ import eu.metacloudservice.terminal.commands.CommandDriver;
 import eu.metacloudservice.terminal.enums.Type;
 import eu.metacloudservice.terminal.screens.GroupSetup;
 import eu.metacloudservice.terminal.screens.MainSetup;
+import org.jline.reader.UserInterruptException;
 
 public final class TerminalReader extends Thread {
     private final TerminalDriver consoleDriver;
@@ -39,8 +40,8 @@ public final class TerminalReader extends Thread {
                             "The entered command was not found please type '§fhelp§r'");
 
                 }
-            } catch (Exception ignored) {
-                ignored.printStackTrace();
+            } catch (UserInterruptException ignored) {
+                commandDriver.executeCommand("stop");
             }
         }
     }
@@ -48,9 +49,9 @@ public final class TerminalReader extends Thread {
     private void handleSetupInput(String line) {
         if (line.equalsIgnoreCase("leave")) {
             consoleDriver.leaveSetup();
-        } else if (Driver.getInstance().getMessageStorage().setuptype.equalsIgnoreCase("MAINSETUP")) {
+        } else if (Driver.getInstance().getMessageStorage().setupType.equalsIgnoreCase("MAINSETUP")) {
             new MainSetup(line);
-        } else if (Driver.getInstance().getMessageStorage().setuptype.equalsIgnoreCase("GROUP")) {
+        } else if (Driver.getInstance().getMessageStorage().setupType.equalsIgnoreCase("GROUP")) {
             new GroupSetup(line);
         }
     }

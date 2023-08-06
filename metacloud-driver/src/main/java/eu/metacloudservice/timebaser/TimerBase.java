@@ -1,16 +1,18 @@
 package eu.metacloudservice.timebaser;
 
+import eu.metacloudservice.timebaser.interfaces.ITimerBase;
 import eu.metacloudservice.timebaser.utils.TimeUtil;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class TimerBase {
+public class TimerBase implements ITimerBase {
 
     private Timer timer;
 
     public TimerBase() {}
 
+    @Override
     public void schedule(TimerTask runnable, Integer time, TimeUtil timeUtil){
         Timer timer = new Timer();
         if (timeUtil == TimeUtil.SECONDS){
@@ -26,7 +28,7 @@ public class TimerBase {
         }
 
     }
-
+    @Override
     public void schedule(TimerTask runnable, Integer time, Integer secondTime, TimeUtil timeUtil){
         timer = new Timer();
         if (timeUtil == TimeUtil.SECONDS){
@@ -40,7 +42,7 @@ public class TimerBase {
         }
 
     }
-
+    @Override
     public boolean isCanceled(){
         if (timer == null){
             return true;
@@ -48,7 +50,7 @@ public class TimerBase {
             return false;
         }
     }
-
+    @Override
     public void cancel(){
         timer.cancel();
         timer = null;

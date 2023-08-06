@@ -66,7 +66,7 @@ public class ModuleLoader implements IModuleLoader {
                             "An error has occurred in module '§f"+getJarName()+"§r', please check your modules (#ERROR_12092)");
                     ignore.printStackTrace();
                 }
-            } catch (MalformedURLException e) {
+            } catch ( MalformedURLException e) {
                 throw new RuntimeException(e);
             }
         }

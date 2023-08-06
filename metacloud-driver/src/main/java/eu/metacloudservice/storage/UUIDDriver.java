@@ -67,8 +67,6 @@ public class UUIDDriver {
 
     public static String getUsername(String uuid) {
 
-
-
         if (uuids == null){
             uuids = new ArrayList<>();
         }

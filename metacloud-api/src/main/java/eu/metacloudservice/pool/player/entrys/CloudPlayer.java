@@ -100,6 +100,7 @@ public class CloudPlayer {
     public void dispatchCommand(@NonNull String command){
         CloudAPI.getInstance().sendPacketSynchronized(new PacketOutAPIPlayerDispactchCommand(username, command));
     }
+
     public String getSkinValue() {
         String urlString = "https://minecraft-api.com/api/uuid/" + username + "/json";
         try {
@@ -117,6 +118,10 @@ public class CloudPlayer {
         }
 
         return null;
+    }
+
+    public void setXp(int amount){
+        getServer().dispatchCommand("xp " + username + " " + amount);
     }
 
     public String getSkinSignature() {

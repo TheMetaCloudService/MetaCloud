@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class PlayerConfiguration implements IConfigAdapter {
 
-    private String UUID;
+    private String playerUuid;
 
     private ArrayList<GivenGroup> groups;
     private HashMap<String, HashMap<String, Object>> permissions;
@@ -17,11 +17,11 @@ public class PlayerConfiguration implements IConfigAdapter {
     }
 
     public String getUUID() {
-        return UUID;
+        return playerUuid;
     }
 
     public void setUUID(String UUID) {
-        this.UUID = UUID;
+        this.playerUuid = UUID;
     }
 
     public ArrayList<GivenGroup> getGroups() {

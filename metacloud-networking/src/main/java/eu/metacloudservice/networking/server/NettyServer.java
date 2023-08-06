@@ -104,8 +104,6 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
         }
     }
 
-
-
     private boolean allowAddress(String address){
         if (NettyDriver.getInstance().whitelist.contains(address)){
             return true;

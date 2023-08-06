@@ -5,6 +5,7 @@ import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
 import eu.metacloudservice.configuration.dummys.nodeconfig.NodeConfig;
 import eu.metacloudservice.groups.interfaces.ITemplateDriver;
+import eu.metacloudservice.terminal.animation.AnimationDriver;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 
@@ -23,16 +24,20 @@ public class TemplateDriver implements ITemplateDriver {
                     ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
                     if (bungee){
                         Driver.getInstance().getMessageStorage().packetLoader.loadBungee(config.getBungeecordVersion(), template+ "/default");
+                        new AnimationDriver().play();
 
                     }else {
-                        Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion().replace("-", "").replace(".", ""), template+ "/default");
+                        Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion(), template+ "/default");
+                        new AnimationDriver().play();
                     }
                 }else {
                     NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
                     if (bungee){
                         Driver.getInstance().getMessageStorage().packetLoader.loadBungee(config.getBungeecordVersion(), template + "/default");
+                        new AnimationDriver().play();
                     }else {
-                        Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion().replace("-", "").replace(".", ""), template+ "/default");
+                        Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion(), template+ "/default");
+                        new AnimationDriver().play();
                     }
                 }
             }
@@ -43,16 +48,20 @@ public class TemplateDriver implements ITemplateDriver {
                     ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
                     if (bungee){
                         Driver.getInstance().getMessageStorage().packetLoader.loadBungee(config.getBungeecordVersion(), template);
+                        new AnimationDriver().play();
 
                     }else {
-                        Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion().replace("-", "").replace(".", ""), template);
+                        Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion(), template);
+                        new AnimationDriver().play();
                     }
                 }else {
                     NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
                     if (bungee){
                         Driver.getInstance().getMessageStorage().packetLoader.loadBungee(config.getBungeecordVersion(), template);
+                        new AnimationDriver().play();
                     }else {
-                        Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion().replace("-", "").replace(".", ""), template);
+                        Driver.getInstance().getMessageStorage().packetLoader.loadSpigot(config.getSpigotVersion(), template);
+                        new AnimationDriver().play();
                     }
                 }
             }

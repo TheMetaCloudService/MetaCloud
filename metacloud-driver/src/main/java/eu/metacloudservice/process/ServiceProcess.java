@@ -8,6 +8,8 @@ import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.in.node.PacketInSendConsole;
+import eu.metacloudservice.process.interfaces.IServiceProcess;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 
@@ -16,17 +18,23 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Random;
 
-public class ServiceProcess {
+public class ServiceProcess implements IServiceProcess {
 
+    @Getter
     private final Group group;
+    @Getter
     private final String service;
+    @Getter
     private final int port;
+    @Getter
     private Process process;
+    @Getter
     private final boolean useProtocol;
+    @Getter
     private boolean useVelocity;
     public boolean useConsole;
     private   BufferedReader reader;
-    public final LinkedList<String> consoelStorage;
+    public final LinkedList<String> consoleStorage;
 
 
     public ServiceProcess(Group group, String service, int port, boolean useProtocol) {
@@ -35,13 +43,14 @@ public class ServiceProcess {
         this.port = port;
         this.useProtocol = useProtocol;
         this.useVelocity = false;
-        consoelStorage = new LinkedList<>();
+        consoleStorage = new LinkedList<>();
         useConsole = false;
 
 
     }
 
     @SneakyThrows
+    @Override
     public void sync(){
         if (process == null || this.port == 0 || this.service == null || this.group == null){
             return;
@@ -67,6 +76,7 @@ public class ServiceProcess {
     }
 
 
+    @Override
     public void handelConsole(){
         if (useConsole){
             useConsole = false;
@@ -75,7 +85,7 @@ public class ServiceProcess {
             new Thread(() -> {
                 String line;
 
-                consoelStorage.forEach(s -> {
+                consoleStorage.forEach(s -> {
                     if (new File("./service.json").exists()){
                         Driver.getInstance().getTerminalDriver().log(getService(), s);
                     }else {
@@ -84,7 +94,7 @@ public class ServiceProcess {
                 });
                     try {
                         while ((line = reader.readLine()) != null && useConsole){
-                            consoelStorage.add(line);
+                            consoleStorage.add(line);
                             if (new File("./service.json").exists()){
                                 Driver.getInstance().getTerminalDriver().log(getService(), line);
                             }else {
@@ -98,7 +108,7 @@ public class ServiceProcess {
             }).start();
         }
     }
-
+    @Override
     public void handelLaunch() {
 
         if (process != null || this.port == 0 || this.service == null || this.group == null ){
@@ -380,73 +390,32 @@ public class ServiceProcess {
         }
     }
 
-    public void handleRestart(){
-        if (process != null && process.isAlive()){
+    @Override
+    public void handleRestart() {
+        if (process != null && process.isAlive()) {
             process.destroy();
             process.destroyForcibly().destroy();
         }
 
 
-        LiveService liveService = new LiveService();
-        liveService.setService(service);
-
-        liveService.setGroup(group.getGroup());
-        liveService.setPort(port);
-        if (new File("./service.json").exists()){
-            ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
-            liveService.setManagerAddress(config.getManagerAddress());
-            liveService.setRunningNode("InternalNode");
-            liveService.setRestPort(config.getRestApiCommunication());
-            liveService.setNetworkPort(config.getNetworkingCommunication());
-            useVelocity = config.getBungeecordVersion().equalsIgnoreCase("VELOCITY");
-        }else {
-            NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
-            liveService.setManagerAddress(config.getManagerAddress());
-            liveService.setRestPort(config.getRestApiCommunication());
-            liveService.setRunningNode(config.getNodeName());
-            liveService.setNetworkPort(config.getNetworkingCommunication());
-            useVelocity = config.getBungeecordVersion().equalsIgnoreCase("VELOCITY");
-        }
-        new ConfigDriver("./live/" + group.getGroup() + "/" + service + "/CLOUDSERVICE.json").save(liveService);
-
-
-        try {
-            FileUtils.copyDirectory( new File("./local/GLOBAL/EVERY/"),
-                    new File("./live/" + group.getGroup() + "/" + service +"/"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            FileUtils.copyFile(new File("./connection.key"), new File("./live/" + group.getGroup() + "/" + service+ "/connection.key"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.directory(new File("./live/" + group.getGroup() + "/" + service + "/"));
-        if (!group.getStorage().getJavaEnvironment().isEmpty()){
-            processBuilder.environment().put("JAVA_HOME",group.getStorage().getJavaEnvironment());
+        if (!group.getStorage().getJavaEnvironment().isEmpty()) {
+            processBuilder.environment().put("JAVA_HOME", group.getStorage().getJavaEnvironment());
         }
 
         if (group.getGroupType().equals("PROXY")) {
 
-            if (!new File("./live/" + group.getGroup() + "/" + service+ "/server-icon.png").exists()){
+            if (!new File("./live/" + group.getGroup() + "/" + service + "/server-icon.png").exists()) {
                 try {
-                    FileUtils.copyFile(new File("./local/server-icon.png"), new File("./live/" + group.getGroup() + "/" + service+ "/server-icon.png"));
+                    FileUtils.copyFile(new File("./local/server-icon.png"), new File("./live/" + group.getGroup() + "/" + service + "/server-icon.png"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
 
-            try {
-                FileUtils.copyDirectory( new File("./local/GLOBAL/EVERY_PROXY/"),
-                        new File("./live/" + group.getGroup() + "/" + service +"/"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
-            if (useVelocity){
+            if (useVelocity) {
                 String[] command = new String[]{
                         "java",
                         "-XX:+UseG1GC",
@@ -460,7 +429,7 @@ public class ServiceProcess {
                         "-jar",
                         "server.jar"
                 };
-                File configFile = new File(System.getProperty("user.dir") + "/live/" + group.getGroup()+ "/" + service + "/", "velocity.toml");
+                File configFile = new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/", "velocity.toml");
                 final FileWriter fileWriter;
                 try {
                     fileWriter = new FileWriter(configFile);
@@ -479,7 +448,7 @@ public class ServiceProcess {
                         .limit(targetStringLength)
                         .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                         .toString();
-                File configFile2 = new File(System.getProperty("user.dir") + "/live/" + group.getGroup()+ "/" + service + "/", "forwarding.secret");
+                File configFile2 = new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/", "forwarding.secret");
                 final FileWriter fileWriter2;
                 try {
                     fileWriter2 = new FileWriter(configFile2);
@@ -491,7 +460,6 @@ public class ServiceProcess {
                 }
 
 
-
                 processBuilder.command(command);
                 try {
                     process = processBuilder.start();
@@ -499,7 +467,7 @@ public class ServiceProcess {
                     e.printStackTrace();
                 }
                 reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            }else {
+            } else {
                 String[] command = new String[]{
                         "java",
                         "-XX:+UseG1GC",
@@ -513,7 +481,7 @@ public class ServiceProcess {
                         "-jar",
                         "server.jar"
                 };
-                File configFile = new File(System.getProperty("user.dir") + "/live/" + group.getGroup()+ "/" + service + "/", "config.yml");
+                File configFile = new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/", "config.yml");
                 final FileWriter fileWriter;
                 try {
                     fileWriter = new FileWriter(configFile);
@@ -536,12 +504,6 @@ public class ServiceProcess {
             reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         } else {
 
-            try {
-                FileUtils.copyDirectory(new File("./local/GLOBAL/EVERY_SERVER/"),
-                        new File("./live/" + group.getGroup() + "/" + service + "/"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
             String[] command = new String[]{
                     "java",
@@ -602,10 +564,13 @@ public class ServiceProcess {
                 e.printStackTrace();
             }
             reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-         }
         }
+    }
+
+
 
     @SneakyThrows
+    @Override
     public void handelShutdown(){
 
         if (process != null && process.isAlive()){
@@ -620,8 +585,11 @@ public class ServiceProcess {
                 if (new File("./local/logs/services/"+group.getGroup()+"/" + service + ".json").exists()){
                     new File("./local/logs/services/" +group.getGroup()+"/"+ service + ".json").delete();
                 }
-                new File("./local/logs/services/"+group.getGroup()+"/").mkdirs();
-                FileUtils.copyFile(new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/logs/latest.log"), new File("./local/logs/services/"+group.getGroup()+"/" + service + ".json"));
+                if (new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/logs/").exists()){
+                    new File("./local/logs/services/"+group.getGroup()+"/").mkdirs();
+                    FileUtils.copyFile(new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/logs/latest.log"), new File("./local/logs/services/"+group.getGroup()+"/" + service + ".json"));
+
+                }
             }
         }else {
             NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
@@ -629,8 +597,11 @@ public class ServiceProcess {
                 if (new File("./local/logs/services/"+group.getGroup()+"/" + service + ".json").exists()){
                     new File("./local/logs/services/" +group.getGroup()+"/"+ service + ".json").delete();
                 }
-                new File("./local/logs/services/"+group.getGroup()+"/").mkdirs();
-                FileUtils.copyFile(new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/logs/latest.log"), new File("./local/logs/services/"+group.getGroup()+"/" + service + ".json"));
+                if (new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/logs/").exists()){
+                    new File("./local/logs/services/"+group.getGroup()+"/").mkdirs();
+                    FileUtils.copyFile(new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/logs/latest.log"), new File("./local/logs/services/"+group.getGroup()+"/" + service + ".json"));
+
+                }
             }
         }
 
@@ -659,26 +630,10 @@ public class ServiceProcess {
             if (Objects.requireNonNull(file.list()).length == 0) {
                 file.delete();
             }
-        }catch (IOException | InterruptedException e){}
+        }catch (IOException | InterruptedException ignored){}
     }
 
-    public Group getGroup() {
-        return group;
-    }
 
-    public String getService() {
-        return service;
-    }
 
-    public int getPort() {
-        return port;
-    }
 
-    public Process getProcess() {
-        return process;
-    }
-
-    public boolean isUseProtocol() {
-        return useProtocol;
-    }
 }

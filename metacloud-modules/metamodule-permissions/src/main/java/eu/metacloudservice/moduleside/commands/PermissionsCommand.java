@@ -4,6 +4,7 @@ import eu.metacloudservice.Driver;
 import eu.metacloudservice.config.groups.entry.GroupEntry;
 import eu.metacloudservice.config.player.PlayerConfiguration;
 import eu.metacloudservice.moduleside.MetaModule;
+import eu.metacloudservice.storage.UUIDDriver;
 import eu.metacloudservice.terminal.commands.CommandAdapter;
 import eu.metacloudservice.terminal.commands.CommandInfo;
 import eu.metacloudservice.terminal.enums.Type;
@@ -459,7 +460,9 @@ public class PermissionsCommand extends CommandAdapter {
                 }
             }else if (args[0].equalsIgnoreCase("user")){
 
-                if (args.length == 2){
+                if (args.length == 1){
+                    MetaModule.permissionDriver.getPlayers().forEach(playerConfiguration -> returns.add(new UUIDDriver().getUsername(playerConfiguration.getUUID())));
+                }else if (args.length == 2){
                     returns.add("addperm");
                     returns.add("delperm");
                     returns.add("addgroup");

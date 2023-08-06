@@ -4,6 +4,7 @@ import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfigNodes;
+import eu.metacloudservice.storage.PacketLoader;
 import org.jline.reader.Candidate;
 import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
@@ -16,6 +17,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TerminalCompleter  implements Completer {
 
@@ -35,7 +37,7 @@ public class TerminalCompleter  implements Completer {
         }else if (Driver.getInstance().getTerminalDriver().isInSetup()){
             final var result = new LinkedList<String>();
 
-            if (Driver.getInstance().getMessageStorage().setuptype.equalsIgnoreCase("GROUP")){
+            if (Driver.getInstance().getMessageStorage().setupType.equalsIgnoreCase("GROUP")){
 
                 if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 1){
                     result.add("LOBBY");
@@ -66,7 +68,7 @@ public class TerminalCompleter  implements Completer {
 
                 suggestions = result;
                 suggestions.stream().map(Candidate::new).forEach(list::add);
-            }else if (Driver.getInstance().getMessageStorage().setuptype.equalsIgnoreCase("MAINSETUP")){
+            }else if (Driver.getInstance().getMessageStorage().setupType.equalsIgnoreCase("MAINSETUP")){
                 if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 0){
                     if (!input.contains(" ")){
                         result.add("DE");
@@ -94,11 +96,7 @@ public class TerminalCompleter  implements Completer {
                 if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 4){
                     if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("MANAGER")){
                         if (!input.contains(" ")){
-                            result.add("WATERFALL");
-                            result.add("BUNGEECORD");
-                            result.add("VELOCITY");
-                            result.add("TRAVERTINE");
-                            result.add("HEXACORD");
+                            result.addAll(new PacketLoader().availableBungeecords());
 
                         }
                     }
@@ -106,92 +104,48 @@ public class TerminalCompleter  implements Completer {
                 if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 5){
                     if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("MANAGER")){
                         if (!input.contains(" ")){
-
                             if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("none")){
-                                result.add("SPIGOT");
-                                result.add("PAPER");
-                                result.add("PURPUR");
-                                result.add("FOLIA");
-                            }
-                            if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("SPIGOT")){
-                                result.add("SPIGOT-1.19.4");
-                                result.add("SPIGOT-1.19.3");
-                                result.add("SPIGOT-1.19.2");
-                                result.add("SPIGOT-1.18.2");
-                                result.add("SPIGOT-1.17.1");
-                                result.add("SPIGOT-1.16.5");
+                                List<String> spigots = new PacketLoader().availableSpigots();
+                                List<String> mainSpigots = new ArrayList<>();
+                                spigots.forEach(s -> {
+                                    if (!mainSpigots.contains(s.split("-")[0])) {
+                                        mainSpigots.add(s.split("-")[0]);
+                                    }
+                                });
+
+                                result.addAll(mainSpigots);
+                            }else {
+
+                                List<String> spigots = new PacketLoader().availableSpigots().stream().filter(s -> s.startsWith( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString())).collect(Collectors.toList());
+                                result.addAll(spigots);
                                 result.add("BACKTOMAIN");
-                            } if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("PAPER")){
-                                result.add("PAPER-1.19.4");
-                                result.add("PAPER-1.19.3");
-                                result.add("PAPER-1.19.2");
-                                result.add("PAPER-1.18.2");
-                                result.add("PAPER-1.17.1");
-                                result.add("PAPER-1.16.5");
-                                result.add("BACKTOMAIN");
-                            }if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("PURPUR")){
-                                result.add("PURPUR-1.19.4");
-                                result.add("PURPUR-1.19.3");
-                                result.add("PURPUR-1.19.2");
-                                result.add("PURPUR-1.18.2");
-                                result.add("PURPUR-1.17.1");
-                                result.add("PURPUR-1.16.5");
-                                result.add("BACKTOMAIN");
-                            }       if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("FOLIA")){
-                                result.add("BACKTOMAIN");
-                                result.add("FOLIA-1.19.4");
-                            }
+                             }
                         }
                     }
                 }
                 if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 6){
                     if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("NODE")){
                         if (!input.contains(" ")){
-                            result.add("WATERFALL");
-                            result.add("BUNGEECORD");
-                            result.add("VELOCITY");
-                            result.add("TRAVERTINE");
-                            result.add("HEXACORD");
+                            result.addAll(new PacketLoader().availableBungeecords());
                         }
                     }
                 }
                 if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 7){
                     if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("NODE")){
                         if (!input.contains(" ")){
-
                             if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("none")){
-                                result.add("SPIGOT");
-                                result.add("PAPER");
-                                result.add("PURPUR");
-                                result.add("FOLIA");
-                            }
-                            if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("FOLIA")){
-                                result.add("BACKTOMAIN");
-                                result.add("FOLIA-1.19.4");
-                            }
-                            if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("SPIGOT")){
-                                result.add("SPIGOT-1.19.4");
-                                result.add("SPIGOT-1.19.3");
-                                result.add("SPIGOT-1.19.2");
-                                result.add("SPIGOT-1.18.2");
-                                result.add("SPIGOT-1.17.1");
-                                result.add("SPIGOT-1.16.5");
-                                result.add("BACKTOMAIN");
-                            } if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("PAPER")){
-                                result.add("PAPER-1.19.4");
-                                result.add("PAPER-1.19.3");
-                                result.add("PAPER-1.19.2");
-                                result.add("PAPER-1.18.2");
-                                result.add("PAPER-1.17.1");
-                                result.add("PAPER-1.16.5");
-                                result.add("BACKTOMAIN");
-                            }if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("PURPUR")){
-                                result.add("PURPUR-1.19.4");
-                                result.add("PURPUR-1.19.3");
-                                result.add("PURPUR-1.19.2");
-                                result.add("PURPUR-1.18.2");
-                                result.add("PURPUR-1.17.1");
-                                result.add("PURPUR-1.16.5");
+                                List<String> spigots = new PacketLoader().availableSpigots();
+                                List<String> mainSpigots = new ArrayList<>();
+                                spigots.forEach(s -> {
+                                    if (!mainSpigots.contains(s.split("-")[0])) {
+                                        mainSpigots.add(s.split("-")[0]);
+                                    }
+                                });
+
+                                result.addAll(mainSpigots);
+                            }else {
+                                List<String> spigots = new PacketLoader().availableSpigots().stream().filter(s -> s.startsWith( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString())).collect(Collectors.toList());
+                                result.addAll(spigots);
                                 result.add("BACKTOMAIN");
                             }
                         }

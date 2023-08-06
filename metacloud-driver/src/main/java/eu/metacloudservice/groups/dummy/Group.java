@@ -20,6 +20,7 @@ public class Group implements IConfigAdapter {
     @Getter
     private Integer priority;
     @Getter
+    @Setter
     private String permission;
     @Setter
     @Getter

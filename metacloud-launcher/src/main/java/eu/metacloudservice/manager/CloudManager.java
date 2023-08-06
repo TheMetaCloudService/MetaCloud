@@ -43,6 +43,7 @@ import eu.metacloudservice.networking.out.service.playerbased.apibased.PacketOut
 import eu.metacloudservice.networking.out.service.playerbased.apibased.PacketOutAPIPlayerTitle;
 import eu.metacloudservice.networking.server.NettyServer;
 import eu.metacloudservice.storage.UUIDDriver;
+import eu.metacloudservice.terminal.animation.AnimationDriver;
 import eu.metacloudservice.terminal.enums.Type;
 import eu.metacloudservice.webserver.RestDriver;
 import eu.metacloudservice.webserver.dummys.Addresses;
@@ -64,6 +65,7 @@ import java.util.UUID;
 public class CloudManager {
 
     public static CloudServiceDriver serviceDriver;
+
     public static QueueDriver queueDriver;
     public static RestDriver restDriver;
     public static ManagerConfig config;
@@ -82,7 +84,6 @@ public class CloudManager {
         System.setProperty("io.netty.recycler.maxCapacity.default", "0");
         if (!new File("./modules/").exists()){
             new File("./modules/").mkdirs();
-            Driver.getInstance().getMessageStorage().packetLoader.loadModules();
         }
 
 
@@ -123,6 +124,7 @@ public class CloudManager {
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Versuche die Datei '§fserver-icon.png§r' herunter zuladen",
                     "Try to download the file '§fserver-icon.png§r'.");
             Driver.getInstance().getMessageStorage().packetLoader.loadLogo();
+            new AnimationDriver().play();
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
                     "The download was successful");
         }else {
@@ -131,7 +133,9 @@ public class CloudManager {
         if (!new File("./local/GLOBAL/EVERY/plugins/metacloud-plugin.jar").exists()){
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Versuche die Datei '§fmetacloud-plugin.jar§r' herunter zuladen",
                     "Try to download the file '§fmetacloud-plugin.jar§r'.");
+
             Driver.getInstance().getMessageStorage().packetLoader.loadPlugin();
+            new AnimationDriver().play();
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
                     "The download was successful");
         }
@@ -140,7 +144,9 @@ public class CloudManager {
         if (!new File("./local/GLOBAL/EVERY/plugins/metacloud-api.jar").exists()){
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Versuche die Datei '§fmetacloud-api.jar§r' herunter zuladen",
                     "Try to download the file '§fmetacloud-api.jar§r'.");
+
             Driver.getInstance().getMessageStorage().packetLoader.loadAPI();
+            new AnimationDriver().play();
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Der download war erfolgreich",
                     "The download was successful");
         }
@@ -159,6 +165,7 @@ public class CloudManager {
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new MetaCloudCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new QueueCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new PlayersCommand());
+        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new UpdateCommand());
 
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Es wurden '§f"+Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().size()+" Befehle§r' gefunden und geladen",
                 "There were '§f"+Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().size()+" commands§r' found and loaded");

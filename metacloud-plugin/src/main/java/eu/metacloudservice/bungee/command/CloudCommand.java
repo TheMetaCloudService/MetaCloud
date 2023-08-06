@@ -27,7 +27,7 @@ public class CloudCommand extends Command implements TabExecutor {
             ProxiedPlayer player = (ProxiedPlayer) commandSender;
             Messages messages = CloudAPI.getInstance().getMessages();
             String PREFIX = Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix()).replace("&", "§");
-            if (player.hasPermission("metacloud.command.cloud")){
+            if (player.hasPermission("metacloud.command.use")){
                 if (args.length == 0){
                     sendHelp(player);
                 }else {
@@ -240,11 +240,12 @@ public class CloudCommand extends Command implements TabExecutor {
                         }
                     }else if (args[0].equalsIgnoreCase("exit")){
                         AsyncCloudAPI.getInstance().dispatchCommand("shutdown");
+                        AsyncCloudAPI.getInstance().dispatchCommand("shutdown");
                     }else if (args[0].equalsIgnoreCase("version")){
                         player.sendMessage(PREFIX + "The cloud is currently running on version §8⯮ §f" + Driver.getInstance().getMessageStorage().version);
 
                     }else if (args[0].equalsIgnoreCase("reload")){
-                        AsyncCloudAPI.getInstance().dispatchCommand("reload");
+                        AsyncCloudAPI.getInstance().dispatchCommand("reload all");
                         player.sendMessage(PREFIX + "The network will now be reloaded");
                     }else {
                         sendHelp(player);
@@ -263,6 +264,7 @@ public class CloudCommand extends Command implements TabExecutor {
         String PREFIX = Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix()).replace("&", "§");
         player.sendMessage( PREFIX + "/cloud maintenance (group)");
         player.sendMessage( PREFIX + "/cloud maxplayers <amount> (group)");
+        player.sendMessage( PREFIX + "/cloud run <group> (amount)");
         player.sendMessage( PREFIX + "/cloud stop <service>");
         player.sendMessage( PREFIX + "/cloud stopgroup <group>");
         player.sendMessage( PREFIX + "/cloud whitelist (<add/remove>) (<player>)");
@@ -277,6 +279,7 @@ public class CloudCommand extends Command implements TabExecutor {
     @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
         Iterable<String> resuls = new ArrayList<>();
+
         return resuls;
     }
 }

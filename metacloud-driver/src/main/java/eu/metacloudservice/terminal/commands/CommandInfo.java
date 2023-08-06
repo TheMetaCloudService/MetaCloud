@@ -11,6 +11,7 @@ public @interface CommandInfo {
     String command();
     String ENdescription() default "";
     String DEdescription() default "";
+    String permission() default  "";
     String[] aliases() default {};
 
 }

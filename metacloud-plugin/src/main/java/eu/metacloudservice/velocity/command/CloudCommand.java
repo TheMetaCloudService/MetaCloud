@@ -31,7 +31,7 @@ public class CloudCommand implements SimpleCommand {
             Player player = (Player) invocation.source();
             Messages messages = CloudAPI.getInstance().getMessages();
             String PREFIX = Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix()).replace("&", "§");
-            if (player.hasPermission("metacloud.command.cloud")){
+            if (player.hasPermission("metacloud.command.use")){
                 if (args.length == 0){
                     sendHelp(player);
                 }else {
@@ -242,6 +242,7 @@ public class CloudCommand implements SimpleCommand {
                         }
                     }else if (args[0].equalsIgnoreCase("exit")){
                         AsyncCloudAPI.getInstance().dispatchCommand("shutdown");
+                        AsyncCloudAPI.getInstance().dispatchCommand("shutdown");
                     }else if (args[0].equalsIgnoreCase("version")){
                         player.sendMessage(Component.text(PREFIX + "The cloud is currently running on version §8⯮ §f" + Driver.getInstance().getMessageStorage().version));
                     }else if (args[0].equalsIgnoreCase("reload")){
@@ -263,7 +264,8 @@ public class CloudCommand implements SimpleCommand {
         String PREFIX = Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix()).replace("&", "§");
         player.sendMessage(Component.text(PREFIX + "/cloud maintenance (group)"));
         player.sendMessage(Component.text(PREFIX + "/cloud maxplayers <amount> (group)"));
-        player.sendMessage(Component.text(PREFIX + "/cloud stop <service> --force"));
+        player.sendMessage(Component.text(PREFIX + "/cloud run <group> (amount)"));
+        player.sendMessage(Component.text(PREFIX + "/cloud stop <service>"));
         player.sendMessage(Component.text(PREFIX + "/cloud stopgroup <group>"));
         player.sendMessage(Component.text(PREFIX + "/cloud whitelist (<add/remove>) (<player>)"));
         player.sendMessage(Component.text(PREFIX + "/cloud dispatch <service> <command>"));

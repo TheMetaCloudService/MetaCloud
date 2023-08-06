@@ -303,7 +303,6 @@ public class GroupSetup {
                 Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("network100", Integer.valueOf(line));
 
 
-                //template liste
                 ArrayList<String> templates = Driver.getInstance().getTemplateDriver().get();
 
                 String templateList;

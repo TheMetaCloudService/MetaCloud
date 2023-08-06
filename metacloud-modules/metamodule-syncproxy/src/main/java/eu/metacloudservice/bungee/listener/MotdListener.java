@@ -82,7 +82,7 @@ public class MotdListener  implements Listener {
                     .replace("%max_players%", "" + bungeeBootstrap.group.getMaxPlayers());
 
             String description = firstLine + "\n" + secondLine;
-            ping.setDescriptionComponent(BungeeComponentSerializer.get().serialize(Component.text(description))[0]);
+            ping.setDescription(description);
             ping.setVersion(serverProtocol);
             ping.setPlayers(players);
 
