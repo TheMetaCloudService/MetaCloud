@@ -9,11 +9,11 @@
     <br>
     ► <a href="https://discord.com/invite/4kKEcaP9WC">Discord</a>
     •
-    <a href="https://invis-cloud.de">Our Partner</a>
+    <a href="https://vortexhost.de">Our Partner</a>
     •
     <a href="https://metacloudservice.eu">Website</a>
     •
-    <a href="https://metacloudservice.eu/download/metacloud/metacloud-latest.zip">Download</a>
+    <a href="https://metacloudservice.eu/download/metacloud-latest.zip">Download</a>
      ◄
   </p>
 </p>
@@ -38,7 +38,7 @@ minimal requirements:
 ```
 + Download the zip data
 ```bash
-  wget https://metacloudservice.eu/download/metacloud/metacloud-latest.zip
+  wget https://metacloudservice.eu/download/metacloud-latest.zip
 ```
  + Unzip the **metacloud-latest.zip** in your folder
 ```bash
@@ -62,5 +62,5 @@ chmod +u start.sh
 - **CPU-Overload protaction** with **Queuesystem** and more 
 - Modular system with **comprehensive modules** like (*Syncproxy, Notify & more*)
 - Great scalability, thanks to the **multi-proxy** and **multi-root** function
-- Multiversion support for bungeecord's (*Bungeecod, Waterfall, Velocity, Travertine, Hexacord*) and Spigot's (*Spigot, Paperspigot, Foliaspigot, Purpurspigot*)
+- Multiversion support for bungeecord's (*Bungeecod, Waterfall, Velocity, Hexacord*) and Spigot's (*Spigot, Paperspigot, Foliaspigot, Galespigot, Pufferfishspigot, Bukkit, Purpurspigot*)
 
