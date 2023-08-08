@@ -67,8 +67,8 @@ public class TablistListener {
         VeloCityBootstrap bungeeBootstrap = VeloCityBootstrap.getInstance();
         CloudAPI cloudAPI = CloudAPI.getInstance();
 
-        String rawHeader = Driver.getInstance().getMessageStorage().base64ToUTF8(tablist.getHeader());
-        String rawFooter = Driver.getInstance().getMessageStorage().base64ToUTF8(tablist.getFooter());
+        String rawHeader = tablist.getHeader();
+        String rawFooter = tablist.getFooter();
         String playerName = player.getUsername();
         String playerUuid = player.getUniqueId().toString();
         String serviceName = player.getCurrentServer().get().getServerInfo().getName();

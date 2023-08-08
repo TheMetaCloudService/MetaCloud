@@ -110,7 +110,7 @@ public class CloudNode {
         NettyDriver.getInstance().nettyClient = new NettyClient();
          NettyDriver.getInstance().nettyClient.bind(config.getManagerAddress(), config.getNetworkingCommunication()).connect();
 
-        NettyDriver.getInstance().packetDriver
+        NettyDriver.getInstance().getPacketDriver()
 
                 /*
                 * in this part all packages and trader sent form the server are registered

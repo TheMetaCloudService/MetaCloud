@@ -16,6 +16,7 @@
         <module name="metamodule-permissions" />
         <module name="metacloud-driver" />
         <module name="metamodule-syncproxy" />
+        <module name="metamodule-hub" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -23,7 +24,6 @@
       <module name="metacloud-updater" target="16" />
       <module name="metamodule-balancer" target="16" />
       <module name="metamodule-cloudflare" target="17" />
-      <module name="metamodule-hub" target="16" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -39,7 +39,7 @@ public class MotdListener  implements Listener {
 
             ServerPing.PlayerInfo[] playerInfos = motd.getPlayerinfos().stream()
                     .map(info -> new ServerPing.PlayerInfo(
-                                  Driver.getInstance().getMessageStorage().base64ToUTF8(info).replace("&", "§"),
+                                  info.replace("&", "§"),
                             UUID.randomUUID().toString()))
                     .toArray(ServerPing.PlayerInfo[]::new);
             ServerPing.Players players = new ServerPing.Players(
@@ -48,7 +48,7 @@ public class MotdListener  implements Listener {
                     playerInfos.length > 0 ? playerInfos : null);
             String protocol = motd.getProtocol();
             String protocolString = protocol != null && !protocol.isEmpty() ?
-                   Driver.getInstance().getMessageStorage().base64ToUTF8(protocol)
+                  protocol
                             .replace("&", "§")
                             .replace("%proxy_name%", bungeeBootstrap.getLiveService().getService())
                             .replace("%proxy_node%", bungeeBootstrap.getLiveService().getRunningNode())
@@ -61,7 +61,7 @@ public class MotdListener  implements Listener {
                     "§7" + cloudAPI.getPlayerPool().getPlayers().size() + "/" + bungeeBootstrap.group.getMaxPlayers();
 
             ServerPing.Protocol serverProtocol = new ServerPing.Protocol(protocolString, ping.getVersion().getProtocol() - 1);
-            String firstLine = Driver.getInstance().getMessageStorage().base64ToUTF8(motd.getFirstline())
+            String firstLine =motd.getFirstline()
                     .replace("&", "§")
                     .replace("%proxy_name%", bungeeBootstrap.getLiveService().getService())
                     .replace("%proxy_node%", bungeeBootstrap.getLiveService().getRunningNode())
@@ -71,7 +71,7 @@ public class MotdListener  implements Listener {
                     .replace("%online_players%", "" + cloudAPI.getPlayerPool().getPlayers().size())
                     .replace("%max_players%", "" + bungeeBootstrap.group.getMaxPlayers());
 
-            String secondLine = Driver.getInstance().getMessageStorage().base64ToUTF8(motd.getSecondline())
+            String secondLine = motd.getSecondline()
                     .replace("&", "§")
                     .replace("%proxy_name%", bungeeBootstrap.getLiveService().getService())
                     .replace("%proxy_node%", bungeeBootstrap.getLiveService().getRunningNode())

@@ -20,7 +20,6 @@ public class SignDriver {
     public SignDriver() {
         cloudSigns = new ArrayList<>();
         worker = new SignWorker();
-        worker.setDaemon(true);
         worker.start();
     }
 
@@ -64,7 +63,7 @@ public class SignDriver {
     public CloudSign findFreeSign(String group){
         return cloudSigns.parallelStream()
                 .filter(cloudSign -> cloudSign.getGroup().equalsIgnoreCase(group))
-                .filter(cloudSign -> cloudSign.getServer().isEmpty())
+                .filter(cloudSign -> cloudSign.getServer().equalsIgnoreCase(""))
                 .findFirst().orElse(null);
     }
 

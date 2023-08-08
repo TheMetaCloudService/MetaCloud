@@ -55,7 +55,7 @@ public class CloudConnectListener {
         Group group = CloudAPI.getInstance().getGroups().parallelStream().filter(group1 -> group1.getGroup().equalsIgnoreCase(service.getGroup())).findFirst().get();
 
         if (CloudAPI.getInstance().getPlayerPool().getPlayers().stream().anyMatch(cloudPlayer -> cloudPlayer.getUsername().equalsIgnoreCase(event.getPlayer().getUsername()))){
-            event.getPlayer().disconnect(Component.text(Driver.getInstance().getMessageStorage().base64ToUTF8(CloudAPI.getInstance().getMessages().getKickAlreadyOnNetwork()).replace("&", "§")));
+            event.getPlayer().disconnect(Component.text(CloudAPI.getInstance().getMessages().getKickAlreadyOnNetwork().replace("&", "§")));
         }
 
         this.connected.add(event.getPlayer().getUniqueId());
@@ -64,17 +64,17 @@ public class CloudConnectListener {
         if (group.isMaintenance()
                 && !server.getPlayer(event.getPlayer().getUniqueId()).get().hasPermission("metacloud.connection.maintenance")
                 && !CloudAPI.getInstance().getWhitelist().contains(server.getPlayer(event.getPlayer().getUniqueId()).get().getUsername())){
-            event.getPlayer().disconnect(Component.text(Driver.getInstance().getMessageStorage().base64ToUTF8(CloudAPI.getInstance().getMessages().getKickNetworkIsMaintenance()).replace("&", "§")));
+            event.getPlayer().disconnect(Component.text(CloudAPI.getInstance().getMessages().getKickNetworkIsMaintenance().replace("&", "§")));
 
         }else if (CloudAPI.getInstance().getPlayerPool().getPlayers().size() >= group.getMaxPlayers().intValue()
 
                 && !server.getPlayer(event.getPlayer().getUniqueId()).get().hasPermission("metacloud.connection.full")
                 && !CloudAPI.getInstance().getWhitelist().contains(server.getPlayer(event.getPlayer().getUniqueId()).get().getUsername())){
-            event.getPlayer().disconnect(Component.text(Driver.getInstance().getMessageStorage().base64ToUTF8(CloudAPI.getInstance().getMessages().getKickNetworkIsFull()).replace("&", "§")));
+            event.getPlayer().disconnect(Component.text(CloudAPI.getInstance().getMessages().getKickNetworkIsFull().replace("&", "§")));
 
         }else if (server.getPlayer(event.getPlayer().getUniqueId()).isPresent()
                 && VelocityBootstrap.getLobby( server.getPlayer(event.getPlayer().getUniqueId()).get()) == null){
-            event.getPlayer().disconnect(Component.text(Driver.getInstance().getMessageStorage().base64ToUTF8(CloudAPI.getInstance().getMessages().getKickNoFallback()).replace("&", "§")));
+            event.getPlayer().disconnect(Component.text(CloudAPI.getInstance().getMessages().getKickNoFallback().replace("&", "§")));
 
         }
     }
@@ -98,7 +98,7 @@ public class CloudConnectListener {
             if (target != null) {
                 event.setResult(KickedFromServerEvent.RedirectPlayer.create(server.getServer(target.getName()).get()));
             } else {
-                event.setResult(KickedFromServerEvent.DisconnectPlayer.create(Component.text(Driver.getInstance().getMessageStorage().base64ToUTF8(CloudAPI.getInstance().getMessages().getKickNoFallback()).replace("&", "§"))));
+                event.setResult(KickedFromServerEvent.DisconnectPlayer.create(Component.text(CloudAPI.getInstance().getMessages().getKickNoFallback().replace("&", "§"))));
 
             }
         }

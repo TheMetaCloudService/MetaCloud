@@ -2,21 +2,27 @@
  * this class is by RauchigesEtwas
  */
 
-package eu.metacloudservice.webserver.remastered;
+/*
+ * this class is by RauchigesEtwas
+ */
+
+package eu.metacloudservice.webserver;
 
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.authenticator.AuthenticatorKey;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
 import eu.metacloudservice.webserver.entry.RouteEntry;
-import eu.metacloudservice.webserver.remastered.handel.RequestGET;
+import eu.metacloudservice.webserver.handel.RequestGET;
+import eu.metacloudservice.webserver.handel.RequestNotFound;
+import eu.metacloudservice.webserver.handel.RequestPUT;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpRequestDecoder;
+import io.netty.handler.codec.http.HttpResponseEncoder;
 import lombok.SneakyThrows;
 
 import java.util.ArrayList;
@@ -27,38 +33,63 @@ public class WebServer {
 
     private final ArrayList<RouteEntry> ROUTES;
     public final String AUTH_KEY;
-    private final ManagerConfig config;
+
+    private final EventLoopGroup boosGroup;
+    private final EventLoopGroup workerGroup;
+
+    private Thread current;
+
     @SneakyThrows
     public WebServer() {
 
         AuthenticatorKey authConfig = (AuthenticatorKey) new ConfigDriver("./connection.key").read(AuthenticatorKey.class);
         this.AUTH_KEY = Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey());
-        this.config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+        ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
         this.ROUTES = new ArrayList<>();
 
-        EventLoopGroup boosGroup = new NioEventLoopGroup(1);
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+         boosGroup = new NioEventLoopGroup(1);
+         workerGroup = new NioEventLoopGroup();
 
-        try {
+            current = new Thread(() -> {
+                try {
+                    ServerBootstrap bootstrap = new ServerBootstrap()
+                            .group(boosGroup, workerGroup)
+                            .channel(NioServerSocketChannel.class)
+                            .childHandler(new ChannelInitializer<>() {
+                                @Override
+                                protected void initChannel(Channel ch) {
+                                    ch.pipeline().addLast(new ChannelHandler() {
+                                        @Override
+                                        public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
 
-            ServerBootstrap bootstrap = new ServerBootstrap()
-                    .group(boosGroup, workerGroup)
-                    .channel(NioServerSocketChannel.class)
-                    .childHandler(new ChannelInitializer<>() {
-                        @Override
-                        protected void initChannel(Channel ch) {
-                            ch.pipeline().addLast(new RequestGET()); // ALL GET REQUESTS WAS LOAD
-                        }
-                    });
-            ChannelFuture future = bootstrap.bind(8080).sync();
+                                        }
 
-            Channel channel = future.channel();
-            channel.closeFuture().sync();
+                                        @Override
+                                        public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
 
-        }finally {
-            workerGroup.shutdownGracefully();
-            boosGroup.shutdownGracefully();
-        }
+                                        }
+
+                                        @Override
+                                        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+
+                                        }
+                                    });
+                                    ch.pipeline().addLast(new HttpRequestDecoder());
+                                    ch.pipeline().addLast(new HttpResponseEncoder());
+                                    ch.pipeline().addLast(new HttpObjectAggregator(65536));
+                                    ch.pipeline().addLast(new RequestGET()); // ALL GET REQUESTS WAS LOAD
+                                    ch.pipeline().addLast(new RequestNotFound());
+                                    ch.pipeline().addLast(new RequestPUT());
+                                }
+                            });
+                    ChannelFuture future = bootstrap.bind(config.getRestApiCommunication()).sync();
+
+                    Channel channel = future.channel();
+                    channel.closeFuture().sync();
+                }catch (Exception e){
+                }
+            });
+        current.start();
     }
 
     public String getRoute(String path){
@@ -67,10 +98,15 @@ public class WebServer {
         return ROUTES.parallelStream().filter(routeEntry -> routeEntry.readROUTE().equalsIgnoreCase(path)).findFirst().get().channelRead();
     }
 
+
+
     public RouteEntry getRoutes(String path){
 
         return  ROUTES.parallelStream().filter(routeEntry -> routeEntry.readROUTE().equalsIgnoreCase(path)).findFirst().orElse(null);
     }
+
+
+
     public void addRoute(RouteEntry entry){
         ROUTES.add(entry);
     }
@@ -84,5 +120,10 @@ public class WebServer {
     }
 
 
-
+    public void close() {
+        current.stop();
+        current.interrupt();
+        workerGroup.shutdownGracefully();
+        boosGroup.shutdownGracefully();
+    }
 }

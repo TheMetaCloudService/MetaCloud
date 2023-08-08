@@ -16,14 +16,14 @@ public class HubCommand implements SimpleCommand {
             Player player = (Player) invocation.source();
             Messages messages = CloudAPI.getInstance().getMessages();
             if (CloudAPI.getInstance().getPlayerPool().getPlayer(player.getUsername()).getServer().getGroup().getGroupType().equalsIgnoreCase("LOBBY")){
-                player.sendMessage(Component.text(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getAlreadyOnFallback()).replace("%PREFIX%", Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix()))));
+                player.sendMessage(Component.text(messages.getAlreadyOnFallback().replace("%PREFIX%", messages.getPrefix())));
             }else {
                 if (VelocityBootstrap.getLobby(player) == null){
-                    player.sendMessage(Component.text(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getNoFallbackServer()).replace("%PREFIX%", Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix()))));
-                }else {
+                    player.sendMessage(Component.text(messages.getNoFallbackServer().replace("%PREFIX%", messages.getPrefix())));
+                  }else {
                     CloudService fallback = VelocityBootstrap.getLobby(player);
                     player.createConnectionRequest(VelocityBootstrap.proxyServer.getServer(fallback.getName()).get());
-                    player.sendMessage(Component.text(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getSuccessfullyConnected()).replace("%PREFIX%", Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix())).replace("%SERVICE%", fallback.getName())));
+                    player.sendMessage(Component.text(messages.getSuccessfullyConnected().replace("%PREFIX%", messages.getPrefix())));
                 }
             }
         }

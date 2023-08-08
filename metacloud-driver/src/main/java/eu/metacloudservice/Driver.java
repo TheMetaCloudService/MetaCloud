@@ -1,7 +1,6 @@
 package eu.metacloudservice;
 
 
-import eu.metacloudservice.events.EventDriver;
 import eu.metacloudservice.groups.GroupDriver;
 import eu.metacloudservice.groups.TemplateDriver;
 import eu.metacloudservice.module.ModuleDriver;
@@ -18,6 +17,7 @@ public class Driver {
     private final TemplateDriver templateDriver;
     private final ModuleDriver moduleDriver;
     private WebServer webServer;
+
 
 
     public Driver(){

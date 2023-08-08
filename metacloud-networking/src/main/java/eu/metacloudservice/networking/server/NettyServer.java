@@ -13,16 +13,21 @@ import io.netty.channel.epoll.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.channel.unix.UnixChannelOption;
 import lombok.SneakyThrows;
 
 import java.net.InetSocketAddress;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 
 public class NettyServer extends ChannelInitializer<Channel> implements AutoCloseable{
     private int port;
+
+    protected static final WriteBufferWaterMark WATER_MARK = new WriteBufferWaterMark(1 << 20, 1 << 21);
     private final boolean EPOLL = Epoll.isAvailable();
-    private final HashMap<String, Channel> CHANNELS = new HashMap<>();
+    private final Map<String, Channel> CHANNELS = new ConcurrentHashMap<>();
     EventLoopGroup WORKER;
     EventLoopGroup BOSS;
     public NettyServer bind(int port) {
@@ -45,16 +50,18 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
         ServerBootstrap bootstrap = new ServerBootstrap()
                 .group(BOSS, WORKER)
                 .channel(isEpoll ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
-                .childHandler(this)
-                .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-                .childOption(ChannelOption.TCP_NODELAY, true)
-                .childOption(ChannelOption.SO_KEEPALIVE, true);
+                .childHandler(this);
 
         if(isEpoll) {
             bootstrap
-                    .childOption(EpollChannelOption.EPOLL_MODE, EpollMode.LEVEL_TRIGGERED)
-                    .option(EpollChannelOption.TCP_FASTOPEN, 3)
-                    .option(EpollChannelOption.SO_REUSEPORT, true);
+                    .option(ChannelOption.IP_TOS, 0x18)
+                    .option(ChannelOption.TCP_FASTOPEN, 3)
+                    .option(ChannelOption.AUTO_READ, true)
+                    .option(UnixChannelOption.SO_REUSEPORT, true)
+                    .option(ChannelOption.TCP_NODELAY, true)
+                    .option(ChannelOption.SO_REUSEADDR, true)
+                    .option(ChannelOption.SO_KEEPALIVE, true)
+                    .option(ChannelOption.WRITE_BUFFER_WATER_MARK, WATER_MARK);
         }
 
         bootstrap.bind(new InetSocketAddress(port)).sync().channel();
@@ -105,7 +112,7 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
     }
 
     private boolean allowAddress(String address){
-        if (NettyDriver.getInstance().whitelist.contains(address)){
+        if (NettyDriver.getInstance().getWhitelist().contains(address)){
             return true;
         }else {
             return false;

@@ -1,13 +1,10 @@
 package eu.metacloudservice.api;
 
 import eu.metacloudservice.CloudAPI;
-import eu.metacloudservice.Driver;
 import eu.metacloudservice.config.Configuration;
 import eu.metacloudservice.config.Locations;
 import eu.metacloudservice.config.SignLocation;
 import eu.metacloudservice.configuration.ConfigDriver;
-import eu.metacloudservice.serverside.bukkit.BukkitBootstrap;
-import eu.metacloudservice.webserver.RestDriver;
 
 import java.util.ArrayList;
 
@@ -34,9 +31,9 @@ public class SignsAPI {
         return ((Configuration) new ConfigDriver().convert( CloudAPI.getInstance().getRestDriver().get("/module/signs/configuration"), Configuration.class));
     }
 
-    public void createSign(SignLocation location){
+    public void createSign(SignLocation location){            System.out.println("TEST#1");
         if (getSigns().stream().noneMatch(location1 -> location1.getSignUUID().equals(location.getSignUUID()))){
-            ArrayList<SignLocation> update = getSigns();
+            System.out.println("TEST#2");
             Locations l =  (Locations) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/module/signs/locations"), Locations.class);
             l.getLocations().add(location);
             CloudAPI.getInstance().getRestDriver().put("/module/signs/locations", new ConfigDriver().convert(l));

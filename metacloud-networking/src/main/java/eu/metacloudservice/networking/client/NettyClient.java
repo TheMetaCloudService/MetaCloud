@@ -15,6 +15,8 @@ import java.net.InetSocketAddress;
 public class NettyClient extends ChannelInitializer<Channel> implements AutoCloseable {
     private int port;
     private String host;
+    private static final int CONNECTION_TIMEOUT_MILLIS = 5_000;
+    private static final WriteBufferWaterMark WATER_MARK = new WriteBufferWaterMark(1 << 20, 1 << 21);
     private final boolean EPOLL = Epoll.isAvailable();
     private Channel channel;
 
@@ -35,15 +37,13 @@ public class NettyClient extends ChannelInitializer<Channel> implements AutoClos
                 .group(BOSS)
                 .channel(Epoll.isAvailable() ? EpollSocketChannel.class : NioSocketChannel.class)
                 .handler(this)
+                .option(ChannelOption.IP_TOS, 0x18)
+                .option(ChannelOption.AUTO_READ, true)
                 .option(ChannelOption.TCP_NODELAY, true)
-                .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
+                .option(ChannelOption.SO_REUSEADDR, true)
+                .option(ChannelOption.WRITE_BUFFER_WATER_MARK, WATER_MARK)
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, CONNECTION_TIMEOUT_MILLIS);
 
-        // Check for extra epoll-options
-        if (Epoll.isAvailable()) {
-            bootstrap
-                    .option(EpollChannelOption.EPOLL_MODE, EpollMode.LEVEL_TRIGGERED)
-                    .option(EpollChannelOption.TCP_FASTOPEN_CONNECT, true);
-        }
 
         try {
             this.channel = bootstrap.connect(new InetSocketAddress(host, port)).sync().channel();

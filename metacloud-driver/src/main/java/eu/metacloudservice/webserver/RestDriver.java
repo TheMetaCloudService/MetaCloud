@@ -12,6 +12,7 @@ import lombok.SneakyThrows;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 public class RestDriver {
 
@@ -43,51 +44,43 @@ public class RestDriver {
     }
 
     public String put(String route, String content){
-        ConfigDriver configDriver = new ConfigDriver("./connection.key");
-        AuthenticatorKey authConfig = (AuthenticatorKey) configDriver.read(AuthenticatorKey.class);
-        String authCheckKey = Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey());
-        String urlString = String.format("http://%s:%d/%s%s", ip, port, authCheckKey, route);
-        URL url  = null;
-        HttpURLConnection con = null;
-        BufferedReader in = null;
+
+        String result = null;
         try {
-            url =  new URL(urlString);
-            con = (HttpURLConnection) url.openConnection();
+            ConfigDriver configDriver = new ConfigDriver("./connection.key");
+            AuthenticatorKey authConfig = (AuthenticatorKey) configDriver.read(AuthenticatorKey.class);
+            String authCheckKey = Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey());
+            String urlString = String.format("http://%s:%d/%s%s", ip, port, authCheckKey, route);
+            URL url = new URL(urlString);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
             con.setRequestMethod("PUT");
             con.setDoOutput(true);
             con.setConnectTimeout(5000); // Set connection timeout to 5 seconds
-            con.setReadTimeout(5000); // Set read timeout to 5 seconds
-            OutputStream os = con.getOutputStream();
-            os.write(content.getBytes());
-            os.flush();
-            os.close();
+            con.setReadTimeout(5000);    // Set read timeout to 5 seconds
+
+            try (OutputStream os = con.getOutputStream()) {
+                os.write(content.getBytes());
+                os.flush();
+            }
+
             int statusCode = con.getResponseCode();
             if (statusCode == HttpURLConnection.HTTP_OK) {
-                in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                StringBuilder response = new StringBuilder();
-                String inputLine;
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+                    StringBuilder response = new StringBuilder();
+                    String inputLine;
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
+                    }
+                    result = response.toString();
                 }
-                content = response.toString();
             } else {
+                // Handle non-OK status code if needed
             }
         } catch (IOException e) {
-
-        } finally {
-            // Clean up resources
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                }
-            }
-            if (con != null) {
-                con.disconnect();
-            }
+            // Handle IOException if needed
         }
-
-        return content;
+        return result;
 
     }
 
@@ -108,7 +101,7 @@ public class RestDriver {
             con.connect();
             int statusCode = con.getResponseCode();
             if (statusCode == HttpURLConnection.HTTP_OK) {
-                in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                in = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
                 StringBuilder response = new StringBuilder();
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {

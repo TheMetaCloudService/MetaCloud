@@ -3,22 +3,23 @@ package eu.metacloudservice.moduleside;
 import eu.metacloudservice.config.*;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
-import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.module.extention.IModule;
 import eu.metacloudservice.moduleside.commands.SyncProxyCommand;
+import eu.metacloudservice.moduleside.events.SyncEvents;
 import eu.metacloudservice.webserver.entry.RouteEntry;
-import org.checkerframework.checker.units.qual.C;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
 public class MetaModule implements IModule {
     @Override
     public void load() {
-        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new SyncProxyCommand());
+
+
         create();
         set();
+        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new SyncProxyCommand());
+        Driver.getInstance().getMessageStorage().eventDriver.registerListener(new SyncEvents());
     }
 
     @Override
@@ -121,68 +122,7 @@ public class MetaModule implements IModule {
 
         try {
             Configuration config = (Configuration) new ConfigDriver("./modules/syncproxy/config.json").read(Configuration.class);
-            ArrayList<DesignConfig> designs = new ArrayList<>();
-            config.getConfiguration().forEach(designConfig -> {
-
-                ArrayList<Motd> maintenance = new ArrayList<>();
-                ArrayList<Motd> defaults = new ArrayList<>();
-                ArrayList<Tablist> tablist = new ArrayList<>();
-
-                designConfig.getTablist().forEach(ct -> {
-                    Tablist tab = new Tablist();
-                    tab.setHeader(Driver.getInstance().getMessageStorage().utf8ToUBase64(ct.getHeader()));
-                    tab.setFooter(Driver.getInstance().getMessageStorage().utf8ToUBase64(ct.getFooter()));
-                    tablist.add(tab);
-                });
-                designConfig.getDefaults().forEach(cmotd -> {
-                    ArrayList<String> playerlist = new ArrayList<>();
-                    Motd motd = new Motd();
-                    if (cmotd.getProtocol() == null){
-                        motd.setProtocol(null);
-                    }else {
-                        motd.setProtocol(Driver.getInstance().getMessageStorage().utf8ToUBase64(cmotd.getProtocol()));
-                    }
-
-                    motd.setFirstline(Driver.getInstance().getMessageStorage().utf8ToUBase64(cmotd.getFirstline()));
-                    motd.setSecondline(Driver.getInstance().getMessageStorage().utf8ToUBase64(cmotd.getSecondline()));
-                    cmotd.getPlayerinfos().forEach(s -> {
-                        playerlist.add(Driver.getInstance().getMessageStorage().utf8ToUBase64(s));
-                    });
-                    motd.setPlayerinfos(playerlist);
-                    defaults.add(motd);
-                });
-                designConfig.getMaintenancen().forEach(cmotd -> {
-                    ArrayList<String> playerlist = new ArrayList<>();
-                    Motd motd = new Motd();
-                    if (cmotd.getProtocol() == null){
-                        motd.setProtocol(null);
-                    }else {
-                        motd.setProtocol(Driver.getInstance().getMessageStorage().utf8ToUBase64(cmotd.getProtocol()));
-                    }
-
-                    motd.setFirstline(Driver.getInstance().getMessageStorage().utf8ToUBase64(cmotd.getFirstline()));
-                    motd.setSecondline(Driver.getInstance().getMessageStorage().utf8ToUBase64(cmotd.getSecondline()));
-                    cmotd.getPlayerinfos().forEach(s -> {
-                        playerlist.add(Driver.getInstance().getMessageStorage().utf8ToUBase64(s));
-                    });
-                    motd.setPlayerinfos(playerlist);
-                    maintenance.add(motd);
-                });
-
-                DesignConfig moduleConfig = new DesignConfig();
-                moduleConfig.setTargetGroup(designConfig.getTargetGroup());
-                moduleConfig.setMotdEnabled(designConfig.isMotdEnabled());
-                moduleConfig.setTabEnabled(designConfig.isTabEnabled());
-                moduleConfig.setMaintenancen(maintenance);
-                moduleConfig.setDefaults(defaults);
-                moduleConfig.setTablist(tablist);
-                designs.add(moduleConfig);
-            });
-
-            Configuration update = new Configuration();
-            update.setConfiguration(designs);
-
-            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/syncproxy/configuration", new ConfigDriver().convert(update)));
+            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/syncproxy/configuration", new ConfigDriver().convert(config)));
         }catch (Exception e){
             create();
             set();
@@ -194,68 +134,8 @@ public class MetaModule implements IModule {
         try {
 
             Configuration config = (Configuration) new ConfigDriver("./modules/syncproxy/config.json").read(Configuration.class);
-            ArrayList<DesignConfig> designs = new ArrayList<>();
-            config.getConfiguration().forEach(designConfig -> {
 
-                ArrayList<Motd> maintenance = new ArrayList<>();
-                ArrayList<Motd> defaults = new ArrayList<>();
-                ArrayList<Tablist> tablist = new ArrayList<>();
-
-                designConfig.getTablist().forEach(ct -> {
-                    Tablist tab = new Tablist();
-                    tab.setHeader(Driver.getInstance().getMessageStorage().utf8ToUBase64(ct.getHeader()));
-                    tab.setFooter(Driver.getInstance().getMessageStorage().utf8ToUBase64(ct.getFooter()));
-                    tablist.add(tab);
-                });
-                designConfig.getDefaults().forEach(cmotd -> {
-                    ArrayList<String> playerlist = new ArrayList<>();
-                    Motd motd = new Motd();
-                    if (cmotd.getProtocol() == null){
-                        motd.setProtocol(null);
-                    }else {
-                        motd.setProtocol(Driver.getInstance().getMessageStorage().utf8ToUBase64(cmotd.getProtocol()));
-                    }
-
-                    motd.setFirstline(Driver.getInstance().getMessageStorage().utf8ToUBase64(cmotd.getFirstline()));
-                    motd.setSecondline(Driver.getInstance().getMessageStorage().utf8ToUBase64(cmotd.getSecondline()));
-                    cmotd.getPlayerinfos().forEach(s -> {
-                        playerlist.add(Driver.getInstance().getMessageStorage().utf8ToUBase64(s));
-                    });
-                    motd.setPlayerinfos(playerlist);
-                    defaults.add(motd);
-                });
-                designConfig.getMaintenancen().forEach(cmotd -> {
-                    ArrayList<String> playerlist = new ArrayList<>();
-                    Motd motd = new Motd();
-                    if (cmotd.getProtocol() == null){
-                        motd.setProtocol(null);
-                    }else {
-                        motd.setProtocol(Driver.getInstance().getMessageStorage().utf8ToUBase64(cmotd.getProtocol()));
-                    }
-
-                    motd.setFirstline(Driver.getInstance().getMessageStorage().utf8ToUBase64(cmotd.getFirstline()));
-                    motd.setSecondline(Driver.getInstance().getMessageStorage().utf8ToUBase64(cmotd.getSecondline()));
-                    cmotd.getPlayerinfos().forEach(s -> {
-                        playerlist.add(Driver.getInstance().getMessageStorage().utf8ToUBase64(s));
-                    });
-                    motd.setPlayerinfos(playerlist);
-                    maintenance.add(motd);
-                });
-
-                DesignConfig moduleConfig = new DesignConfig();
-                moduleConfig.setMaintenancen(maintenance);
-                moduleConfig.setDefaults(defaults);
-                moduleConfig.setTargetGroup(designConfig.getTargetGroup());
-                moduleConfig.setMotdEnabled(designConfig.isMotdEnabled());
-                moduleConfig.setTabEnabled(designConfig.isTabEnabled());
-                moduleConfig.setTablist(tablist);
-                designs.add(moduleConfig);
-            });
-
-            Configuration update = new Configuration();
-            update.setConfiguration(designs);
-
-            Driver.getInstance().getWebServer().updateRoute("/module/syncproxy/configuration", new ConfigDriver().convert(update));
+            Driver.getInstance().getWebServer().updateRoute("/module/syncproxy/configuration", new ConfigDriver().convert(config));
         }catch (Exception e){
             set();
             update();

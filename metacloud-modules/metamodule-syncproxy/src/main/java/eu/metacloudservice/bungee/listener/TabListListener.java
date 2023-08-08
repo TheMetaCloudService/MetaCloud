@@ -82,8 +82,8 @@ public class TabListListener implements Listener {
         BungeeBootstrap bungeeBootstrap = BungeeBootstrap.getInstance();
         CloudAPI cloudAPI = CloudAPI.getInstance();
 
-        String rawHeader = Driver.getInstance().getMessageStorage().base64ToUTF8(tablist.getHeader());
-        String rawFooter = Driver.getInstance().getMessageStorage().base64ToUTF8(tablist.getFooter());
+        String rawHeader = tablist.getHeader();
+        String rawFooter = tablist.getFooter();
         String playerName = player.getName();
         String playerUuid = player.getUUID();
         String serviceName = player.getServer().getInfo().getName();

@@ -30,18 +30,8 @@ public class ReloadCommand extends CommandAdapter {
             sendHelp();
         }else if (args[0].equalsIgnoreCase("all")){
             Driver.getInstance().getModuleDriver().reload();
-            Messages raw = (Messages) new ConfigDriver("./local/messages.json").read(Messages.class);
-            Messages msg = new Messages(Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getPrefix()),
-                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getSuccessfullyConnected()),
-                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getServiceIsFull()),
-                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getAlreadyOnFallback()),
-                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getConnectingGroupMaintenance()),
-                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getNoFallbackServer()),
-                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNetworkIsFull()),
-                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNetworkIsMaintenance()),
-                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNoFallback()),
-                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickOnlyProxyJoin()),
-                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickAlreadyOnNetwork()));
+            Messages msg = (Messages) new ConfigDriver("./local/messages.json").read(Messages.class);
+
 
 
             WhiteList whitelistConfig = new WhiteList();
@@ -75,18 +65,8 @@ public class ReloadCommand extends CommandAdapter {
 
 
 
-            Messages raw = (Messages) new ConfigDriver("./local/messages.json").read(Messages.class);
-            Messages msg = new Messages(Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getPrefix()),
-                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getSuccessfullyConnected()),
-                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getServiceIsFull()),
-                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getAlreadyOnFallback()),
-                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getConnectingGroupMaintenance()),
-                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getNoFallbackServer()),
-                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNetworkIsFull()),
-                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNetworkIsMaintenance()),
-                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNoFallback()),
-                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickOnlyProxyJoin()),
-                    Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickAlreadyOnNetwork()));
+            Messages msg = (Messages) new ConfigDriver("./local/messages.json").read(Messages.class);
+
 
 
             WhiteList whitelistConfig = new WhiteList();

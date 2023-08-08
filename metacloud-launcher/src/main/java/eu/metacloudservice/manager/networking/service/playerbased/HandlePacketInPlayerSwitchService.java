@@ -28,7 +28,7 @@ public class HandlePacketInPlayerSwitchService implements NettyAdaptor {
 
                 if (!restCech.getCloudplayerservice().equalsIgnoreCase("")){
 
-                    if (         CloudManager.serviceDriver.getService(restCech.getCloudplayerservice()) != null){
+                    if (  CloudManager.serviceDriver.getService(restCech.getCloudplayerservice()) != null){
                         CloudManager.serviceDriver.getService(restCech.getCloudplayerservice()).handelCloudPlayerConnection(false);
                     }
                 }

@@ -20,6 +20,7 @@ import eu.metacloudservice.events.entrys.Priority;
 import eu.metacloudservice.events.entrys.Subscribe;
 import eu.metacloudservice.events.listeners.group.CloudGroupCreateEvent;
 import eu.metacloudservice.events.listeners.group.CloudGroupDeleteEvent;
+import eu.metacloudservice.moduleside.MetaModule;
 
 import java.util.ArrayList;
 
@@ -89,6 +90,7 @@ public class SyncEvents implements ICloudListener {
         config.setTablist(tablist);
         config.setDefaults(defaults);
         configuration.getConfiguration().add(config);
+        MetaModule.update();
     }
 
 
@@ -96,6 +98,7 @@ public class SyncEvents implements ICloudListener {
     public void handle(CloudGroupDeleteEvent event){
         Configuration configuration = (Configuration) new ConfigDriver("./modules/syncproxy/config.json").read(Configuration.class);
         configuration.getConfiguration().removeIf(designConfig -> designConfig.getTargetGroup().equals(event.getGroupname()));
+        MetaModule.update();
     }
 
 }

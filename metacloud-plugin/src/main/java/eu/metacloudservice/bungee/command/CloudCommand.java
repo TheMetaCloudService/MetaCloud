@@ -6,6 +6,7 @@ import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.pool.player.entrys.CloudPlayer;
+import eu.metacloudservice.pool.service.entrys.CloudService;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -13,6 +14,7 @@ import net.md_5.bungee.api.plugin.TabExecutor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CloudCommand extends Command implements TabExecutor {
     public CloudCommand(String name) {
@@ -22,11 +24,10 @@ public class CloudCommand extends Command implements TabExecutor {
     @Override
     public void execute(CommandSender commandSender, String[] args) {
 
-
         if (commandSender instanceof ProxiedPlayer) {
             ProxiedPlayer player = (ProxiedPlayer) commandSender;
             Messages messages = CloudAPI.getInstance().getMessages();
-            String PREFIX = Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix()).replace("&", "§");
+            String PREFIX = messages.getPrefix().replace("&", "§");
             if (player.hasPermission("metacloud.command.use")){
                 if (args.length == 0){
                     sendHelp(player);
@@ -261,7 +262,7 @@ public class CloudCommand extends Command implements TabExecutor {
 
     public void sendHelp(ProxiedPlayer player){
         Messages messages = CloudAPI.getInstance().getMessages();
-        String PREFIX = Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix()).replace("&", "§");
+        String PREFIX = messages.getPrefix().replace("&", "§");
         player.sendMessage( PREFIX + "/cloud maintenance (group)");
         player.sendMessage( PREFIX + "/cloud maxplayers <amount> (group)");
         player.sendMessage( PREFIX + "/cloud run <group> (amount)");
@@ -278,8 +279,70 @@ public class CloudCommand extends Command implements TabExecutor {
 
     @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
-        Iterable<String> resuls = new ArrayList<>();
+        List<String> suggestions = new ArrayList<>();
 
-        return resuls;
+        if (args.length == 1) {
+            // List of main command arguments
+            suggestions.add("maintenance");
+            suggestions.add("maxplayers");
+            suggestions.add("stop");
+            suggestions.add("stopgroup");
+            suggestions.add("run");
+            suggestions.add("whitelist");
+            suggestions.add("dispatch");
+            suggestions.add("list");
+            suggestions.add("sync");
+            suggestions.add("exit");
+            suggestions.add("version");
+            suggestions.add("reload");
+        } else if (args.length == 2) {
+            // Suggestions for specific commands that require a second argument
+            if (args[0].equalsIgnoreCase("maxplayers")) {
+                suggestions.addAll(CloudAPI.getInstance().getGroupsName());
+            } else if (args[0].equalsIgnoreCase("stopgroup")) {
+                suggestions.addAll(CloudAPI.getInstance().getGroupsName());
+            }else if (args[0].equalsIgnoreCase("stop")) {
+                    suggestions.addAll(CloudAPI.getInstance().getServicePool().getServices()
+                            .stream()
+                            .map(CloudService::getName)
+                            .collect(Collectors.toList()));;
+                } else if (args[0].equalsIgnoreCase("run") || args[0].equalsIgnoreCase("sync")) {
+                    suggestions.addAll(CloudAPI.getInstance().getGroupsName());
+                } else if (args[0].equalsIgnoreCase("whitelist")) {
+                    suggestions.add("add");
+                    suggestions.add("remove");
+                    suggestions.addAll(CloudAPI.getInstance().getPlayerPool().getPlayers()
+                            .stream()
+                            .map(CloudPlayer::getUsername)
+                            .collect(Collectors.toList()));
+                } else if (args[0].equalsIgnoreCase("dispatch")) {
+                    suggestions.addAll(CloudAPI.getInstance().getServicePool().getServices()
+                            .stream()
+                            .map(CloudService::getName)
+                            .collect(Collectors.toList()));
+                } else if (args[0].equalsIgnoreCase("list")) {
+                    suggestions.add("players");
+                    suggestions.add("services");
+                }
+            }
+        else if (args.length == 3) {
+            // Additional suggestions for specific cases
+            if (args[0].equalsIgnoreCase("run")) {
+
+            } else if (args[0].equalsIgnoreCase("dispatch")) {
+
+            } else if (args[0].equalsIgnoreCase("whitelist")) {
+                suggestions.addAll(CloudAPI.getInstance().getPlayerPool().getPlayers()
+                        .stream()
+                        .map(CloudPlayer::getUsername)
+                        .collect(Collectors.toList()));
+            }
+        }
+
+        // Filter suggestions based on the current input
+        String prefix = args[args.length - 1].toLowerCase();
+        return suggestions.stream()
+                .filter(suggestion -> suggestion.toLowerCase().startsWith(prefix))
+                .collect(Collectors.toList());
     }
 }

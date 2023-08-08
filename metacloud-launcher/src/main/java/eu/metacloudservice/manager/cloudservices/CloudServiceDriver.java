@@ -26,7 +26,6 @@ public class CloudServiceDriver implements ICloudServiceDriver {
 
 
     private final ArrayList<TaskedService> services;
-    public ArrayList<String> reaction;
     public final ArrayList<String> delete;
     public final NetworkEntry entry;
 
@@ -34,7 +33,6 @@ public class CloudServiceDriver implements ICloudServiceDriver {
         entry = new NetworkEntry();
         services = new ArrayList<>();
         delete = new ArrayList<>();
-        reaction = new ArrayList<>();
         handelServices();
     }
 
@@ -131,28 +129,32 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                 @Override
                 public void run() {
 
-                    if (Driver.getInstance().getMessageStorage().getCPULoad() <= CloudManager.config.getProcessorUsage()){
-                        if (getServices().stream().filter(taskedService -> taskedService.getEntry().getStatus() == ServiceState.STARTED).toList().size() <= CloudManager.config.getServiceStartupCount()){
-                            if (!CloudManager.queueDriver.getQueue_startup().isEmpty()){
-                                String service = CloudManager.queueDriver.getQueue_startup().removeFirst();
-                                if (
-                                        Driver.getInstance().getGroupDriver().load(CloudManager.serviceDriver.getService(service).getEntry().getGroupName()).getGroupType().equalsIgnoreCase("PROXY")){
-                                    Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudProxyLaunchEvent(service,     CloudManager.serviceDriver.getService(service).getEntry().getGroupName(),     CloudManager.serviceDriver.getService(service).getEntry().getNode()));
+                    try {
+                        if (Driver.getInstance().getMessageStorage().getCPULoad() <= CloudManager.config.getProcessorUsage()){
+                            if (getServices().stream().filter(taskedService -> taskedService.getEntry().getStatus() == ServiceState.STARTED).toList().size() <= CloudManager.config.getServiceStartupCount()){
+                                if (!CloudManager.queueDriver.getQueue_startup().isEmpty()){
+                                    String service = CloudManager.queueDriver.getQueue_startup().removeFirst();
+                                    if (
+                                            Driver.getInstance().getGroupDriver().load(CloudManager.serviceDriver.getService(service).getEntry().getGroupName()).getGroupType().equalsIgnoreCase("PROXY")){
+                                        Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudProxyLaunchEvent(service,     CloudManager.serviceDriver.getService(service).getEntry().getGroupName(),     CloudManager.serviceDriver.getService(service).getEntry().getNode()));
 
-                                }else {
-                                    Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudServiceLaunchEvent(service,     CloudManager.serviceDriver.getService(service).getEntry().getGroupName(),     CloudManager.serviceDriver.getService(service).getEntry().getNode()));
+                                    }else {
+                                        Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudServiceLaunchEvent(service,     CloudManager.serviceDriver.getService(service).getEntry().getGroupName(),     CloudManager.serviceDriver.getService(service).getEntry().getNode()));
 
+                                    }
+                                    NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutServiceLaunch(service,             Driver.getInstance().getGroupDriver().load(CloudManager.serviceDriver.getService(service).getEntry().getGroupName()).getGroupType().equalsIgnoreCase("PROXY"),  CloudManager.serviceDriver.getService(service).getEntry().getGroupName(),  CloudManager.serviceDriver.getService(service).getEntry().getNode() ));
+                                    CloudManager.serviceDriver.getService(service).handelStatusChange(ServiceState.STARTED);
+                                    CloudManager.serviceDriver.getService(service).handelLaunch();
                                 }
-                                NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutServiceLaunch(service,             Driver.getInstance().getGroupDriver().load(CloudManager.serviceDriver.getService(service).getEntry().getGroupName()).getGroupType().equalsIgnoreCase("PROXY"),  CloudManager.serviceDriver.getService(service).getEntry().getGroupName(),  CloudManager.serviceDriver.getService(service).getEntry().getNode() ));
-                                CloudManager.serviceDriver.getService(service).handelStatusChange(ServiceState.STARTED);
-                                CloudManager.serviceDriver.getService(service).handelLaunch();
+                            }
+                            if (!CloudManager.queueDriver.getQueue_shutdown().isEmpty()){
+                                String service = CloudManager.queueDriver.getQueue_shutdown().removeFirst();
+                                CloudManager.serviceDriver.getService(service).handelQuit();
+                                CloudManager.serviceDriver.unregistered(service);
                             }
                         }
-                        if (!CloudManager.queueDriver.getQueue_shutdown().isEmpty()){
-                            String service = CloudManager.queueDriver.getQueue_shutdown().removeFirst();
-                            CloudManager.serviceDriver.getService(service).handelQuit();
-                            CloudManager.serviceDriver.unregistered(service);
-                        }
+                    }catch (Exception e){
+
                     }
                 }
             }, 0, 100, TimeUtil.MILLISECONDS);

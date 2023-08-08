@@ -48,7 +48,7 @@ public class CloudConnectListener implements Listener {
         Group group = CloudAPI.getInstance().getGroups().stream().filter(group1 -> group1.getGroup().equalsIgnoreCase(service.getGroup())).findFirst().get();
 
         if (CloudAPI.getInstance().getPlayerPool().getPlayers().stream().anyMatch(cloudPlayer -> cloudPlayer.getUsername().equalsIgnoreCase(event.getPlayer().getName()))){
-            event.getPlayer().disconnect(Driver.getInstance().getMessageStorage().base64ToUTF8(CloudAPI.getInstance().getMessages().getKickAlreadyOnNetwork()).replace("&", "§"));
+            event.getPlayer().disconnect(CloudAPI.getInstance().getMessages().getKickAlreadyOnNetwork().replace("&", "§"));
 
         }
 
@@ -58,17 +58,17 @@ public class CloudConnectListener implements Listener {
         if (group.isMaintenance()
                 && !ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()).hasPermission("metacloud.connection.maintenance")
                 && !CloudAPI.getInstance().getWhitelist().contains(ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()).getName())){
-            event.getPlayer().disconnect(Driver.getInstance().getMessageStorage().base64ToUTF8(CloudAPI.getInstance().getMessages().getKickNetworkIsMaintenance()).replace("&", "§"));
+            event.getPlayer().disconnect(CloudAPI.getInstance().getMessages().getKickNetworkIsMaintenance().replace("&", "§"));
 
         }else if (CloudAPI.getInstance().getPlayerPool().getPlayers().size() >= group.getMaxPlayers().intValue()
 
                 && !ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()).hasPermission("metacloud.connection.full")
                 && !CloudAPI.getInstance().getWhitelist().contains(ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()).getName())){
-            event.getPlayer().disconnect(Driver.getInstance().getMessageStorage().base64ToUTF8(CloudAPI.getInstance().getMessages().getKickNetworkIsFull()).replace("&", "§"));
+            event.getPlayer().disconnect(CloudAPI.getInstance().getMessages().getKickNetworkIsFull().replace("&", "§"));
 
         }else if ( ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()) != null
                 && BungeeBootstrap.getInstance().getLobby( ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId())) == null){
-            event.getPlayer().disconnect(Driver.getInstance().getMessageStorage().base64ToUTF8(CloudAPI.getInstance().getMessages().getKickNoFallback()).replace("&", "§"));
+            event.getPlayer().disconnect(CloudAPI.getInstance().getMessages().getKickNoFallback().replace("&", "§"));
         }
     }
 
@@ -97,7 +97,7 @@ public class CloudConnectListener implements Listener {
             } else {
                 event.setCancelled(false);
                 event.setCancelServer(null);
-                event.getPlayer().disconnect(Driver.getInstance().getMessageStorage().base64ToUTF8(CloudAPI.getInstance().getMessages().getKickNoFallback()).replace("&", "§"));
+                event.getPlayer().disconnect(CloudAPI.getInstance().getMessages().getKickNoFallback().replace("&", "§"));
             }
         }
     }

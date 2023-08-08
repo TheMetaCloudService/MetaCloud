@@ -1,5 +1,6 @@
 package eu.metacloudservice.networking.packet;
 
+import eu.metacloudservice.networking.packet.NettyBuffer;
 import io.netty.channel.Channel;
 
 import java.util.Map;
@@ -7,39 +8,39 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PacketDriver {
 
-    private final Map<Integer, Class<? extends Packet>> packets;
-    private final Map<Integer, NettyAdaptor> adaptor;
+    private final Map<Integer, Class<? extends Packet>> packets = new ConcurrentHashMap<>();
+    private final Map<Integer, NettyAdaptor> adaptor = new ConcurrentHashMap<>();
 
     public PacketDriver() {
-        packets = new ConcurrentHashMap<>();
-        adaptor = new ConcurrentHashMap<>();
     }
 
     public Map<Integer, NettyAdaptor> getAdaptor() {
         return adaptor;
     }
 
-    public boolean handle(Integer id, Channel channelFuture, Packet packet) {
+    public boolean handle(Integer id, Channel channel, Packet packet) {
         NettyAdaptor nettyAdaptor = adaptor.get(id);
         if (nettyAdaptor != null) {
-            nettyAdaptor.handle(channelFuture, packet);
+            nettyAdaptor.handle(channel, packet);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public PacketDriver registerHandler(Integer id, NettyAdaptor nettyAdaptor, Class<? extends Packet> pc) {
-        this.adaptor.putIfAbsent(id, nettyAdaptor);
+        adaptor.putIfAbsent(id, nettyAdaptor);
         try {
-            this.packets.putIfAbsent(pc.newInstance().getPacketUUID(), pc);
-        } catch (InstantiationException | IllegalAccessException e) {
+            Packet packetInstance = pc.getDeclaredConstructor().newInstance();
+            packets.putIfAbsent(packetInstance.getPacketUUID(), pc);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return this;
     }
 
     public Class<? extends Packet> getPacket(int id) {
-        return this.packets.getOrDefault(id, null);
+        return packets.getOrDefault(id, null);
     }
 }
+
+

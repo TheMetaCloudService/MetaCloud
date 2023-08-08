@@ -21,11 +21,13 @@ public class QueueDriver {
     }
 
     public void addQueuedObjectToStart(String service){
-        this.queue_startup.add(service);
+        if (!queue_startup.contains(service))
+          this.queue_startup.add(service);
     }
 
     public void addQueuedObjectToShutdown(String service){
-        this.queue_shutdown.add(service);
+        if (!queue_shutdown.contains(service))
+            this.queue_shutdown.add(service);
     }
 
 

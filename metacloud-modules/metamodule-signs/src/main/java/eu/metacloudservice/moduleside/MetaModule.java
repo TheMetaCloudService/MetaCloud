@@ -17,8 +17,8 @@ MetaModule implements IModule {
     @Override
     public void load() {
         create();
-        Driver.getInstance().getMessageStorage().eventDriver.registerListener(new RestUpdate());
         set();
+        Driver.getInstance().getMessageStorage().eventDriver.registerListener(new RestUpdate());
     }
     @Override
     public void unload() {
@@ -38,19 +38,19 @@ MetaModule implements IModule {
             new File("./modules/signs/").mkdirs();
 
             ArrayList<SignLayout> online = new ConfigBuilder()
-                    .add("stained_hardened_clay", "5", "§8► service_name% §8◄", "§bLOBBY §8| §b§l✔", "%service_motd%", "§8• %online_players% / %max_players% §8•")
-                    .add("stained_hardened_clay", "5", "§8► service_name% §8◄", "§3L§bOBBY §8| §b§l✔", "%service_motd%", "§8• %online_players% / %max_players% §8•")
-                    .add("stained_hardened_clay", "5", "§8► service_name% §8◄", "§bL§3O§bBBY §8| §b§l✔", "%service_motd%", "§8• %online_players% / %max_players% §8•")
-                    .add("stained_hardened_clay", "5", "§8► service_name% §8◄", "§bLO§3B§bBY §8| §b§l✔", "%service_motd%", "§8• %online_players% / %max_players% §8•")
-                    .add("stained_hardened_clay", "5", "§8► service_name% §8◄", "§bLOB§3B§bY §8| §b§l✔", "%service_motd%", "§8• %online_players% / %max_players% §8•")
-                    .add("stained_hardened_clay", "5", "§8► service_name% §8◄", "§bLOBB§3Y §8| §b§l✔", "%service_motd%", "§8• %online_players% / %max_players% §8•")
+                    .add("stained_hardened_clay", "5", "§8► %service_name% §8◄", "§bLOBBY §8| §b§l✔", "%service_motd%", "§8• %online_players% / %max_players% §8•")
+                    .add("stained_hardened_clay", "5", "§8► %service_name% §8◄", "§3L§bOBBY §8| §b§l✔", "%service_motd%", "§8• %online_players% / %max_players% §8•")
+                    .add("stained_hardened_clay", "5", "§8► %service_name% §8◄", "§bL§3O§bBBY §8| §b§l✔", "%service_motd%", "§8• %online_players% / %max_players% §8•")
+                    .add("stained_hardened_clay", "5", "§8► %service_name% §8◄", "§bLO§3B§bBY §8| §b§l✔", "%service_motd%", "§8• %online_players% / %max_players% §8•")
+                    .add("stained_hardened_clay", "5", "§8► %service_name% §8◄", "§bLOB§3B§bY §8| §b§l✔", "%service_motd%", "§8• %online_players% / %max_players% §8•")
+                    .add("stained_hardened_clay", "5", "§8► %service_name% §8◄", "§bLOBB§3Y §8| §b§l✔", "%service_motd%", "§8• %online_players% / %max_players% §8•")
                     .build();
 
             ArrayList<SignLayout> full= new ConfigBuilder()
-                    .add("stained_hardened_clay", "4", "§8► service_name% §8◄", "§eVIP §8| §e§l✘", "%service_motd%", "§8• %online_players% / %max_players% §8•")
-                    .add("stained_hardened_clay", "4", "§8► service_name% §8◄", "§6V§eIP §8| §e§l✘", "%service_motd%", "§8• %online_players% / %max_players% §8•")
-                    .add("stained_hardened_clay", "4", "§8► service_name% §8◄", "§eV§6I§eP §8| §e§l✘", "%service_motd%", "§8• %online_players% / %max_players% §8•")
-                    .add("stained_hardened_clay", "4", "§8► service_name% §8◄", "§eVI§6P §8| §e§l✘", "%service_motd%", "§8• %online_players% / %max_players% §8•")
+                    .add("stained_hardened_clay", "4", "§8► %service_name% §8◄", "§eVIP §8| §e§l✘", "%service_motd%", "§8• %online_players% / %max_players% §8•")
+                    .add("stained_hardened_clay", "4", "§8► %service_name% §8◄", "§6V§eIP §8| §e§l✘", "%service_motd%", "§8• %online_players% / %max_players% §8•")
+                    .add("stained_hardened_clay", "4", "§8► %service_name% §8◄", "§eV§6I§eP §8| §e§l✘", "%service_motd%", "§8• %online_players% / %max_players% §8•")
+                    .add("stained_hardened_clay", "4", "§8► %service_name% §8◄", "§eVI§6P §8| §e§l✘", "%service_motd%", "§8• %online_players% / %max_players% §8•")
                     .build();
 
             ArrayList<SignLayout> maintenance= new ConfigBuilder()
@@ -88,74 +88,20 @@ MetaModule implements IModule {
 
     public void set(){
 
-        try {
             General general = new General("signs", "1.0.0", "RauchigesEtwas");
             Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/signs/general", new ConfigDriver().convert(general)));
-            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/signs/configuration", new ConfigDriver().convert(getConfigAsBase64())));
+            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/signs/configuration", new ConfigDriver().convert(new ConfigDriver("./modules/signs/config.json").read(Configuration.class))));
             Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/signs/locations", new ConfigDriver().convert(new ConfigDriver("./modules/signs/locations.json").read(Locations.class))));
-        }catch (Exception e){
-        }
     }
 
     public void update(){
         try {
-            Driver.getInstance().getWebServer().updateRoute("/module/signs/configuration", new ConfigDriver().convert(getConfigAsBase64()));
+            Driver.getInstance().getWebServer().updateRoute("/module/signs/configuration", new ConfigDriver().convert(new ConfigDriver("./modules/signs/config.json").read(Configuration.class)));
             Driver.getInstance().getWebServer().updateRoute("/module/signs/locations", new ConfigDriver().convert(new ConfigDriver("./modules/signs/locations.json").read(Configuration.class)));
         }catch (Exception e){
         }
     }
 
 
-    public Configuration getConfigAsBase64(){
-        Configuration config = (Configuration) new ConfigDriver("./modules/signs/config.json").read(Configuration.class);
 
-        ArrayList<SignLayout> online = new ArrayList<>();
-        ArrayList<SignLayout> full = new ArrayList<>();
-        ArrayList<SignLayout> maintenance = new ArrayList<>();
-        ArrayList<SignLayout> searching = new ArrayList<>();
-
-        config.getSearching().forEach(signLayout -> {
-            String line0 = Driver.getInstance().getMessageStorage().utf8ToUBase64(signLayout.getLines()[0]);
-            String line1 = Driver.getInstance().getMessageStorage().utf8ToUBase64(signLayout.getLines()[1]);
-            String line2 = Driver.getInstance().getMessageStorage().utf8ToUBase64(signLayout.getLines()[2]);
-            String line3 = Driver.getInstance().getMessageStorage().utf8ToUBase64(signLayout.getLines()[3]);
-
-            SignLayout layout = new SignLayout(new String[]{line0, line1, line2, line3}, signLayout.getItemID(), signLayout.getSubID());
-            searching.add(layout);
-
-        });
-
-        config.getMaintenance().forEach(signLayout -> {
-            String line0 = Driver.getInstance().getMessageStorage().utf8ToUBase64(signLayout.getLines()[0]);
-            String line1 = Driver.getInstance().getMessageStorage().utf8ToUBase64(signLayout.getLines()[1]);
-            String line2 = Driver.getInstance().getMessageStorage().utf8ToUBase64(signLayout.getLines()[2]);
-            String line3 = Driver.getInstance().getMessageStorage().utf8ToUBase64(signLayout.getLines()[3]);
-
-            SignLayout layout = new SignLayout(new String[]{line0, line1, line2, line3}, signLayout.getItemID(), signLayout.getSubID());
-            maintenance.add(layout);
-
-        });
-
-        config.getOnline().forEach(signLayout -> {
-            String line0 = Driver.getInstance().getMessageStorage().utf8ToUBase64(signLayout.getLines()[0]);
-            String line1 = Driver.getInstance().getMessageStorage().utf8ToUBase64(signLayout.getLines()[1]);
-            String line2 = Driver.getInstance().getMessageStorage().utf8ToUBase64(signLayout.getLines()[2]);
-            String line3 = Driver.getInstance().getMessageStorage().utf8ToUBase64(signLayout.getLines()[3]);
-
-            SignLayout layout = new SignLayout(new String[]{line0, line1, line2, line3}, signLayout.getItemID(), signLayout.getSubID());
-            online.add(layout);
-
-        });
-
-        config.getFull().forEach(signLayout -> {
-            String line0 = Driver.getInstance().getMessageStorage().utf8ToUBase64(signLayout.getLines()[0]);
-            String line1 = Driver.getInstance().getMessageStorage().utf8ToUBase64(signLayout.getLines()[1]);
-            String line2 = Driver.getInstance().getMessageStorage().utf8ToUBase64(signLayout.getLines()[2]);
-            String line3 = Driver.getInstance().getMessageStorage().utf8ToUBase64(signLayout.getLines()[3]);
-
-            SignLayout layout = new SignLayout(new String[]{line0, line1, line2, line3}, signLayout.getItemID(), signLayout.getSubID());
-            full.add(layout);
-        });
-        return new Configuration(config.isHideFull(), online, full, maintenance, searching);
-    }
 }

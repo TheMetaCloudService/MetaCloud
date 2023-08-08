@@ -5,6 +5,8 @@
     <file url="file://$PROJECT_DIR$/metacloud-cloudupdater/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/metacloud-modules/metamodule-balancer/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/metacloud-modules/metamodule-balancer/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/metacloud-modules/metamodule-hub/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/metacloud-modules/metamodule-hub/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/metacloud-modules/metamodule-notify/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/metacloud-modules/metamodule-notify/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/metacloud-modules/metamodule-permissions/src/main/java" charset="UTF-8" />

@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/metacloud-driver/metacloud-driver.iml" filepath="$PROJECT_DIR$/metacloud-driver/metacloud-driver.iml" />
       <module fileurl="file://$PROJECT_DIR$/metacloud-launcher/metacloud-launcher.iml" filepath="$PROJECT_DIR$/metacloud-launcher/metacloud-launcher.iml" />
       <module fileurl="file://$PROJECT_DIR$/metacloud-plugin/metacloud-plugin.iml" filepath="$PROJECT_DIR$/metacloud-plugin/metacloud-plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/metamodule-hub.iml" filepath="$PROJECT_DIR$/metamodule-hub.iml" />
       <module fileurl="file://$PROJECT_DIR$/metacloud-modules/metamodule-notify/metamodule-notify.iml" filepath="$PROJECT_DIR$/metacloud-modules/metamodule-notify/metamodule-notify.iml" />
       <module fileurl="file://$PROJECT_DIR$/metacloud-modules/metamodule-permissions/metamodule-permissions.iml" filepath="$PROJECT_DIR$/metacloud-modules/metamodule-permissions/metamodule-permissions.iml" />
       <module fileurl="file://$PROJECT_DIR$/metacloud-modules/metamodule-signs/metamodule-signs.iml" filepath="$PROJECT_DIR$/metacloud-modules/metamodule-signs/metamodule-signs.iml" />

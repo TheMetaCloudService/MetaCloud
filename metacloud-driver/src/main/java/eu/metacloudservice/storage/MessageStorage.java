@@ -771,7 +771,7 @@ public class MessageStorage {
                 "max-build-height=256\n" +
                 "level-seed=\n" +
                 "enable-rcon=false\n" +
-                "motd=\"§8| §bMetaCloud §8- §7Server Service\"\n";
+                "motd=MetaCloudService\n";
     }
     public String getBungeeCordConfiguration(int port, int players, boolean useProtocol){
         return "server_connect_timeout: 5000\n" +

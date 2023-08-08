@@ -10,6 +10,7 @@ import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.pool.player.entrys.CloudPlayer;
+import eu.metacloudservice.pool.service.entrys.CloudService;
 import net.kyori.adventure.text.Component;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.units.qual.C;
@@ -17,6 +18,7 @@ import org.checkerframework.checker.units.qual.C;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class CloudCommand implements SimpleCommand {
 
@@ -30,7 +32,7 @@ public class CloudCommand implements SimpleCommand {
         if (invocation.source() instanceof  Player){
             Player player = (Player) invocation.source();
             Messages messages = CloudAPI.getInstance().getMessages();
-            String PREFIX = Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix()).replace("&", "§");
+            String PREFIX = messages.getPrefix().replace("&", "§");
             if (player.hasPermission("metacloud.command.use")){
                 if (args.length == 0){
                     sendHelp(player);
@@ -261,7 +263,7 @@ public class CloudCommand implements SimpleCommand {
 
     public void sendHelp(Player player){
         Messages messages = CloudAPI.getInstance().getMessages();
-        String PREFIX = Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix()).replace("&", "§");
+        String PREFIX = messages.getPrefix().replace("&", "§");
         player.sendMessage(Component.text(PREFIX + "/cloud maintenance (group)"));
         player.sendMessage(Component.text(PREFIX + "/cloud maxplayers <amount> (group)"));
         player.sendMessage(Component.text(PREFIX + "/cloud run <group> (amount)"));
@@ -279,6 +281,71 @@ public class CloudCommand implements SimpleCommand {
 
     @Override
     public CompletableFuture<List<String>> suggestAsync(Invocation invocation) {
-        return SimpleCommand.super.suggestAsync(invocation);
+        List<String> suggestions = new ArrayList<>();
+        String[] args = invocation.arguments();
+
+        if (args.length == 1) {
+            suggestions.add("maintenance");
+            suggestions.add("maxplayers");
+            suggestions.add("stop");
+            suggestions.add("stopgroup");
+            suggestions.add("run");
+            suggestions.add("whitelist");
+            suggestions.add("dispatch");
+            suggestions.add("list");
+            suggestions.add("sync");
+            suggestions.add("exit");
+            suggestions.add("version");
+            suggestions.add("reload");
+        } else if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("maxplayers")) {
+                suggestions.addAll(CloudAPI.getInstance().getGroupsName());
+            } else if (args[0].equalsIgnoreCase("stopgroup")) {
+                suggestions.addAll(CloudAPI.getInstance().getGroupsName());
+            } else if (args[0].equalsIgnoreCase("stop")) {
+                suggestions.addAll(CloudAPI.getInstance().getServicePool().getServices()
+                        .stream()
+                        .map(CloudService::getName)
+                        .collect(Collectors.toList()));
+            } else if (args[0].equalsIgnoreCase("run") || args[0].equalsIgnoreCase("sync")) {
+                suggestions.addAll(CloudAPI.getInstance().getGroupsName());
+            } else if (args[0].equalsIgnoreCase("whitelist")) {
+                suggestions.add("add");
+                suggestions.add("remove");
+                suggestions.addAll(CloudAPI.getInstance().getPlayerPool().getPlayers()
+                        .stream()
+                        .map(CloudPlayer::getUsername)
+                        .collect(Collectors.toList()));
+            } else if (args[0].equalsIgnoreCase("dispatch")) {
+                suggestions.addAll(CloudAPI.getInstance().getServicePool().getServices()
+                        .stream()
+                        .map(CloudService::getName)
+                        .collect(Collectors.toList()));
+            } else if (args[0].equalsIgnoreCase("list")) {
+                suggestions.add("players");
+                suggestions.add("services");
+            }
+        } else if (args.length == 3) {
+            // Additional suggestions for specific cases
+            if (args[0].equalsIgnoreCase("run")) {
+
+            } else if (args[0].equalsIgnoreCase("dispatch")) {
+
+            } else if (args[0].equalsIgnoreCase("whitelist")) {
+                suggestions.addAll(CloudAPI.getInstance().getPlayerPool().getPlayers()
+                        .stream()
+                        .map(CloudPlayer::getUsername)
+                        .collect(Collectors.toList()));
+            }
+        }
+
+        // Filter suggestions based on the current input
+        String prefix = args[args.length - 1].toLowerCase();
+        List<String> filteredSuggestions = suggestions.stream()
+                .filter(suggestion -> suggestion.toLowerCase().startsWith(prefix))
+                .collect(Collectors.toList());
+
+        return CompletableFuture.completedFuture(filteredSuggestions);
     }
+
 }

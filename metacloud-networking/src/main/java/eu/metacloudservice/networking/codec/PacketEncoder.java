@@ -7,13 +7,14 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
 public class PacketEncoder extends MessageToByteEncoder<Packet> {
-
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, Packet packet, ByteBuf byteBuf) {
-
         try {
-            byteBuf.writeInt(packet.getPacketUUID());
+            int packetUUID = packet.getPacketUUID();
+            byteBuf.writeInt(packetUUID);
             packet.writePacket(new NettyBuffer(byteBuf));
-        }catch (Exception ignored){}
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
+        }
     }
 }

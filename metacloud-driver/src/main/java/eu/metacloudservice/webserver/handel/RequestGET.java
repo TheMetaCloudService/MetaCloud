@@ -2,10 +2,9 @@
  * this class is by RauchigesEtwas
  */
 
-package eu.metacloudservice.webserver.remastered.handel;
+package eu.metacloudservice.webserver.handel;
 
 import eu.metacloudservice.Driver;
-import eu.metacloudservice.webserver.remastered.WebServer;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -19,21 +18,34 @@ public class RequestGET extends ChannelInboundHandlerAdapter {
         if (msg instanceof FullHttpRequest) {
             FullHttpRequest request = (FullHttpRequest) msg;
             if (request.method().name().equals("GET")) {
-                String uri = request.uri();
-                if (uri.contains("/")) {
-                    String authenticatorKey = uri.split("/")[1];
-                    if (Driver.getInstance().wb.AUTH_KEY.contains(authenticatorKey)){
-                        String path = uri.replace("/" + authenticatorKey, "");
-                        String json = Driver.getInstance().wb.getRoute(path);
-                        FullHttpResponse response = createResponse(HttpResponseStatus.OK, json);
-                        ctx.writeAndFlush(response);
-                    }else {
+                try {
+                    String uri = request.uri();
+                    if (uri.contains("/")) {
+                        String authenticatorKey = uri.split("/")[1];
+                        if (Driver.getInstance().getWebServer().AUTH_KEY.contains(authenticatorKey)){
+                            String path = uri.replace("/" + authenticatorKey, "");
+                            if (Driver.getInstance().getWebServer().getRoutes(path) == null){
+                                FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter a right path\"}");
+                                ctx.writeAndFlush(response);
+                            }
+                            else if (!path.isEmpty()){
+                                String json = Driver.getInstance().getWebServer().getRoute(path);
+                                FullHttpResponse response = createResponse(HttpResponseStatus.OK, json);
+                                ctx.writeAndFlush(response);
+                            }else {
+                                FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter a right path\"}");
+                                ctx.writeAndFlush(response);
+                            }
+                        }else {
+                            FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter the right auth-key\"}");
+                            ctx.writeAndFlush(response);
+                        }
+                    } else {
                         FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter the right auth-key\"}");
                         ctx.writeAndFlush(response);
                     }
-                } else {
-                    FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter the right auth-key\"}");
-                    ctx.writeAndFlush(response);
+                }catch (Exception ignored){
+
                 }
             }
         }

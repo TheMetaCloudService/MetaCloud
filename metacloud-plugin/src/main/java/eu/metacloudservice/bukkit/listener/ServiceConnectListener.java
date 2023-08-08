@@ -21,7 +21,7 @@ public class ServiceConnectListener implements Listener {
         Messages messages = CloudAPI.getInstance().getMessages();
         Addresses addressesConfig = (Addresses) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/default/addresses"), Addresses.class);
         if (addressesConfig.getWhitelist().stream().noneMatch(s -> s.equalsIgnoreCase(event.getAddress().getHostAddress().toString())) || !CloudAPI.getInstance().getPlayerPool().playerIsNotNull(event.getPlayer().getName())){
-            event.getPlayer().kickPlayer(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getKickOnlyProxyJoin()).replace("&", "§"));
+            event.getPlayer().kickPlayer(messages.getKickOnlyProxyJoin().replace("&", "§"));
         }
     }
     @EventHandler

@@ -11,10 +11,10 @@ public class NettyDriver {
 
     public NettyServer nettyServer;
 
-    public ArrayList<String> whitelist;
+    private ArrayList<String> whitelist;
 
     public NettyClient nettyClient;
-    public PacketDriver packetDriver;
+    private PacketDriver packetDriver;
 
     public NettyDriver() {
         instance = this;
@@ -24,5 +24,13 @@ public class NettyDriver {
 
     public static NettyDriver getInstance() {
         return instance;
+    }
+
+    public ArrayList<String> getWhitelist() {
+        return whitelist;
+    }
+
+    public PacketDriver getPacketDriver() {
+        return packetDriver;
     }
 }

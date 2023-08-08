@@ -19,7 +19,7 @@ public class CloudListener implements ICloudListener {
 
         ProxyServer.getInstance().getPlayers().forEach(player -> {
             if (player.hasPermission("metacloud.notify")){
-                player.sendMessage(Driver.getInstance().getMessageStorage().base64ToUTF8(configuration.getProxiedServiceDiconnected()).replace("&", "§").replace("%service_name%", event.getName()));
+                player.sendMessage(configuration.getProxiedServiceDiconnected().replace("&", "§").replace("%service_name%", event.getName()));
             }
         });
     }
@@ -30,7 +30,7 @@ public class CloudListener implements ICloudListener {
 
         ProxyServer.getInstance().getPlayers().forEach(player -> {
             if (player.hasPermission("metacloud.notify")){
-                player.sendMessage(Driver.getInstance().getMessageStorage().base64ToUTF8(configuration.getProxiedServiceConnected()).replace("&", "§")
+                player.sendMessage((configuration.getProxiedServiceConnected()).replace("&", "§")
                         .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode()));
             }
         });
@@ -42,7 +42,7 @@ public class CloudListener implements ICloudListener {
 
         ProxyServer.getInstance().getPlayers().forEach(player -> {
             if (player.hasPermission("metacloud.notify")){
-                player.sendMessage(Driver.getInstance().getMessageStorage().base64ToUTF8(configuration.getProxiedServicePrepared()).replace("&", "§")
+                player.sendMessage((configuration.getProxiedServicePrepared()).replace("&", "§")
                         .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode()));
             }
         });
@@ -54,7 +54,7 @@ public class CloudListener implements ICloudListener {
 
         ProxyServer.getInstance().getPlayers().forEach(player -> {
             if (player.hasPermission("metacloud.notify")) {
-                player.sendMessage(Driver.getInstance().getMessageStorage().base64ToUTF8(configuration.getServiceConnected()).replace("&", "§")
+                player.sendMessage((configuration.getServiceConnected()).replace("&", "§")
                         .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode()));
             }
         });
@@ -67,7 +67,7 @@ public class CloudListener implements ICloudListener {
         ProxyServer.getInstance().getPlayers().forEach(player -> {
 
             if (player.hasPermission("metacloud.notify")){
-                player.sendMessage(Driver.getInstance().getMessageStorage().base64ToUTF8(configuration.getServiceDiconnected()).replace("&", "§")
+                player.sendMessage((configuration.getServiceDiconnected()).replace("&", "§")
                         .replace("%service_name%", event.getName()));
 
             }
@@ -80,7 +80,7 @@ public class CloudListener implements ICloudListener {
 
         ProxyServer.getInstance().getPlayers().forEach(player -> {
             if (player.hasPermission("metacloud.notify")){
-                player.sendMessage(Driver.getInstance().getMessageStorage().base64ToUTF8(configuration.getServicePrepared()).replace("&", "§")
+                player.sendMessage((configuration.getServicePrepared()).replace("&", "§")
                         .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode()));
             }
 
@@ -92,7 +92,7 @@ public class CloudListener implements ICloudListener {
 
         ProxyServer.getInstance().getPlayers().forEach(player -> {
             if (player.hasPermission("metacloud.notify")){
-                player.sendMessage(Driver.getInstance().getMessageStorage().base64ToUTF8(configuration.getProxiedServiceLaunch()).replace("&", "§")
+                player.sendMessage((configuration.getProxiedServiceLaunch()).replace("&", "§")
                         .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode()));
             }
 
@@ -104,7 +104,7 @@ public class CloudListener implements ICloudListener {
 
         ProxyServer.getInstance().getPlayers().forEach(player -> {
             if (player.hasPermission("metacloud.notify")){
-                player.sendMessage(Driver.getInstance().getMessageStorage().base64ToUTF8(configuration.getServiceLaunch()).replace("&", "§")
+                player.sendMessage((configuration.getServiceLaunch()).replace("&", "§")
                         .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode()));
             }
 

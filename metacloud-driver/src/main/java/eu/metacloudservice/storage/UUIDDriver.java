@@ -57,7 +57,41 @@ public class UUIDDriver {
                     reader.close();
                     uuids.add(new UUIDStorage(name, uuid));
                     return uuid;
-                }catch (Exception ignored){}
+                }catch (Exception ignored){
+                    try {
+                        URL url = new URL("https://api.minetools.eu/uuid/" + name);
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+                        StringBuilder builder = new StringBuilder();
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            builder.append(line);
+                        }
+                        JSONObject json = new JSONObject(builder.toString());
+                        String uuid = json.getString("id");
+
+                        reader.close();
+                        uuids.add(new UUIDStorage(name, uuid));
+                        return uuid;
+                    }catch (Exception E){
+                        try {
+                            URL url = new URL("https://api.minecraftservices.com/minecraft/profile/lookup/name/" + name);
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+                            StringBuilder builder = new StringBuilder();
+                            String line;
+                            while ((line = reader.readLine()) != null) {
+                                builder.append(line);
+                            }
+                            JSONObject json = new JSONObject(builder.toString());
+                            String uuid = json.getString("id");
+
+                            reader.close();
+                            uuids.add(new UUIDStorage(name, uuid));
+                            return uuid;
+                        }catch (Exception exception){
+
+                        }
+                    }
+                }
             }
         }
         return null;

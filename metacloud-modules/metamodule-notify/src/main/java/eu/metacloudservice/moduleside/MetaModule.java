@@ -61,16 +61,8 @@ public class MetaModule implements IModule {
 
         try {
             Configuration configuration = (Configuration) new ConfigDriver("./modules/notify/config.json").read(Configuration.class);
-            Configuration rest = new Configuration();
-            rest.setProxiedServiceConnected(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getProxiedServiceConnected()));
-            rest.setProxiedServiceDiconnected(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getProxiedServiceDiconnected()));
-            rest.setProxiedServicePrepared(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getProxiedServicePrepared()));
-            rest.setServiceConnected(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getServiceConnected()));
-            rest.setServiceDiconnected(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getServiceDiconnected()));
-            rest.setServicePrepared(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getServicePrepared()));
-            rest.setServiceLaunch(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getServiceLaunch()));
-            rest.setProxiedServiceLaunch(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getProxiedServiceLaunch()));
-            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/notify/configuration", new ConfigDriver().convert(rest)));
+
+            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/notify/configuration", new ConfigDriver().convert(configuration)));
         }catch (Exception e){
             create();
             set();
@@ -80,16 +72,8 @@ public class MetaModule implements IModule {
     public void update(){
         try {
             Configuration configuration = (Configuration) new ConfigDriver("./modules/notify/config.json").read(Configuration.class);
-            Configuration rest = new Configuration();
-            rest.setProxiedServiceConnected(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getProxiedServiceConnected()));
-            rest.setProxiedServiceDiconnected(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getProxiedServiceDiconnected()));
-            rest.setProxiedServicePrepared(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getProxiedServicePrepared()));
-            rest.setServiceConnected(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getServiceConnected()));
-            rest.setServiceDiconnected(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getServiceDiconnected()));
-            rest.setServicePrepared(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getServicePrepared()));
-            rest.setServiceLaunch(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getServiceLaunch()));
-            rest.setProxiedServiceLaunch(Driver.getInstance().getMessageStorage().utf8ToUBase64(configuration.getProxiedServiceLaunch()));
-            Driver.getInstance().getWebServer().updateRoute("/module/notify/configuration", new ConfigDriver().convert(rest));
+
+            Driver.getInstance().getWebServer().updateRoute("/module/notify/configuration", new ConfigDriver().convert(configuration));
         }catch (Exception e){
             create();
             update();

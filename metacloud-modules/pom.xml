@@ -11,6 +11,9 @@
 
     <artifactId>metacloud-modules</artifactId>
     <packaging>pom</packaging>
+    <modules>
+        <module>metamodule-hub</module>
+    </modules>
 
 
     <properties>

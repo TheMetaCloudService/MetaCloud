@@ -1,10 +1,12 @@
 package eu.metacloudservice.networking.packet;
 
+import eu.metacloudservice.networking.packet.NettyBuffer;
+
 public abstract class Packet {
 
     private int packetUUID;
 
-    public Packet(){
+    public Packet() {
     }
 
     public int getPacketUUID() {
@@ -16,6 +18,6 @@ public abstract class Packet {
     }
 
     public abstract void readPacket(NettyBuffer buffer);
-    public abstract void writePacket(NettyBuffer buffer);
 
+    public abstract void writePacket(NettyBuffer buffer);
 }

@@ -4,7 +4,6 @@ package eu.metacloudservice.velocity;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
-import com.velocitypowered.api.permission.PermissionProvider;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -19,15 +18,12 @@ import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.timebaser.TimerBase;
 import eu.metacloudservice.timebaser.utils.TimeUtil;
 import eu.metacloudservice.velocity.command.CloudCommand;
-import eu.metacloudservice.velocity.command.HubCommand;
 import eu.metacloudservice.velocity.listeners.CloudConnectListener;
 
 import net.kyori.adventure.text.Component;
 import org.slf4j.Logger;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Plugin(id = "metacloudplugin", name = "metacloud-plugin", version = "1.0.0", authors = "RauchigesEtwas")
@@ -50,7 +46,6 @@ public class VelocityBootstrap {
         LiveService service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         CloudAPI.getInstance().setState(ServiceState.LOBBY, service.getService());
         proxyServer.getCommandManager().register("cloud", new CloudCommand(), "metacloud", "mc");
-        proxyServer.getCommandManager().register("hub", new HubCommand(), "lobby", "l", "leave");
         proxyServer.getEventManager().register(this, new CloudConnectListener(proxyServer));
 
         new TimerBase().schedule(new TimerTask() {

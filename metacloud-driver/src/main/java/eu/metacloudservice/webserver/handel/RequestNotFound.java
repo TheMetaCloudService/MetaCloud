@@ -2,7 +2,7 @@
  * this class is by RauchigesEtwas
  */
 
-package eu.metacloudservice.webserver.remastered.handel;
+package eu.metacloudservice.webserver.handel;
 
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;

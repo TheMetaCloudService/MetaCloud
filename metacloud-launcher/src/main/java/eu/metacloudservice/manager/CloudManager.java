@@ -96,7 +96,7 @@ public class CloudManager {
         config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
         if (!new File("./connection.key").exists()){
             AuthenticatorKey key = new AuthenticatorKey();
-            String  k = Driver.getInstance().getMessageStorage().utf8ToUBase64(UUID.randomUUID() + UUID.randomUUID().toString()+ UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID());
+            String  k = UUID.randomUUID() + UUID.randomUUID().toString()+ UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID();
             key.setKey(k);
             new ConfigDriver("./connection.key").save(key);
         }
@@ -174,18 +174,8 @@ public class CloudManager {
                 "The cloud is successfully started, you can use it from now on with '§fhelp§r'.");
         queueDriver= new QueueDriver();
 
-        Messages raw = (Messages) new ConfigDriver("./local/messages.json").read(Messages.class);
-        Messages msg = new Messages(Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getPrefix()),
-                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getSuccessfullyConnected()),
-                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getServiceIsFull()),
-                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getAlreadyOnFallback()),
-                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getConnectingGroupMaintenance()),
-                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getNoFallbackServer()),
-                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNetworkIsFull()),
-                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNetworkIsMaintenance()),
-                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickNoFallback()),
-                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickOnlyProxyJoin()),
-                Driver.getInstance().getMessageStorage().utf8ToUBase64(raw.getKickAlreadyOnNetwork()));
+        Messages msg = (Messages) new ConfigDriver("./local/messages.json").read(Messages.class);
+
 
         Driver.getInstance().getWebServer().addRoute(new RouteEntry("/message/default", new ConfigDriver().convert(msg)));
         GroupList groupList = new GroupList();
@@ -226,11 +216,11 @@ public class CloudManager {
         new NettyDriver();
         Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der Netty-Server wird vorbereitet und dann gestartet", "The Netty server is prepared and then started");
 
-        NettyDriver.getInstance().whitelist.add("127.0.0.1");
+        NettyDriver.getInstance().getWhitelist().add("127.0.0.1");
 
         config.getNodes().forEach(managerConfigNodes -> {
-            if (!NettyDriver.getInstance().whitelist.contains(managerConfigNodes.getAddress())){
-                NettyDriver.getInstance().whitelist.add(managerConfigNodes.getAddress());
+            if (!NettyDriver.getInstance().getWhitelist().contains(managerConfigNodes.getAddress())){
+                NettyDriver.getInstance().getWhitelist().add(managerConfigNodes.getAddress());
             }
         });
 
@@ -243,7 +233,7 @@ public class CloudManager {
         Driver.getInstance().getTerminalDriver().logSpeed(Type.NETWORK, "Der '§fNetty-Server§r' wurde erfolgreich an Port '§f"+config.getNetworkingCommunication()+"§r' angebunden", "The '§fNetty-server§r' was successfully bound on port '§f"+config.getNetworkingCommunication()+"§r'");
 
         //PACKETS
-        NettyDriver.getInstance().packetDriver
+        NettyDriver.getInstance().getPacketDriver()
                 /*
                 * in this part all packages and traders sent to the server are registered
                 * {@link NettyAdaptor} handles the packet and looks where it belongs
@@ -287,7 +277,7 @@ public class CloudManager {
 
     public static void shutdownHook(){
         shutdown = true;
-        NettyDriver.getInstance().packetDriver.getAdaptor().clear();
+        NettyDriver.getInstance().getPacketDriver().getAdaptor().clear();
         serviceDriver.getServicesFromNode("InternalNode").forEach(TaskedService::handelQuit);
         Driver.getInstance().getModuleDriver().unload();
 

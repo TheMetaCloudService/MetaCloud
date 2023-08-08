@@ -27,7 +27,7 @@ public class MOTDListener {
             Motd motd = bungeeBootstrap.group.isMaintenance() ? bungeeBootstrap.configuration.getMaintenancen().get(motdIndex) : bungeeBootstrap.configuration.getDefaults().get(motdIndex);
 
             String protocol = motd.getProtocol() != null && !motd.getProtocol().isEmpty() ?
-                    Driver.getInstance().getMessageStorage().base64ToUTF8(motd.getProtocol())
+           motd.getProtocol()
                             .replace("&", "§")
                             .replace("%proxy_name%", bungeeBootstrap.getLiveService().getService())
                             .replace("%proxy_node%", bungeeBootstrap.getLiveService().getRunningNode())
@@ -36,7 +36,7 @@ public class MOTDListener {
                     "§7" + cloudAPI.getPlayerPool().getPlayers().size() + "/" + bungeeBootstrap.group.getMaxPlayers();
 
 
-            String firstLine = Driver.getInstance().getMessageStorage().base64ToUTF8(motd.getFirstline())
+            String firstLine = motd.getFirstline()
                     .replace("&", "§")
                     .replace("%proxy_name%", bungeeBootstrap.getLiveService().getService())
                     .replace("%proxy_node%", bungeeBootstrap.getLiveService().getRunningNode())
@@ -44,7 +44,7 @@ public class MOTDListener {
                     .replace("%online_players%", "" + cloudAPI.getPlayerPool().getPlayers().size())
                     .replace("%max_players%", "" + bungeeBootstrap.group.getMaxPlayers());
 
-            String secondLine = Driver.getInstance().getMessageStorage().base64ToUTF8(motd.getSecondline())
+            String secondLine = motd.getSecondline()
                     .replace("&", "§")
                     .replace("%proxy_name%", bungeeBootstrap.getLiveService().getService())
                     .replace("%proxy_node%", bungeeBootstrap.getLiveService().getRunningNode())
@@ -58,7 +58,7 @@ public class MOTDListener {
 
 
     String[] players = motd.getPlayerinfos().stream()
-                    .map(info -> Driver.getInstance().getMessageStorage().base64ToUTF8(info).replace("&", "§"))
+                    .map(info -> info.replace("&", "§"))
                     .toArray(String[]::new);
 
 

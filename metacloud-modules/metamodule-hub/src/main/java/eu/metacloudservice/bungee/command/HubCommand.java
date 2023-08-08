@@ -24,16 +24,16 @@ public class HubCommand extends Command {
             ProxiedPlayer player = (ProxiedPlayer) commandSender;
             Messages messages = CloudAPI.getInstance().getMessages();
             if (CloudAPI.getInstance().getPlayerPool().getPlayer(player.getName()).getServer().getGroup().getGroupType().equalsIgnoreCase("LOBBY")){
-                player.sendMessage(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getAlreadyOnFallback()).replace("%PREFIX%", Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix())));
+                player.sendMessage(messages.getAlreadyOnFallback().replace("%PREFIX%", messages.getPrefix()));
             }else {
 
                 if (BungeeBootstrap.getInstance().getLobby(player) == null){
-                    player.sendMessage(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getNoFallbackServer()).replace("%PREFIX%", Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix())));
+                    player.sendMessage(messages.getNoFallbackServer().replace("%PREFIX%", messages.getPrefix()));
 
                 }else {
                     CloudService fallback = BungeeBootstrap.getInstance().getLobby(player);
                     player.connect(ProxyServer.getInstance().getServerInfo(fallback.getName()));
-                    player.sendMessage(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getSuccessfullyConnected()).replace("%PREFIX%", Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getPrefix())).replace("%SERVICE%", fallback.getName()));
+                    player.sendMessage(messages.getSuccessfullyConnected().replace("%PREFIX%", messages.getPrefix()));
 
                 }
 
