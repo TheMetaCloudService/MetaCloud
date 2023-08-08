@@ -11,11 +11,9 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
-import java.util.stream.Collectors;
+public class HubCommand extends Command {
 
-public class LobbyCommand extends Command {
-
-    public LobbyCommand(String name) {
+    public HubCommand(String name) {
         super(name);
     }
 
