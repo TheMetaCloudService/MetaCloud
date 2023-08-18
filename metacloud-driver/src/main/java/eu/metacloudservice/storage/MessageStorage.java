@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 
 public class MessageStorage {
-    public String version = "BETA-1.0.7";
+    public final String version = "BETA-1.0.7";
     public String language;
     public Integer canUseMemory = 0;
     public PacketLoader packetLoader;
@@ -44,8 +44,7 @@ public class MessageStorage {
         if (osBean instanceof com.sun.management.OperatingSystemMXBean) {
             com.sun.management.OperatingSystemMXBean sunOsBean = (com.sun.management.OperatingSystemMXBean) osBean;
             double load = sunOsBean.getSystemCpuLoad();
-            int loadPercent = (int) (load * 100);
-            return loadPercent;
+            return (int) (load * 100);
         } else {
             return -1;
         }

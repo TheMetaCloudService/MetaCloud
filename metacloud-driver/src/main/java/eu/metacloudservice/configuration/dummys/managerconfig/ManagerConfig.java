@@ -56,8 +56,10 @@ public class ManagerConfig implements IConfigAdapter {
     private Integer restApiCommunication;
     @lombok.Setter
     @lombok.Getter
+    private Integer timeOutCheckTime;
+    @lombok.Setter
+    @lombok.Getter
     private boolean copyLogs;
-
 
     @lombok.Setter
     @lombok.Getter

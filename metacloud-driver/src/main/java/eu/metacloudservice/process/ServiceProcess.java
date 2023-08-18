@@ -18,19 +18,15 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Random;
 
-public class ServiceProcess implements IServiceProcess {
+@Getter
+public final class ServiceProcess implements IServiceProcess {
 
-    @Getter
     private final Group group;
-    @Getter
     private final String service;
-    @Getter
     private final int port;
-    @Getter
     private Process process;
-    @Getter
     private final boolean useProtocol;
-    @Getter
+
     private boolean useVelocity;
     public boolean useConsole;
     private   BufferedReader reader;

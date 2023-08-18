@@ -11,6 +11,7 @@ import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.webserver.dummys.liveservice.LiveServiceList;
 import eu.metacloudservice.webserver.dummys.liveservice.LiveServices;
 import lombok.NonNull;
+import lombok.SneakyThrows;
 
 import java.io.*;
 import java.lang.management.ManagementFactory;
@@ -79,43 +80,13 @@ public class CloudService {
         return getGroup().getGroupType().equalsIgnoreCase("GAME");
     }
 
-    public String getMOTD() {
-        try (Socket socket = new Socket()) {
-            socket.connect(new InetSocketAddress(getAddress(), getPort()));
-
-            InputStream in = socket.getInputStream();
-            OutputStream out = socket.getOutputStream();
-
-            out.write(254);
-
-            StringBuilder sb = new StringBuilder();
-
-            int i;
-
-            while ((i = in.read()) != -1) {
-                if ((i != 0) && (i > 16) && (i != 255) && (i != 23) && (i != 24)) {
-                    sb.append((char) i);
-                }
-            }
-
-            String[] data = sb.toString().split("§");
-
-            if (data.length > 0) {
-                String motd = data[0];
-                return motd;
-            }
-
-        } catch (IOException error) {
-            error.printStackTrace();
-        }
-        return "";
-    }
 
 
+    @SneakyThrows
     public int getPlayercount() {
         if (getGroup().getGroupType().equalsIgnoreCase("PROXY"))
-            return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromProxy(this.name).size();
-        return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromService(this.name).size();
+            return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromProxy(this.name).get().size();
+        return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromService(this.name).get().size();
     }
 
     public ServiceState getState(){

@@ -11,6 +11,7 @@ import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.pool.player.entrys.CloudPlayer;
 import eu.metacloudservice.pool.service.entrys.CloudService;
+import lombok.SneakyThrows;
 import net.kyori.adventure.text.Component;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.units.qual.C;
@@ -26,6 +27,7 @@ public class CloudCommand implements SimpleCommand {
  
 
 
+    @SneakyThrows
     @Override
     public void execute(Invocation invocation) {
        String[] args = invocation.arguments();
@@ -55,11 +57,11 @@ public class CloudCommand implements SimpleCommand {
                                 Group groupc = CloudAPI.getInstance().getGroups().parallelStream().filter(group1 -> group1.getGroup().equalsIgnoreCase(group)).findFirst().get();
                                 if (groupc.isMaintenance()) {
                                     CloudAPI.getInstance().dispatchCommand("group " + group + " setmaintenance false");
-                                    player.sendMessage(Component.text(PREFIX + "The group '§f"+group+"§r' is now no longer in maintenance"));
+                                    player.sendMessage(Component.text(PREFIX + "The group '§f"+group+"§7' is now no longer in maintenance"));
                                 } else {
 
                                     CloudAPI.getInstance().dispatchCommand("group " + group + " setmaintenance true");
-                                    player.sendMessage(Component.text(PREFIX + "The group '§f"+group+"§r' is now in maintenance"));
+                                    player.sendMessage(Component.text(PREFIX + "The group '§f"+group+"§7' is now in maintenance"));
                                 }
                             }
                         }
@@ -95,7 +97,7 @@ public class CloudCommand implements SimpleCommand {
                             if (CloudAPI.getInstance().getServicePool().getService(group) != null){
                                 if (args.length == 2){
                                     CloudAPI.getInstance().dispatchCommand("service stop " + group );
-                                    player.sendMessage(Component.text(PREFIX + "The '§f"+group+"§r' service is now stopped"));
+                                    player.sendMessage(Component.text(PREFIX + "The '§f"+group+"§7' service is now stopped"));
                                 }else {
                                     sendHelp(player);
                                 }
@@ -111,7 +113,7 @@ public class CloudCommand implements SimpleCommand {
                             if (CloudAPI.getInstance().getGroupsName().contains(group)){
                                 if (args.length == 2){
                                     CloudAPI.getInstance().dispatchCommand("service stopgroup " + group );
-                                    player.sendMessage(Component.text(PREFIX + "The '§f"+group+"§r' group is now stopped"));
+                                    player.sendMessage(Component.text(PREFIX + "The '§f"+group+"§7' group is now stopped"));
                                 }else {
                                     sendHelp(player);
                                 }
@@ -165,17 +167,17 @@ public class CloudCommand implements SimpleCommand {
                             String name = args[2];
                             if (args[1].equalsIgnoreCase("add")){
                                 if (list.contains(name)){
-                                    player.sendMessage(Component.text(PREFIX +  "The player  '§f"+name+"§r'  is now on the whitelist"));
+                                    player.sendMessage(Component.text(PREFIX +  "The player  '§f"+name+"§7'  is now on the whitelist"));
                                     CloudAPI.getInstance().addWhiteList(name);
                                 }else {
-                                    player.sendMessage(Component.text(PREFIX +  "The player  '§f"+name+"§r'  is already whitelisted"));
+                                    player.sendMessage(Component.text(PREFIX +  "The player  '§f"+name+"§7'  is already whitelisted"));
                                 }
                             }else if (args[1].equalsIgnoreCase("remove")){
                                 if (!list.contains(name)){
                                     CloudAPI.getInstance().removeWhiteList(name);
-                                    player.sendMessage(Component.text(PREFIX +  "The player  '§f"+name+"§r'  is now no longer on the whitelist"));
+                                    player.sendMessage(Component.text(PREFIX +  "The player  '§f"+name+"§7'  is now no longer on the whitelist"));
                                 }else {
-                                    player.sendMessage(Component.text(PREFIX +  "The player '§f"+name+"§r' is not whitelisted"));
+                                    player.sendMessage(Component.text(PREFIX +  "The player '§f"+name+"§7' is not whitelisted"));
                                 }
                             }else {
                                 sendHelp(player);
@@ -191,7 +193,7 @@ public class CloudCommand implements SimpleCommand {
                                 msg.append(args[i]).append(" ");
                             }
                             if (CloudAPI.getInstance().getServicePool().getServices().stream().anyMatch(service1 -> service1.getName().equalsIgnoreCase(service))){
-                                player.sendMessage(Component.text(PREFIX + "The command '§f"+msg.toString()+"§r' was sent to the service '§f"+service+"§r'"));
+                                player.sendMessage(Component.text(PREFIX + "The command '§f"+msg.toString()+"§7' was sent to the service '§f"+service+"§7'"));
                                 CloudAPI.getInstance().getServicePool().getService(service).dispatchCommand(msg.toString());
                             }else {
                                 player.sendMessage(Component.text(PREFIX + "The service you are looking for was not found, please check that it is spelled correctly."));
@@ -212,7 +214,7 @@ public class CloudCommand implements SimpleCommand {
                                     String playerss = players.get(0).getUsername();
                                     if (players.size() != 1){
                                         for (int i = 1; i != players.size(); i++){
-                                            playerss = playerss + "§r, §f" + players.get(i).getUsername();
+                                            playerss = playerss + "§7, §f" + players.get(i).getUsername();
                                         }
                                     }
                                     player.sendMessage(Component.text(PREFIX + "current players §8⯮ §f" + playerss));
@@ -220,9 +222,9 @@ public class CloudCommand implements SimpleCommand {
                             }else if (chose.equalsIgnoreCase("services")){
                                 CloudAPI.getInstance().getServicePool().getServices().forEach(service -> {
                                     player.sendMessage(Component.text(PREFIX + "§f" + service.getName() +
-                                            " §r| GROUP §8⯮ §f" + service.getGroup() +
-                                            "§r - PLAYERS §8⯮ §f" + service.getPlayers().size() +
-                                            "§r ~ STATE §8⯮ §f" + service.getState()));
+                                            " §7| GROUP §8⯮ §f" + service.getGroup() +
+                                            "§7 - PLAYERS §8⯮ §f" + service.getPlayers().size() +
+                                            "§7 ~ STATE §8⯮ §f" + service.getState()));
                                 });
                             }else {
                                 sendHelp(player);
@@ -234,8 +236,8 @@ public class CloudCommand implements SimpleCommand {
                         if (args.length == 2){
                             String service = args[1];
                             if (CloudAPI.getInstance().getServicePool().serviceNotNull(service)){
-                                AsyncCloudAPI.getInstance().getServicePool().getService(service).sync();
-                                player.sendMessage(Component.text(PREFIX + "The service '§f"+service+"§r' was successfully synchronized"));
+                                AsyncCloudAPI.getInstance().getServicePool().getService(service).get().sync();
+                                player.sendMessage(Component.text(PREFIX + "The service '§f"+service+"§7' was successfully synchronized"));
                             }else {
                                 player.sendMessage(Component.text(PREFIX + "The service was not found and therefore cannot be synced"));
                             }

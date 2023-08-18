@@ -16,11 +16,9 @@ import java.util.List;
 public class SimpleLatestLog {
 
     private final File latestLog;
-    private final List<String> logs;
 
     @SneakyThrows
     public SimpleLatestLog() {
-        this.logs = new ArrayList<>();
 
         File logsDir = new File("./local/logs/");
         if (!logsDir.exists()) {
@@ -51,14 +49,6 @@ public class SimpleLatestLog {
     public void log(String line) {
         try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(this.latestLog, true)))) {
             writer.println(line);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void saveLogs() {
-        try {
-            Files.write(this.latestLog.toPath(), this.logs, StandardCharsets.UTF_8, StandardOpenOption.APPEND);
         } catch (IOException e) {
             e.printStackTrace();
         }

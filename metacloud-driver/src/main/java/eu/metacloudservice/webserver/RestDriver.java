@@ -11,12 +11,13 @@ import lombok.SneakyThrows;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class RestDriver {
 
-    protected static final Gson GSON = (new GsonBuilder()).serializeNulls().setPrettyPrinting().disableHtmlEscaping().create();
+    private static final Gson GSON = (new GsonBuilder()).serializeNulls().setPrettyPrinting().disableHtmlEscaping().create();
     private String ip;
     private int port;
 
@@ -58,7 +59,7 @@ public class RestDriver {
             con.setDoOutput(true);
             con.setConnectTimeout(5000); // Set connection timeout to 5 seconds
             con.setReadTimeout(5000);    // Set read timeout to 5 seconds
-
+            con.connect();
             try (OutputStream os = con.getOutputStream()) {
                 os.write(content.getBytes());
                 os.flush();
@@ -83,7 +84,6 @@ public class RestDriver {
         return result;
 
     }
-
     public String get(String route){
         AuthenticatorKey authConfig = (AuthenticatorKey) new ConfigDriver("./connection.key").read(AuthenticatorKey.class);
         String authCheckKey = Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey());
@@ -108,9 +108,8 @@ public class RestDriver {
                     response.append(inputLine);
                 }
                 content = response.toString();
-            } else {
             }
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         } finally {
 
             if (in != null) {

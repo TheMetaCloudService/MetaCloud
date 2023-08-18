@@ -19,9 +19,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TerminalCompleter  implements Completer {
+public final class TerminalCompleter  implements Completer {
 
-    private boolean exeists;
+    private boolean exists;
 
     @Override
     public void complete(LineReader lineReader, ParsedLine parsedLine, List<Candidate> list) {
@@ -255,7 +255,7 @@ public class TerminalCompleter  implements Completer {
 
     private boolean canBeFinde(String line){
         ArrayList<String> commandsAndAliases = new ArrayList<>();
-        exeists = false;
+        exists = false;
 
         if (line.contains(" ")){
             return true;
@@ -269,11 +269,11 @@ public class TerminalCompleter  implements Completer {
 
         commandsAndAliases.forEach(command -> {
             if (command.startsWith(line)){
-                exeists = true;
+                exists = true;
             }
         });
 
 
-        return exeists;
+        return exists;
     }
 }

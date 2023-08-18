@@ -27,17 +27,23 @@ import eu.metacloudservice.networking.packet.Packet;
 import eu.metacloudservice.pool.player.PlayerPool;
 import eu.metacloudservice.pool.player.entrys.CloudPlayer;
 import eu.metacloudservice.pool.service.ServicePool;
+import eu.metacloudservice.pool.service.entrys.CloudService;
 import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.storage.UUIDDriver;
+import eu.metacloudservice.timebaser.TimerBase;
+import eu.metacloudservice.timebaser.utils.TimeUtil;
 import eu.metacloudservice.webserver.RestDriver;
 import eu.metacloudservice.webserver.dummys.GroupList;
 import eu.metacloudservice.webserver.dummys.PlayerGeneral;
 import eu.metacloudservice.webserver.dummys.WhiteList;
+import eu.metacloudservice.webserver.dummys.liveservice.LiveServiceList;
+import eu.metacloudservice.webserver.dummys.liveservice.LiveServices;
 import lombok.NonNull;
 
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimerTask;
 
 public class CloudAPI {
 
@@ -113,8 +119,28 @@ public class CloudAPI {
             }
         }
 
+
+
+
         NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInServiceConnect(service.getService()));
 
+
+        new TimerBase().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("TEST #1");
+                CloudService service = CloudAPI.getInstance().getServicePool().getService(CloudAPI.getInstance().getCurrentService().getService());
+                System.out.println("TEST #2");
+                LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
+                System.out.println("TEST #3");
+                LiveServices liveServices = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + service.getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
+                System.out.println("TEST #4");
+                liveServices.setLastReaction(System.currentTimeMillis());
+                System.out.println("TEST #5");
+                CloudAPI.getInstance().getRestDriver().put("/cloudservice/" + service.getName().replace(list.getCloudServiceSplitter(), "~"), new ConfigDriver().convert(liveServices));
+                System.out.println("TEST #6");
+            }
+        }, 5, 30, TimeUtil.SECONDS);
     }
 
     public void launchService(String group){

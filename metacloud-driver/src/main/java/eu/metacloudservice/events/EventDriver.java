@@ -6,6 +6,7 @@ import eu.metacloudservice.events.entrys.Subscribe;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class EventDriver {
     public static final int PRE = -1;
@@ -16,7 +17,7 @@ public class EventDriver {
     private final Set<ICloudListener> registeredListeners;
 
     public EventDriver() {
-        this.bindings = new HashMap<>();
+        this.bindings = new ConcurrentHashMap<>();
         this.registeredListeners = new HashSet<>();
     }
 
@@ -39,6 +40,7 @@ public class EventDriver {
             handler.execute(event);
         }
         return event;
+
     }
     public <T extends IEventAdapter> T executeEvent(T event) {
         return this.executeEvent(event, ALL);

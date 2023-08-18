@@ -14,6 +14,7 @@ import eu.metacloudservice.configuration.dummys.authenticator.AuthenticatorKey;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
 import eu.metacloudservice.webserver.entry.RouteEntry;
 import eu.metacloudservice.webserver.handel.RequestGET;
+import eu.metacloudservice.webserver.handel.RequestHandler;
 import eu.metacloudservice.webserver.handel.RequestNotFound;
 import eu.metacloudservice.webserver.handel.RequestPUT;
 import io.netty.bootstrap.ServerBootstrap;
@@ -31,13 +32,12 @@ public class WebServer {
 
 
 
-    private final ArrayList<RouteEntry> ROUTES;
-    public final String AUTH_KEY;
+    private  ArrayList<RouteEntry> ROUTES;
+    public  String AUTH_KEY;
 
-    private final EventLoopGroup boosGroup;
-    private final EventLoopGroup workerGroup;
-
-    private Thread current;
+    private  EventLoopGroup boosGroup;
+    private  EventLoopGroup workerGroup;
+    private  Thread current;
 
     @SneakyThrows
     public WebServer() {
@@ -74,28 +74,28 @@ public class WebServer {
 
                                         }
                                     });
+
                                     ch.pipeline().addLast(new HttpRequestDecoder());
                                     ch.pipeline().addLast(new HttpResponseEncoder());
                                     ch.pipeline().addLast(new HttpObjectAggregator(65536));
-                                    ch.pipeline().addLast(new RequestGET()); // ALL GET REQUESTS WAS LOAD
-                                    ch.pipeline().addLast(new RequestNotFound());
-                                    ch.pipeline().addLast(new RequestPUT());
+                                    ch.pipeline().addLast(new RequestHandler());
                                 }
                             });
                     ChannelFuture future = bootstrap.bind(config.getRestApiCommunication()).sync();
 
                     Channel channel = future.channel();
                     channel.closeFuture().sync();
-                }catch (Exception e){
+                }catch (Exception ignored){
                 }
             });
         current.start();
     }
 
     public String getRoute(String path){
-        if (        ROUTES.parallelStream().noneMatch(routeEntry -> routeEntry.readROUTE().equalsIgnoreCase(path)))return null;
-
-        return ROUTES.parallelStream().filter(routeEntry -> routeEntry.readROUTE().equalsIgnoreCase(path)).findFirst().get().channelRead();
+        if (ROUTES.parallelStream().noneMatch(routeEntry -> routeEntry.readROUTE().equalsIgnoreCase(path)))
+            return null;
+        else
+            return ROUTES.parallelStream().filter(routeEntry -> routeEntry.readROUTE().equalsIgnoreCase(path)).findFirst().get().channelRead();
     }
 
 

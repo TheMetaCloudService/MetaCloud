@@ -169,7 +169,6 @@ public class CloudBoot {
         }else {
             new CloudNode();
         }
-
     }
 
     public static void  waitForFinishSetup(){

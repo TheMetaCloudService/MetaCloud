@@ -12,9 +12,6 @@ public class CloudPlayerRestCache implements ICloudPlayerRestCache, IConfigAdapt
     private  String cloudplayerservice;
     private Long cloudplayerconnect;
 
-
-
-
     public CloudPlayerRestCache(String name, String uuid) {
         this.cloudplayername = name;
         this.cloudplayeruuid = uuid;

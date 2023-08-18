@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 
-public class TerminalStorageLine {
+public final class TerminalStorageLine {
 
     public List<String> tabCompletes;
     public Consumer<String> inputs;

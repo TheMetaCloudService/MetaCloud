@@ -8,22 +8,18 @@ import lombok.SneakyThrows;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CommandDriver {
+public final class CommandDriver {
 
     private final Set<CommandAdapter> commands;
-
     public CommandDriver() {
         this.commands = new HashSet<>();
     }
-
     public Set<CommandAdapter> getCommands() {
         return commands;
     }
-
     public void registerCommand(CommandAdapter command){
         this.commands.add(command);
     }
-
 
     @SneakyThrows
     public void executeCommand(String line){
@@ -40,7 +36,6 @@ public class CommandDriver {
             }
         }
     }
-
 
     public CommandAdapter getCommand(String name){
         for (CommandAdapter command : getCommands()){

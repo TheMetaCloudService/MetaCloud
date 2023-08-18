@@ -6,6 +6,7 @@ import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class ServicePool {
@@ -17,20 +18,20 @@ public class ServicePool {
         connectedServices = new ArrayList<>();
     }
 
-    public List<CloudService> getServices(){
-        return connectedServices;
+    public CompletableFuture<List<CloudService>> getServices(){
+        return CompletableFuture.supplyAsync(() -> connectedServices);
     }
 
-    public CloudService getService(@NonNull String name){
-        return connectedServices.stream().filter(cloudService -> cloudService.getName().equalsIgnoreCase(name)).findFirst().get();
+    public CompletableFuture<CloudService> getService(@NonNull String name){
+        return CompletableFuture.supplyAsync(() -> connectedServices.stream().filter(cloudService -> cloudService.getName().equalsIgnoreCase(name)).findFirst().get());
     }
 
-    public List<CloudService> getServicesByGroup(@NonNull String group){
-        return connectedServices.stream().filter(cloudService -> cloudService.getGroup().getGroup().equals(group)).collect(Collectors.toList());
+    public CompletableFuture<List<CloudService>> getServicesByGroup(@NonNull String group){
+        return CompletableFuture.supplyAsync(() -> connectedServices.stream().filter(cloudService -> cloudService.getGroup().getGroup().equals(group)).collect(Collectors.toList()));
     }
 
-    public List<CloudService> getServicesByState(@NonNull  ServiceState state){
-        return connectedServices.stream().filter(cloudService -> cloudService.getState() == state).collect(Collectors.toList());
+    public CompletableFuture<List<CloudService>> getServicesByState(@NonNull  ServiceState state){
+        return CompletableFuture.supplyAsync( () ->connectedServices.stream().filter(cloudService -> cloudService.getState() == state).collect(Collectors.toList()));
     }
 
     public boolean serviceNotNull(@NonNull String name){

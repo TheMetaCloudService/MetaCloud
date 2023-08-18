@@ -7,18 +7,18 @@ import eu.metacloudservice.module.ModuleDriver;
 import eu.metacloudservice.storage.MessageStorage;
 import eu.metacloudservice.terminal.TerminalDriver;
 import eu.metacloudservice.webserver.WebServer;
+import lombok.Getter;
 
-public class Driver {
+@Getter
+public final class Driver {
 
-    private static  Driver instance;
+    private static Driver instance;
     private TerminalDriver terminalDriver;
     private final MessageStorage messageStorage;
     private final GroupDriver groupDriver;
     private final TemplateDriver templateDriver;
     private final ModuleDriver moduleDriver;
     private WebServer webServer;
-
-
 
     public Driver(){
         /*
@@ -33,32 +33,8 @@ public class Driver {
 
     }
 
-    public ModuleDriver getModuleDriver() {
-        return moduleDriver;
-    }
-
-    public TemplateDriver getTemplateDriver() {
-        return templateDriver;
-    }
-
-    public GroupDriver getGroupDriver() {
-        return groupDriver;
-    }
-
     public void runWebServer(){
         this.webServer = new WebServer();
-    }
-
-    public WebServer getWebServer() {
-        return webServer;
-    }
-
-    public TerminalDriver getTerminalDriver() {
-        return terminalDriver;
-    }
-
-    public MessageStorage getMessageStorage() {
-        return messageStorage;
     }
 
     public void setTerminalDriver(TerminalDriver terminalDriver) {

@@ -7,6 +7,7 @@ import lombok.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class PlayerPool {
@@ -17,44 +18,44 @@ public class PlayerPool {
         this.connectedPlayers = new ArrayList<>();
     }
 
-    public List<CloudPlayer> getPlayers(){
-        return connectedPlayers;
+    public CompletableFuture<List<CloudPlayer>> getPlayers(){
+        return CompletableFuture.supplyAsync( () ->connectedPlayers);
     }
 
-    public CloudPlayer getPlayer(@NonNull String username){
-        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUsername().equals(username)).toList().get(0);
+    public CompletableFuture<CloudPlayer> getPlayer(@NonNull String username){
+        return CompletableFuture.supplyAsync(() ->connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUsername().equals(username)).toList().get(0));
     }
 
-    public CloudPlayer getPlayer(@NonNull UUID uniqueId){
-        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString())).toList().get(0);
+    public CompletableFuture<CloudPlayer> getPlayer(@NonNull UUID uniqueId){
+        return CompletableFuture.supplyAsync( () -> connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString())).toList().get(0));
     }
 
-    public List<CloudPlayer> getPlayersFromService(@NonNull String service){
-        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getServer().getName().equals(service)).collect(Collectors.toList());
+    public CompletableFuture<List<CloudPlayer>> getPlayersFromService(@NonNull String service){
+        return CompletableFuture.supplyAsync(() ->connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getServer().getName().equals(service)).collect(Collectors.toList()));
     }
 
-    public List<CloudPlayer> getPlayersFromServiceGroupByState(@NonNull String group, ServiceState state){
-        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getServer().getGroup().getGroup().equals(group))
+    public CompletableFuture<List<CloudPlayer>> getPlayersFromServiceGroupByState(@NonNull String group, ServiceState state){
+        return CompletableFuture.supplyAsync(() ->connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getServer().getGroup().getGroup().equals(group))
                 .filter(cloudPlayer -> cloudPlayer.getServer().getState() == state)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
-    public List<CloudPlayer> getPlayersFromProxyGroupByState(@NonNull String group, ServiceState state){
-        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getProxyServer().getGroup().getGroup().equals(group))
+    public CompletableFuture<List<CloudPlayer>> getPlayersFromProxyGroupByState(@NonNull String group, ServiceState state){
+        return CompletableFuture.supplyAsync(() ->connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getProxyServer().getGroup().getGroup().equals(group))
                 .filter(cloudPlayer -> cloudPlayer.getProxyServer().getState() == state)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
-    public List<CloudPlayer> getPlayersFromProxy(@NonNull String Proxy){
-        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getProxyServer().getName().equals(Proxy)).collect(Collectors.toList());
+    public CompletableFuture<List<CloudPlayer>> getPlayersFromProxy(@NonNull String Proxy){
+        return CompletableFuture.supplyAsync(() ->connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getProxyServer().getName().equals(Proxy)).collect(Collectors.toList()));
     }
 
-    public List<CloudPlayer> getPlayersByProxyGroup(@NonNull String group){
-        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getProxyServer().getGroup().getGroup().equals(group)).collect(Collectors.toList());
+    public CompletableFuture<List<CloudPlayer>> getPlayersByProxyGroup(@NonNull String group){
+        return CompletableFuture.supplyAsync(()->connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getProxyServer().getGroup().getGroup().equals(group)).collect(Collectors.toList()));
     }
 
-    public List<CloudPlayer> getPlayersByServiceGroup(@NonNull String group){
-        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getServer().getGroup().getGroup().equals(group)).collect(Collectors.toList());
+    public CompletableFuture<List<CloudPlayer>> getPlayersByServiceGroup(@NonNull String group){
+        return CompletableFuture.supplyAsync(() ->connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getServer().getGroup().getGroup().equals(group)).collect(Collectors.toList()));
     }
 
 

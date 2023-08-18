@@ -587,6 +587,7 @@ public class MainSetup {
                 managerConfig.setShowConnectingPlayers(true);
                 managerConfig.setSpigotPort(5000);
                 managerConfig.setAutoUpdate(true);
+                managerConfig.setTimeOutCheckTime(100);
                 managerConfig.setUuid("INT");
                 managerConfig.setSplitter("-");
                 managerConfig.setWhitelist(new ArrayList<>());
@@ -613,6 +614,7 @@ public class MainSetup {
                 managerConfig.setUseProtocol(false);
                 managerConfig.setCopyLogs(true);
                 managerConfig.setProcessorUsage(90);
+                managerConfig.setTimeOutCheckTime(100);
                 managerConfig.setServiceStartupCount(3);
                 managerConfig.setRestApiCommunication(8097);
                 managerConfig.setShowConnectingPlayers(true);

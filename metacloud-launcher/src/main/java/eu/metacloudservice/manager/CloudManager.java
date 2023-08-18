@@ -97,7 +97,7 @@ public class CloudManager {
         if (!new File("./connection.key").exists()){
             AuthenticatorKey key = new AuthenticatorKey();
             String  k = UUID.randomUUID() + UUID.randomUUID().toString()+ UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID();
-            key.setKey(k);
+            key.setKey(Driver.getInstance().getMessageStorage().utf8ToUBase64(k));
             new ConfigDriver("./connection.key").save(key);
         }
         Driver.getInstance().getMessageStorage().canUseMemory = config.getCanUsedMemory() -250;

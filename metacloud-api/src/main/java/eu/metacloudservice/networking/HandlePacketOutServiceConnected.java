@@ -14,9 +14,7 @@ public class HandlePacketOutServiceConnected implements NettyAdaptor {
     @Override
     public void handle(Channel channel, Packet packet) {
         if (packet instanceof PacketOutServiceConnected){
-            System.out.println("-> " + ((PacketOutServiceConnected) packet).getName());
             if (!CloudAPI.getInstance().getServicePool().serviceNotNull(((PacketOutServiceConnected) packet).getName())){
-                System.out.println("-> " + ((PacketOutServiceConnected) packet).getName());
                 CloudAPI.getInstance().getServicePool().registerService(new CloudService(((PacketOutServiceConnected) packet).getName(), ((PacketOutServiceConnected) packet).getGroup()));
                 AsyncCloudAPI.getInstance().getServicePool().registerService(new eu.metacloudservice.async.pool.service.entrys.CloudService(((PacketOutServiceConnected) packet).getName(), ((PacketOutServiceConnected) packet).getGroup()));
                 CloudService cloudService = CloudAPI.getInstance().getServicePool().getService(((PacketOutServiceConnected) packet).getName());
@@ -29,13 +27,11 @@ public class HandlePacketOutServiceConnected implements NettyAdaptor {
                 }else {
                     try {
                         CloudAPI.getInstance().getEventDriver().executeEvent(new CloudServiceConnectedEvent(cloudService.getName(), cloudService.getGroup().getStorage().getRunningNode(), cloudService.getPort(), cloudService.getAddress(), cloudService.getGroup().getGroup()));
-
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                 }
             }
-
         }
     }
 }

@@ -16,6 +16,7 @@ import eu.metacloudservice.networking.out.service.PacketOutServiceLaunch;
 import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.timebaser.TimerBase;
 import eu.metacloudservice.timebaser.utils.TimeUtil;
+import eu.metacloudservice.webserver.dummys.liveservice.LiveServices;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -125,7 +126,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
     @Override
     public void handelServices() {
         Thread current = new Thread(() -> {
-            new TimerBase().schedule(new TimerTask() {
+            new TimerBase().scheduleAsync(new TimerTask() {
                 @Override
                 public void run() {
 
@@ -153,12 +154,15 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                                 CloudManager.serviceDriver.unregistered(service);
                             }
                         }
-                    }catch (Exception e){
-
+                    }catch (Exception e) {
+                        throw new RuntimeException(e);
                     }
                 }
             }, 0, 100, TimeUtil.MILLISECONDS);
-            new TimerBase().schedule(new TimerTask() {
+
+
+
+            new TimerBase().scheduleAsync(new TimerTask() {
                 @Override
                 public void run() {
                     if (CloudManager.shutdown){
@@ -188,7 +192,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                 }
             }, 20, 20, TimeUtil.SECONDS);
 
-            new TimerBase().schedule(new TimerTask() {
+            new TimerBase().scheduleAsync(new TimerTask() {
                 @Override
                 public void run() {
 
@@ -327,7 +331,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
 
             //AUTO STARTUP
 
-            new TimerBase().schedule(new TimerTask() {
+            new TimerBase().scheduleAsync(new TimerTask() {
                 @Override
                 public void run() {
                     if (CloudManager.shutdown){
@@ -419,6 +423,28 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                     }catch (Exception ignored){}
                 }
             }, 0, 1, TimeUtil.SECONDS);
+
+            new TimerBase().scheduleAsync(new TimerTask() {
+                @Override
+                public void run() {
+                    if (!CloudManager.shutdown){
+                        CloudManager.serviceDriver.getServices().forEach(taskedService -> {
+                            LiveServices ls = (LiveServices) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudservice/" + taskedService.getEntry().getServiceName().replace(CloudManager.config.getSplitter(), "~")), LiveServices.class);
+
+                          if (ls != null){
+                              if (ls.getLastReaction() != -1){
+
+                                  int timeDifferenceSeconds = Integer.parseInt(String.valueOf(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - ls.getLastReaction())));
+                                  if (timeDifferenceSeconds >= CloudManager.config.getTimeOutCheckTime()){
+                                      taskedService.handelRestart();
+                                  }
+                              }
+                          }
+
+                        });
+                    }
+                }
+            }, 0, 5, TimeUtil.SECONDS);
         });
         current.setPriority(1);
         current.start();

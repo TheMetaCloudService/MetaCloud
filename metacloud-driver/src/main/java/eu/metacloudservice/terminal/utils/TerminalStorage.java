@@ -2,7 +2,7 @@ package eu.metacloudservice.terminal.utils;
 
 import eu.metacloudservice.terminal.enums.Type;
 
-public class TerminalStorage {
+public final class TerminalStorage {
 
     private final Type type;
     private final String message;

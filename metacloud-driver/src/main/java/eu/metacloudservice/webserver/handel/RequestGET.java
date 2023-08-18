@@ -11,43 +11,33 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.*;
 import io.netty.util.CharsetUtil;
 
-public class RequestGET extends ChannelInboundHandlerAdapter {
+public  class RequestGET  {
 
-    @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        if (msg instanceof FullHttpRequest) {
-            FullHttpRequest request = (FullHttpRequest) msg;
-            if (request.method().name().equals("GET")) {
-                try {
-                    String uri = request.uri();
-                    if (uri.contains("/")) {
-                        String authenticatorKey = uri.split("/")[1];
-                        if (Driver.getInstance().getWebServer().AUTH_KEY.contains(authenticatorKey)){
-                            String path = uri.replace("/" + authenticatorKey, "");
-                            if (Driver.getInstance().getWebServer().getRoutes(path) == null){
-                                FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter a right path\"}");
-                                ctx.writeAndFlush(response);
-                            }
-                            else if (!path.isEmpty()){
-                                String json = Driver.getInstance().getWebServer().getRoute(path);
-                                FullHttpResponse response = createResponse(HttpResponseStatus.OK, json);
-                                ctx.writeAndFlush(response);
-                            }else {
-                                FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter a right path\"}");
-                                ctx.writeAndFlush(response);
-                            }
-                        }else {
-                            FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter the right auth-key\"}");
-                            ctx.writeAndFlush(response);
-                        }
-                    } else {
-                        FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter the right auth-key\"}");
-                        ctx.writeAndFlush(response);
-                    }
-                }catch (Exception ignored){
-
+    public void handle(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
+        String uri = request.uri();
+        if (uri.contains("/")) {
+            String authenticatorKey = uri.split("/")[1];
+            if (Driver.getInstance().getWebServer().AUTH_KEY.contains(authenticatorKey)){
+                String path = uri.replace("/" + authenticatorKey, "");
+                if (Driver.getInstance().getWebServer().getRoutes(path) == null){
+                    FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter a right path\"}");
+                    ctx.writeAndFlush(response);
                 }
+                else if (!path.isEmpty()){
+                    String json = Driver.getInstance().getWebServer().getRoute(path);
+                    FullHttpResponse response = createResponse(HttpResponseStatus.OK, json);
+                    ctx.writeAndFlush(response);
+                }else {
+                    FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter a right path\"}");
+                    ctx.writeAndFlush(response);
+                }
+            }else {
+                FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter the right auth-key\"}");
+                ctx.writeAndFlush(response);
             }
+        } else {
+            FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter the right auth-key\"}");
+            ctx.writeAndFlush(response);
         }
     }
 

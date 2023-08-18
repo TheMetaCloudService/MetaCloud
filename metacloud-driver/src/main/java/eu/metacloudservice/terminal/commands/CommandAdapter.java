@@ -11,9 +11,7 @@ public abstract class CommandAdapter {
     private final String[] aliases;
     private final String DEdescription;
     private final String ENdescription;
-
     private final String permission;
-
 
     public CommandAdapter(){
         final var annotation = getClass().getAnnotation(CommandInfo.class);
@@ -27,27 +25,22 @@ public abstract class CommandAdapter {
 
     public abstract void performCommand(CommandAdapter command, String[] args);
     public abstract ArrayList<String> tabComplete(TerminalStorageLine consoleInput, String[] args);
-
-
     public String getCommand() {
         return command;
     }
-
     public String getDEdescription() {
         return DEdescription;
     }
-
     public String getENdescription() {
         return ENdescription;
     }
-
     public ArrayList<String> getAliases() {
         ArrayList<String> resuls = new ArrayList<>();
         Collections.addAll(resuls, aliases);
         return resuls;
     }
-
     public String getPermission() {
         return permission;
     }
+
 }

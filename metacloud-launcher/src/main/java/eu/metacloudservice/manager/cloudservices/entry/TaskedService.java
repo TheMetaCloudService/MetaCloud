@@ -48,6 +48,8 @@ public class TaskedService implements ITaskedService {
         liveServices.setPort(-1);
         liveServices.setUuid(entry.getUsedId());
         liveServices.setState(ServiceState.QUEUED);
+        liveServices.setLastReaction(-1);
+
 
         LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudManager.restDriver.get("/cloudservice/general"), LiveServiceList.class);
         list.getCloudServices().add(entry.getServiceName());

@@ -77,8 +77,14 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
     }
 
     public void removeChannel(String receiver) {
-        this.CHANNELS.get(receiver).close();
-        this.CHANNELS.remove(receiver);
+
+        if (this.CHANNELS.get(receiver) == null)
+            return;
+        else {
+            if (    this.CHANNELS.get(receiver).isActive())
+                this.CHANNELS.get(receiver).close();
+            this.CHANNELS.remove(receiver);
+        }
     }
 
     public void close() {
@@ -91,8 +97,6 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
 
     @Override
     protected void initChannel(Channel channel) {
-
-
         final InetSocketAddress inetSocketAddress = ((InetSocketAddress) channel.remoteAddress());
 
         if (allowAddress(inetSocketAddress.getAddress().getHostAddress())){

@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class TerminalDriver {
+public final class TerminalDriver {
 
 
     private boolean isInSetup;

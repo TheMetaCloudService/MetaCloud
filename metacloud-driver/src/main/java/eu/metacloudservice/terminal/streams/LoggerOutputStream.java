@@ -6,7 +6,7 @@ import eu.metacloudservice.terminal.enums.Type;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 
-public class LoggerOutputStream extends ByteArrayOutputStream {
+public final class LoggerOutputStream extends ByteArrayOutputStream {
 
     private final Type logType;
 
@@ -20,6 +20,9 @@ public class LoggerOutputStream extends ByteArrayOutputStream {
         this.reset();
         if (input != null && !input.isEmpty()) {
             Driver.getInstance().getTerminalDriver().log(this.logType, input.split("\n"));
+            Driver.getInstance().getTerminalDriver().getLineReader().getTerminal().flush();
+            String prompt = Driver.getInstance().getTerminalDriver().getColoredString(String.format("§bmetacloud§f@%s §7=> ", System.getProperty("user.name")));
+            Driver.getInstance().getTerminalDriver().getTerminal().writer().print(prompt);
             Driver.getInstance().getTerminalDriver().getLineReader().getTerminal().flush();
         }
     }

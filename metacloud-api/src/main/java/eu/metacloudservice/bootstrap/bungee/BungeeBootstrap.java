@@ -6,6 +6,11 @@ import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.in.service.PacketInServiceDisconnect;
+import eu.metacloudservice.pool.service.entrys.CloudService;
+import eu.metacloudservice.timebaser.TimerBase;
+import eu.metacloudservice.timebaser.utils.TimeUtil;
+import eu.metacloudservice.webserver.dummys.liveservice.LiveServiceList;
+import eu.metacloudservice.webserver.dummys.liveservice.LiveServices;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
@@ -14,6 +19,8 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.TimerTask;
 
 public class BungeeBootstrap extends Plugin {
 
@@ -30,10 +37,6 @@ public class BungeeBootstrap extends Plugin {
     public void onEnable() {
         instance = this;
         this.audiences =  BungeeAudiences.builder(BungeeBootstrap.getInstance()).build();
-        ProxyServer.getInstance().getConsole().sendMessage("[§bMetaCloud§r] >");
-        ProxyServer.getInstance().getConsole().sendMessage("[§bMetaCloud§r] > THE METACLOUD has been loaded with Succsess");
-        ProxyServer.getInstance().getConsole().sendMessage("[§bMetaCloud§r] > This registered all Classes & files..");
-        ProxyServer.getInstance().getConsole().sendMessage("[§bMetaCloud§r] >");
 
     }
 
@@ -53,4 +56,5 @@ public class BungeeBootstrap extends Plugin {
     public static BungeeBootstrap getInstance() {
         return instance;
     }
+
 }

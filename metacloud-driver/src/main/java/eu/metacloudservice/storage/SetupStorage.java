@@ -2,7 +2,7 @@ package eu.metacloudservice.storage;
 
 import java.util.HashMap;
 
-public class SetupStorage {
+public final class SetupStorage {
 
 
     public Integer step;

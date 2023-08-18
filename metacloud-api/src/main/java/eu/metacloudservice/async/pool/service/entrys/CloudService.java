@@ -20,6 +20,7 @@ import java.lang.management.MemoryMXBean;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 public class CloudService {
@@ -78,6 +79,7 @@ public class CloudService {
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInDispatchCommand(this.name, command));
     }
 
+
     public ServiceState getState(){
         LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
         LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
@@ -98,54 +100,40 @@ public class CloudService {
 
     public List<CloudPlayer> getPlayers(){
         if (getGroup().getGroupType().equalsIgnoreCase("PROXY")){
-            return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromProxy(name);
+            try {
+                return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromProxy(name).get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
         }else {
-            return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromService(name);
+            try {
+                return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromService(name).get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
         }
 
     }
 
     public int getPlayercount() {
-        if (getGroup().getGroupType().equalsIgnoreCase("PROXY"))
-            return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromProxy(this.name).size();
-        return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromService(this.name).size();
+        if (getGroup().getGroupType().equalsIgnoreCase("PROXY")) {
+            try {
+                return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromProxy(this.name).get().size();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        try {
+            return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromService(this.name).get().size();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String toString(){
         return "name='"+name+"', group='"+group+"', id='"+getID()+"', state='"+getState()+"', address='"+getAddress()+"', port='"+getPort()+"', playerCount='"+getPlayercount()+"'";
     }
 
-    public String getMOTD() {
-        try (Socket socket = new Socket()) {
-            socket.connect(new InetSocketAddress(getAddress(), getPort()));
-
-            InputStream in = socket.getInputStream();
-            OutputStream out = socket.getOutputStream();
-
-            out.write(254);
-
-            StringBuilder sb = new StringBuilder();
-
-            int i;
-
-            while ((i = in.read()) != -1) {
-                if ((i != 0) && (i > 16) && (i != 255) && (i != 23) && (i != 24)) {
-                    sb.append((char) i);
-                }
-            }
-
-            String[] data = sb.toString().split("§");
-
-            if (data.length > 0) {
-                String motd = data[0];
-                return motd;
-            }
-
-        } catch (IOException error) {
-            error.printStackTrace();
-        }
-        return "";
-    }
 
 
 }

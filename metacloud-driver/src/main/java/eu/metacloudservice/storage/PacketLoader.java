@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PacketLoader {
+public final class PacketLoader {
     public PacketLoader() {}
 
     @SneakyThrows
