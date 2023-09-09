@@ -2,6 +2,7 @@ package eu.metacloudservice.configuration.dummys.managerconfig;
 
 import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 
 public class ManagerConfig implements IConfigAdapter {

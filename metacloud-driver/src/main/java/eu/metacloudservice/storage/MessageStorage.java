@@ -820,8 +820,6 @@ public class MessageStorage {
                 "remote_ping_timeout: 5000\n" +
                 "prevent_proxy_connections: false\n" +
                 "groups:\n" +
-                "  RauchigesEtwas:\n" +
-                "  - admin\n" +
                 "connection_throttle: 4000\n" +
                 "stats: ddace828-7313-4d44-a1e2-6736196a8ab5\n" +
                 "connection_throttle_limit: 5\n" +

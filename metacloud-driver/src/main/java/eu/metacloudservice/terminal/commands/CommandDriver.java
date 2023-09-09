@@ -5,16 +5,18 @@ import eu.metacloudservice.Driver;
 import eu.metacloudservice.terminal.enums.Type;
 import lombok.SneakyThrows;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public final class CommandDriver {
 
-    private final Set<CommandAdapter> commands;
+    private final List<CommandAdapter> commands;
     public CommandDriver() {
-        this.commands = new HashSet<>();
+        this.commands = new ArrayList<>();
     }
-    public Set<CommandAdapter> getCommands() {
+    public List<CommandAdapter> getCommands() {
         return commands;
     }
     public void registerCommand(CommandAdapter command){

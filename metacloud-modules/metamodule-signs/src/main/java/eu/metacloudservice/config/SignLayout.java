@@ -4,7 +4,8 @@ public class SignLayout {
 
     String[] lines;
     String itemID;
-    String subID;
+    boolean glowText;
+    String color;
 
     public SignLayout() {}
 
@@ -16,13 +17,19 @@ public class SignLayout {
         return itemID;
     }
 
-    public String getSubID() {
-        return subID;
+
+    public boolean isGlowText() {
+        return glowText;
     }
 
-    public SignLayout(String[] lines, String itemID, String subID) {
+    public String getColor() {
+        return color;
+    }
+
+    public SignLayout(String[] lines, String itemID, boolean glowText, String color) {
         this.lines = lines;
         this.itemID = itemID;
-        this.subID = subID;
+        this.glowText = glowText;
+        this.color = color;
     }
 }

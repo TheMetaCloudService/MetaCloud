@@ -9,10 +9,7 @@ import eu.metacloudservice.storage.PacketLoader;
 import eu.metacloudservice.terminal.enums.Type;
 import org.checkerframework.checker.units.qual.A;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MainSetup {
@@ -587,9 +584,9 @@ public class MainSetup {
                 managerConfig.setShowConnectingPlayers(true);
                 managerConfig.setSpigotPort(5000);
                 managerConfig.setAutoUpdate(true);
-                managerConfig.setTimeOutCheckTime(100);
+                managerConfig.setTimeOutCheckTime(120);
                 managerConfig.setUuid("INT");
-                managerConfig.setSplitter("-");
+                managerConfig.setSplitter("#");
                 managerConfig.setWhitelist(new ArrayList<>());
                 managerConfig.setNodes(nodes);
                 new ConfigDriver("./service.json").save(managerConfig);
@@ -614,7 +611,7 @@ public class MainSetup {
                 managerConfig.setUseProtocol(false);
                 managerConfig.setCopyLogs(true);
                 managerConfig.setProcessorUsage(90);
-                managerConfig.setTimeOutCheckTime(100);
+                managerConfig.setTimeOutCheckTime(120);
                 managerConfig.setServiceStartupCount(3);
                 managerConfig.setRestApiCommunication(8097);
                 managerConfig.setShowConnectingPlayers(true);

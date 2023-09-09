@@ -53,8 +53,8 @@
       <scope>provided</scope>
       <exclusions>
         <exclusion>
-          <artifactId>spigot-api</artifactId>
-          <groupId>org.spigotmc</groupId>
+          <artifactId>bungeecord-api</artifactId>
+          <groupId>net.md-5</groupId>
         </exclusion>
         <exclusion>
           <artifactId>adventure-api</artifactId>

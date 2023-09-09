@@ -298,49 +298,39 @@ public class CloudCommand extends Command implements TabExecutor {
             suggestions.add("version");
             suggestions.add("reload");
         } else if (args.length == 2) {
-            // Suggestions for specific commands that require a second argument
-            if (args[0].equalsIgnoreCase("maxplayers")) {
-                suggestions.addAll(CloudAPI.getInstance().getGroupsName());
-            } else if (args[0].equalsIgnoreCase("stopgroup")) {
-                suggestions.addAll(CloudAPI.getInstance().getGroupsName());
-            }else if (args[0].equalsIgnoreCase("stop")) {
-                    suggestions.addAll(CloudAPI.getInstance().getServicePool().getServices()
-                            .stream()
-                            .map(CloudService::getName)
-                            .collect(Collectors.toList()));;
-                } else if (args[0].equalsIgnoreCase("run") || args[0].equalsIgnoreCase("sync")) {
-                    suggestions.addAll(CloudAPI.getInstance().getGroupsName());
-                } else if (args[0].equalsIgnoreCase("whitelist")) {
-                    suggestions.add("add");
-                    suggestions.add("remove");
-                    suggestions.addAll(CloudAPI.getInstance().getPlayerPool().getPlayers()
-                            .stream()
-                            .map(CloudPlayer::getUsername)
-                            .collect(Collectors.toList()));
-                } else if (args[0].equalsIgnoreCase("dispatch")) {
-                    suggestions.addAll(CloudAPI.getInstance().getServicePool().getServices()
-                            .stream()
-                            .map(CloudService::getName)
-                            .collect(Collectors.toList()));
-                } else if (args[0].equalsIgnoreCase("list")) {
-                    suggestions.add("players");
-                    suggestions.add("services");
-                }
+            if (args[0].equalsIgnoreCase("sync") || args[0].equalsIgnoreCase("dispatch")
+                    || args[0].equalsIgnoreCase("stop")){
+                CloudAPI.getInstance().getServicePool().getServices().forEach(cloudService -> {
+                    suggestions.add(cloudService.getName());
+                });
+            }else  if (args[0].equalsIgnoreCase("list")){
+                CloudAPI.getInstance().getServicePool().getServices().forEach(cloudService -> {
+                    suggestions.add(cloudService.getName());
+                });
+
+                CloudAPI.getInstance().getPlayerPool().getPlayers().forEach(cloudService -> {
+                    suggestions.add(cloudService.getUsername());
+                });
             }
-        else if (args.length == 3) {
-            // Additional suggestions for specific cases
-            if (args[0].equalsIgnoreCase("run")) {
-
-            } else if (args[0].equalsIgnoreCase("dispatch")) {
-
-            } else if (args[0].equalsIgnoreCase("whitelist")) {
-                suggestions.addAll(CloudAPI.getInstance().getPlayerPool().getPlayers()
-                        .stream()
-                        .map(CloudPlayer::getUsername)
-                        .collect(Collectors.toList()));
+            else if (args[0].equalsIgnoreCase("stopgroup") || args[0].equalsIgnoreCase("maintenance")|| args[0].equalsIgnoreCase("run")){
+                CloudAPI.getInstance().getGroups().forEach(group -> {
+                    suggestions.add(group.getGroup());
+                });
+            }else if (args[0].equalsIgnoreCase("whitelist")){
+                suggestions.add("add");
+                suggestions.add("remove");
+            }
+        }else if (args.length == 3) {
+            if (args[0].equalsIgnoreCase("whitelist")){
+                CloudAPI.getInstance().getPlayerPool().getPlayers().forEach(cloudService -> {
+                    suggestions.add(cloudService.getUsername());
+                });
+            }else   if (args[0].equalsIgnoreCase("maxplayers")){
+                CloudAPI.getInstance().getGroups().forEach(group -> {
+                    suggestions.add(group.getGroup());
+                });
             }
         }
-
         // Filter suggestions based on the current input
         String prefix = args[args.length - 1].toLowerCase();
         return suggestions.stream()

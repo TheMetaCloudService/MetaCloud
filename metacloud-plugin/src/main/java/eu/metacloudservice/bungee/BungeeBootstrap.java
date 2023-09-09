@@ -67,7 +67,7 @@ public class BungeeBootstrap extends Plugin {
     public CloudService getLobby(ProxiedPlayer player){
         if (CloudAPI.getInstance().getServicePool().getServices().isEmpty()){
             return null;
-        }else if (CloudAPI.getInstance().getServicePool().getServices().stream().filter(service -> service.getGroup().getGroupType().equalsIgnoreCase("LOBBY")).collect(Collectors.toList()).isEmpty()){
+        }else if (CloudAPI.getInstance().getServicePool().getServices().stream().noneMatch(service -> service.getGroup().getGroupType().equalsIgnoreCase("LOBBY"))){
             return null;
         }else {
             List<CloudService> cloudServices = CloudAPI.getInstance().getServicePool().getServices().stream()

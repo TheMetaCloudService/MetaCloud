@@ -2,6 +2,7 @@ package eu.metacloudservice.webserver.dummys;
 
 import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 
 public class WhiteList implements IConfigAdapter {

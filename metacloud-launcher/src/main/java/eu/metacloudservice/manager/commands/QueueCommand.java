@@ -9,6 +9,8 @@ import eu.metacloudservice.terminal.utils.TerminalStorageLine;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 @CommandInfo(command = "queue", DEdescription = "Verwalte die Warteschlange, Sehe was startet", ENdescription = "Manage the queue, See what starts", aliases = {"servicequeue", "waitingline"})
 public class QueueCommand extends CommandAdapter {
@@ -18,8 +20,8 @@ public class QueueCommand extends CommandAdapter {
             sendHelp();
         }else {
             if (args[0].equalsIgnoreCase("list")){
-             LinkedList<String> start =  CloudManager.queueDriver.getQueue_startup();
-             LinkedList<String> stop =  CloudManager.queueDriver.getQueue_shutdown();
+                ConcurrentLinkedDeque<String> start =  CloudManager.queueDriver.getQueue_startup();
+             ConcurrentLinkedDeque<String> stop =  CloudManager.queueDriver.getQueue_shutdown();
 
                 Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                         "Hier sind alle Dienste, die sich in der Startwarteschlange befinden: ",
@@ -36,8 +38,8 @@ public class QueueCommand extends CommandAdapter {
 
             }else if (args[0].equalsIgnoreCase("remove")){
                 String service = args[1];
-                LinkedList<String> start =  CloudManager.queueDriver.getQueue_startup();
-                LinkedList<String> stop =  CloudManager.queueDriver.getQueue_shutdown();
+                ConcurrentLinkedDeque<String> start =  CloudManager.queueDriver.getQueue_startup();
+                ConcurrentLinkedDeque<String> stop =  CloudManager.queueDriver.getQueue_shutdown();
 
                 if (stop.stream().noneMatch(s -> s.equalsIgnoreCase(service))&& start.stream().noneMatch(s -> s.equals(s))){
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,

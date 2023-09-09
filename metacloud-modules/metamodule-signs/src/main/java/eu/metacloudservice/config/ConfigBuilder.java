@@ -9,8 +9,8 @@ public class ConfigBuilder {
     public ConfigBuilder() {
         layouts = new ArrayList<>();
     }
-    public ConfigBuilder add(String itemID, String subID, String... lines){
-        layouts.add(new SignLayout(lines, itemID, subID));
+    public ConfigBuilder add(String itemID, boolean isGlowing,String color,  String... lines){
+        layouts.add(new SignLayout(lines,itemID, isGlowing, color));
         return this;
     }
 

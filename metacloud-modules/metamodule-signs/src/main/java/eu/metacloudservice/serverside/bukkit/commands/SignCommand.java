@@ -31,6 +31,7 @@ public class SignCommand implements CommandExecutor, TabCompleter {
     static {
         subCommands.add("create");
         subCommands.add("delete");
+        subCommands.add("claenup");
     }
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -38,10 +39,19 @@ public class SignCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof  Player player){
             if (player.hasPermission("metacloud.command.cloudsign")){
                 String prefix = CloudAPI.getInstance().getMessages().getPrefix().replace("&", "§");
-
                 if (args.length == 0){
                     sendHelp(player);
-                }else if (args[0].equalsIgnoreCase("create")){
+                }else if  (args[0].equalsIgnoreCase("cleanup")) {
+                    BukkitBootstrap.getInstance().getSignDriver().getCloudSigns().forEach(cloudSign -> {
+                        if (cloudSign.getSignPosition().getBlock().getState() instanceof Sign){
+
+                        }else {
+                            BukkitBootstrap.getInstance().getSignDriver().handleSignRemove(cloudSign.getUuid());
+                        }
+                    });
+                    player.sendMessage(prefix + "all signs that are not correct have been deleted.");
+
+                } else if (args[0].equalsIgnoreCase("create")){
                     if (args.length == 2){
                         Block targetBlock = player.getTargetBlock(null, 4);
 
@@ -99,6 +109,7 @@ public class SignCommand implements CommandExecutor, TabCompleter {
         String prefix = CloudAPI.getInstance().getMessages().getPrefix().replace("&", "§");
         player.sendMessage(prefix + "/cloudsigns create <group>");
         player.sendMessage(prefix + "/cloudsigns delete");
+        player.sendMessage(prefix + "/cloudsigns claenup");
 
 
     }

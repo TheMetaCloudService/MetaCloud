@@ -12,6 +12,7 @@
         <module name="metacloud-plugin" />
         <module name="metamodule-signs" />
         <module name="metacloud-networking" />
+        <module name="metamodule-cloudflare" />
         <module name="metamodule-notify" />
         <module name="metamodule-permissions" />
         <module name="metacloud-driver" />
@@ -23,7 +24,6 @@
       <module name="metacloud-cloudupdater" target="17" />
       <module name="metacloud-updater" target="16" />
       <module name="metamodule-balancer" target="16" />
-      <module name="metamodule-cloudflare" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -59,7 +59,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class CloudManager {
@@ -192,7 +194,7 @@ public class CloudManager {
 
         LiveServiceList liveGroup = new LiveServiceList();
         liveGroup.setCloudServiceSplitter(config.getSplitter());
-        liveGroup.setCloudServices(new ArrayList<>());
+        liveGroup.setCloudServices(new ArrayDeque<>());
         Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudservice/general", new ConfigDriver().convert(liveGroup)));
         WhiteList whitelistConfig = new WhiteList();
         whitelistConfig.setWhitelist(config.getWhitelist());

@@ -21,6 +21,7 @@ public class BukkitBootstrap extends JavaPlugin {
 
     @Override
     public void onEnable(){
+        new Driver();
         LiveService service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         CloudAPI.getInstance().setState(ServiceState.LOBBY, service.getService());
         Bukkit.getPluginManager().registerEvents(new ReloadBlocker(), this);

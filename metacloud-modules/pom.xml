@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>metamodule-hub</module>
+        <module>metamodule-cloudflare</module>
     </modules>
 
 

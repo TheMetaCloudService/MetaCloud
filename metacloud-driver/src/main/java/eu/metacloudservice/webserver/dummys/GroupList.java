@@ -2,20 +2,20 @@ package eu.metacloudservice.webserver.dummys;
 
 import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
 
-import java.util.ArrayList;
+import java.util.ArrayDeque;
 
 public class GroupList implements IConfigAdapter {
 
-    private ArrayList<String> groups;
+    private ArrayDeque<String> groups;
 
     public GroupList() {
     }
 
-    public ArrayList<String> getGroups() {
+    public ArrayDeque<String> getGroups() {
         return groups;
     }
 
-    public void setGroups(ArrayList<String> groups) {
+    public void setGroups(ArrayDeque<String> groups) {
         this.groups = groups;
     }
 }

@@ -2,7 +2,6 @@ package eu.metacloudservice.manager.cloudservices;
 
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
-import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
 import eu.metacloudservice.events.listeners.services.CloudProxyLaunchEvent;
 import eu.metacloudservice.events.listeners.services.CloudServiceLaunchEvent;
 import eu.metacloudservice.groups.dummy.Group;
@@ -26,14 +25,14 @@ import java.util.stream.IntStream;
 public class CloudServiceDriver implements ICloudServiceDriver {
 
 
-    private final ArrayList<TaskedService> services;
-    public final ArrayList<String> delete;
+    private final ArrayDeque<TaskedService> services;
+    public final ArrayDeque<String> delete;
     public final NetworkEntry entry;
 
     public CloudServiceDriver() {
         entry = new NetworkEntry();
-        services = new ArrayList<>();
-        delete = new ArrayList<>();
+        services = new ArrayDeque<>();
+        delete = new ArrayDeque<>();
         handelServices();
     }
 
@@ -170,7 +169,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                     }
                     try {
                         ArrayList<Group> groups = Driver.getInstance().getGroupDriver().getAll();
-                        ArrayList<TaskedService> currentServices = getServices();
+                        ArrayDeque<TaskedService> currentServices = getServices();
                         entry.global_players = currentServices.stream()
                                 .mapToInt(s -> s.getEntry().getCurrentPlayers())
                                 .sum();
@@ -418,7 +417,6 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                                         }
                                     }
 
-
                                 });
                     }catch (Exception ignored){}
                 }
@@ -428,18 +426,22 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                 @Override
                 public void run() {
                     if (!CloudManager.shutdown){
-                        CloudManager.serviceDriver.getServices().forEach(taskedService -> {
-                            LiveServices ls = (LiveServices) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudservice/" + taskedService.getEntry().getServiceName().replace(CloudManager.config.getSplitter(), "~")), LiveServices.class);
+                        CloudManager.serviceDriver.getServices().parallelStream().filter(taskedService -> taskedService.getEntry().getStatus() != ServiceState.QUEUED || taskedService.getEntry().getStatus() != ServiceState.STARTED).forEach(taskedService -> {
 
-                          if (ls != null){
-                              if (ls.getLastReaction() != -1){
+                            if (Driver.getInstance().getWebServer().getRoute("/cloudservice/" + taskedService.getEntry().getServiceName().replace(CloudManager.config.getSplitter(), "~")) != null){
+                                LiveServices ls = (LiveServices) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudservice/" + taskedService.getEntry().getServiceName().replace(CloudManager.config.getSplitter(), "~")), LiveServices.class);
 
-                                  int timeDifferenceSeconds = Integer.parseInt(String.valueOf(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - ls.getLastReaction())));
-                                  if (timeDifferenceSeconds >= CloudManager.config.getTimeOutCheckTime()){
-                                      taskedService.handelRestart();
-                                  }
-                              }
-                          }
+                                if (ls != null){
+                                    if (ls.getLastReaction() != -1){
+
+                                        int timeDifferenceSeconds = Integer.parseInt(String.valueOf(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - ls.getLastReaction())));
+                                        if (timeDifferenceSeconds >= CloudManager.config.getTimeOutCheckTime()){
+                                            taskedService.handelRestart();
+                                        }
+                                    }
+                                }
+                            }
+
 
                         });
                     }
@@ -465,7 +467,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
     }
 
     @Override
-    public ArrayList<TaskedService> getServices() {
+    public ArrayDeque<TaskedService> getServices() {
         return this.services;
     }
 

@@ -34,7 +34,7 @@ public class VelocityBootstrap {
 
     @Inject
     public VelocityBootstrap(ProxyServer proxyServer, Logger logger) {
-        this.proxyServer = proxyServer;
+        VelocityBootstrap.proxyServer = proxyServer;
         this.logger = logger;
 
 

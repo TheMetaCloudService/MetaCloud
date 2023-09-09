@@ -21,6 +21,8 @@ public class ReloadBlocker implements Listener {
             if (player.hasPermission("bukkit.command.reload")) {
                 event.setCancelled(true);
                 player.sendMessage("§cCloud-Servers cannot be reloaded");
+            }else {
+                player.sendMessage("§cno permission to do that!");
             }
         }
     }

@@ -18,6 +18,7 @@ import eu.metacloudservice.webserver.dummys.GroupList;
 import eu.metacloudservice.webserver.entry.RouteEntry;
 import lombok.SneakyThrows;
 import java.io.File;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.TimerTask;
 
@@ -117,8 +118,8 @@ public class GroupDriver implements IGroupDriver {
     }
 
     @Override
-    public ArrayList<String> getAllStrings() {
-        ArrayList<String> groups = new ArrayList<>();
+    public ArrayDeque<String> getAllStrings() {
+        ArrayDeque<String> groups = new ArrayDeque<>();
         File file = new File("./local/groups/");
         File[] files = file.listFiles();
         for (int i = 0; i != (files != null ? files.length : 0); i++) {

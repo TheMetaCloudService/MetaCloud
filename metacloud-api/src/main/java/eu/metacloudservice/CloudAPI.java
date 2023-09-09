@@ -41,6 +41,7 @@ import eu.metacloudservice.webserver.dummys.liveservice.LiveServices;
 import lombok.NonNull;
 
 import java.lang.management.ManagementFactory;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
@@ -128,17 +129,20 @@ public class CloudAPI {
         new TimerBase().schedule(new TimerTask() {
             @Override
             public void run() {
-                System.out.println("TEST #1");
                 CloudService service = CloudAPI.getInstance().getServicePool().getService(CloudAPI.getInstance().getCurrentService().getService());
-                System.out.println("TEST #2");
                 LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
-                System.out.println("TEST #3");
+                PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/genernal"), PlayerGeneral.class);
+                getPlayerPool().getPlayers().stream().filter(cloudPlayer -> general.getCloudplayers().stream().noneMatch(s -> s.equalsIgnoreCase(cloudPlayer.getUniqueId()))).toList().forEach(cloudPlayer -> {
+                    getPlayerPool().unregisterPlayer(cloudPlayer.getUniqueId());
+                    getAsyncAPI().getPlayerPool().unregisterPlayer(cloudPlayer.getUniqueId());
+                });
+                getServicePool().getServices().stream().filter(cloudService -> list.getCloudServices().stream().noneMatch(s -> s.equalsIgnoreCase(cloudService.getName()))).toList().forEach(cloudService -> {
+                    getServicePool().unregisterService(cloudService.getName());
+                    getAsyncAPI().getServicePool().unregisterService(cloudService.getName());
+                });
                 LiveServices liveServices = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + service.getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
-                System.out.println("TEST #4");
                 liveServices.setLastReaction(System.currentTimeMillis());
-                System.out.println("TEST #5");
                 CloudAPI.getInstance().getRestDriver().put("/cloudservice/" + service.getName().replace(list.getCloudServiceSplitter(), "~"), new ConfigDriver().convert(liveServices));
-                System.out.println("TEST #6");
             }
         }, 5, 30, TimeUtil.SECONDS);
     }
@@ -184,7 +188,7 @@ public class CloudAPI {
         return service;
     }
 
-    public List<String> getGroupsName(){
+    public ArrayDeque<String> getGroupsName(){
         GroupList cech = (GroupList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/general"), GroupList.class);
         return cech.getGroups();
     }

@@ -9,6 +9,8 @@ import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.in.node.PacketInSendConsole;
 import eu.metacloudservice.process.interfaces.IServiceProcess;
+import eu.metacloudservice.timebaser.TimerBase;
+import eu.metacloudservice.timebaser.utils.TimeUtil;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
@@ -17,6 +19,7 @@ import java.io.*;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Random;
+import java.util.TimerTask;
 
 @Getter
 public final class ServiceProcess implements IServiceProcess {
@@ -51,24 +54,29 @@ public final class ServiceProcess implements IServiceProcess {
         if (process == null || this.port == 0 || this.service == null || this.group == null){
             return;
         }
-        if (!group.isRunStatic()){
-            if (            new File("./local/templates/" + group.getStorage().getTemplate() +"/").exists()){
-                new File("./local/templates/" + group.getStorage().getTemplate() +"/").delete();
+        new TimerBase().scheduleAsync(new TimerTask() {
+            @Override
+            public void run() {
+                if (!group.isRunStatic()){
+                    if (            new File("./local/templates/" + group.getStorage().getTemplate() +"/").exists()){
+                        new File("./local/templates/" + group.getStorage().getTemplate() +"/").delete();
+                    }
+                    new File("./local/templates/" + group.getStorage().getTemplate() +"/").delete();
+                    new File("./local/templates/" + group.getStorage().getTemplate()+"/").mkdirs();
+                    try {
+                        FileUtils.copyDirectory(new File("./live/" + group.getGroup() + "/" + service + "/"), new File("./local/templates/" + group.getStorage().getTemplate()+"/"));
+                    } catch (IOException ignored) {}
+                }else {
+                    if ( new File("./local/templates/" + group.getStorage().getTemplate() +"/" + service + "/").exists()){
+                        new File("./local/templates/" + group.getStorage().getTemplate() +"/" + service + "/").delete();
+                    }
+                    new File("./local/templates/" + group.getStorage().getTemplate()+"/" + service + "/").mkdirs();
+                    try {
+                        FileUtils.copyDirectory(new File("./live/" + group.getGroup() + "/" + service + "/"), new File("./local/templates/" + group.getStorage().getTemplate()+"/" + service +"/"));
+                    } catch (IOException ignored) {}
+                };
             }
-            new File("./local/templates/" + group.getStorage().getTemplate() +"/").delete();
-            new File("./local/templates/" + group.getStorage().getTemplate()+"/").mkdirs();
-            try {
-                FileUtils.copyDirectory(new File("./live/" + group.getGroup() + "/" + service + "/"), new File("./local/templates/" + group.getStorage().getTemplate()+"/"));
-            } catch (IOException ignored) {}
-        }else {
-            if ( new File("./local/templates/" + group.getStorage().getTemplate() +"/" + service + "/").exists()){
-                new File("./local/templates/" + group.getStorage().getTemplate() +"/" + service + "/").delete();
-            }
-            new File("./local/templates/" + group.getStorage().getTemplate()+"/" + service + "/").mkdirs();
-            try {
-                FileUtils.copyDirectory(new File("./live/" + group.getGroup() + "/" + service + "/"), new File("./local/templates/" + group.getStorage().getTemplate()+"/" + service +"/"));
-            } catch (IOException ignored) {}
-        };
+        }, 5, TimeUtil.MILLISECONDS);
     }
 
 

@@ -38,6 +38,7 @@ public class CloudService {
         cloudServiceConsumer.accept(this);
     }
 
+
     public String getName() {
         return name;
     }

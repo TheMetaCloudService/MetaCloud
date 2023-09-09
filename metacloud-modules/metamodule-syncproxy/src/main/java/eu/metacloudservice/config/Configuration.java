@@ -9,6 +9,8 @@ public class Configuration implements IConfigAdapter {
 
     private ArrayList<DesignConfig> configuration;
 
+    public Configuration() {}
+
     public ArrayList<DesignConfig> getConfiguration() {
         return configuration;
     }

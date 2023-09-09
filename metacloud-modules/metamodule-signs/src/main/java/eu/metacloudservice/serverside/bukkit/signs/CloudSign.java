@@ -7,31 +7,28 @@ package eu.metacloudservice.serverside.bukkit.signs;
 
 import com.google.common.base.Enums;
 import eu.metacloudservice.CloudAPI;
-import eu.metacloudservice.Driver;
 import eu.metacloudservice.api.ServicePing;
 import eu.metacloudservice.config.SignLayout;
 import eu.metacloudservice.pool.service.entrys.CloudService;
 import eu.metacloudservice.serverside.bukkit.BukkitBootstrap;
 import lombok.Getter;
 import lombok.Setter;
-import net.md_5.bungee.api.ServerPing;
-import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.WallSign;
-import org.bukkit.material.MaterialData;
+import org.bukkit.entity.Player;
 
 import java.io.IOException;
-import java.net.Socket;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class CloudSign {
 
@@ -77,12 +74,42 @@ public class CloudSign {
                     }
 
                     sign.setLine(i, lineText);
+
                 }
 
+                if (block.getBlockData() instanceof WallSign){
+                    Directional directional = (Directional) block.getBlockData();
+                    Block blockBehind = block.getRelative(directional.getFacing().getOppositeFace());
+                    if (!layout.getItemID().equalsIgnoreCase("")){
 
+                        Material material = Material.matchMaterial(layout.getItemID());
+                         if (material != null && material.isBlock()){
+                            blockBehind.setType(material);
+                        }
+                    }
+                }
 
                 sign.setEditable(false);
+                if (layout.isGlowText() && !layout.getColor().isEmpty()){
+                    DyeColor color = DyeColor.valueOf(layout.getColor());
+                    sign.setColor(color);
+                }
+
+                sign.setGlowingText(layout.isGlowText());
                 sign.update();
+            }
+
+            if (BukkitBootstrap.getInstance().signsAPI.getConfig().isUseKnockBack()){
+                for (var entity : Objects.requireNonNull(signPosition.getWorld()).getNearbyEntities(signPosition, BukkitBootstrap.getInstance().signsAPI.getConfig().getKnockbackDistance(), BukkitBootstrap.getInstance().signsAPI.getConfig().getKnockbackDistance(), BukkitBootstrap.getInstance().signsAPI.getConfig().getKnockbackDistance())){
+                    if (entity instanceof Player){
+                        if (!entity.hasPermission("metacloud.sign.bypass")){
+                            entity.setVelocity(((Player) entity).getEyeLocation().toVector()
+                                    .subtract(signPosition.getBlock().getLocation().toVector())
+                                    .normalize()
+                                    .multiply(BukkitBootstrap.getInstance().signsAPI.getConfig().getKnockbackStrength()).setY(0.3));
+                            }
+                    }
+                }
             }
         });
     }

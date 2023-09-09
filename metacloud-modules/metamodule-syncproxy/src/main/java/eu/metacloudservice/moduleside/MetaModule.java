@@ -6,10 +6,14 @@ import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.module.extention.IModule;
 import eu.metacloudservice.moduleside.commands.SyncProxyCommand;
 import eu.metacloudservice.moduleside.events.SyncEvents;
+import eu.metacloudservice.timebaser.TimerBase;
+import eu.metacloudservice.timebaser.utils.TimeUtil;
 import eu.metacloudservice.webserver.entry.RouteEntry;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MetaModule implements IModule {
     @Override
@@ -30,12 +34,13 @@ public class MetaModule implements IModule {
 
     @Override
     public void reload() {
+        create();
         update();
     }
 
 
     private static void create(){
-        try {
+
             if (!new File("./modules/syncproxy/config.json").exists()) {
                 new File("./modules/syncproxy/").mkdirs();
                 Configuration configuration = new Configuration();
@@ -106,10 +111,14 @@ public class MetaModule implements IModule {
 
                 new ConfigDriver("./modules/syncproxy/config.json").save(configuration);
             }
-        }catch (Exception e){
-            set();
-        }
-        set();
+
+        new TimerBase().scheduleAsync(new TimerTask() {
+            @Override
+            public void run() {
+                set();
+                update();
+            }
+        }, 5, TimeUtil.SECONDS);
 
 
     }
@@ -117,16 +126,12 @@ public class MetaModule implements IModule {
     public static void set(){
 
 
-        General general = new General("syncproxy", "1.0.0", "RauchigesEtwas");
-        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/syncproxy/general", new ConfigDriver().convert(general)));
+        General general = new General("syncproxy", "BETA-1.0.7", "RauchigesEtwas");
+        if (Driver.getInstance().getWebServer().getRoute("/module/syncproxy/general") == null)
+          Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/syncproxy/general", new ConfigDriver().convert(general)));
 
-        try {
-            Configuration config = (Configuration) new ConfigDriver("./modules/syncproxy/config.json").read(Configuration.class);
-            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/syncproxy/configuration", new ConfigDriver().convert(config)));
-        }catch (Exception e){
-            create();
-            set();
-        }
+        Configuration config = (Configuration) new ConfigDriver("./modules/syncproxy/config.json").read(Configuration.class);
+        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/syncproxy/configuration", new ConfigDriver().convert(config)));
     }
 
     public static void update(){

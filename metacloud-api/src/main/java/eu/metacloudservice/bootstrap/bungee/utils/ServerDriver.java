@@ -22,7 +22,6 @@ public class ServerDriver {
         if (serverExists(serverInfo.getName())) {
             return;
         }
-
         getServers().put(serverInfo.getName(), serverInfo);
         ServerConfig.addToConfig(serverInfo);
     }

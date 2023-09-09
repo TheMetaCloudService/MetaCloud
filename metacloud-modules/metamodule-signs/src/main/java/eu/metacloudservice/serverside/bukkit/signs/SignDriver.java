@@ -8,22 +8,23 @@ import eu.metacloudservice.serverside.bukkit.utils.SignWorker;
 import org.bukkit.Location;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.IllegalFormatCodePointException;
 import java.util.UUID;
 
 public class SignDriver {
 
-    private final ArrayList<CloudSign> cloudSigns;
+    private final ArrayDeque<CloudSign> cloudSigns;
     private final SignWorker worker;
 
     public SignDriver() {
-        cloudSigns = new ArrayList<>();
+        cloudSigns = new ArrayDeque<>();
         worker = new SignWorker();
         worker.start();
     }
 
-    public ArrayList<CloudSign> getCloudSigns() {
+    public ArrayDeque<CloudSign> getCloudSigns() {
         return cloudSigns;
     }
 

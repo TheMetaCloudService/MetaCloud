@@ -20,6 +20,9 @@ public class UpdateCommand extends CommandAdapter {
     @Override
     public void performCommand(CommandAdapter command, String[] args) {
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Es wird geschaut ob die Cloud version noch aktuell ist", "It is checked if the cloud version is still up to date");
+
+
+
         if (Driver.getInstance().getMessageStorage().checkAvailableUpdate()){
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Eine neue Version der Metacloud wurde gefunden '§f"+Driver.getInstance().getMessageStorage().version+" >> "+Driver.getInstance().getMessageStorage().getNewVersionName()+"§r'","A new version of the Metacloud was found '§f"+Driver.getInstance().getMessageStorage().version+" >> "+Driver.getInstance().getMessageStorage().getNewVersionName()+"§r'");
 

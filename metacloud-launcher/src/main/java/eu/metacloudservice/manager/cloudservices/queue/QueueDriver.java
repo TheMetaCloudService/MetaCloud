@@ -1,22 +1,23 @@
 package eu.metacloudservice.manager.cloudservices.queue;
 
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class QueueDriver {
 
-    private final LinkedList<String> queue_startup;
-    private final LinkedList<String> queue_shutdown;
+    private final ConcurrentLinkedDeque<String> queue_startup;
+    private final ConcurrentLinkedDeque<String> queue_shutdown;
 
     public QueueDriver() {
-        this.queue_startup = new LinkedList<>();
-        this.queue_shutdown = new LinkedList<>();
+        this.queue_startup = new ConcurrentLinkedDeque<>();
+        this.queue_shutdown = new ConcurrentLinkedDeque<>();
     }
 
-    public LinkedList<String> getQueue_startup() {
+    public ConcurrentLinkedDeque<String> getQueue_startup() {
         return queue_startup;
     }
 
-    public LinkedList<String> getQueue_shutdown() {
+    public ConcurrentLinkedDeque<String> getQueue_shutdown() {
         return queue_shutdown;
     }
 

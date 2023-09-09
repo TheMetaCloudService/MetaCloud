@@ -19,6 +19,7 @@ import eu.metacloudservice.webserver.dummys.WhiteList;
 import lombok.NonNull;
 
 import java.lang.management.ManagementFactory;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,7 +84,7 @@ public class AsyncCloudAPI {
         return CloudAPI.getInstance().getCurrentService();
     }
 
-    public List<String> getGroupsName(){
+    public ArrayDeque<String> getGroupsName(){
         GroupList cech = (GroupList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/general"), GroupList.class);
         return cech.getGroups();
     }

@@ -27,12 +27,14 @@ import io.netty.handler.codec.http.HttpResponseEncoder;
 import lombok.SneakyThrows;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class WebServer {
 
 
 
-    private  ArrayList<RouteEntry> ROUTES;
+    private ConcurrentLinkedDeque<RouteEntry> ROUTES;
     public  String AUTH_KEY;
 
     private  EventLoopGroup boosGroup;
@@ -45,7 +47,7 @@ public class WebServer {
         AuthenticatorKey authConfig = (AuthenticatorKey) new ConfigDriver("./connection.key").read(AuthenticatorKey.class);
         this.AUTH_KEY = Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey());
         ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
-        this.ROUTES = new ArrayList<>();
+        this.ROUTES = new ConcurrentLinkedDeque<>();
 
          boosGroup = new NioEventLoopGroup(1);
          workerGroup = new NioEventLoopGroup();
