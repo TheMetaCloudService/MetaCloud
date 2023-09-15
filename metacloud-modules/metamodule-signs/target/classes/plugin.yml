@@ -1,0 +1,8 @@
+main: eu.metacloudservice.serverside.bukkit.BukkitBootstrap
+name: metacloud-signs
+version: BETA-1.0.7
+author: RauchigesEtwas
+
+commands:
+  cloudsign:
+    description: manage a sign

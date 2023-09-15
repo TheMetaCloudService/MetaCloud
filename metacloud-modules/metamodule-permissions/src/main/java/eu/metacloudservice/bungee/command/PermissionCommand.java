@@ -14,6 +14,8 @@ import eu.metacloudservice.moduleside.config.*;
 import eu.metacloudservice.storage.UUIDDriver;
 import eu.metacloudservice.terminal.enums.Type;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
@@ -22,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class PermissionCommand extends Command implements TabExecutor {
@@ -38,10 +41,9 @@ public class PermissionCommand extends Command implements TabExecutor {
                 if (args.length == 0){
                     sendHelp(player);
                 }else if (args[0].equalsIgnoreCase("user")){
-                    if (args.length > 1){
+                    if (args.length != 1) {
                         String target = args[1];
                         if (CloudPermissionAPI.getInstance().getPlayers().stream().anyMatch(player1 -> player1.getUuid().equalsIgnoreCase(UUIDDriver.getUUID(target)))){
-
                             PermissionPlayer pp = CloudPermissionAPI.getInstance().getPlayer(target);
                             if (args.length == 2){
                                 player.sendMessage(PREFIX + "player: " + pp.getUuid());
@@ -49,16 +51,13 @@ public class PermissionCommand extends Command implements TabExecutor {
                                 pp.getGroups().forEach(includedAble -> player.sendMessage(PREFIX + "- " + includedAble.getGroup() + " ~ " + includedAble.getTime()));
                                 player.sendMessage(PREFIX + "able permissions: ");
                                 pp.getPermissions().forEach(permissionAble -> player.sendMessage(PREFIX + "- " + permissionAble.getPermission() + " ~ " + permissionAble.getAble() + " ~ " + permissionAble.getTime()));
-                            }if (args[2].equalsIgnoreCase("addperm")) {
-                                if (args.length == 6){
+                            }else if (args[2].equalsIgnoreCase("addperm")){
+                                if (args.length == 6) {
                                     String permission = args[3];
                                     if ((args[4].equalsIgnoreCase("true") || args[4].equalsIgnoreCase("false"))){
                                         boolean able = Boolean.parseBoolean(args[4]);
                                         int time = args[5].equalsIgnoreCase("lifetime") ? -1 : Integer.parseInt(args[5]);
-
-                                        assert pp != null;
                                         if (pp.getPermissions().stream().noneMatch(permissionAble -> permissionAble.getPermission().equalsIgnoreCase(permission))){
-
                                             String formattedDateTime;
                                             if (time != -1){
                                                 LocalDateTime currentDateTime = LocalDateTime.now(); // das aktuelle Datum und die aktuelle Uhrzeit
@@ -70,18 +69,20 @@ public class PermissionCommand extends Command implements TabExecutor {
                                                 formattedDateTime = "LIFETIME";
                                             }
                                             pp.getPermissions().add(new PermissionAble(permission, able, formattedDateTime));
-                                           CloudPermissionAPI.getInstance().updatePlayer(pp);
-                                         player.sendMessage(PREFIX + "The player '§f"+target+"§r' has successfully received the permission '§f"+permission+"§r@§f"+formattedDateTime+"§r' .");
+                                            CloudPermissionAPI.getInstance().updatePlayer(pp);
+                                            player.sendMessage(PREFIX + "The player '§f"+target+"§r' has successfully received the permission '§f"+permission+"§r@§f"+formattedDateTime+"§r' .");
                                         }else {
-
-                                        player.sendMessage(PREFIX + "The player '§f"+target+"§r' already has this permissions");
+                                            player.sendMessage(PREFIX + "The player '§f"+target+"§r' already has this permissions");
                                         }
+                                    }else {
+                                        player.sendMessage(PREFIX + "please use true or false");
                                     }
 
-                                }else{
+
+                                }else {
                                     sendHelp(player);
                                 }
-                            }else if (args[2].equalsIgnoreCase("removeperm")){
+                            }else  if (args[2].equalsIgnoreCase("removeperm")){
                                 if (args.length == 4){
                                     if (pp != null && pp.getPermissions().stream().anyMatch(permissionAble -> permissionAble.getPermission().equalsIgnoreCase(args[3]))){
                                         pp.getPermissions().removeIf(permissionAble -> permissionAble.getPermission().equalsIgnoreCase(args[3]));
@@ -144,26 +145,27 @@ public class PermissionCommand extends Command implements TabExecutor {
                             }else {
                                 sendHelp(player);
                             }
+
                         }else {
                             player.sendMessage( PREFIX +"The specified player '§f" + target + "§r' was not found.");
                         }
                     }else {
                         sendHelp(player);
                     }
-                }else if (args[0].equalsIgnoreCase("group")){
-                    if (args.length > 1){
+                }else if (args[0].equalsIgnoreCase("group")) {
+                    if (args.length != 2) {
                         String group = args[1];
                         if (CloudPermissionAPI.getInstance().isGroupExists(group)){
                             PermissionGroup pg = CloudPermissionAPI.getInstance().getGroup(group);
                             if (args.length == 2){
-                             player.sendMessage(PREFIX + "Group name: "+ pg.getGroup());
-                             player.sendMessage(PREFIX + "Default: "+ pg.getIsDefault());
-                             player.sendMessage(PREFIX + "Tag-Power: "+ pg.getTagPower());
-                             player.sendMessage(PREFIX + "Prefix: "+ pg.getPrefix());
-                             player.sendMessage(PREFIX + "Suffix: "+ pg.getSuffix());
-                             player.sendMessage(PREFIX + "Able groups: ");
+                                player.sendMessage(PREFIX + "Group name: "+ pg.getGroup());
+                                player.sendMessage(PREFIX + "Default: "+ pg.getIsDefault());
+                                player.sendMessage(PREFIX + "Tag-Power: "+ pg.getTagPower());
+                                player.sendMessage(PREFIX + "Prefix: "+ pg.getPrefix());
+                                player.sendMessage(PREFIX + "Suffix: "+ pg.getSuffix());
+                                player.sendMessage(PREFIX + "Able groups: ");
                                 pg.getIncluded().forEach(includedAble ->  player.sendMessage(PREFIX + "- " +includedAble.getGroup() + " ~ " + includedAble.getTime() ));
-                             player.sendMessage(PREFIX + "Able permissions: ");
+                                player.sendMessage(PREFIX + "Able permissions: ");
                                 pg.getPermissions().forEach(permissionAble ->        player.sendMessage(PREFIX + "- " + permissionAble.getPermission() + " ~ " + permissionAble.getAble() + " ~ " + permissionAble.getTime()));
                             }else if (args[2].equalsIgnoreCase("addperm")) {
                                 if (args.length == 6){
@@ -189,10 +191,10 @@ public class PermissionCommand extends Command implements TabExecutor {
 
                                             pg.getPermissions().add(new PermissionAble(permission, able, formattedDateTime));
                                             CloudPermissionAPI.getInstance().updateGroup(pg);
-                                           player.sendMessage(PREFIX + "The group '§f" + group + "§r' now has the permission '§f" + permission + "§r@§f"+formattedDateTime+"§r'.");
+                                            player.sendMessage(PREFIX + "The group '§f" + group + "§r' now has the permission '§f" + permission + "§r@§f"+formattedDateTime+"§r'.");
 
                                         }else {
-                                          player.sendMessage(PREFIX + "The group '§f" + group + "§r' has alreasy the permission '§f" + permission + "§r'.");
+                                            player.sendMessage(PREFIX + "The group '§f" + group + "§r' has alreasy the permission '§f" + permission + "§r'.");
 
                                         }
                                     }else {
@@ -215,7 +217,7 @@ public class PermissionCommand extends Command implements TabExecutor {
                                 }else {
                                     sendHelp(player);
                                 }
-                            }else if (args[2].equalsIgnoreCase("addgroup")){
+                            }else if (args[2].equalsIgnoreCase("include")){
 
                                 if (args.length == 5){
                                     String target= args[3];
@@ -250,14 +252,14 @@ public class PermissionCommand extends Command implements TabExecutor {
                                     sendHelp(player);
                                 }
 
-                            }else if (args[2].equalsIgnoreCase("removegroup")){
+                            }else if (args[2].equalsIgnoreCase("exclude")){
                                 if (args.length == 4){
                                     assert pg != null;
                                     if (pg.getIncluded().stream().anyMatch(includedAble -> includedAble.getGroup().equalsIgnoreCase(args[3]))){
                                         pg.getIncluded().removeIf(includedAble -> includedAble.getGroup().equalsIgnoreCase(args[3]));
 
                                         CloudPermissionAPI.getInstance().excludeGroup(group, args[3] );
-                                       player.sendMessage(PREFIX +    "The group '§f" + group + "§r' no longer inherits from the group '§f" + args[3] + "§r'.");
+                                        player.sendMessage(PREFIX +    "The group '§f" + group + "§r' no longer inherits from the group '§f" + args[3] + "§r'.");
 
                                     }else {
                                         player.sendMessage(PREFIX + "The group '§f" + group + "§r' does not inherit from the group '§f" + args[3] + "§r'.");
@@ -299,8 +301,8 @@ public class PermissionCommand extends Command implements TabExecutor {
 
                             if (args.length == 3){
                                 if (args[2].equalsIgnoreCase("create")){
-                                   CloudPermissionAPI.getInstance().createGroup(new PermissionGroup(args[1], false, 99,"§b" +group + " §8| §7" ,"",new ArrayList<>(), new ArrayList<>()));
-                                   player.sendMessage(PREFIX +   "The group '§f" + group + "§r' has been successfully created.");
+                                    CloudPermissionAPI.getInstance().createGroup(new PermissionGroup(args[1], false, 99,"§b" +group + " §8| §7" ,"",new ArrayList<>(), new ArrayList<>()));
+                                    player.sendMessage(PREFIX +   "The group '§f" + group + "§r' has been successfully created.");
                                 }else {
                                     sendHelp(player);
                                 }
@@ -312,7 +314,21 @@ public class PermissionCommand extends Command implements TabExecutor {
                     }else {
                         sendHelp(player);
                     }
-                }else {
+                }else if (args[0].equalsIgnoreCase("groups")) {
+                    StringBuilder result = new StringBuilder();
+                    if (!CloudPermissionAPI.getInstance().getGroups().isEmpty()) {
+                        // Füge den ersten Gruppennamen hinzu
+                        result.append(CloudPermissionAPI.getInstance().getGroups().get(0).getGroup());
+
+                        // Füge die restlichen Gruppennamen mit einem Komma hinzu
+                        for (int i = 1; i < CloudPermissionAPI.getInstance().getGroups().size(); i++) {
+                            result.append(", ").append(CloudPermissionAPI.getInstance().getGroups().get(i).getGroup());
+                        }
+                    }
+                    player.sendMessage(PREFIX + "groups:");
+                    player.sendMessage(PREFIX + result.toString());
+
+                }else{
                     sendHelp(player);
                 }
             }else {
@@ -325,34 +341,37 @@ public class PermissionCommand extends Command implements TabExecutor {
     public void sendHelp(ProxiedPlayer player){
         Messages messages = CloudAPI.getInstance().getMessages();
         String PREFIX = messages.getPrefix().replace("&", "§");
-        player.sendMessage( PREFIX + "/perms user <player>");
-        player.sendMessage( PREFIX + "/perms user <player> addperm <permission> <true/false> <time>");
-        player.sendMessage( PREFIX + "/perms user <player> removeperm <permission> ");
-        player.sendMessage( PREFIX + "/perms user <player> addgroup <group> <time>");
-        player.sendMessage( PREFIX + "/perms user <player> removegroup <group>");
+        player.sendMessage( PREFIX + "/perms user [player]");
+        player.sendMessage( PREFIX + "/perms user [player] addperm [permission] [true/false] [time]");
+        player.sendMessage( PREFIX + "/perms user [player] removeperm [permission] ");
+        player.sendMessage( PREFIX + "/perms user [player] addgroup [group] [time]");
+        player.sendMessage( PREFIX + "/perms user [player] removegroup [group]");
         player.sendMessage( PREFIX + " ");
-        player.sendMessage( PREFIX + "/perms group <group>");
-        player.sendMessage( PREFIX + "/perms group <group> create");
-        player.sendMessage( PREFIX + "/perms group <group> delete");
-        player.sendMessage( PREFIX + "/perms group <group> setdefault");
-        player.sendMessage( PREFIX + "/perms group <group> settargpower <power>");
-        player.sendMessage( PREFIX + "/perms group <group> addperm <permission> <true/false> <time>");
-        player.sendMessage( PREFIX + "/perms group <group> removeperm <permission>");
-        player.sendMessage( PREFIX + "/perms group <group> addgroup <group> <time>");
-        player.sendMessage( PREFIX + "/perms group <group> removegroup <group>");
+        player.sendMessage( PREFIX + "/perms groups");
+        player.sendMessage( PREFIX + "/perms group [group]");
+        player.sendMessage( PREFIX + "/perms group [group] create");
+        player.sendMessage( PREFIX + "/perms group [group] delete");
+        player.sendMessage( PREFIX + "/perms group [group] setdefault");
+        player.sendMessage( PREFIX + "/perms group [group] settargpower [power]");
+        player.sendMessage( PREFIX + "/perms group [group] addperm [permission] [true/false] [time]");
+        player.sendMessage( PREFIX + "/perms group [group] removeperm [permission]");
+        player.sendMessage( PREFIX + "/perms group [group] include [group] [time]");
+        player.sendMessage( PREFIX + "/perms group [group] exclude [group]");
     }
 
     @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
         List<String> collection = new ArrayList<>();
 
+        Configuration configuration = CloudPermissionAPI.getInstance().getConfig();
 
         if (args.length == 0){
             collection.add("user");
             collection.add("group");
+            collection.add("groups");
         }else if (args[0].equalsIgnoreCase("user")){
             if (args.length == 1){
-                CloudPermissionAPI.getInstance().getPlayers().forEach(player -> collection.add(UUIDDriver.getUsername(player.getUuid())));
+                configuration.getPlayers().forEach(permissionPlayer -> collection.add(UUIDDriver.getUsername(permissionPlayer.getUuid())));
             }else   if (args.length == 2){
                 collection.add("addperm");
                 collection.add("removeperm");
@@ -361,9 +380,17 @@ public class PermissionCommand extends Command implements TabExecutor {
             }else {
                 if (args[2].equalsIgnoreCase("removegroup") || args[2].equalsIgnoreCase("addgroup")){
                     if (args.length==3){
-                        CloudPermissionAPI.getInstance().getGroups().forEach(permissionGroup -> collection.add(permissionGroup.getGroup()));
+                        if (args[2].equalsIgnoreCase("removegroup")) {
+                            Objects.requireNonNull(configuration.getPlayers().stream().filter(player -> player.getUuid().equalsIgnoreCase(UUIDDriver.getUUID(args[1]))).findFirst().orElse(null)).getGroups().forEach(permissionGroup -> collection.add(permissionGroup.getGroup()));
+                        }else {
+                            configuration.getGroups().forEach(permissionGroup -> {
+                                if ( Objects.requireNonNull(configuration.getPlayers().stream().filter(player -> player.getUuid().equalsIgnoreCase(UUIDDriver.getUUID(args[1]))).findFirst().orElse(null)).getGroups().stream().noneMatch(includedAble -> includedAble.getGroup().equalsIgnoreCase(permissionGroup.getGroup()))){
+                                    collection.add(permissionGroup.getGroup());
+                                }
+                            });
+                        }
                     }else {
-                        if ( args[2].equalsIgnoreCase("addgroup")){
+                        if (args[2].equalsIgnoreCase("addgroup")){
                             collection.add("30");
                             collection.add("60");
                             collection.add("90");
@@ -382,11 +409,15 @@ public class PermissionCommand extends Command implements TabExecutor {
                         collection.add("120");
                         collection.add("LIFETIME");
                     }
+                }else if (args[2].equalsIgnoreCase("removeperm")){
+                    if (args.length==3){
+                        Objects.requireNonNull(configuration.getPlayers().stream().filter(player -> player.getUuid().equalsIgnoreCase(UUIDDriver.getUUID(args[1]))).findFirst().orElse(null)).getPermissions().forEach(permissionAble -> collection.add(permissionAble.getPermission()));
+                    }
                 }
             }
         }else if (args[0].equalsIgnoreCase("group")){
             if (args.length == 1){
-                CloudPermissionAPI.getInstance().getGroups().forEach(permissionGroup -> collection.add(permissionGroup.getGroup()));
+                configuration.getGroups().forEach(permissionGroup -> collection.add(permissionGroup.getGroup()));
             }else   if (args.length == 2){
                 collection.add("create");
                 collection.add("delete");
@@ -394,14 +425,31 @@ public class PermissionCommand extends Command implements TabExecutor {
                 collection.add("setdefault");
                 collection.add("addperm");
                 collection.add("removeperm");
-                collection.add("addgroup");
-                collection.add("removegroup");
+                collection.add("include");
+                collection.add("exclude");
             }else {
-                if (args[2].equalsIgnoreCase("removegroup") || args[2].equalsIgnoreCase("addgroup")){
+                if (args[2].equalsIgnoreCase("exclude") || args[2].equalsIgnoreCase("include")){
                     if (args.length==3){
-                        CloudPermissionAPI.getInstance().getGroups().forEach(permissionGroup -> collection.add(permissionGroup.getGroup()));
+                        if (args[2].equalsIgnoreCase("exclude")){
+                            Objects.requireNonNull(configuration.getGroups().stream().filter(permissionGroup -> permissionGroup.getGroup().equalsIgnoreCase(args[1])).findFirst().orElse(null)).getIncluded().forEach(includedAble -> {
+                                collection.add(includedAble.getGroup());
+                            });
+                        }else {
+                            configuration.getGroups().stream().filter(permissionGroup -> !permissionGroup.getGroup().equalsIgnoreCase(args[1]) &&
+                                            Objects.requireNonNull(configuration.getGroups()
+                                                            .stream()
+                                                            .filter(permissionGroup1 -> permissionGroup1.getGroup().equalsIgnoreCase(args[1]))
+                                                            .findFirst()
+                                                            .orElse(null))
+                                                    .getIncluded()
+                                                    .stream()
+                                                    .noneMatch(includedAble -> includedAble.getGroup().equalsIgnoreCase(permissionGroup.getGroup())) )
+                                    .forEach(permissionGroup -> {
+                                        collection.add(permissionGroup.getGroup());
+                                    });
+                        }
                     }else {
-                        if ( args[2].equalsIgnoreCase("addgroup")){
+                        if ( args[2].equalsIgnoreCase("include")){
                             collection.add("30");
                             collection.add("60");
                             collection.add("90");
@@ -420,18 +468,18 @@ public class PermissionCommand extends Command implements TabExecutor {
                         collection.add("120");
                         collection.add("LIFETIME");
                     }
+                }else if (args[2].equalsIgnoreCase("removeperm")){
+                    if (args.length==3){
+                        Objects.requireNonNull(configuration.getGroups().stream().filter(permissionGroup -> permissionGroup.getGroup().equalsIgnoreCase(args[1])).findFirst().orElse(null)).getPermissions().forEach(permissionAble -> collection.add(permissionAble.getPermission()));
+                    }
                 }
             }
 
         }else {
             collection.add("user");
             collection.add("group");
+            collection.add("groups");
         }
-
-        // Filter suggestions based on the current input
-        String prefix = args[args.length - 1].toLowerCase();
-        return collection.stream()
-                .filter(suggestion -> suggestion.toLowerCase().startsWith(prefix))
-                .collect(Collectors.toList());
+        return collection;
     }
 }

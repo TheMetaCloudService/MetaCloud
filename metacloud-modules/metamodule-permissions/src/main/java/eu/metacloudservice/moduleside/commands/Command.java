@@ -18,6 +18,7 @@ import org.checkerframework.checker.units.qual.A;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Objects;
 
 @CommandInfo(command = "perms", DEdescription = "Alle Berechtigungen können hier verwaltet werden", ENdescription = "All permissions can be managed here", aliases = {"permissions", "rank"})
 public class Command extends CommandAdapter {
@@ -255,7 +256,7 @@ public class Command extends CommandAdapter {
                         }else {
                             sendHelp();
                         }
-                    }else if (args[2].equalsIgnoreCase("addgroup")){
+                    }else if (args[2].equalsIgnoreCase("include")){
 
                         if (args.length == 5){
                             String target= args[3];
@@ -299,7 +300,7 @@ public class Command extends CommandAdapter {
                             sendHelp();
                         }
 
-                    }else if (args[2].equalsIgnoreCase("removegroup")){
+                    }else if (args[2].equalsIgnoreCase("exclude")){
                         if (args.length == 4){
                             assert pg != null;
                             if (pg.getIncluded().stream().anyMatch(includedAble -> includedAble.getGroup().equalsIgnoreCase(args[3]))){
@@ -344,7 +345,6 @@ public class Command extends CommandAdapter {
                     }else if (args[2].equalsIgnoreCase("settagpower")) {
                         if (args.length == 4){
                             assert pg != null;
-                            Integer.valueOf(args[0]);
                             int integer = Integer.parseInt(args[3]);
                             pg.setTagPower(integer);
                             configuration.getGroups().removeIf(permissionGroup -> permissionGroup.getGroup().equalsIgnoreCase(group));
@@ -410,7 +410,21 @@ public class Command extends CommandAdapter {
             }else {
                 sendHelp();
             }
-        }else {
+        }else if (args[0].equalsIgnoreCase("groups")) {
+            Configuration configuration = (Configuration) new ConfigDriver("./modules/permissions/config.json").read(Configuration.class);
+            StringBuilder result = new StringBuilder();
+            if (!configuration.getGroups().isEmpty()) {
+                // Füge den ersten Gruppennamen hinzu
+                result.append(configuration.getGroups().get(0).getGroup());
+
+                // Füge die restlichen Gruppennamen mit einem Komma hinzu
+                for (int i = 1; i < configuration.getGroups().size(); i++) {
+                    result.append(", ").append(configuration.getGroups().get(i).getGroup());
+                }
+            }
+            Driver.getInstance().getTerminalDriver().log(Type.COMMAND,"groups:");
+            Driver.getInstance().getTerminalDriver().log(Type.COMMAND,">> §f" +result.toString() );
+        }else{
             sendHelp();
         }
 
@@ -437,6 +451,9 @@ public class Command extends CommandAdapter {
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 "", "");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                " >> §fperms groups §7~ sehe alle vorhandenen Gruppe ",
+                " >> §fperms groups §7~ see all available group ");
+        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fperms group [group] §7~ sehe alle daten von einer Gruppe ",
                 " >> §fperms group [group] §7~ see all data about the group ");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
@@ -460,11 +477,11 @@ public class Command extends CommandAdapter {
                 " >> §fperms group [group] removeperm [permission] §7~ revoke a groups's privileges ");
 
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fperms group [group] addgroup [group] [time] §7~ um eine Gruppe in diese Gruppe aufzunehmen",
-                " >> §fperms group [group] addgroup [group]  [time]  §7~ to add a group to this group");
+                " >> §fperms group [group] include [group] [time] §7~ um eine Gruppe in diese Gruppe aufzunehmen",
+                " >> §fperms group [group] include [group]  [time]  §7~ to add a group to this group");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fperms group [group] removegroup [group] §7~ um eine Gruppe aus dieser Gruppe zu entfernen ",
-                " >> §fperms group [group] removegroup [group] §7~ to remove a group from this group ");
+                " >> §fperms group [group] exclude [group] §7~ um eine Gruppe aus dieser Gruppe zu entfernen ",
+                " >> §fperms group [group] exclude [group] §7~ to remove a group from this group ");
     }
 
     @Override
@@ -472,10 +489,10 @@ public class Command extends CommandAdapter {
         ArrayList<String> collection = new ArrayList<>();
 
         Configuration configuration = (Configuration) new ConfigDriver("./modules/permissions/config.json").read(Configuration.class);
-
         if (args.length == 0){
             collection.add("user");
             collection.add("group");
+            collection.add("groups");
         }else if (args[0].equalsIgnoreCase("user")){
             if (args.length == 1){
                 configuration.getPlayers().forEach(permissionPlayer -> collection.add(UUIDDriver.getUsername(permissionPlayer.getUuid())));
@@ -487,9 +504,17 @@ public class Command extends CommandAdapter {
             }else {
                 if (args[2].equalsIgnoreCase("removegroup") || args[2].equalsIgnoreCase("addgroup")){
                     if (args.length==3){
-                        configuration.getGroups().forEach(permissionGroup -> collection.add(permissionGroup.getGroup()));
+                        if (args[2].equalsIgnoreCase("removegroup")) {
+                            Objects.requireNonNull(configuration.getPlayers().stream().filter(player -> player.getUuid().equalsIgnoreCase(UUIDDriver.getUUID(args[1]))).findFirst().orElse(null)).getGroups().forEach(permissionGroup -> collection.add(permissionGroup.getGroup()));
+                        }else {
+                            configuration.getGroups().forEach(permissionGroup -> {
+                                if ( Objects.requireNonNull(configuration.getPlayers().stream().filter(player -> player.getUuid().equalsIgnoreCase(UUIDDriver.getUUID(args[1]))).findFirst().orElse(null)).getGroups().stream().noneMatch(includedAble -> includedAble.getGroup().equalsIgnoreCase(permissionGroup.getGroup()))){
+                                    collection.add(permissionGroup.getGroup());
+                                }
+                            });
+                        }
                     }else {
-                        if ( args[2].equalsIgnoreCase("addgroup")){
+                        if (args[2].equalsIgnoreCase("addgroup")){
                             collection.add("30");
                             collection.add("60");
                             collection.add("90");
@@ -507,6 +532,10 @@ public class Command extends CommandAdapter {
                         collection.add("90");
                         collection.add("120");
                         collection.add("LIFETIME");
+                    }
+                }else if (args[2].equalsIgnoreCase("removeperm")){
+                    if (args.length==3){
+                        Objects.requireNonNull(configuration.getPlayers().stream().filter(player -> player.getUuid().equalsIgnoreCase(UUIDDriver.getUUID(args[1]))).findFirst().orElse(null)).getPermissions().forEach(permissionAble -> collection.add(permissionAble.getPermission()));
                     }
                 }
             }
@@ -520,14 +549,31 @@ public class Command extends CommandAdapter {
                 collection.add("setdefault");
                 collection.add("addperm");
                 collection.add("removeperm");
-                collection.add("addgroup");
-                collection.add("removegroup");
+                collection.add("include");
+                collection.add("exclude");
             }else {
-                if (args[2].equalsIgnoreCase("removegroup") || args[2].equalsIgnoreCase("addgroup")){
+                if (args[2].equalsIgnoreCase("exclude") || args[2].equalsIgnoreCase("include")){
                     if (args.length==3){
-                        configuration.getGroups().forEach(permissionGroup -> collection.add(permissionGroup.getGroup()));
+                        if (args[2].equalsIgnoreCase("exclude")){
+                            Objects.requireNonNull(configuration.getGroups().stream().filter(permissionGroup -> permissionGroup.getGroup().equalsIgnoreCase(args[1])).findFirst().orElse(null)).getIncluded().forEach(includedAble -> {
+                                collection.add(includedAble.getGroup());
+                            });
+                        }else {
+                            configuration.getGroups().stream().filter(permissionGroup -> !permissionGroup.getGroup().equalsIgnoreCase(args[1]) &&
+                                            Objects.requireNonNull(configuration.getGroups()
+                                                            .stream()
+                                                            .filter(permissionGroup1 -> permissionGroup1.getGroup().equalsIgnoreCase(args[1]))
+                                                            .findFirst()
+                                                            .orElse(null))
+                                                    .getIncluded()
+                                                    .stream()
+                                                    .noneMatch(includedAble -> includedAble.getGroup().equalsIgnoreCase(permissionGroup.getGroup())) )
+                                    .forEach(permissionGroup -> {
+                                collection.add(permissionGroup.getGroup());
+                            });
+                        }
                     }else {
-                        if ( args[2].equalsIgnoreCase("addgroup")){
+                        if ( args[2].equalsIgnoreCase("include")){
                             collection.add("30");
                             collection.add("60");
                             collection.add("90");
@@ -546,12 +592,17 @@ public class Command extends CommandAdapter {
                         collection.add("120");
                         collection.add("LIFETIME");
                     }
+                }else if (args[2].equalsIgnoreCase("removeperm")){
+                    if (args.length==3){
+                        Objects.requireNonNull(configuration.getGroups().stream().filter(permissionGroup -> permissionGroup.getGroup().equalsIgnoreCase(args[1])).findFirst().orElse(null)).getPermissions().forEach(permissionAble -> collection.add(permissionAble.getPermission()));
+                    }
                 }
             }
 
         }else {
             collection.add("user");
             collection.add("group");
+            collection.add("groups");
         }
         return collection;
     }

@@ -107,7 +107,7 @@ public class SignCommand implements CommandExecutor, TabCompleter {
 
     public void sendHelp(Player player){
         String prefix = CloudAPI.getInstance().getMessages().getPrefix().replace("&", "§");
-        player.sendMessage(prefix + "/cloudsigns create <group>");
+        player.sendMessage(prefix + "/cloudsigns create [group]");
         player.sendMessage(prefix + "/cloudsigns delete");
         player.sendMessage(prefix + "/cloudsigns claenup");
 

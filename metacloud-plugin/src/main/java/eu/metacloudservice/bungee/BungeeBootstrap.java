@@ -38,9 +38,7 @@ public class BungeeBootstrap extends Plugin {
         new TimerBase().schedule(new TimerTask() {
             @Override
             public void run() {
-
-                if (
-                        CloudAPI.getInstance().getGroups().stream().filter(group -> group.getGroup().equalsIgnoreCase(service.getGroup())).findFirst().get().isMaintenance()){
+                if (Objects.requireNonNull(CloudAPI.getInstance().getGroups().stream().filter(group -> group.getGroup().equalsIgnoreCase(service.getGroup())).findFirst().orElse(null)).isMaintenance()){
                     ProxyServer.getInstance().getPlayers().forEach(player -> {
                        if ( !player.hasPermission("metacloud.connection.maintenance") && !CloudAPI.getInstance().getWhitelist().contains(player.getName())){
                            Messages messages = CloudAPI.getInstance().getMessages();
@@ -48,26 +46,21 @@ public class BungeeBootstrap extends Plugin {
                        }
                     });
                 }
-
                     if (!NettyDriver.getInstance().nettyClient.getChannel().isActive()){
                         System.exit(0);
                     }
-
-
             }
         }, 2, 2, TimeUtil.SECONDS);
-
     }
 
     public static BungeeBootstrap getInstance() {
         return instance;
     }
 
-
     public CloudService getLobby(ProxiedPlayer player){
         if (CloudAPI.getInstance().getServicePool().getServices().isEmpty()){
             return null;
-        }else if (CloudAPI.getInstance().getServicePool().getServices().stream().noneMatch(service -> service.getGroup().getGroupType().equalsIgnoreCase("LOBBY"))){
+        }else if (CloudAPI.getInstance().getServicePool().getServices().stream().noneMatch(service -> service.getGroup().getGroupType().equalsIgnoreCase("LOBBY")  && service.getState() == ServiceState.LOBBY)){
             return null;
         }else {
             List<CloudService> cloudServices = CloudAPI.getInstance().getServicePool().getServices().stream()
@@ -94,8 +87,7 @@ public class BungeeBootstrap extends Plugin {
     public CloudService getLobby(ProxiedPlayer player, String kicked){
         if (CloudAPI.getInstance().getServicePool().getServices().isEmpty()){
             return null;
-        }else if ( CloudAPI.getInstance().getServicePool().getServices().stream()
-                .filter(service -> service.getGroup().getGroupType().equals("LOBBY")).collect(Collectors.toList()).isEmpty()){
+        }else if (CloudAPI.getInstance().getServicePool().getServices().stream().noneMatch(service -> service.getGroup().getGroupType().equals("LOBBY") && service.getState() == ServiceState.LOBBY)){
             return null;
         }
         List<CloudService> services = CloudAPI.getInstance().getServicePool().getServices().stream()

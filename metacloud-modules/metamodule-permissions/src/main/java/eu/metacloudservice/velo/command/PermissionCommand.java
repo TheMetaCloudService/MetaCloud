@@ -10,10 +10,7 @@ import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.api.CloudPermissionAPI;
 import eu.metacloudservice.configuration.dummys.message.Messages;
-import eu.metacloudservice.moduleside.config.IncludedAble;
-import eu.metacloudservice.moduleside.config.PermissionAble;
-import eu.metacloudservice.moduleside.config.PermissionGroup;
-import eu.metacloudservice.moduleside.config.PermissionPlayer;
+import eu.metacloudservice.moduleside.config.*;
 import eu.metacloudservice.storage.UUIDDriver;
 import eu.metacloudservice.terminal.enums.Type;
 import net.kyori.adventure.text.Component;
@@ -23,6 +20,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class PermissionCommand implements SimpleCommand {
@@ -47,7 +46,7 @@ public class PermissionCommand implements SimpleCommand {
                                 pp.getGroups().forEach(includedAble -> player.sendMessage(Component.text(PREFIX + "- " + includedAble.getGroup() + " ~ " + includedAble.getTime())));
                                 player.sendMessage(Component.text(PREFIX + "able permissions: "));
                                 pp.getPermissions().forEach(permissionAble -> player.sendMessage(Component.text(PREFIX + "- " + permissionAble.getPermission() + " ~ " + permissionAble.getAble() + " ~ " + permissionAble.getTime())));
-                            }if (args[2].equalsIgnoreCase("addperm")) {
+                            }else if (args[2].equalsIgnoreCase("addperm")) {
                                 if (args.length == 6){
                                     String permission = args[3];
                                     if ((args[4].equalsIgnoreCase("true") || args[4].equalsIgnoreCase("false"))){
@@ -213,7 +212,7 @@ public class PermissionCommand implements SimpleCommand {
                                 }else {
                                     sendHelp(player);
                                 }
-                            }else if (args[2].equalsIgnoreCase("addgroup")){
+                            }else if (args[2].equalsIgnoreCase("include")){
 
                                 if (args.length == 5){
                                     String target= args[3];
@@ -248,7 +247,7 @@ public class PermissionCommand implements SimpleCommand {
                                     sendHelp(player);
                                 }
 
-                            }else if (args[2].equalsIgnoreCase("removegroup")){
+                            }else if (args[2].equalsIgnoreCase("exclude")){
                                 if (args.length == 4){
                                     assert pg != null;
                                     if (pg.getIncluded().stream().anyMatch(includedAble -> includedAble.getGroup().equalsIgnoreCase(args[3]))){
@@ -303,14 +302,26 @@ public class PermissionCommand implements SimpleCommand {
                                     sendHelp(player);
                                 }
                             }else {
-
                                 player.sendMessage(Component.text(PREFIX + "The specified group '§f" + group + "§r' was not found."));}
-
                         }
                     }else {
                         sendHelp(player);
                     }
-                }else {
+                }else if (args[0].equalsIgnoreCase("groups")) {
+                    StringBuilder result = new StringBuilder();
+                    if (!CloudPermissionAPI.getInstance().getGroups().isEmpty()) {
+                        // Füge den ersten Gruppennamen hinzu
+                        result.append(CloudPermissionAPI.getInstance().getGroups().get(0).getGroup());
+
+                        // Füge die restlichen Gruppennamen mit einem Komma hinzu
+                        for (int i = 1; i < CloudPermissionAPI.getInstance().getGroups().size(); i++) {
+                            result.append(", ").append(CloudPermissionAPI.getInstance().getGroups().get(i).getGroup());
+                        }
+                    }
+                    player.sendMessage(Component.text(PREFIX + "groups:"));
+                    player.sendMessage(Component.text(PREFIX + result.toString()));
+
+                }else{
                     sendHelp(player);
                 }
             }else {
@@ -323,21 +334,22 @@ public class PermissionCommand implements SimpleCommand {
     public void sendHelp(Player player) {
         Messages messages = CloudAPI.getInstance().getMessages();
         String PREFIX = messages.getPrefix().replace("&", "§");
-        player.sendMessage(Component.text(PREFIX + "/perms user <player>"));
-        player.sendMessage(Component.text(PREFIX + "/perms user <player> addperm <permission> <true/false> <time>"));
-        player.sendMessage(Component.text(PREFIX + "/perms user <player> removeperm <permission>"));
-        player.sendMessage(Component.text(PREFIX + "/perms user <player> addgroup <group> <time>"));
-        player.sendMessage(Component.text(PREFIX + "/perms user <player> removegroup <group>"));
+        player.sendMessage(Component.text(PREFIX + "/perms user [player]"));
+        player.sendMessage(Component.text(PREFIX + "/perms user [player] addperm [permission] [true/false] [time]"));
+        player.sendMessage(Component.text(PREFIX + "/perms user [player] removeperm [permission]"));
+        player.sendMessage(Component.text(PREFIX + "/perms user [player] addgroup [group] [time]"));
+        player.sendMessage(Component.text(PREFIX + "/perms user [player] removegroup [group]"));
         player.sendMessage(Component.text(PREFIX + ""));
-        player.sendMessage(Component.text(PREFIX + "/perms group <group>"));
-        player.sendMessage(Component.text(PREFIX + "/perms group <group> create"));
-        player.sendMessage(Component.text(PREFIX + "/perms group <group> delete"));
-        player.sendMessage(Component.text(PREFIX + "/perms group <group> setdefault"));
-        player.sendMessage(Component.text(PREFIX + "/perms group <group> settargpower <power>"));
-        player.sendMessage(Component.text(PREFIX + "/perms group <group> addperm <permission> <true/false> <time>"));
-        player.sendMessage(Component.text(PREFIX + "/perms group <group> removeperm <permission>"));
-        player.sendMessage(Component.text(PREFIX + "/perms group <group> addgroup <group> <time>"));
-        player.sendMessage(Component.text(PREFIX + "/perms group <group> removegroup <group>"));
+        player.sendMessage(Component.text(PREFIX + "/perms groups"));
+        player.sendMessage(Component.text(PREFIX + "/perms group [group]"));
+        player.sendMessage(Component.text(PREFIX + "/perms group [group] create"));
+        player.sendMessage(Component.text(PREFIX + "/perms group [group] delete"));
+        player.sendMessage(Component.text(PREFIX + "/perms group [group] setdefault"));
+        player.sendMessage(Component.text(PREFIX + "/perms group [group] settargpower [power]"));
+        player.sendMessage(Component.text(PREFIX + "/perms group [group] addperm [permission] [true/false] [time]"));
+        player.sendMessage(Component.text(PREFIX + "/perms group [group] removeperm [permission]"));
+        player.sendMessage(Component.text(PREFIX + "/perms group [group] include [group] [time]"));
+        player.sendMessage(Component.text(PREFIX + "/perms group [group] exclude [group]"));
 
 
     }
@@ -346,24 +358,34 @@ public class PermissionCommand implements SimpleCommand {
     public List<String> suggest(Invocation invocation) {
         List<String> collection = new ArrayList<>();
         String[] args = invocation.arguments();
+        Configuration configuration = CloudPermissionAPI.getInstance().getConfig();
 
-        if (args.length == 0) {
+        if (args.length == 0){
             collection.add("user");
             collection.add("group");
-        } else if (args[0].equalsIgnoreCase("user")) {
-            if (args.length == 1) {
-                CloudPermissionAPI.getInstance().getPlayers().forEach(player -> collection.add(UUIDDriver.getUsername(player.getUuid())));
-            } else if (args.length == 2) {
+            collection.add("groups");
+        }else if (args[0].equalsIgnoreCase("user")){
+            if (args.length == 1){
+                configuration.getPlayers().forEach(permissionPlayer -> collection.add(UUIDDriver.getUsername(permissionPlayer.getUuid())));
+            }else   if (args.length == 2){
                 collection.add("addperm");
                 collection.add("removeperm");
                 collection.add("addgroup");
                 collection.add("removegroup");
-            } else {
-                if (args[2].equalsIgnoreCase("removegroup") || args[2].equalsIgnoreCase("addgroup")) {
-                    if (args.length == 3) {
-                        CloudPermissionAPI.getInstance().getGroups().forEach(permissionGroup -> collection.add(permissionGroup.getGroup()));
-                    } else {
-                        if (args[2].equalsIgnoreCase("addgroup")) {
+            }else {
+                if (args[2].equalsIgnoreCase("removegroup") || args[2].equalsIgnoreCase("addgroup")){
+                    if (args.length==3){
+                        if (args[2].equalsIgnoreCase("removegroup")) {
+                            Objects.requireNonNull(configuration.getPlayers().stream().filter(player -> player.getUuid().equalsIgnoreCase(UUIDDriver.getUUID(args[1]))).findFirst().orElse(null)).getGroups().forEach(permissionGroup -> collection.add(permissionGroup.getGroup()));
+                        }else {
+                            configuration.getGroups().forEach(permissionGroup -> {
+                                if ( Objects.requireNonNull(configuration.getPlayers().stream().filter(player -> player.getUuid().equalsIgnoreCase(UUIDDriver.getUUID(args[1]))).findFirst().orElse(null)).getGroups().stream().noneMatch(includedAble -> includedAble.getGroup().equalsIgnoreCase(permissionGroup.getGroup()))){
+                                    collection.add(permissionGroup.getGroup());
+                                }
+                            });
+                        }
+                    }else {
+                        if (args[2].equalsIgnoreCase("addgroup")){
                             collection.add("30");
                             collection.add("60");
                             collection.add("90");
@@ -371,37 +393,58 @@ public class PermissionCommand implements SimpleCommand {
                             collection.add("LIFETIME");
                         }
                     }
-                } else if (args[2].equalsIgnoreCase("addperm")) {
-                    if (args.length == 4) {
+                }else if (args[2].equalsIgnoreCase("addperm")){
+                    if (args.length==4){
                         collection.add("true");
                         collection.add("false");
-                    } else if (args.length == 5) {
+                    }else         if (args.length==5){
                         collection.add("30");
                         collection.add("60");
                         collection.add("90");
                         collection.add("120");
                         collection.add("LIFETIME");
                     }
+                }else if (args[2].equalsIgnoreCase("removeperm")){
+                    if (args.length==3){
+                        Objects.requireNonNull(configuration.getPlayers().stream().filter(player -> player.getUuid().equalsIgnoreCase(UUIDDriver.getUUID(args[1]))).findFirst().orElse(null)).getPermissions().forEach(permissionAble -> collection.add(permissionAble.getPermission()));
+                    }
                 }
             }
-        } else if (args[0].equalsIgnoreCase("group")) {
-            if (args.length == 1) {
-                CloudPermissionAPI.getInstance().getGroups().forEach(permissionGroup -> collection.add(permissionGroup.getGroup()));
-            } else if (args.length == 2) {
+        }else if (args[0].equalsIgnoreCase("group")){
+            if (args.length == 1){
+                configuration.getGroups().forEach(permissionGroup -> collection.add(permissionGroup.getGroup()));
+            }else   if (args.length == 2){
                 collection.add("create");
                 collection.add("delete");
                 collection.add("settagpower");
                 collection.add("setdefault");
                 collection.add("addperm");
                 collection.add("removeperm");
-                collection.add("addgroup");
-                collection.add("removegroup");
-            } else {
-                if (args[2].equalsIgnoreCase("removegroup") || args[2].equalsIgnoreCase("addgroup")) {
-                    if (args.length == 3) {
-                        CloudPermissionAPI.getInstance().getGroups().forEach(permissionGroup -> collection.add(permissionGroup.getGroup()));
-                    } else {
-                        if (args[2].equalsIgnoreCase("addgroup")) {
+                collection.add("include");
+                collection.add("exclude");
+            }else {
+                if (args[2].equalsIgnoreCase("exclude") || args[2].equalsIgnoreCase("include")){
+                    if (args.length==3){
+                        if (args[2].equalsIgnoreCase("exclude")){
+                            Objects.requireNonNull(configuration.getGroups().stream().filter(permissionGroup -> permissionGroup.getGroup().equalsIgnoreCase(args[1])).findFirst().orElse(null)).getIncluded().forEach(includedAble -> {
+                                collection.add(includedAble.getGroup());
+                            });
+                        }else {
+                            configuration.getGroups().stream().filter(permissionGroup -> !permissionGroup.getGroup().equalsIgnoreCase(args[1]) &&
+                                            Objects.requireNonNull(configuration.getGroups()
+                                                            .stream()
+                                                            .filter(permissionGroup1 -> permissionGroup1.getGroup().equalsIgnoreCase(args[1]))
+                                                            .findFirst()
+                                                            .orElse(null))
+                                                    .getIncluded()
+                                                    .stream()
+                                                    .noneMatch(includedAble -> includedAble.getGroup().equalsIgnoreCase(permissionGroup.getGroup())) )
+                                    .forEach(permissionGroup -> {
+                                        collection.add(permissionGroup.getGroup());
+                                    });
+                        }
+                    }else {
+                        if ( args[2].equalsIgnoreCase("include")){
                             collection.add("30");
                             collection.add("60");
                             collection.add("90");
@@ -409,29 +452,30 @@ public class PermissionCommand implements SimpleCommand {
                             collection.add("LIFETIME");
                         }
                     }
-                } else if (args[2].equalsIgnoreCase("addperm")) {
-                    if (args.length == 4) {
+                }else if (args[2].equalsIgnoreCase("addperm")){
+                    if (args.length==4){
                         collection.add("true");
                         collection.add("false");
-                    } else if (args.length == 5) {
+                    }else         if (args.length==5){
                         collection.add("30");
                         collection.add("60");
                         collection.add("90");
                         collection.add("120");
                         collection.add("LIFETIME");
                     }
+                }else if (args[2].equalsIgnoreCase("removeperm")){
+                    if (args.length==3){
+                        Objects.requireNonNull(configuration.getGroups().stream().filter(permissionGroup -> permissionGroup.getGroup().equalsIgnoreCase(args[1])).findFirst().orElse(null)).getPermissions().forEach(permissionAble -> collection.add(permissionAble.getPermission()));
+                    }
                 }
             }
-        } else {
+
+        }else {
             collection.add("user");
             collection.add("group");
+            collection.add("groups");
         }
-
-// Filter suggestions based on the current input
-        String prefix = args[args.length - 1].toLowerCase();
-        return collection.stream()
-                .filter(suggestion -> suggestion.toLowerCase().startsWith(prefix))
-                .collect(Collectors.toList());
+        return collection;
 
     }
 }

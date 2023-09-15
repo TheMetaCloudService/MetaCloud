@@ -19,6 +19,10 @@ public class Group implements IConfigAdapter {
     @Setter
     @Getter
     private Integer priority;
+
+    @Setter
+    @Getter
+    private Integer startPriority;
     @Getter
     @Setter
     private String permission;
@@ -45,7 +49,7 @@ public class Group implements IConfigAdapter {
 
     public Group() {}
 
-    public Group(String group, String groupType, Integer usedMemory, boolean maintenance, boolean runStatic, Integer priority, String permission, Integer maxPlayers, Integer minimalOnline, Integer maximalOnline, Integer startNewPercent, Integer over100AtGroup, Integer over100AtNetwork, GroupStorage storage) {
+    public Group(String group, String groupType, Integer usedMemory, boolean maintenance, boolean runStatic, Integer priority, String permission, Integer maxPlayers, Integer minimalOnline, Integer maximalOnline, Integer startNewPercent, Integer over100AtGroup, Integer over100AtNetwork, GroupStorage storage, int startPriority) {
         this.group = group;
         this.groupType = groupType;
         this.usedMemory = usedMemory;
@@ -60,6 +64,7 @@ public class Group implements IConfigAdapter {
         this.over100AtGroup = over100AtGroup;
         this.over100AtNetwork = over100AtNetwork;
         this.storage = storage;
+        this.startPriority = startPriority;
     }
 
 }

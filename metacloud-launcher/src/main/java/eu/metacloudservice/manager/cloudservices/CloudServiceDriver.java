@@ -189,7 +189,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
 
                     }
                 }
-            }, 20, 20, TimeUtil.SECONDS);
+            }, 5, 5, TimeUtil.SECONDS);
 
             new TimerBase().scheduleAsync(new TimerTask() {
                 @Override
@@ -354,6 +354,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                                 })
                                 .filter(group -> getServices(group.getGroup()).size() + 1 <= Integer.parseInt(String.valueOf(group.getMaximalOnline()).replace("-1", String.valueOf(Integer.MAX_VALUE))) )
                                 .filter(group -> NettyDriver.getInstance().nettyServer.isChannelFound(group.getStorage().getRunningNode()) || group.getStorage().getRunningNode().equals("InternalNode"))
+                                .sorted(Comparator.comparingInt(Group::getStartPriority).reversed())
                                 .forEach(group -> {
 
                                     int minonline = 0;
@@ -447,6 +448,8 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                     }
                 }
             }, 0, 5, TimeUtil.SECONDS);
+
+
         });
         current.setPriority(1);
         current.start();
