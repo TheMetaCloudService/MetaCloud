@@ -461,7 +461,7 @@ public class Command extends CommandAdapter {
                 " >> §fperms group [group] create §7~ to create a new group");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fperms group [group] delete §7~ um eine Gruppe zu löschen ",
-                " >> §fperms group [group] delete §7~ to delete an  group");
+                " >> §fperms group [group] delete §7~ to delete an group");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fperms group [group] setdefault §7~ die Gruppe als Standard festlegen",
                 " >> §fperms group [group] setdefault §7~ set the group as default");

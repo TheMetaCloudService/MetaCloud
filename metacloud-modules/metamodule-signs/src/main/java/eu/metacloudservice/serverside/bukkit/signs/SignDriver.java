@@ -24,6 +24,10 @@ public class SignDriver {
         worker.start();
     }
 
+    public SignWorker getWorker() {
+        return worker;
+    }
+
     public ArrayDeque<CloudSign> getCloudSigns() {
         return cloudSigns;
     }
@@ -54,7 +58,7 @@ public class SignDriver {
         }
     }
 
-    private @Nullable String getFreeServer(String group){
+    public @Nullable String getFreeServer(String group){
         CloudService service = CloudAPI.getInstance().getServicePool().getServicesByGroup(group).parallelStream()
                 .filter(cloudService -> cloudService.getState() == ServiceState.LOBBY)
                 .filter(cloudService -> cloudSigns.stream().parallel().noneMatch(cloudSign -> cloudSign.getServer().equalsIgnoreCase(cloudService.getName()))).findFirst().orElse(null);
