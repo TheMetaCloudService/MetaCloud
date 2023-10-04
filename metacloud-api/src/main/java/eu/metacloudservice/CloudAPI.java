@@ -13,6 +13,8 @@ import eu.metacloudservice.networking.*;
 import eu.metacloudservice.networking.client.NettyClient;
 import eu.metacloudservice.networking.in.service.PacketInServiceConnect;
 import eu.metacloudservice.networking.in.service.cloudapi.*;
+import eu.metacloudservice.networking.in.service.command.PacketInCommandMinCount;
+import eu.metacloudservice.networking.in.service.command.PacketInCommandWhitelist;
 import eu.metacloudservice.networking.in.service.playerbased.apibased.PacketOutAPIPlayerDispactchCommand;
 import eu.metacloudservice.networking.out.service.playerbased.apibased.PacketOutCloudPlayerComponent;
 import eu.metacloudservice.networking.out.service.*;
@@ -24,6 +26,7 @@ import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerDis
 import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerSwitchService;
 import eu.metacloudservice.networking.out.service.playerbased.apibased.*;
 import eu.metacloudservice.networking.packet.Packet;
+import eu.metacloudservice.pool.groupe.GroupPool;
 import eu.metacloudservice.pool.player.PlayerPool;
 import eu.metacloudservice.pool.player.entrys.CloudPlayer;
 import eu.metacloudservice.pool.service.ServicePool;
@@ -52,6 +55,7 @@ public class CloudAPI {
     private final LiveService service;
 
     private final PlayerPool playerPool;
+    private final GroupPool groupPool;
     private final ServicePool servicePool;
     private final RestDriver restDriver;
     private final EventDriver eventDriver;
@@ -63,6 +67,7 @@ public class CloudAPI {
         new NettyDriver();
         this.playerPool = new PlayerPool();
         this.servicePool = new ServicePool();
+        this.groupPool = new GroupPool();
 
         restDriver = new RestDriver(service.getManagerAddress(), service.getRestPort());
         NettyDriver.getInstance().nettyClient = new NettyClient();
@@ -165,33 +170,19 @@ public class CloudAPI {
         sendPacketSynchronized(new PacketInStopService(service));
     }
 
-    public void stopGroup(String group){
-        sendPacketSynchronized(new PacketInStopGroup(group));
-    }
+
     
     public EventDriver getEventDriver() {
         return eventDriver;
     }
 
-    public ArrayList<Group> getGroups(){
-        ArrayList<Group> groups = new ArrayList<>();
-        GroupList cech = (GroupList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/general"), GroupList.class);
-        cech.getGroups().forEach(s -> {
-            Group g = (Group) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/" + s), Group.class);
-            groups.add(g);
-        });
-        return groups;
 
-    }
 
     public LiveService getCurrentService(){
         return service;
     }
 
-    public ArrayDeque<String> getGroupsName(){
-        GroupList cech = (GroupList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/general"), GroupList.class);
-        return cech.getGroups();
-    }
+
 
     public List<String> getWhitelist(){
         WhiteList cech = (WhiteList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/default/whitelist"), WhiteList.class);
@@ -204,7 +195,7 @@ public class CloudAPI {
 
     public boolean addWhiteList(String username){
         if (getWhitelist().stream().noneMatch(s -> s.equals(username))){
-            dispatchCommand("service whitelist add " + username);
+            CloudAPI.getInstance().sendPacketSynchronized(new PacketInCommandWhitelist(username));
             return true;
         }
         return false;
@@ -212,7 +203,7 @@ public class CloudAPI {
 
     public boolean removeWhiteList(String username){
         if (getWhitelist().stream().anyMatch(s -> s.equals(username))){
-            dispatchCommand("service whitelist remove " + username);
+            CloudAPI.getInstance().sendPacketSynchronized(new PacketInCommandWhitelist(username));
             return true;
         }
 
@@ -232,12 +223,12 @@ public class CloudAPI {
     }
     
     public double getUsedMemory(){
-        return  ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1048576;
+        return  (double) ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1048576;
 
     }
 
     public double getMaxMemory(){
-        return  ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getMax() / 1048576;
+        return  (double) ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getMax() / 1048576;
 
     }
 
@@ -259,6 +250,10 @@ public class CloudAPI {
 
     public ServicePool getServicePool() {
         return servicePool;
+    }
+
+    public GroupPool getGroupPool() {
+        return groupPool;
     }
 
     public static CloudAPI getInstance() {

@@ -1,6 +1,5 @@
 package eu.metacloudservice.bungee.listener;
 
-import eu.metacloudservice.Driver;
 import eu.metacloudservice.bungee.BungeeBootstrap;
 import eu.metacloudservice.config.Configuration;
 import eu.metacloudservice.configuration.ConfigDriver;

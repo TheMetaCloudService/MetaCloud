@@ -56,9 +56,6 @@ public class MetaModule implements IModule {
     public void set(){
 
 
-        General general = new General("notify", "1.0.0", "RauchigesEtwas");
-        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/notify/general", new ConfigDriver().convert(general)));
-
         try {
             Configuration configuration = (Configuration) new ConfigDriver("./modules/notify/config.json").read(Configuration.class);
 

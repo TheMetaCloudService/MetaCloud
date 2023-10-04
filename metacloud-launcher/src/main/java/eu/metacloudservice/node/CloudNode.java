@@ -33,8 +33,10 @@ public class CloudNode {
         if (!new File("./modules/").exists()){
             new File("./modules/").mkdirs();
         }
-
-        new File("./local/GLOBAL/plugins/").mkdirs();
+        new File("./local/GLOBAL/EVERY/plugins/").mkdirs();
+        new File("./local/GLOBAL/EVERY_SERVER/plugins/").mkdirs();
+        new File("./local/GLOBAL/EVERY_PROXY/plugins/").mkdirs();
+        new File("./local/GLOBAL/EVERY_LOBBY/plugins/").mkdirs();
         new File("./local/templates/").mkdirs();
         cloudServiceDriver = new CloudServiceDriver();
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO,"Es wird versucht, den '§fCloud Node§r' zu starten",
@@ -91,12 +93,12 @@ public class CloudNode {
     public static void shutdownHook(){
 
         NodeConfig config = (NodeConfig) new ConfigDriver("./nodeservice.json").read(NodeConfig.class);
-
-
         cloudServiceDriver.shutdownALLFORCE();
 
+        Driver.getInstance().getModuleDriver().unload();
         NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInShutdownNode(config.getNodeName()));
         NettyDriver.getInstance().nettyClient.close();
+        Driver.getInstance().getMessageStorage().eventDriver.clearListeners();
 
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Danke für die Nutzung von MetaCloud ;->",
                 "thank you for using MetaCloud ;->");

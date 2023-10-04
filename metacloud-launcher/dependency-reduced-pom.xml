@@ -20,7 +20,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>2.4.1</version>
+        <version>3.2.4</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -32,7 +32,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>2.4</version>
+        <version>3.2.0</version>
         <configuration>
           <archive>
             <index>true</index>
@@ -42,30 +42,10 @@
           </archive>
         </configuration>
       </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>compile</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>testCompile</id>
-            <phase>test-compile</phase>
-            <goals>
-              <goal>testCompile</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
   <properties>
-    <maven.compiler.target>8</maven.compiler.target>
-    <maven.compiler.source>8</maven.compiler.source>
+    <maven.compiler.target>16</maven.compiler.target>
+    <maven.compiler.source>16</maven.compiler.source>
   </properties>
 </project>
-

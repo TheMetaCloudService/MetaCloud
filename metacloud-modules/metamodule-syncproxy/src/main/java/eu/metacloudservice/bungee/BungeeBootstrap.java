@@ -9,17 +9,13 @@ import eu.metacloudservice.config.DesignConfig;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.groups.dummy.Group;
-import eu.metacloudservice.timebaser.TimerBase;
-import eu.metacloudservice.timebaser.utils.TimeUtil;
 import eu.metacloudservice.webserver.RestDriver;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public class BungeeBootstrap extends Plugin {
 
@@ -46,9 +42,7 @@ public class BungeeBootstrap extends Plugin {
             configuration = conf.getConfiguration().stream().filter(designConfig -> designConfig.getTargetGroup().equalsIgnoreCase(liveService.getGroup())).findFirst().get();
         }
 
-        group = CloudAPI.getInstance().getGroups().stream()
-                .filter(group1 -> group1.getGroup().equalsIgnoreCase(getLiveService().getGroup()))
-                .findFirst().get();
+        group = CloudAPI.getInstance().getGroupPool().getGroup(getLiveService().getGroup());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new MotdListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new TabListListener());
         updater();
@@ -83,9 +77,8 @@ public class BungeeBootstrap extends Plugin {
                     .findFirst()
                     .ifPresent(config -> {
                         configuration = config;
-                        group = CloudAPI.getInstance().getGroups().stream()
-                                .filter(group1 -> group1.getGroup().equalsIgnoreCase(getLiveService().getGroup()))
-                                .findFirst().get();
+
+                        group = CloudAPI.getInstance().getGroupPool().getGroup(getLiveService().getGroup());
                         tabCount = tabCount >= configuration.getTablist().size() - 1 ? 0 : tabCount + 1;
                         if (group.isMaintenance()) {
                             motdCount = motdCount >= configuration.getMaintenancen().size() - 1 ? 0 : motdCount + 1;
@@ -93,6 +86,6 @@ public class BungeeBootstrap extends Plugin {
                             motdCount = motdCount >= configuration.getDefaults().size() - 1 ? 0 : motdCount + 1;
                         }
                     });
-        }, 0, 5, TimeUnit.SECONDS);
+        }, 0, 1, TimeUnit.SECONDS);
     }
 }

@@ -56,7 +56,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
             NettyDriver.getInstance().nettyServer.removeChannel(service);
         }
 
-
+        CloudManager.serviceDriver.getService(service).getEntry().setStatus(ServiceState.QUEUED);
         CloudManager.queueDriver.addQueuedObjectToShutdown(service);
     }
 

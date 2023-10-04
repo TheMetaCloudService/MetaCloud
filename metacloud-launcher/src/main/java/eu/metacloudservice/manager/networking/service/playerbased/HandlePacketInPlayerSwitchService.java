@@ -9,6 +9,7 @@ import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerSwitc
 import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerSwitchService;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;
+import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.storage.UUIDDriver;
 import eu.metacloudservice.terminal.enums.Type;
 import eu.metacloudservice.webserver.RestDriver;
@@ -26,10 +27,11 @@ public class HandlePacketInPlayerSwitchService implements NettyAdaptor {
                             "The player '"+ ((PacketInPlayerSwitchService) packet).getName()+ "@" + UUIDDriver.getUUID(((PacketInPlayerSwitchService) packet).getName()) + "§f' has connected to the '"+ ((PacketInPlayerSwitchService) packet).getServer()+ "§r' server");
                 }
 
-                if (!restCech.getCloudplayerservice().equalsIgnoreCase("")){
+                if (!restCech.getCloudplayerservice().equalsIgnoreCase("") && restCech.getCloudplayerservice() != null){
 
                     if (  CloudManager.serviceDriver.getService(restCech.getCloudplayerservice()) != null){
-                        CloudManager.serviceDriver.getService(restCech.getCloudplayerservice()).handelCloudPlayerConnection(false);
+                        if (CloudManager.serviceDriver.getService(restCech.getCloudplayerservice()).getEntry().getStatus() != ServiceState.QUEUED)
+                         CloudManager.serviceDriver.getService(restCech.getCloudplayerservice()).handelCloudPlayerConnection(false);
                     }
                 }
 

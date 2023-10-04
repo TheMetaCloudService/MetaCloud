@@ -2,7 +2,9 @@ package eu.metacloudservice.networking.packet;
 
 import eu.metacloudservice.networking.packet.NettyBuffer;
 import io.netty.channel.Channel;
+import lombok.SneakyThrows;
 
+import javax.crypto.Cipher;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -11,7 +13,11 @@ public class PacketDriver {
     private final Map<Integer, Class<? extends Packet>> packets = new ConcurrentHashMap<>();
     private final Map<Integer, NettyAdaptor> adaptor = new ConcurrentHashMap<>();
 
+
+
+    @SneakyThrows
     public PacketDriver() {
+
     }
 
     public Map<Integer, NettyAdaptor> getAdaptor() {

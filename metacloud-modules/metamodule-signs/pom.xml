@@ -5,17 +5,19 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>eu.metacloudservice</groupId>
-        <artifactId>MetacloudService</artifactId>
+        <artifactId>metacloud-modules</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>metamodule-signs</artifactId>
+
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>eu.metacloudservice</groupId>
@@ -23,18 +25,23 @@
             <version>1.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.18-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+            <type>jar</type>
+        </dependency>
+
         <dependency>
             <groupId>eu.metacloudservice</groupId>
             <artifactId>metacloud-driver</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.18-R0.1-SNAPSHOT</version>
-        </dependency>
     </dependencies>
+
 
     <build>
         <resources>
@@ -48,8 +55,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>16</source>
-                    <target>16</target>
+                    <source>17</source>
+                    <target>17</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -69,12 +76,14 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>16</source>
-                    <target>16</target>
+                    <source>17</source>
+                    <target>17</target>
                 </configuration>
             </plugin>
         </plugins>
 
-        <finalName>metacloud-signs</finalName>
+        <finalName>metacloud-sign</finalName>
     </build>
+
+
 </project>

@@ -21,10 +21,6 @@ public class MetaModule implements IModule {
 
     @Override
     public void load() {
-
-        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new Command());
-        Driver.getInstance().getMessageStorage().eventDriver.registerListener(new CloudEvents());
-
         if (!new File("./modules/permissions/config.json").exists()){
             new File("./modules/permissions/").mkdirs();
 
@@ -42,8 +38,9 @@ public class MetaModule implements IModule {
             new ConfigDriver("./modules/permissions/config.json").save(config);
         }
 
-
         Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/permission/configuration", new ConfigDriver().convert(new ConfigDriver("./modules/permissions/config.json").read(Configuration.class)) ));
+        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new Command());
+        Driver.getInstance().getMessageStorage().eventDriver.registerListener(new CloudEvents());
     }
 
     @Override

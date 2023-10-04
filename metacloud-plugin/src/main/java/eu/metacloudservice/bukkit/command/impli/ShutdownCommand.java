@@ -2,7 +2,11 @@
  * this class is by RauchigesEtwas
  */
 
-package eu.metacloudservice.bukkit.command;
+/*
+ * this class is by RauchigesEtwas
+ */
+
+package eu.metacloudservice.bukkit.command.impli;
 
 import com.velocitypowered.api.proxy.Player;
 import eu.metacloudservice.CloudAPI;
@@ -10,6 +14,7 @@ import eu.metacloudservice.api.PluginCommand;
 import eu.metacloudservice.api.PluginCommandInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @PluginCommandInfo(command = "shutdown", description = "/service shutdown")
@@ -21,6 +26,6 @@ public class ShutdownCommand extends PluginCommand {
 
     @Override
     public List<String> tabComplete(String[] args) {
-        return null;
+        return new ArrayList<>();
     }
 }

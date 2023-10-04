@@ -14,13 +14,18 @@ public class GroupStorage {
     @Getter
     @Setter
     private String javaEnvironment;
+    @Getter
+    @Setter
+    private String startArguments;
+
 
     public GroupStorage() {
     }
 
-    public GroupStorage(String template, String runningNode, String javaEnvironment) {
+    public GroupStorage(String template, String runningNode, String javaEnvironment, String arguments) {
         this.template = template;
         this.runningNode = runningNode;
         this.javaEnvironment = javaEnvironment;
+        this.startArguments = arguments;
     }
 }

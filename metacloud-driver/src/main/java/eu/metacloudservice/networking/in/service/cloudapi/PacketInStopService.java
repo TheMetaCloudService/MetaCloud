@@ -9,11 +9,11 @@ public class PacketInStopService extends Packet {
     private String service;
 
     public PacketInStopService() {
-        setPacketUUID(821321);
+        setPacketUUID(1278782187);
     }
 
     public PacketInStopService(String service) {
-        setPacketUUID(821321);
+        setPacketUUID(1278782187);
         this.service = service;
     }
 

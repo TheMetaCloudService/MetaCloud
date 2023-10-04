@@ -20,11 +20,6 @@ import java.util.TimerTask;
 
 public class BukkitBootstrap extends JavaPlugin {
 
-
-    private BukkitTask tpsTask;
-    public  int monitorTPS;
-
-
     @Override
     public void onLoad() {
         new AsyncCloudAPI();

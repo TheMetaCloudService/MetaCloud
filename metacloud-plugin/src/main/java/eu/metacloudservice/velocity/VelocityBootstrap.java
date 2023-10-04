@@ -9,12 +9,14 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
+import eu.metacloudservice.api.PluginDriver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.pool.service.entrys.CloudService;
 import eu.metacloudservice.process.ServiceState;
+import eu.metacloudservice.subcommands.*;
 import eu.metacloudservice.timebaser.TimerBase;
 import eu.metacloudservice.timebaser.utils.TimeUtil;
 import eu.metacloudservice.velocity.command.CloudCommand;
@@ -43,16 +45,24 @@ public class VelocityBootstrap {
     @Subscribe
     public void handelInject(ProxyInitializeEvent event){
         new Driver();
+        new PluginDriver();
         LiveService service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         CloudAPI.getInstance().setState(ServiceState.LOBBY, service.getService());
         proxyServer.getCommandManager().register("cloud", new CloudCommand(), "metacloud", "mc");
+        PluginDriver.getInstance().register(new ExitCommand());
+        PluginDriver.getInstance().register(new VersionCommand());
+        PluginDriver.getInstance().register(new ReloadCommand());
+        PluginDriver.getInstance().register(new ServiceCommand());
+        PluginDriver.getInstance().register(new GroupCommand());
+        PluginDriver.getInstance().register(new PlayerCommand());
         proxyServer.getEventManager().register(this, new CloudConnectListener(proxyServer));
+
 
         new TimerBase().schedule(new TimerTask() {
             @Override
             public void run() {
 
-                if (CloudAPI.getInstance().getGroups().stream().filter(group -> group.getGroup().equalsIgnoreCase(service.getGroup())).findFirst().get().isMaintenance()){
+                if (CloudAPI.getInstance().getGroupPool().getGroup(service.getGroup()).isMaintenance()){
                     proxyServer.getAllPlayers().forEach(player -> {
                         if ( !player.hasPermission("metacloud.connection.maintenance") && !CloudAPI.getInstance().getWhitelist().contains(player.getUsername())){
                             Messages messages = CloudAPI.getInstance().getMessages();

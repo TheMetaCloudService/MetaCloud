@@ -1,6 +1,7 @@
 package eu.metacloudservice.async;
 
 import eu.metacloudservice.CloudAPI;
+import eu.metacloudservice.async.pool.group.GroupPool;
 import eu.metacloudservice.async.pool.player.PlayerPool;
 import eu.metacloudservice.async.pool.service.ServicePool;
 import eu.metacloudservice.configuration.ConfigDriver;
@@ -29,11 +30,13 @@ public class AsyncCloudAPI {
 
     private PlayerPool playerPool;
     private ServicePool servicePool;
+    private GroupPool groupPool;
 
     public AsyncCloudAPI() {
         instance = this;
         this.playerPool = new PlayerPool();
         this.servicePool = new ServicePool();
+        this.groupPool = new GroupPool();
     }
 
     public void launchService(String group){
@@ -149,6 +152,10 @@ public class AsyncCloudAPI {
 
     public ServicePool getServicePool() {
         return servicePool;
+    }
+
+    public GroupPool getGroupPool() {
+        return groupPool;
     }
 
     public static AsyncCloudAPI getInstance() {

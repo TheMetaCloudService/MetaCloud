@@ -1,6 +1,7 @@
 eu\metacloudservice\manager\networking\service\HandlePacketInServiceDisconnect.class
 eu\metacloudservice\node\commands\UpdateCommand.class
 eu\metacloudservice\node\networking\HandlePacketOutStopService.class
+eu\metacloudservice\manager\networking\command\HandlePacketInCommandWhitelist.class
 eu\metacloudservice\manager\networking\service\playerbased\HandlePacketInPlayerSwitchService.class
 eu\metacloudservice\node\networking\HandlePacketOutDisableConsole.class
 eu\metacloudservice\manager\networking\service\HandlePacketInAPIPlayerKick.class
@@ -11,17 +12,20 @@ eu\metacloudservice\manager\networking\service\HandlePacketInAPIPlayerTab.class
 eu\metacloudservice\manager\networking\service\HandlePacketInChangeState.class
 eu\metacloudservice\manager\cloudservices\entry\TaskedEntry.class
 eu\metacloudservice\manager\networking\service\HandlePacketInAPIPlayerActionBar.class
+eu\metacloudservice\manager\networking\service\HandlePacketInDeleteGroup.class
 eu\metacloudservice\manager\networking\service\HandlePacketInAPIPlayerConnect.class
 eu\metacloudservice\node\networking\HandlePacketOutRestartService.class
 eu\metacloudservice\manager\cloudservices\entry\TaskedService.class
 eu\metacloudservice\manager\networking\service\HandlePacketInServiceConnect$1.class
 eu\metacloudservice\node\CloudNode.class
 eu\metacloudservice\manager\networking\node\HandlePacketInSendConsole.class
+eu\metacloudservice\manager\networking\command\HandlePacketInCommandMaintenance.class
 eu\metacloudservice\manager\commands\ClearCommand.class
 eu\metacloudservice\manager\networking\service\HandlePacketInCloudPlayerComponent.class
 eu\metacloudservice\manager\networking\service\HandlePacketInServiceConnect$2.class
 eu\metacloudservice\manager\networking\service\playerbased\HandlePacketInPlayerDisconnect.class
 eu\metacloudservice\manager\cloudservices\CloudServiceDriver$1.class
+eu\metacloudservice\manager\networking\command\HandlePacketInCommandMinCount.class
 eu\metacloudservice\node\networking\HandlePacketOutAuthSuccess.class
 eu\metacloudservice\manager\networking\service\HandlePacketInServiceConnect.class
 eu\metacloudservice\manager\commands\ServiceCommand.class
@@ -30,6 +34,7 @@ eu\metacloudservice\manager\cloudservices\CloudServiceDriver$5.class
 eu\metacloudservice\manager\commands\StopCommand$1.class
 eu\metacloudservice\manager\networking\service\HandlePacketInStopGroup.class
 eu\metacloudservice\manager\networking\service\HandlePacketInAPIPlayerMessage.class
+eu\metacloudservice\manager\networking\command\HandlePacketInCommandMaxPlayers.class
 eu\metacloudservice\node\cloudservices\CloudServiceDriver$1.class
 eu\metacloudservice\manager\cloudservices\entry\TaskedService$2.class
 eu\metacloudservice\manager\commands\MetaCloudCommand.class
@@ -53,6 +58,7 @@ eu\metacloudservice\manager\commands\ReloadCommand.class
 eu\metacloudservice\node\networking\HandlePacketOutLaunchService.class
 eu\metacloudservice\node\cloudservices\CloudServiceDriver.class
 eu\metacloudservice\manager\networking\service\HandlePacketInStopService.class
+eu\metacloudservice\manager\networking\service\HandlePacketInCreateGroup.class
 eu\metacloudservice\manager\networking\service\HandlePacketInDispatchCommand.class
 eu\metacloudservice\node\networking\HandlePacketOutEnableConsole.class
 eu\metacloudservice\manager\CloudManager.class

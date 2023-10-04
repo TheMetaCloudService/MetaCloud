@@ -41,11 +41,6 @@ public class CloudService {
         cloudServiceConsumer.accept(this);
     }
 
-    public int getID(){
-        LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
-        LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
-        return services.getUuid();
-    }
 
     public void setState(@NonNull ServiceState state){
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInChangeState(this.name, state.toString()));
@@ -131,7 +126,7 @@ public class CloudService {
     }
 
     public String toString(){
-        return "name='"+name+"', group='"+group+"', id='"+getID()+"', state='"+getState()+"', address='"+getAddress()+"', port='"+getPort()+"', playerCount='"+getPlayercount()+"'";
+        return "name='"+name+"', group='"+group+"', state='"+getState()+"', address='"+getAddress()+"', port='"+getPort()+"', playerCount='"+getPlayercount()+"'";
     }
 
 

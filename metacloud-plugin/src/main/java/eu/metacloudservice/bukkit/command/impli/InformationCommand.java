@@ -2,7 +2,11 @@
  * this class is by RauchigesEtwas
  */
 
-package eu.metacloudservice.bukkit.command;
+/*
+ * this class is by RauchigesEtwas
+ */
+
+package eu.metacloudservice.bukkit.command.impli;
 
 import com.velocitypowered.api.proxy.Player;
 import eu.metacloudservice.CloudAPI;
@@ -12,6 +16,7 @@ import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.pool.service.entrys.CloudService;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -34,6 +39,6 @@ public class InformationCommand extends PluginCommand {
 
     @Override
     public List<String> tabComplete(String[] args) {
-        return null;
+        return new ArrayList<>();
     }
 }

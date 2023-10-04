@@ -2,7 +2,11 @@
  * this class is by RauchigesEtwas
  */
 
-package eu.metacloudservice.async.pool;
+/*
+ * this class is by RauchigesEtwas
+ */
+
+package eu.metacloudservice.async.pool.group;
 
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.async.AsyncCloudAPI;

@@ -52,7 +52,7 @@ public class CloudConnectListener {
     @Subscribe
     public void handle(PostLoginEvent event){
         LiveService service = (LiveService)(new ConfigDriver("./CLOUDSERVICE.json")).read(LiveService.class);
-        Group group = CloudAPI.getInstance().getGroups().parallelStream().filter(group1 -> group1.getGroup().equalsIgnoreCase(service.getGroup())).findFirst().get();
+        Group group = CloudAPI.getInstance().getGroupPool().getGroup(service.getGroup());
 
         if (CloudAPI.getInstance().getPlayerPool().getPlayers().stream().anyMatch(cloudPlayer -> cloudPlayer.getUsername().equalsIgnoreCase(event.getPlayer().getUsername()))){
             event.getPlayer().disconnect(Component.text(CloudAPI.getInstance().getMessages().getKickAlreadyOnNetwork().replace("&", "§")));

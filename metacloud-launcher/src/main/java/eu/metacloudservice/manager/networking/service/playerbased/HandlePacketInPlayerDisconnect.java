@@ -11,6 +11,7 @@ import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerDisco
 import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerDisconnect;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;
+import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.storage.UUIDDriver;
 import eu.metacloudservice.terminal.enums.Type;
 import eu.metacloudservice.webserver.RestDriver;
@@ -27,12 +28,14 @@ public class HandlePacketInPlayerDisconnect implements NettyAdaptor {
                  CloudPlayerRestCache restCech = (CloudPlayerRestCache)(new RestDriver()).convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/" + UUIDDriver.getUUID(((PacketInPlayerDisconnect) packet).getName())), CloudPlayerRestCache.class);
 
                  if (CloudManager.serviceDriver.getService(restCech.getCloudplayerproxy()) != null){
-                     CloudManager.serviceDriver.getService(restCech.getCloudplayerproxy()).handelCloudPlayerConnection(false);
+                     if (CloudManager.serviceDriver.getService(restCech.getCloudplayerproxy()).getEntry().getStatus() != ServiceState.QUEUED)
+                       CloudManager.serviceDriver.getService(restCech.getCloudplayerproxy()).handelCloudPlayerConnection(false);
                  }
-                 if (!restCech.getCloudplayerservice().equalsIgnoreCase("")){
 
+                 if (!restCech.getCloudplayerservice().equalsIgnoreCase("") && restCech.getCloudplayerservice() != null){
                      if (CloudManager.serviceDriver.getService(restCech.getCloudplayerservice()) != null){
-                         CloudManager.serviceDriver.getService(restCech.getCloudplayerservice()).handelCloudPlayerConnection(false);
+                         if (CloudManager.serviceDriver.getService(restCech.getCloudplayerservice()).getEntry().getStatus() != ServiceState.QUEUED)
+                            CloudManager.serviceDriver.getService(restCech.getCloudplayerservice()).handelCloudPlayerConnection(false);
                      }
                  }
 

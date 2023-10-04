@@ -70,7 +70,7 @@ public class MOTDListener {
             }
 
             int cloudPlayersplayers = cloudAPI.getPlayerPool().getPlayers().size();
-            int max = cloudAPI.getGroups().stream().filter(group -> group.getGroup().equalsIgnoreCase(cloudAPI.getCurrentService().getGroup())).findFirst().get().getMaxPlayers();
+            int max = cloudAPI.getGroupPool().getGroup(cloudAPI.getCurrentService().getGroup()).getMaxPlayers();
             ping
                     .description(Component.text(description))
                     .maximumPlayers(max)

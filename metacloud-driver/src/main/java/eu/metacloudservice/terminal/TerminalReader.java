@@ -47,7 +47,7 @@ public final class TerminalReader extends Thread {
     }
 
     private void handleSetupInput(String line) {
-        if (line.equalsIgnoreCase("leave")) {
+        if (line.equalsIgnoreCase("leave") ||line.equalsIgnoreCase("leave ")) {
             consoleDriver.leaveSetup();
         } else if (Driver.getInstance().getMessageStorage().setupType.equalsIgnoreCase("MAINSETUP")) {
             new MainSetup(line);

@@ -2,6 +2,7 @@ eu\metacloudservice\CloudAPI.class
 eu\metacloudservice\pool\player\entrys\CloudPlayer.class
 eu\metacloudservice\networking\HandlePacketOutServicePrepared.class
 velocity-plugin.json
+eu\metacloudservice\async\pool\group\GroupPool.class
 eu\metacloudservice\bootstrap\velocity\networking\HandlePacketOutCloudPlayerComponent.class
 eu\metacloudservice\networking\HandlePacketOutServiceConnected.class
 eu\metacloudservice\bootstrap\bungee\networking\HandlePacketOutAPIPlayerDispactchCommand.class
@@ -12,6 +13,7 @@ eu\metacloudservice\bootstrap\bungee\networking\HandlePacketOutAPIPlayerTab.clas
 eu\metacloudservice\bootstrap\bungee\networking\HandlePacketOutAPIPlayerConnect.class
 eu\metacloudservice\pool\service\ServicePool.class
 eu\metacloudservice\networking\HandlePacketOutRestAPIPut.class
+eu\metacloudservice\pool\groupe\GroupPool.class
 eu\metacloudservice\bootstrap\bungee\networking\HandlePacketOutAPIPlayerKick.class
 eu\metacloudservice\networking\HandlePacketOutCloudProxyChangeState.class
 eu\metacloudservice\networking\HandlePacketOutServiceLaunch.class

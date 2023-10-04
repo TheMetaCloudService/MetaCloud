@@ -2,6 +2,7 @@ package eu.metacloudservice.bungee;
 
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
+import eu.metacloudservice.api.PluginDriver;
 import eu.metacloudservice.bungee.command.CloudCommand;
 import eu.metacloudservice.bungee.listener.CloudConnectListener;
 import eu.metacloudservice.configuration.ConfigDriver;
@@ -10,6 +11,7 @@ import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.pool.service.entrys.CloudService;
 import eu.metacloudservice.process.ServiceState;
+import eu.metacloudservice.subcommands.*;
 import eu.metacloudservice.timebaser.TimerBase;
 import eu.metacloudservice.timebaser.utils.TimeUtil;
 import net.md_5.bungee.api.ProxyServer;
@@ -27,18 +29,25 @@ public class BungeeBootstrap extends Plugin {
     public void onEnable() {
         instance = this;
         new Driver();
-        LiveService service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
+        new PluginDriver();
+                LiveService service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         CloudAPI.getInstance().setState(ServiceState.LOBBY, service.getService());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new CloudConnectListener());
 
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CloudCommand("cloud"));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CloudCommand("metacloud"));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CloudCommand("mc"));
+        PluginDriver.getInstance().register(new ExitCommand());
+        PluginDriver.getInstance().register(new VersionCommand());
+        PluginDriver.getInstance().register(new ReloadCommand());
+        PluginDriver.getInstance().register(new ServiceCommand());
+        PluginDriver.getInstance().register(new GroupCommand());
+        PluginDriver.getInstance().register(new PlayerCommand());
 
         new TimerBase().schedule(new TimerTask() {
             @Override
             public void run() {
-                if (Objects.requireNonNull(CloudAPI.getInstance().getGroups().stream().filter(group -> group.getGroup().equalsIgnoreCase(service.getGroup())).findFirst().orElse(null)).isMaintenance()){
+                if (CloudAPI.getInstance().getGroupPool().getGroup(service.getGroup()).isMaintenance()){
                     ProxyServer.getInstance().getPlayers().forEach(player -> {
                        if ( !player.hasPermission("metacloud.connection.maintenance") && !CloudAPI.getInstance().getWhitelist().contains(player.getName())){
                            Messages messages = CloudAPI.getInstance().getMessages();

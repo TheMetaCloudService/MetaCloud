@@ -44,7 +44,9 @@ public class ServiceCommand extends CommandAdapter {
                 sendHelp();
             }
         }else if (args.length == 2){
-            if (args[0].equalsIgnoreCase("stopGroup")){
+            if (args[0].equalsIgnoreCase("whitelist")){
+                CloudManager.config.getWhitelist().forEach(s -> Driver.getInstance().getTerminalDriver().log(Type.COMMAND, " > " + s));
+            }else if (args[0].equalsIgnoreCase("stopGroup")){
                 String group = args[1];
                 if (Driver.getInstance().getGroupDriver().find(group)){
                     CloudManager.serviceDriver.getServices(group).forEach(taskedService -> CloudManager.serviceDriver.unregister(taskedService.getEntry().getServiceName()));
@@ -158,9 +160,6 @@ public class ServiceCommand extends CommandAdapter {
                 String group = args[1];
                 if (Driver.getInstance().getGroupDriver().find(group)) {
                     if (args[2].matches("[0-9]+")) {
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Der Befehl war erfolgreich",
-                                "the command was successful");
                         Group gdata = Driver.getInstance().getGroupDriver().load(group);
 
                         if (gdata.getMaximalOnline() != -1){
@@ -229,7 +228,7 @@ public class ServiceCommand extends CommandAdapter {
                         new ConfigDriver("./service.json").save(CloudManager.config);
                         WhiteList whitelistConfig = new WhiteList();
                         whitelistConfig.setWhitelist(CloudManager.config.getWhitelist());
-                        Driver.getInstance().getWebServer().updateRoute("/general/whitelist", new ConfigDriver().convert(whitelistConfig));
+                        Driver.getInstance().getWebServer().updateRoute("/default/whitelist", new ConfigDriver().convert(whitelistConfig));
 
                         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                                 "Der Spieler '§f" + user + "§r' wurde in die Whitelist aufgenommenn",
@@ -245,7 +244,7 @@ public class ServiceCommand extends CommandAdapter {
                         new ConfigDriver("./service.json").save(CloudManager.config);
                         WhiteList whitelistConfig = new WhiteList();
                          whitelistConfig.setWhitelist(CloudManager.config.getWhitelist());
-                        Driver.getInstance().getWebServer().updateRoute("/general/whitelist", new ConfigDriver().convert(whitelistConfig));
+                        Driver.getInstance().getWebServer().updateRoute("/default/whitelist", new ConfigDriver().convert(whitelistConfig));
                         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                                 "Der Spieler '§f" + user + "§r' wurde von der Whitelist entfernt",
                                 "the player '§f" + user + "§r' was removed from the whitelist");
@@ -280,7 +279,7 @@ public class ServiceCommand extends CommandAdapter {
             commands.add("restartgroup");
             commands.add("restartnode");
             commands.add("whitelist");
-        }else if (args.length == 1 && !args[0].equalsIgnoreCase("list") && !args[0].equalsIgnoreCase("stopgroup")&& !args[0].equalsIgnoreCase("run") && !args[0].equalsIgnoreCase("restartgroup") && !args[0].equalsIgnoreCase("restartnode")){
+        }else if (args.length == 1 && !args[0].equalsIgnoreCase("list") && !args[0].equalsIgnoreCase("stopgroup") && ! args[0].equalsIgnoreCase("whitelist") && !args[0].equalsIgnoreCase("run") && !args[0].equalsIgnoreCase("restartgroup") && !args[0].equalsIgnoreCase("restartnode")){
             CloudManager.serviceDriver.getServices().forEach(taskedService -> commands.add(taskedService.getEntry().getServiceName()));
             if (args[0].equalsIgnoreCase("execute") || args[0].equalsIgnoreCase("sync")){
                 commands.add("--all");
@@ -294,6 +293,8 @@ public class ServiceCommand extends CommandAdapter {
             ((ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class)).getNodes().forEach(managerConfigNodes -> {
                 commands.add(managerConfigNodes.getName());
             });
+        }else if (args.length == 2 && args[0].equalsIgnoreCase("whitelist") && args[1].equalsIgnoreCase("remove")){
+            commands.addAll(CloudManager.config.getWhitelist());
         }else if (args.length== 1 ){
             Driver.getInstance().getGroupDriver().getAll().forEach(group -> commands.add(group.getGroup()));
         }

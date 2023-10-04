@@ -126,7 +126,7 @@ public class TaskedService implements ITaskedService {
                     public void run() {
                         if (! Driver.getInstance().getMessageStorage().consoleInput.isEmpty()){
                             String line =  Driver.getInstance().getMessageStorage().consoleInput.removeFirst();
-                            if (line.equalsIgnoreCase("leave")){
+                            if (line.equalsIgnoreCase("leave") ||line.equalsIgnoreCase("leave ")){
                                 handelScreen();
                             }else {
                                 try {
@@ -163,7 +163,7 @@ public class TaskedService implements ITaskedService {
                     public void run() {
                         if (! Driver.getInstance().getMessageStorage().consoleInput.isEmpty()){
                             String line =  Driver.getInstance().getMessageStorage().consoleInput.removeFirst();
-                            if (line.equalsIgnoreCase("leave")){
+                            if (line.equalsIgnoreCase("leave") ||line.equalsIgnoreCase("leave ")){
                                 handelScreen();
                             }else {
                                 handelExecute(line);

@@ -30,10 +30,14 @@ public class CloudEvents implements ICloudListener {
 
         if (config.getPlayers().stream().noneMatch(permissionPlayer -> permissionPlayer.getUuid().equalsIgnoreCase(event.getUniqueId()))){
 
+
             ArrayList<IncludedAble> ables = new ArrayList<>();
             config.getGroups().stream().filter(PermissionGroup::getIsDefault).toList().forEach(permissionGroup -> ables.add(new IncludedAble(permissionGroup.getGroup(), "LIFETIME")));
 
             config.getPlayers().add(new PermissionPlayer(event.getUniqueId(), ables, new ArrayList<>()));
+            new ConfigDriver("./modules/permissions/config.json").save(config);
+            Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(new ConfigDriver("./modules/permissions/config.json").read(Configuration.class)));
+
         }
 
         ArrayList<PermissionGroup> updateGroup = new ArrayList<>();
@@ -108,6 +112,9 @@ public class CloudEvents implements ICloudListener {
 
             config.getPlayers().removeIf(permissionPlayer -> permissionPlayer.getUuid().equalsIgnoreCase(event.getUniqueId()));
             config.getPlayers().add(new PermissionPlayer(event.getUniqueId(), newGroup, newAble));
+            new ConfigDriver("./modules/permissions/config.json").save(config);
+            Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(new ConfigDriver("./modules/permissions/config.json").read(Configuration.class)));
+
         }
 
         ArrayList<PermissionGroup> updateGroup = new ArrayList<>();

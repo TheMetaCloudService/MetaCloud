@@ -247,7 +247,8 @@ public final class ServiceProcess implements IServiceProcess {
                         "-Djline.terminal=jline.UnsupportedTerminal",
                         "-Xmx" + group.getUsedMemory() + "M",
                         "-jar",
-                        "server.jar"
+                        "server.jar",
+                        group.getStorage().getStartArguments()
                 };
                 File configFile = new File(System.getProperty("user.dir") + "/live/" + group.getGroup()+ "/" + service + "/", "velocity.toml");
                 final FileWriter fileWriter;
@@ -300,7 +301,8 @@ public final class ServiceProcess implements IServiceProcess {
                         "-Djline.terminal=jline.UnsupportedTerminal",
                         "-Xmx" + group.getUsedMemory() + "M",
                         "-jar",
-                        "server.jar"
+                        "server.jar",
+                        group.getStorage().getStartArguments()
                 };
                 File configFile = new File(System.getProperty("user.dir") + "/live/" + group.getGroup()+ "/" + service + "/", "config.yml");
                 final FileWriter fileWriter;
@@ -332,6 +334,17 @@ public final class ServiceProcess implements IServiceProcess {
                 e.printStackTrace();
             }
 
+            if (group.getGroupType().equalsIgnoreCase("LOBBY")){
+
+                try {
+                    FileUtils.copyDirectory( new File("./local/GLOBAL/EVERY_LOBBY/"),
+                            new File("./live/" + group.getGroup() + "/" + service +"/"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
             String[] command = new String[]{
                     "java",
                     "-XX:+UseG1GC",
@@ -346,7 +359,8 @@ public final class ServiceProcess implements IServiceProcess {
                     "-jar",
                     "server.jar",
                     "--nogui",
-                    "--nojline"
+                    "--nojline",
+                    group.getStorage().getStartArguments()
             };
                 File configFile = new File(System.getProperty("user.dir") + "/live/" + group.getGroup()+ "/" +service + "/", "server.properties");
                 try {
@@ -431,7 +445,8 @@ public final class ServiceProcess implements IServiceProcess {
                         "-Djline.terminal=jline.UnsupportedTerminal",
                         "-Xmx" + group.getUsedMemory() + "M",
                         "-jar",
-                        "server.jar"
+                        "server.jar",
+                        group.getStorage().getStartArguments()
                 };
                 File configFile = new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/", "velocity.toml");
                 final FileWriter fileWriter;
@@ -483,7 +498,8 @@ public final class ServiceProcess implements IServiceProcess {
                         "-Djline.terminal=jline.UnsupportedTerminal",
                         "-Xmx" + group.getUsedMemory() + "M",
                         "-jar",
-                        "server.jar"
+                        "server.jar",
+                        group.getStorage().getStartArguments()
                 };
                 File configFile = new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/", "config.yml");
                 final FileWriter fileWriter;
@@ -523,7 +539,8 @@ public final class ServiceProcess implements IServiceProcess {
                     "-jar",
                     "server.jar",
                     "--nogui",
-                    "--nojline"
+                    "--nojline",
+                    group.getStorage().getStartArguments()
             };
             File configFile = new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/", "server.properties");
             try {

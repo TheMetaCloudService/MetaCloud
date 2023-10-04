@@ -39,12 +39,12 @@ MetaModule implements IModule {
             new File("./modules/signs/").mkdirs();
 
             ArrayList<SignLayout> empty = new ConfigBuilder()
-                    .add("green_glazed_terracotta",   false, "","§8► §7%service_name% §8◄", "§bLOBBY §8| §b§l✔", "%service_motd%", "§8• §7%online_players% / %max_players% §8•")
-                    .add("green_glazed_terracotta",  false, "","§8► §7%service_name% §8◄", "§3L§bOBBY §8| §b§l✔", "%service_motd%", "§8• §7%online_players% / %max_players% §8•")
-                    .add("green_glazed_terracotta",  false, "","§8► §7%service_name% §8◄", "§bL§3O§bBBY §8| §b§l✔", "%service_motd%", "§8• §7%online_players% / %max_players% §8•")
-                    .add("green_glazed_terracotta",  false, "","§8► §7%service_name% §8◄", "§bLO§3B§bBY §8| §b§l✔", "%service_motd%", "§8• §7%online_players% / %max_players% §8•")
-                    .add("green_glazed_terracotta",  false, "","§8► §7%service_name% §8◄", "§bLOB§3B§bY §8| §b§l✔", "%service_motd%", "§8• §7%online_players% / %max_players% §8•")
-                    .add("green_glazed_terracotta",  false, "","§8► §7%service_name% §8◄", "§bLOBB§3Y §8| §b§l✔", "%service_motd%", "§8• §7%online_players% / %max_players% §8•")
+                    .add("green_glazed_terracotta",   false, "","§8► §7%service_name% §8◄", "§bEMPTY §8| §b§l✔", "%service_motd%", "§8• §7%online_players% / %max_players% §8•")
+                    .add("green_glazed_terracotta",  false, "","§8► §7%service_name% §8◄", "§3E§bMPTY §8| §b§l✔", "%service_motd%", "§8• §7%online_players% / %max_players% §8•")
+                    .add("green_glazed_terracotta",  false, "","§8► §7%service_name% §8◄", "§bE§3M§bPTY §8| §b§l✔", "%service_motd%", "§8• §7%online_players% / %max_players% §8•")
+                    .add("green_glazed_terracotta",  false, "","§8► §7%service_name% §8◄", "§bEM§3P§bTY §8| §b§l✔", "%service_motd%", "§8• §7%online_players% / %max_players% §8•")
+                    .add("green_glazed_terracotta",  false, "","§8► §7%service_name% §8◄", "§bEMP§3T§bY §8| §b§l✔", "%service_motd%", "§8• §7%online_players% / %max_players% §8•")
+                    .add("green_glazed_terracotta",  false, "","§8► §7%service_name% §8◄", "§bEMPT§3Y §8| §b§l✔", "%service_motd%", "§8• §7%online_players% / %max_players% §8•")
                     .build();
 
 

@@ -27,6 +27,7 @@ public class CloudPlayer {
 
     @Getter
     private final String username;
+    
     @Getter
     private final String uniqueId;
 

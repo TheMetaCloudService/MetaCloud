@@ -126,10 +126,6 @@ public class MetaModule implements IModule {
     public static void set(){
 
 
-        General general = new General("syncproxy", "BETA-1.0.7", "RauchigesEtwas");
-        if (Driver.getInstance().getWebServer().getRoute("/module/syncproxy/general") == null)
-          Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/syncproxy/general", new ConfigDriver().convert(general)));
-
         Configuration config = (Configuration) new ConfigDriver("./modules/syncproxy/config.json").read(Configuration.class);
         Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/syncproxy/configuration", new ConfigDriver().convert(config)));
     }

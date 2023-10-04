@@ -10,6 +10,10 @@ import eu.metacloudservice.manager.cloudservices.CloudServiceDriver;
 import eu.metacloudservice.manager.cloudservices.entry.TaskedService;
 import eu.metacloudservice.manager.cloudservices.queue.QueueDriver;
 import eu.metacloudservice.manager.commands.*;
+import eu.metacloudservice.manager.networking.command.HandlePacketInCommandMaintenance;
+import eu.metacloudservice.manager.networking.command.HandlePacketInCommandMaxPlayers;
+import eu.metacloudservice.manager.networking.command.HandlePacketInCommandMinCount;
+import eu.metacloudservice.manager.networking.command.HandlePacketInCommandWhitelist;
 import eu.metacloudservice.manager.networking.node.HandlePacketInAuthNode;
 import eu.metacloudservice.manager.networking.node.HandlePacketInNodeActionSuccess;
 import eu.metacloudservice.manager.networking.node.HandlePacketInSendConsole;
@@ -27,6 +31,10 @@ import eu.metacloudservice.networking.in.service.PacketInServiceConnect;
 import eu.metacloudservice.networking.in.service.PacketInServiceDisconnect;
 import eu.metacloudservice.networking.in.service.PacketInServiceReaction;
 import eu.metacloudservice.networking.in.service.cloudapi.*;
+import eu.metacloudservice.networking.in.service.command.PacketInCommandMaintenance;
+import eu.metacloudservice.networking.in.service.command.PacketInCommandMaxPlayers;
+import eu.metacloudservice.networking.in.service.command.PacketInCommandMinCount;
+import eu.metacloudservice.networking.in.service.command.PacketInCommandWhitelist;
 import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerConnect;
 import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerDisconnect;
 import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerSwitchService;
@@ -93,6 +101,7 @@ public class CloudManager {
         new File("./local/GLOBAL/EVERY/plugins/").mkdirs();
         new File("./local/GLOBAL/EVERY_SERVER/plugins/").mkdirs();
         new File("./local/GLOBAL/EVERY_PROXY/plugins/").mkdirs();
+        new File("./local/GLOBAL/EVERY_LOBBY/plugins/").mkdirs();
         new File("./local/groups/").mkdirs();
         new File( "./local/templates/").mkdirs();
         config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
@@ -263,6 +272,15 @@ public class CloudManager {
                 .registerHandler(new PacketInAPIPlayerTab().getPacketUUID(), new HandlePacketInAPIPlayerTab(), PacketInAPIPlayerTab.class)
                 .registerHandler(new PacketInCloudPlayerComponent().getPacketUUID(), new HandlePacketInCloudPlayerComponent(), PacketInCloudPlayerComponent.class)
                 .registerHandler(new PacketOutAPIPlayerDispactchCommand().getPacketUUID(), new HandlePacketOutAPIPlayerDispatchCommand(), PacketOutAPIPlayerDispactchCommand.class)
+                .registerHandler(new PacketInCreateGroup().getPacketUUID(), new HandlePacketInCreateGroup(), PacketInCreateGroup.class)
+                .registerHandler(new PacketInDeleteGroup().getPacketUUID(), new HandlePacketInDeleteGroup(), PacketInDeleteGroup.class)
+
+
+                //COMMAND
+                .registerHandler(new PacketInCommandMaintenance().getPacketUUID(), new HandlePacketInCommandMaintenance(), PacketInCommandMaintenance.class)
+                .registerHandler(new PacketInCommandMaxPlayers().getPacketUUID(),new HandlePacketInCommandMaxPlayers(), PacketInCommandMaxPlayers.class)
+                .registerHandler(new PacketInCommandMinCount().getPacketUUID(),new HandlePacketInCommandMinCount(), PacketInCommandMinCount.class)
+                .registerHandler(new PacketInCommandWhitelist().getPacketUUID(),new HandlePacketInCommandWhitelist(), PacketInCommandWhitelist.class)
 
                 //PLAYER
                 .registerHandler(new PacketInPlayerConnect().getPacketUUID(), new HandlePacketInPlayerConnect(), PacketInPlayerConnect.class)
@@ -280,7 +298,11 @@ public class CloudManager {
     public static void shutdownHook(){
         shutdown = true;
         NettyDriver.getInstance().getPacketDriver().getAdaptor().clear();
-        serviceDriver.getServicesFromNode("InternalNode").forEach(TaskedService::handelQuit);
+        serviceDriver.getServicesFromNode("InternalNode").stream().filter(taskedService -> Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName()).getGroupType().equalsIgnoreCase("PROXY"))
+                .forEach(TaskedService::handelQuit);
+
+        serviceDriver.getServicesFromNode("InternalNode").stream().filter(taskedService -> !Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName()).getGroupType().equalsIgnoreCase("PROXY"))
+                .forEach(TaskedService::handelQuit);
         Driver.getInstance().getModuleDriver().unload();
 
         try {
@@ -290,6 +312,7 @@ public class CloudManager {
         }
         Driver.getInstance().getWebServer().close();
         NettyDriver.getInstance().nettyServer.close();
+        Driver.getInstance().getMessageStorage().eventDriver.clearListeners();
         Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Danke für die Nutzung von MetaCloud ;->",
                 "Thank you for using MetaCloud ;->");
         System.exit(0);

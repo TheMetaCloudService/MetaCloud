@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PluginDriver {
-    private final List<ProxyCommand> commands;
+    private final List<PluginCommand> commands;
 
     private static  PluginDriver instance;
 
@@ -24,26 +24,20 @@ public class PluginDriver {
         commands = new ArrayList<>();
     }
 
-    public void register(ProxyCommand command){
+    public void register(PluginCommand command){
         commands.add(command);
     }
 
-    public List<ProxyCommand> getCommands() {
+    public List<PluginCommand> getCommands() {
         return commands;
     }
 
-    @SneakyThrows
-    public void executeCommand(String command, ProxiedPlayer proxiedPlayer, Player player, String[] args){
-
-        getCommand(command).performCommand(getCommand(command), proxiedPlayer, player, args);
-    }
-
-    public ProxyCommand getCommand(String name){
-        for (ProxyCommand command : getCommands()){
+    public PluginCommand getCommand(String name){
+        for (PluginCommand command : getCommands()){
             if(command.getCommand().equalsIgnoreCase(name)){
                 return command;
             }
-            }
+        }
         return null;
     }
 

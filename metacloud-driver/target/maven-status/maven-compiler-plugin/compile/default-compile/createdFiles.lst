@@ -66,6 +66,7 @@ eu\metacloudservice\events\listeners\services\CloudProxyLaunchEvent.class
 eu\metacloudservice\webserver\WebServer$1$1.class
 eu\metacloudservice\networking\in\service\cloudapi\PacketInDispatchCommand.class
 eu\metacloudservice\configuration\ConfigDriver.class
+eu\metacloudservice\networking\in\service\command\PacketInCommandMaintenance.class
 eu\metacloudservice\networking\in\service\playerbased\PacketInPlayerSwitchService.class
 eu\metacloudservice\configuration\dummys\managerconfig\ManagerConfigNodes.class
 eu\metacloudservice\events\EventProcess.class
@@ -102,6 +103,7 @@ eu\metacloudservice\networking\in\service\playerbased\apibased\PacketInAPIPlayer
 eu\metacloudservice\webserver\dummys\Addresses.class
 eu\metacloudservice\cloudplayer\codec\sounds\Sounds.class
 eu\metacloudservice\events\entrys\ICloudListener.class
+eu\metacloudservice\networking\in\service\cloudapi\PacketInDeleteGroup.class
 eu\metacloudservice\networking\out\service\playerbased\apibased\PacketOutAPIPlayerTitle.class
 eu\metacloudservice\networking\out\node\PacketOutSendCommand.class
 eu\metacloudservice\networking\out\service\group\PacketOutGroupEdit.class
@@ -120,6 +122,7 @@ eu\metacloudservice\events\listeners\group\CloudGroupDeleteEvent.class
 eu\metacloudservice\terminal\screens\MainSetup.class
 eu\metacloudservice\networking\in\service\PacketInServiceConnect.class
 eu\metacloudservice\networking\out\node\PacketOutRestartService.class
+eu\metacloudservice\networking\in\service\command\PacketInCommandMaxPlayers.class
 eu\metacloudservice\events\listeners\services\CloudProxyChangeStateEvent.class
 eu\metacloudservice\terminal\screens\MainSetup$2.class
 eu\metacloudservice\webserver\interfaces\IRest.class
@@ -138,12 +141,14 @@ eu\metacloudservice\webserver\dummys\WhiteList.class
 eu\metacloudservice\networking\out\node\PacketOutAuthSuccess.class
 eu\metacloudservice\networking\in\node\PacketInShutdownNode.class
 eu\metacloudservice\networking\out\service\playerbased\apibased\PacketOutCloudPlayerComponent.class
+eu\metacloudservice\networking\in\service\command\PacketInCommandWhitelist.class
 eu\metacloudservice\networking\out\service\playerbased\apibased\PacketOutAPIPlayerMessage.class
 eu\metacloudservice\networking\in\service\playerbased\apibased\PacketInAPIPlayerTab.class
 eu\metacloudservice\networking\out\service\playerbased\apibased\PacketOutAPIPlayerActionBar.class
 eu\metacloudservice\process\interfaces\IServiceProcess.class
 eu\metacloudservice\terminal\screens\MainSetup$1.class
 eu\metacloudservice\cloudplayer\codec\teleport\Teleport.class
+eu\metacloudservice\networking\in\service\command\PacketInCommandMinCount.class
 eu\metacloudservice\networking\in\service\cloudapi\PacketInStopGroup.class
 eu\metacloudservice\terminal\enums\Color.class
 eu\metacloudservice\terminal\TerminalDriver.class

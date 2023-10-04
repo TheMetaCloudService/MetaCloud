@@ -427,7 +427,7 @@ public class GroupSetup {
                             Integer.valueOf(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("group100").toString()),
                             Integer.valueOf(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("network100").toString()),
                             new GroupStorage(  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("template").toString(),
-                                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("node").toString() , ""), 0
+                                    Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("node").toString() , "", ""), 0
                     ));
 
 

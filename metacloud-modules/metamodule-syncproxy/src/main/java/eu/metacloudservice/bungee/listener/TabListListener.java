@@ -40,7 +40,7 @@ public class TabListListener implements Listener {
                         .schedule(BungeeBootstrap.getInstance(), () -> {ProxyServer
                                 .getInstance()
                                 .getPlayers()
-                                .forEach(TabListListener::sendTab);}, 0, 2, TimeUnit.SECONDS));
+                                .forEach(TabListListener::sendTab);}, 0, 500, TimeUnit.MILLISECONDS));
     }
 
     @EventHandler
@@ -68,9 +68,10 @@ public class TabListListener implements Listener {
             if (!BungeeBootstrap.getInstance().configuration.isTabEnabled()) {
                 return;
             } else {
-                Tablist tab = BungeeBootstrap.getInstance().configuration.getTablist().get(BungeeBootstrap.getInstance().tabCount);
-                String[] config = readConfigs(tab, player);
-                player.setTabHeader(TextComponent.fromLegacyText(config[0]), TextComponent.fromLegacyText(config[1]));
+                    Tablist tab = BungeeBootstrap.getInstance().configuration.getTablist().get(BungeeBootstrap.getInstance().tabCount);
+                    String[] config = readConfigs(tab, player);
+                    player.setTabHeader(TextComponent.fromLegacyText(config[0]), TextComponent.fromLegacyText(config[1]));
+
             }
         }
     }
