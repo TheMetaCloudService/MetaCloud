@@ -10,7 +10,8 @@ import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
 import eu.metacloudservice.api.CloudPermissionAPI;
-import eu.metacloudservice.velo.command.PermissionCommand;
+import eu.metacloudservice.api.PluginDriver;
+import eu.metacloudservice.subcommand.PermissionCommand;
 import eu.metacloudservice.velo.listener.PermissionListener;
 import lombok.NonNull;
 
@@ -34,7 +35,8 @@ public class VeloBoostrap {
     @Subscribe
     public void handelInject(ProxyInitializeEvent event){
         proxyServer.getEventManager().register(this, new PermissionListener(new PermissionBaseVelocity()));
-        proxyServer.getCommandManager().register("permissions", new PermissionCommand(), "perms", "mperms");
+        PluginDriver.getInstance().register(new PermissionCommand());
+        PluginDriver.getInstance().register(new PermissionCommand());
     }
 
 }

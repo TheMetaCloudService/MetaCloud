@@ -58,6 +58,22 @@
   </repositories>
   <dependencies>
     <dependency>
+      <groupId>eu.metacloudservice</groupId>
+      <artifactId>metacloud-api</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>adventure-api</artifactId>
+          <groupId>net.kyori</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>adventure-platform-bungeecord</artifactId>
+          <groupId>net.kyori</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
       <version>1.18-R0.1-SNAPSHOT</version>
@@ -66,6 +82,14 @@
         <exclusion>
           <artifactId>commons-lang</artifactId>
           <groupId>commons-lang</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>guava</artifactId>
+          <groupId>com.google.guava</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>gson</artifactId>
+          <groupId>com.google.code.gson</groupId>
         </exclusion>
         <exclusion>
           <artifactId>bungeecord-chat</artifactId>
@@ -96,12 +120,20 @@
           <groupId>net.md-5</groupId>
         </exclusion>
         <exclusion>
+          <artifactId>netty-transport-native-unix-common</artifactId>
+          <groupId>io.netty</groupId>
+        </exclusion>
+        <exclusion>
           <artifactId>bungeecord-chat</artifactId>
           <groupId>net.md-5</groupId>
         </exclusion>
         <exclusion>
           <artifactId>snakeyaml</artifactId>
           <groupId>org.yaml</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>guava</artifactId>
+          <groupId>com.google.guava</groupId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -116,12 +148,28 @@
           <groupId>com.moandjiezana.toml</groupId>
         </exclusion>
         <exclusion>
+          <artifactId>adventure-text-serializer-gson</artifactId>
+          <groupId>net.kyori</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>adventure-text-serializer-legacy</artifactId>
+          <groupId>net.kyori</groupId>
+        </exclusion>
+        <exclusion>
           <artifactId>adventure-text-serializer-plain</artifactId>
           <groupId>net.kyori</groupId>
         </exclusion>
         <exclusion>
+          <artifactId>slf4j-api</artifactId>
+          <groupId>org.slf4j</groupId>
+        </exclusion>
+        <exclusion>
           <artifactId>guice</artifactId>
           <groupId>com.google.inject</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>checker-qual</artifactId>
+          <groupId>org.checkerframework</groupId>
         </exclusion>
         <exclusion>
           <artifactId>velocity-brigadier</artifactId>
@@ -138,6 +186,66 @@
         <exclusion>
           <artifactId>configurate-gson</artifactId>
           <groupId>org.spongepowered</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>gson</artifactId>
+          <groupId>com.google.code.gson</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>adventure-api</artifactId>
+          <groupId>net.kyori</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>guava</artifactId>
+          <groupId>com.google.guava</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>eu.metacloudservice</groupId>
+      <artifactId>metacloud-driver</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>lombok</artifactId>
+          <groupId>org.projectlombok</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jline</artifactId>
+          <groupId>org.jline</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>json</artifactId>
+          <groupId>org.json</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-io</artifactId>
+          <groupId>commons-io</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jansi</artifactId>
+          <groupId>org.fusesource.jansi</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jackson-databind</artifactId>
+          <groupId>com.fasterxml.jackson.core</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>metacloud-networking</artifactId>
+          <groupId>eu.metacloudservice</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>gson</artifactId>
+          <groupId>com.google.code.gson</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>adventure-api</artifactId>
+          <groupId>net.kyori</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>guava</artifactId>
+          <groupId>com.google.guava</groupId>
         </exclusion>
       </exclusions>
     </dependency>

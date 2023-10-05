@@ -11,10 +11,9 @@ eu\metacloudservice\bukkit\PermissionBaseBukkit.class
 eu\metacloudservice\moduleside\config\PermissionAble.class
 eu\metacloudservice\velo\listener\PermissionListener.class
 eu\metacloudservice\bungee\listener\PermissionListener.class
-eu\metacloudservice\velo\command\PermissionCommand.class
 eu\metacloudservice\bungee\BungeeBootstrap.class
 eu\metacloudservice\bukkit\BukkitBootstrap.class
-eu\metacloudservice\bungee\command\PermissionCommand.class
 eu\metacloudservice\velo\PermissionBaseVelocity.class
 eu\metacloudservice\moduleside\config\PermissionGroup.class
+eu\metacloudservice\subcommand\PermissionCommand.class
 eu\metacloudservice\moduleside\config\PermissionPlayer.class
