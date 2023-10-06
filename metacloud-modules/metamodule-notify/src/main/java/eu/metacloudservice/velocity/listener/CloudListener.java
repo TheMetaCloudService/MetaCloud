@@ -1,14 +1,14 @@
 package eu.metacloudservice.velocity.listener;
 
 import com.velocitypowered.api.proxy.ProxyServer;
-import eu.metacloudservice.Driver;
 import eu.metacloudservice.bungee.BungeeBootstrap;
 import eu.metacloudservice.config.Configuration;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.events.entrys.ICloudListener;
 import eu.metacloudservice.events.entrys.Subscribe;
 import eu.metacloudservice.events.listeners.services.*;
-import net.kyori.text.TextComponent;
+import net.kyori.adventure.text.Component;
+
 
 public class CloudListener implements ICloudListener {
 
@@ -25,7 +25,7 @@ public class CloudListener implements ICloudListener {
 
         proxyServer.getAllPlayers().forEach(player -> {
             if (player.hasPermission("metacloud.notify")){
-                player.sendMessage(TextComponent.builder((configuration.getProxiedServiceDiconnected()).replace("&", "§").replace("%service_name%", event.getName())).build());
+                player.sendMessage((Component.text(configuration.getProxiedServiceDiconnected().replace("&", "§").replace("%service_name%", event.getName()))));
             }
         });
 
@@ -36,8 +36,8 @@ public class CloudListener implements ICloudListener {
         Configuration configuration = (Configuration) new ConfigDriver().convert(BungeeBootstrap.getInstance().getRestDriver().get("/module/notify/configuration"), Configuration.class);
         proxyServer.getAllPlayers().forEach(player -> {
             if (player.hasPermission("metacloud.notify")){
-                player.sendMessage(TextComponent.builder((configuration.getProxiedServiceConnected()).replace("&", "§")
-                        .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode())).build());
+                player.sendMessage(Component.text((configuration.getProxiedServiceConnected()).replace("&", "§")
+                        .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode())));
             }
         });
     }
@@ -47,8 +47,8 @@ public class CloudListener implements ICloudListener {
         Configuration configuration = (Configuration) new ConfigDriver().convert(BungeeBootstrap.getInstance().getRestDriver().get("/module/notify/configuration"), Configuration.class);
         proxyServer.getAllPlayers().forEach(player -> {
             if (player.hasPermission("metacloud.notify")){
-                player.sendMessage(TextComponent.builder((configuration.getProxiedServicePrepared()).replace("&", "§")
-                        .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode())).build());
+                player.sendMessage(Component.text((configuration.getProxiedServicePrepared()).replace("&", "§")
+                        .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode())));
             }
         });
 
@@ -60,8 +60,8 @@ public class CloudListener implements ICloudListener {
 
         proxyServer.getAllPlayers().forEach(player -> {
             if (player.hasPermission("metacloud.notify")){
-                player.sendMessage(TextComponent.builder((configuration.getServiceConnected()).replace("&", "§")
-                        .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode())).build());
+                player.sendMessage(Component.text((configuration.getServiceConnected()).replace("&", "§")
+                        .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode())));
             }
         });
 
@@ -74,7 +74,7 @@ public class CloudListener implements ICloudListener {
 
         proxyServer.getAllPlayers().forEach(player -> {
             if (player.hasPermission("metacloud.notify")){
-                player.sendMessage(TextComponent.builder((configuration.getServiceDiconnected()).replace("&", "§").replace("%service_name%", event.getName())).build());
+                player.sendMessage(Component.text((configuration.getServiceDiconnected()).replace("&", "§").replace("%service_name%", event.getName())));
             }
         });
 
@@ -87,8 +87,8 @@ public class CloudListener implements ICloudListener {
 
         proxyServer.getAllPlayers().forEach(player -> {
             if (player.hasPermission("metacloud.notify")){
-                player.sendMessage(TextComponent.builder((configuration.getServicePrepared()).replace("&", "§")
-                        .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode())).build());
+                player.sendMessage(Component.text(configuration.getServicePrepared().replace("&", "§")
+                        .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode())));
             }
         });
     }
@@ -99,8 +99,8 @@ public class CloudListener implements ICloudListener {
 
         proxyServer.getAllPlayers().forEach(player -> {
             if (player.hasPermission("metacloud.notify")){
-                player.sendMessage(TextComponent.builder((configuration.getProxiedServiceLaunch()).replace("&", "§")
-                        .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode())).build());
+                player.sendMessage(Component.text((configuration.getProxiedServiceLaunch()).replace("&", "§")
+                        .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode())));
             }
         });
     }
@@ -111,8 +111,8 @@ public class CloudListener implements ICloudListener {
 
         proxyServer.getAllPlayers().forEach(player -> {
             if (player.hasPermission("metacloud.notify")){
-                player.sendMessage(TextComponent.builder((configuration.getServiceLaunch()).replace("&", "§")
-                        .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode())).build());
+                player.sendMessage(Component.text((configuration.getServiceLaunch()).replace("&", "§")
+                        .replace("%service_name%", event.getName()).replace("%node_name%", event.getNode())));
             }
         });
     }
