@@ -5,12 +5,15 @@
 package eu.metacloudservice.api;
 
 import eu.metacloudservice.CloudAPI;
+import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
+import eu.metacloudservice.moduleside.MetaModule;
 import eu.metacloudservice.moduleside.config.*;
 import eu.metacloudservice.storage.UUIDDriver;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CloudPermissionAPI {
     private static CloudPermissionAPI instance;
@@ -28,11 +31,17 @@ public class CloudPermissionAPI {
     }
 
     public void updateConfig(@NotNull Configuration configuration){
-        CloudAPI.getInstance().getRestDriver().put("/module/permission/configuration", new ConfigDriver().convert(configuration));
+        if (MetaModule.instance == null)
+             CloudAPI.getInstance().getRestDriver().put("/module/permission/configuration", new ConfigDriver().convert(configuration));
+        else
+            Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
     }
 
     public Configuration getConfig(){
-        return (Configuration) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/module/permission/configuration"), Configuration.class);
+        if (MetaModule.instance == null)
+           return (Configuration) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/module/permission/configuration"), Configuration.class);
+        else
+            return (Configuration) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/module/permission/configuration"), Configuration.class);
     }
 
     public ArrayList<PermissionPlayer> getPlayersByGroup(String group){
@@ -59,6 +68,15 @@ public class CloudPermissionAPI {
         getPlayerByUUID(uuid).getGroups().forEach(includedAble -> permissionAbles.addAll(getPermissionsFormGroup(includedAble.getGroup())));
         permissionAbles.addAll(getPlayerByUUID(uuid).getPermissions());
         return permissionAbles;
+    }
+
+    public void setGroupToPlayer(String  uuid, String group, String time){
+       PermissionPlayer player = getPlayerByUUID(uuid);
+        if (isGroupExists(group)){
+            player.getGroups().clear();
+            player.getGroups().add(new IncludedAble(group, time));
+            updatePlayer(player);
+        }
     }
 
     public boolean updatePlayer(@NotNull PermissionPlayer player){
@@ -108,17 +126,25 @@ public class CloudPermissionAPI {
     }
 
     public boolean removeGroupFromPlayer(@NotNull String player, @NotNull String group){
-        PermissionPlayer pp = getPlayer(player);
-        if (pp == null) return false;
-        else if (pp.getGroups().stream().noneMatch(includedAble -> includedAble.getGroup().equalsIgnoreCase(group))) return false;
-        else {
-            pp.getGroups().removeIf(includedAble -> includedAble.getGroup().equalsIgnoreCase(group));
-            if (pp.getGroups().isEmpty()){
-                getGroups().stream().filter(PermissionGroup::getIsDefault).toList().forEach(permissionGroup -> pp.getGroups().add(new IncludedAble(permissionGroup.getGroup(), "LIFETIME")));
-            }
-            updatePlayer(pp);
-            return true;
+        PermissionPlayer player2 = getPlayer(player);
+        if (player2 == null) {
+            return false;
         }
+
+        List<IncludedAble> playerGroups = player2.getGroups();
+        if (playerGroups.stream().noneMatch(group2 -> group2.getGroup().equalsIgnoreCase(group))) {
+            return false;
+        }
+
+        playerGroups.removeIf(group2 -> group2.getGroup().equalsIgnoreCase(group));
+        if (playerGroups.isEmpty()) {
+            List<PermissionGroup> defaultGroups = getGroups().stream().filter(PermissionGroup::getIsDefault).toList();
+            defaultGroups.forEach(permissionGroup -> playerGroups.add(new IncludedAble(permissionGroup.getGroup(), "LIFETIME")));
+        }
+
+        updatePlayer(player2);
+        return true;
+
     }
 
     public ArrayList<PermissionGroup> getGroups(){
@@ -208,14 +234,7 @@ public class CloudPermissionAPI {
         if (configuration == null) return false;
         if (configuration.getGroups().stream().anyMatch(permissionGroup -> permissionGroup.getGroup().equalsIgnoreCase(group))){
             configuration.getGroups().removeIf(permissionGroup -> permissionGroup.getGroup().equalsIgnoreCase(group));
-            getPlayersByGroup(group).forEach(player -> {
-                String uuid = UUIDDriver.getUsername(player.getUuid());
-                assert uuid != null;
-                if (uuid.isEmpty()) {
-                    return;
-                }
-                removeGroupFromPlayer(uuid, group);
-            });
+            getPlayers().forEach(permissionPlayer -> removeGroupFromPlayer(UUIDDriver.getUsername(permissionPlayer.getUuid()), group));
             updateConfig(configuration);
             return true;
         }

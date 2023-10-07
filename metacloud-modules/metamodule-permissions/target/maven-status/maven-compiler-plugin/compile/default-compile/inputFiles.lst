@@ -1,0 +1,17 @@
+D:\work\metacloud-project\MetaCloud\metacloud-modules\metamodule-permissions\src\main\java\eu\metacloudservice\subcommand\PermissionCommand.java
+D:\work\metacloud-project\MetaCloud\metacloud-modules\metamodule-permissions\src\main\java\eu\metacloudservice\moduleside\config\PermissionPlayer.java
+D:\work\metacloud-project\MetaCloud\metacloud-modules\metamodule-permissions\src\main\java\eu\metacloudservice\moduleside\config\Configuration.java
+D:\work\metacloud-project\MetaCloud\metacloud-modules\metamodule-permissions\src\main\java\eu\metacloudservice\velo\listener\PermissionListener.java
+D:\work\metacloud-project\MetaCloud\metacloud-modules\metamodule-permissions\src\main\java\eu\metacloudservice\bukkit\PermissionBaseBukkit.java
+D:\work\metacloud-project\MetaCloud\metacloud-modules\metamodule-permissions\src\main\java\eu\metacloudservice\moduleside\MetaModule.java
+D:\work\metacloud-project\MetaCloud\metacloud-modules\metamodule-permissions\src\main\java\eu\metacloudservice\moduleside\config\PermissionAble.java
+D:\work\metacloud-project\MetaCloud\metacloud-modules\metamodule-permissions\src\main\java\eu\metacloudservice\moduleside\config\IncludedAble.java
+D:\work\metacloud-project\MetaCloud\metacloud-modules\metamodule-permissions\src\main\java\eu\metacloudservice\velo\PermissionBaseVelocity.java
+D:\work\metacloud-project\MetaCloud\metacloud-modules\metamodule-permissions\src\main\java\eu\metacloudservice\api\CloudPermissionAPI.java
+D:\work\metacloud-project\MetaCloud\metacloud-modules\metamodule-permissions\src\main\java\eu\metacloudservice\bungee\listener\PermissionListener.java
+D:\work\metacloud-project\MetaCloud\metacloud-modules\metamodule-permissions\src\main\java\eu\metacloudservice\bungee\BungeeBootstrap.java
+D:\work\metacloud-project\MetaCloud\metacloud-modules\metamodule-permissions\src\main\java\eu\metacloudservice\moduleside\commands\PermissionCommand.java
+D:\work\metacloud-project\MetaCloud\metacloud-modules\metamodule-permissions\src\main\java\eu\metacloudservice\moduleside\events\CloudEvents.java
+D:\work\metacloud-project\MetaCloud\metacloud-modules\metamodule-permissions\src\main\java\eu\metacloudservice\moduleside\config\PermissionGroup.java
+D:\work\metacloud-project\MetaCloud\metacloud-modules\metamodule-permissions\src\main\java\eu\metacloudservice\bukkit\BukkitBootstrap.java
+D:\work\metacloud-project\MetaCloud\metacloud-modules\metamodule-permissions\src\main\java\eu\metacloudservice\velo\VeloBoostrap.java

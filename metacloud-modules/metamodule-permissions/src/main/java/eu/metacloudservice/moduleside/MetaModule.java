@@ -2,16 +2,16 @@ package eu.metacloudservice.moduleside;
 
 
 import eu.metacloudservice.Driver;
+import eu.metacloudservice.api.CloudPermissionAPI;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.module.extention.IModule;
-import eu.metacloudservice.moduleside.commands.Command;
+import eu.metacloudservice.moduleside.commands.PermissionCommand;
 import eu.metacloudservice.moduleside.config.Configuration;
 import eu.metacloudservice.moduleside.config.IncludedAble;
 import eu.metacloudservice.moduleside.config.PermissionAble;
 import eu.metacloudservice.moduleside.config.PermissionGroup;
 import eu.metacloudservice.moduleside.events.CloudEvents;
 import eu.metacloudservice.webserver.entry.RouteEntry;
-import org.checkerframework.checker.units.qual.A;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,8 +19,11 @@ import java.util.ArrayList;
 public class MetaModule implements IModule {
 
 
+    public static MetaModule instance;
+
     @Override
     public void load() {
+        instance = this;
         if (!new File("./modules/permissions/config.json").exists()){
             new File("./modules/permissions/").mkdirs();
 
@@ -38,9 +41,13 @@ public class MetaModule implements IModule {
             new ConfigDriver("./modules/permissions/config.json").save(config);
         }
 
-        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/permission/configuration", new ConfigDriver().convert(new ConfigDriver("./modules/permissions/config.json").read(Configuration.class)) ));
-        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new Command());
+
+        new CloudPermissionAPI();
+        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new PermissionCommand());
         Driver.getInstance().getMessageStorage().eventDriver.registerListener(new CloudEvents());
+
+        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/permission/configuration", new ConfigDriver().convert(new ConfigDriver("./modules/permissions/config.json").read(Configuration.class)) ));
+
     }
 
     @Override
@@ -51,6 +58,5 @@ public class MetaModule implements IModule {
     @Override
     public void reload() {
         Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(new ConfigDriver("./modules/permissions/config.json").read(Configuration.class)));
-
     }
 }

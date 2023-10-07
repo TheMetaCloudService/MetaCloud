@@ -11,6 +11,7 @@ import eu.metacloudservice.events.entrys.Priority;
 import eu.metacloudservice.events.entrys.Subscribe;
 import eu.metacloudservice.events.listeners.player.CloudPlayerConnectedEvent;
 import eu.metacloudservice.events.listeners.player.CloudPlayerSwitchEvent;
+import eu.metacloudservice.events.listeners.restapi.CloudRestAPIPutEvent;
 import eu.metacloudservice.moduleside.config.*;
 import eu.metacloudservice.pool.player.entrys.CloudPlayer;
 
@@ -22,11 +23,18 @@ import java.util.List;
 
 public class CloudEvents implements ICloudListener {
 
+
+    @Subscribe(priority =  Priority.MEDIUM)
+    public void handle(CloudRestAPIPutEvent event){
+        if (event.getPath().equalsIgnoreCase("/module/permission/configuration")){
+            new ConfigDriver("./modules/permissions/config.json").save(new ConfigDriver().convert(event.getContent(), Configuration.class));
+        }
+    }
+
     @Subscribe(priority = Priority.HIGHEST)
     public void handelConnect(CloudPlayerConnectedEvent event){
 
         Configuration config = (Configuration) new ConfigDriver("./modules/permissions/config.json").read(Configuration.class);
-
 
         if (config.getPlayers().stream().noneMatch(permissionPlayer -> permissionPlayer.getUuid().equalsIgnoreCase(event.getUniqueId()))){
 
@@ -80,7 +88,6 @@ public class CloudEvents implements ICloudListener {
     @Subscribe(priority = Priority.HIGHEST)
     public void handelConnect(CloudPlayerSwitchEvent event){
         Configuration config = (Configuration) new ConfigDriver("./modules/permissions/config.json").read(Configuration.class);
-
         if (config.getPlayers().stream().anyMatch(permissionPlayer -> permissionPlayer.getUuid().equalsIgnoreCase(event.getUniqueId()))){
             PermissionPlayer player = config.getPlayers().stream().filter(permissionPlayer -> permissionPlayer.getUuid().equalsIgnoreCase(event.getUniqueId())).findFirst().orElse(null);
             if (player == null) return;

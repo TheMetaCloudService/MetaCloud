@@ -1,0 +1,16 @@
+eu\metacloudservice\moduleside\commands\SyncProxyCommand.class
+eu\metacloudservice\velocity\VeloCityBootstrap.class
+eu\metacloudservice\config\Configuration.class
+eu\metacloudservice\moduleside\MetaModule.class
+eu\metacloudservice\moduleside\MetaModule$1.class
+eu\metacloudservice\config\Motd.class
+velocity-plugin.json
+eu\metacloudservice\config\General.class
+eu\metacloudservice\velocity\listener\MOTDListener.class
+eu\metacloudservice\velocity\listener\TablistListener.class
+eu\metacloudservice\bungee\listener\TabListListener.class
+eu\metacloudservice\config\DesignConfig.class
+eu\metacloudservice\bungee\BungeeBootstrap.class
+eu\metacloudservice\bungee\listener\MotdListener.class
+eu\metacloudservice\config\Tablist.class
+eu\metacloudservice\moduleside\events\SyncEvents.class
