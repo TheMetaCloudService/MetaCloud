@@ -5,6 +5,8 @@ import eu.metacloudservice.config.Configuration;
 import eu.metacloudservice.config.Locations;
 import eu.metacloudservice.config.SignLocation;
 import eu.metacloudservice.configuration.ConfigDriver;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 
 import java.util.ArrayList;
 
@@ -14,19 +16,32 @@ public class SignsAPI {
     public SignsAPI() {}
 
     public ArrayList<SignLocation> getSigns(){
-       return ((Locations) new ConfigDriver().convert( CloudAPI.getInstance().getRestDriver().get("/module/signs/locations"), Locations.class)).getLocations();
+       return getLocConfig().getLocations();
     }
 
-    public String getUUIDFormLocation(int x, int y, int z, String world){
-        ArrayList<SignLocation> locations = getSigns();
-        SignLocation finalLoc =  locations.stream().filter(location -> location.getLocationPosX() == x && location.getLocationPosY() == y && location.getLocationPosZ() == z && location.getLocationWorld().equals(world)).findFirst().orElse(null);
-        if (finalLoc == null) return null;
-        else {
-            return finalLoc.getSignUUID();
-        }
+    public ArrayList<String> getUUIDs(){
+        ArrayList<String> uuids = new ArrayList<>();
+        getLocConfig().getLocations().forEach(signLocation -> {
+            uuids.add(signLocation.getSignUUID());
+        });
+        return uuids;
     }
 
+    public boolean canFind(Location location){
+        return getLocations().stream().anyMatch(location1 -> location1.getX() == location.getX() && location1.getY() == location.getY() && location1.getZ() == location.getZ() && location1.getWorld().getName().equalsIgnoreCase(location.getWorld().getName()));
+    }
 
+    public ArrayList<Location> getLocations(){
+        ArrayList<Location> uuids = new ArrayList<>();
+        getLocConfig().getLocations().forEach(signLocation -> {
+            uuids.add(new Location(Bukkit.getWorld(signLocation.getLocationWorld()), signLocation.getLocationPosX(),signLocation.getLocationPosY(), signLocation.getLocationPosZ()));
+        });
+        return uuids;
+    }
+
+    public Locations getLocConfig(){
+        return ((Locations) new ConfigDriver().convert( CloudAPI.getInstance().getRestDriver().get("/module/signs/locations"), Locations.class));
+    }
     public Configuration getConfig(){
         return ((Configuration) new ConfigDriver().convert( CloudAPI.getInstance().getRestDriver().get("/module/signs/configuration"), Configuration.class));
     }

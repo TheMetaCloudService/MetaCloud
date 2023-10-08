@@ -44,8 +44,7 @@ public class CloudEvents implements ICloudListener {
 
             config.getPlayers().add(new PermissionPlayer(event.getUniqueId(), ables, new ArrayList<>()));
             new ConfigDriver("./modules/permissions/config.json").save(config);
-            Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(new ConfigDriver("./modules/permissions/config.json").read(Configuration.class)));
-
+            Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(config));
         }
 
         ArrayList<PermissionGroup> updateGroup = new ArrayList<>();
@@ -81,7 +80,7 @@ public class CloudEvents implements ICloudListener {
 
 
         new ConfigDriver("./modules/permissions/config.json").save(config);
-        Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(new ConfigDriver("./modules/permissions/config.json").read(Configuration.class)));
+        Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(config));
 
     }
 

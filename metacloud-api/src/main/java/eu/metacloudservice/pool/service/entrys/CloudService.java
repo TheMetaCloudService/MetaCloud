@@ -47,8 +47,6 @@ public class CloudService {
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInChangeState(this.name, state.toString()));
     }
 
-
-
     public void sync(){
         CloudAPI.getInstance().dispatchCommand("service sync " + name);
     }
@@ -77,7 +75,13 @@ public class CloudService {
         return getGroup().getGroupType().equalsIgnoreCase("GAME");
     }
 
+    public boolean isStatic(){
+        return getGroup().isRunStatic();
+    }
 
+    public void connect(String playername){
+        CloudAPI.getInstance().getPlayerPool().getPlayer(playername).connect(this);
+    }
 
     @SneakyThrows
     public int getPlayercount() {

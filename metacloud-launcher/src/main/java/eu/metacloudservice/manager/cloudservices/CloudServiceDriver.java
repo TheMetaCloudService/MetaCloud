@@ -125,6 +125,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
     @Override
     public void handelServices() {
         Thread current = new Thread(() -> {
+            //Queue for server startup and shutdown
             new TimerBase().scheduleAsync(new TimerTask() {
                 @Override
                 public void run() {
@@ -160,6 +161,8 @@ public class CloudServiceDriver implements ICloudServiceDriver {
             }, 0, 100, TimeUtil.MILLISECONDS);
 
 
+
+            //UPDATE PLAYER FOR MIN COUNT
 
             new TimerBase().scheduleAsync(new TimerTask() {
                 @Override
@@ -442,8 +445,6 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                                     }
                                 }
                             }
-
-
                         });
                     }
                 }

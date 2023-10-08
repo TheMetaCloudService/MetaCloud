@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="PlayerNPC">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/PlayerNPC.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

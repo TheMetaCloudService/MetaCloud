@@ -22,14 +22,14 @@
       <option name="url" value="https://repo.metacloudservice.eu/repository/" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="MetaCloud" />
-      <option name="name" value="MetaCloud" />
-      <option name="url" value="https://repo.metacloudservice.eu/repository" />
+      <option name="id" value="ranull-repo-external" />
+      <option name="name" value="ranull-repo-external" />
+      <option name="url" value="https://repo.ranull.com/maven/external/" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="sonatype-oss-snapshots1" />
-      <option name="name" value="sonatype-oss-snapshots1" />
-      <option name="url" value="https://s01.oss.sonatype.org/content/repositories/snapshots/" />
+      <option name="id" value="ranull-repo-external" />
+      <option name="name" value="ranull-repo-external" />
+      <option name="url" value="https://repo.ranull.com/maven/#/external" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="MetaCloud-Repo" />
@@ -47,14 +47,29 @@
       <option name="url" value="https://repo1.maven.org/maven2" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="jboss.community" />
-      <option name="name" value="JBoss Community repository" />
-      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
-    </remote-repository>
-    <remote-repository>
       <option name="id" value="papermc" />
       <option name="name" value="papermc" />
       <option name="url" value="https://repo.papermc.io/repository/maven-public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="MetaCloud" />
+      <option name="name" value="MetaCloud" />
+      <option name="url" value="https://repo.metacloudservice.eu/repository" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="sonatype-oss-snapshots1" />
+      <option name="name" value="sonatype-oss-snapshots1" />
+      <option name="url" value="https://s01.oss.sonatype.org/content/repositories/snapshots/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="ranull-repo-external" />
+      <option name="name" value="ranull-repo-external" />
+      <option name="url" value="https://repo.ranull.com/maven/external" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="jboss.community" />
+      <option name="name" value="JBoss Community repository" />
+      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="MetaCloud" />

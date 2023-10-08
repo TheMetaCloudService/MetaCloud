@@ -4,71 +4,90 @@
 
 package eu.metacloudservice.serverside.bukkit.drivers;
 
+import eu.metacloudservice.CloudAPI;
+import eu.metacloudservice.pool.service.entrys.CloudService;
+import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.serverside.bukkit.entry.CloudSign;
 import org.bukkit.Location;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SignDriver {
 
-    private final List<CloudSign> signCache;
-    private final List<String> queuedServer;
+    private final Map<UUID, CloudSign> signs;
 
     public SignDriver() {
-        this.signCache = new ArrayList<>();
-        this.queuedServer = new ArrayList<>();
+        this.signs = new ConcurrentHashMap<>();
     }
 
-    public String pullService(String group){
-        String service = getQueuedServer().parallelStream().filter(s -> s.startsWith(group)).findFirst().orElse("");
-        if (service.equals("")) return "";
-        else {
-            getQueuedServer().removeIf(s -> s.equals(service));
-            return service;
+    // Methode zum Hinzufügen eines Signs
+    public void addSign(UUID signUUID, String group, Location location) {
+        CloudSign sign = new CloudSign(group, location);
+        signs.put(signUUID, sign);
+    }
+
+    // Methode zum Entfernen eines Signs anhand seiner UUID
+    public void removeSign(UUID signUUID) {
+        signs.remove(signUUID);
+    }
+
+    // Methode zum Abrufen aller Signs (als unveränderliche Liste)
+    public List<CloudSign> getAllSignsRed() {
+        return Collections.unmodifiableList(new ArrayList<>(signs.values()));
+    }
+    public List<CloudSign> getAllSigns() {
+        return List.copyOf(signs.values());
+    }
+
+    // Methode zum Abrufen eines Signs anhand seiner UUID
+    public CloudSign getSignByUUID(UUID signUUID) {
+        return signs.get(signUUID);
+    }
+
+    public UUID getUUIDByLocation(Location location) {
+
+        for (UUID uuid : signs.keySet()){
+            if (signs.get(uuid).getLocation().equals(location)){
+                return uuid;
+            }
         }
-    }
 
-    public CloudSign getSignFromLocation(Location location){
-        return getSignCache().parallelStream().filter(sign -> sign.getSignPosition() == location).findFirst().orElse(null);
-    }
-
-    public boolean isOnLocationASign(Location location){
-        return getSignCache().parallelStream().anyMatch(sign -> sign.getSignPosition() == location);
-    }
-
-    public CloudSign getSignFromService(String service){
-        if (isServiceOnSign(service)) {
-            return getSignCache().parallelStream().filter(sign -> sign.getService().equalsIgnoreCase(service)).findFirst().orElse(null);
-        }
         return null;
     }
 
-    public boolean isServiceOnSign(String service){
-        return getSignCache().parallelStream().anyMatch(sign -> sign.getService().equalsIgnoreCase(service));
+    public List<String> getFreeServers(String group){
+        return CloudAPI.getInstance().getServicePool().getServicesByGroup(group).stream()
+                .filter(cloudService -> cloudService.getState() == ServiceState.LOBBY)
+                .filter(cloudService -> getSignByService(cloudService.getName()) == null).map(CloudService::getName).toList();
     }
 
-    public void registerSign(CloudSign sign){
-        if (!isSignExists(sign.getSignUUID())){
-            getSignCache().add(sign);
+    public List<UUID>  getFreeSigns(){
+        List<UUID> uuids = new ArrayList<>();
+        for (UUID uuid : signs.keySet()){
+            if (signs.get(uuid).getService().equalsIgnoreCase("")){
+                uuids.add(uuid);
+            }
         }
+        return uuids;
     }
-    public void unregisterSign(UUID uuid){
-        if (isSignExists(uuid)){
-            getSignCache().removeIf(sign -> sign.getSignUUID() == uuid);
+    public CloudSign getSignByService(String service) {
+        for (CloudSign sign : signs.values()) {
+            if (sign.getService().equals(service)) {
+                return sign;
+            }
         }
+        return null; // Kein Sign mit dem service gefunden
+    }
+    public CloudSign getSignByLocation(Location locationToFind) {
+        for (CloudSign sign : signs.values()) {
+            if (sign.getLocation().equals(locationToFind)) {
+                return sign;
+            }
+        }
+        return null; // Kein Sign an dieser Location gefunden
     }
 
-    private boolean isSignExists(UUID uuid){
-        return getSignCache().parallelStream().anyMatch(cloudSign -> cloudSign.getSignUUID() == uuid);
-    }
 
-    public List<CloudSign> getSignCache() {
-        return signCache;
-    }
 
-    public List<String> getQueuedServer() {
-        return queuedServer;
-    }
 }

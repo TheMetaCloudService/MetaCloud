@@ -136,30 +136,6 @@ public class PermissionCommand extends PluginCommand {
                             proxiedPlayer.sendMessage(PREFIX + "The player '§f"+username +"§7' already has this group.");
                     }
 
-                }else if (args.length >= 5 && args.length < 7 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("set")) {
-                    String group = args[4];
-                    String time = args.length == 6 ? args[5] : "LIFETIME";
-                    // Implementiere Logik für "/permission user [user] group add [group] [time]"
-                    if (pp.getGroups().stream().noneMatch(includedAble -> includedAble.getGroup().equalsIgnoreCase(group))){
-                        if (!time.equalsIgnoreCase("LIFETIME")){
-                            LocalDateTime currentDateTime = LocalDateTime.now(); // das aktuelle Datum und die aktuelle Uhrzeit
-                            LocalDateTime calculatedDateTime = currentDateTime.plusDays(Integer.parseInt(time)); // berechne das Datum und die Uhrzeit, indem Tage zum aktuellen Datum und zur aktuellen Uhrzeit hinzugefügt werden
-
-                            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-                            time = calculatedDateTime.format(dateTimeFormatter);
-                        }
-                        CloudPermissionAPI.getInstance().setGroupToPlayer(UUIDDriver.getUUID(username), group, time);
-                        if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX + "The player '§f"+username+"§7' has successfully received the group '§f"+group+"§7@§f§"+time+"§7'."));
-                        else
-                            proxiedPlayer.sendMessage(PREFIX + "The player '§f"+username+"§7' has successfully received the group '§f"+group+"§7@§f§"+time+"§7'.");
-                    }else {
-                        if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX +  "The player '§f"+username +"§7' already has this group."));
-                        else
-                            proxiedPlayer.sendMessage(PREFIX + "The player '§f"+username +"§7' already has this group.");
-                    }
-
                 }else if (args.length == 5 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("remove")) {
                     String group = args[4];
                     // Implementiere Logik für "/permission user [user] group remove [group]"
@@ -430,7 +406,6 @@ public class PermissionCommand extends PluginCommand {
             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission user [user] perms add [permission] [true/false] ([time])"));
             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission user [user] perms remove [permission] "));
             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission user [user] group add [group] ([time])"));
-            veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission user [user] group set [group] ([time])"));
             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission user [user] group remove [group]"));
             veloPlayer.sendMessage(Component.text(PREFIX + " "));
             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission groups"));
@@ -447,7 +422,6 @@ public class PermissionCommand extends PluginCommand {
             proxiedPlayer.sendMessage(PREFIX + "/cloud permission user [user] perm add [permission] [true/false] ([time])");
             proxiedPlayer.sendMessage(PREFIX + "/cloud permission user [user] perm remove [permission] ");
             proxiedPlayer.sendMessage(PREFIX + "/cloud permission user [user] group add [group] ([time])");
-            proxiedPlayer.sendMessage(PREFIX + "/cloud permission user [user] group set [group] ([time])");
             proxiedPlayer.sendMessage(PREFIX + "/cloud permission user [user] group remove [group]");
             proxiedPlayer.sendMessage(PREFIX + " ");
             proxiedPlayer.sendMessage(PREFIX + "/cloud permission groups");
@@ -479,23 +453,11 @@ public class PermissionCommand extends PluginCommand {
             }else if (args.length == 4 && !args[2].equalsIgnoreCase("info")){
                 suggestion.add("add");
                 suggestion.add("remove");
-                if (args[2].equalsIgnoreCase("group")){
-                    suggestion.add("set");
-                }
-            }else if (args.length == 5 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("set")){
-                CloudPermissionAPI.getInstance().getGroups().forEach(permissionGroup -> suggestion.add(permissionGroup.getGroup()));
             }else if (args.length == 5 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("add")){
                 CloudPermissionAPI.getInstance().getGroups().forEach(permissionGroup -> suggestion.add(permissionGroup.getGroup()));
             }else if (args.length == 5 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("remove")){
                 CloudPermissionAPI.getInstance().getPlayer(args[1]).getGroups().forEach(includedAble -> suggestion.add(includedAble.getGroup()));
             }else if (args.length == 6 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("add")){
-                suggestion.add("LIFETIME");
-                suggestion.add("120");
-                suggestion.add("90");
-                suggestion.add("60");
-                suggestion.add("30");
-                suggestion.add("15");
-            }else if (args.length == 6 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("set")){
                 suggestion.add("LIFETIME");
                 suggestion.add("120");
                 suggestion.add("90");

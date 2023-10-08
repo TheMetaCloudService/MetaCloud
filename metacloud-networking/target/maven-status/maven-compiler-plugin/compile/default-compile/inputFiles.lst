@@ -1,9 +1,0 @@
-D:\work\metacloud-project\MetaCloud\metacloud-networking\src\main\java\eu\metacloudservice\networking\server\NettyServer.java
-D:\work\metacloud-project\MetaCloud\metacloud-networking\src\main\java\eu\metacloudservice\networking\packet\NettyBuffer.java
-D:\work\metacloud-project\MetaCloud\metacloud-networking\src\main\java\eu\metacloudservice\networking\packet\Packet.java
-D:\work\metacloud-project\MetaCloud\metacloud-networking\src\main\java\eu\metacloudservice\networking\packet\NettyAdaptor.java
-D:\work\metacloud-project\MetaCloud\metacloud-networking\src\main\java\eu\metacloudservice\networking\NettyDriver.java
-D:\work\metacloud-project\MetaCloud\metacloud-networking\src\main\java\eu\metacloudservice\networking\codec\PacketEncoder.java
-D:\work\metacloud-project\MetaCloud\metacloud-networking\src\main\java\eu\metacloudservice\networking\client\NettyClient.java
-D:\work\metacloud-project\MetaCloud\metacloud-networking\src\main\java\eu\metacloudservice\networking\packet\PacketDriver.java
-D:\work\metacloud-project\MetaCloud\metacloud-networking\src\main\java\eu\metacloudservice\networking\codec\PacketDecoder.java

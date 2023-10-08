@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="metacloud-api" />
         <module name="metacloud-launcher" />
+        <module name="metamodule-npc" />
         <module name="metamodule-signs" />
         <module name="metacloud-plugin" />
         <module name="metacloud-networking" />

@@ -225,7 +225,6 @@ public class GroupCommand extends PluginCommand {
         List<String > suggestion =  new ArrayList<>();
         if (args.length == 0){
             suggestion.add("list");
-            suggestion.add("info");
             suggestion.add("maintenance");
             suggestion.add("maxplayers");
             suggestion.add("mincount");

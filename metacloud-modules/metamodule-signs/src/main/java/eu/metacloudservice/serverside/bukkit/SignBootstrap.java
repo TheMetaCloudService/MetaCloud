@@ -5,15 +5,20 @@
 package eu.metacloudservice.serverside.bukkit;
 
 import eu.metacloudservice.CloudAPI;
+import eu.metacloudservice.api.PluginDriver;
 import eu.metacloudservice.api.SignsAPI;
-import eu.metacloudservice.serverside.bukkit.commands.SignCommand;
+import eu.metacloudservice.serverside.bukkit.commands.Command;
 import eu.metacloudservice.serverside.bukkit.drivers.SignDriver;
+import eu.metacloudservice.serverside.bukkit.drivers.SignUpdaterTask;
 import eu.metacloudservice.serverside.bukkit.entry.CloudSign;
-import eu.metacloudservice.serverside.bukkit.events.CloudEvents;
+import eu.metacloudservice.serverside.bukkit.events.InteractEvent;
+import eu.metacloudservice.timebaser.TimerBase;
+import eu.metacloudservice.timebaser.utils.TimeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.TimerTask;
 import java.util.UUID;
 
 public class SignBootstrap extends JavaPlugin {
@@ -22,16 +27,32 @@ public class SignBootstrap extends JavaPlugin {
     public static SignDriver signDriver;
     public static SignsAPI signsAPI;
 
+    public static  SignBootstrap instance;
+    public static  Integer empty;
+    public static  Integer online;
+    public static  Integer full;
+    public static  Integer maintenance;
+    public static  Integer searching;
+
     @Override
     public void onEnable() {
+        instance = this;
         signsAPI = new SignsAPI();
         signDriver = new SignDriver();
-        getCommand("cloudsign").setExecutor(new SignCommand());
-        CloudAPI.getInstance().registerListener(new CloudEvents());
+        PluginDriver.getInstance().register(new Command());
+        Bukkit.getPluginManager().registerEvents(new InteractEvent(), this);
         signsAPI.getSigns().forEach(location -> {
             Location loc = new Location(Bukkit.getWorld(location.getLocationWorld()), location.getLocationPosX(), location.getLocationPosY(), location.getLocationPosZ());
-            signDriver.registerSign(new CloudSign(UUID.fromString(location.getSignUUID()), location.getGroupName(), loc));
+            signDriver.addSign(UUID.fromString(location.getSignUUID()), location.getGroupName(), loc);
         });
+        empty = 0;
+        online = 0;
+        full = 0;
+        maintenance = 0;
+        searching = 0;
+        SignUpdaterTask updaterTask = new SignUpdaterTask(SignBootstrap.signsAPI);
+        updaterTask.runTaskTimer(SignBootstrap.instance, 0L, 20L);
+
 
     }
 
@@ -39,4 +60,6 @@ public class SignBootstrap extends JavaPlugin {
     public void onDisable() {
         super.onDisable();
     }
+
+
 }

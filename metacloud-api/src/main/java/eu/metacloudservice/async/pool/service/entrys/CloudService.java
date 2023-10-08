@@ -125,6 +125,18 @@ public class CloudService {
         }
     }
 
+    public boolean isStatic(){
+        return getGroup().isRunStatic();
+    }
+
+    public void connect(String playername){
+        try {
+            AsyncCloudAPI.getInstance().getPlayerPool().getPlayer(playername).get().connect(this);
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public String toString(){
         return "name='"+name+"', group='"+group+"', state='"+getState()+"', address='"+getAddress()+"', port='"+getPort()+"', playerCount='"+getPlayercount()+"'";
     }

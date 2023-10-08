@@ -93,7 +93,6 @@ public class PermissionCommand extends CommandAdapter {
                         configuration.getPlayers().add(pp);
                         new ConfigDriver("./modules/permissions/config.json").save(configuration);
                         Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
-
                         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                                 "Dem Spieler '§F" + username + "§r' wurde die Berechtigung '" + permission + "' nun entzogen.",
                                 "The player '§f" + username + "§r' has now been deprived of the permission '" + permission+ "'.");
@@ -132,31 +131,15 @@ public class PermissionCommand extends CommandAdapter {
                                 "The player '§f"+username+"§r' already has this group.");
                     }
 
-                }else if (args.length >= 5 && args.length < 7 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("set")) {
-                    String group = args[4];
-                    String time = args.length == 6 ? args[5] : "LIFETIME";
-                    // Implementiere Logik für "/permission user [user] group add [group] [time]"
-                    if (pp.getGroups().stream().noneMatch(includedAble -> includedAble.getGroup().equalsIgnoreCase(group))){
-                        if (!time.equalsIgnoreCase("LIFETIME")){
-                            LocalDateTime currentDateTime = LocalDateTime.now(); // das aktuelle Datum und die aktuelle Uhrzeit
-                            LocalDateTime calculatedDateTime = currentDateTime.plusDays(Integer.parseInt(time)); // berechne das Datum und die Uhrzeit, indem Tage zum aktuellen Datum und zur aktuellen Uhrzeit hinzugefügt werden
-
-                            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-                            time = calculatedDateTime.format(dateTimeFormatter);
-                        }
-
-                        CloudPermissionAPI.getInstance().setGroupToPlayer(UUIDDriver.getUUID(username), group, time);
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Der Spieler '§f"+username+"§r' hat die Gruppe '§f"+group+"§r@§f§"+time+"§r' erfolgreich erhalten.",
-                                "The player '§f"+username+"§r' has successfully received the group '§f"+group+"§r@§f§"+time+"§r'.");
-                    }else {
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Der Spieler '§f"+username+"§r' besitzt diese Gruppe bereits.",
-                                "The player '§f"+username+"§r' already has this group.");
-                    }
-
                 }else if (args.length == 5 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("remove")) {
                     String group = args[4];
+                    if (pp.getGroups().isEmpty()){
+                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
+                                "Der Spieler '§f"+username+"§r' hat die Gruppe nicht eingeschlossen.",
+                                "The player '§f"+username+"§r' has not included the group.");
+
+
+                    }
                     // Implementiere Logik für "/permission user [user] group remove [group]"
                     if (pp.getGroups().stream().anyMatch(includedAble -> includedAble.getGroup().equalsIgnoreCase(group))){
                         pp.getGroups().removeIf(includedAble -> includedAble.getGroup().equalsIgnoreCase(group));
@@ -428,9 +411,6 @@ public class PermissionCommand extends CommandAdapter {
                 " >> §fperms user [player] group add [group] ([time]) §7~ Füge einen Spieler zur Gruppe hinzu",
                 " >> §fperms user [player] group add [group] ([time]) §7~ Add a player to the group");
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fperms user [player] group set [group] ([time]) §7~ den Spieler in eine Gruppe zu setzen",
-                " >> §fperms user [player] group set [group] ([time]) §7~ set the player in a group");
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fperms user [player] group remove [group] §7~ Remove einen Spieler von einer Gruppe ",
                 " >> §fperms user [player] group remove [group] §7~ Remove a player from a group ");
 
@@ -485,22 +465,11 @@ public class PermissionCommand extends CommandAdapter {
             }else if (args.length == 3 && !args[2].equalsIgnoreCase("info")){
                 suggestion.add("add");
                 suggestion.add("remove");
-                if (args[2].equalsIgnoreCase("group")){
-                    suggestion.add("set");
-                }
-            }else if (args.length == 4 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("set")){
-                CloudPermissionAPI.getInstance().getGroups().forEach(permissionGroup -> suggestion.add(permissionGroup.getGroup()));
+
             }else if (args.length == 4 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("add")){
                 CloudPermissionAPI.getInstance().getGroups().forEach(permissionGroup -> suggestion.add(permissionGroup.getGroup()));
             }else if (args.length == 4 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("remove")){
                 CloudPermissionAPI.getInstance().getPlayer(args[1]).getGroups().forEach(includedAble -> suggestion.add(includedAble.getGroup()));
-            }else if (args.length == 5 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("set")){
-                suggestion.add("LIFETIME");
-                suggestion.add("120");
-                suggestion.add("90");
-                suggestion.add("60");
-                suggestion.add("30");
-                suggestion.add("15");
             }else if (args.length == 5 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("add")){
                 suggestion.add("LIFETIME");
                 suggestion.add("120");
