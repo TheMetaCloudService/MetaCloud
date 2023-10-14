@@ -24,7 +24,7 @@ public class ServicePool {
     }
 
     public CloudService getService(@NonNull String name){
-        return connectedServices.stream().filter(cloudService -> cloudService.getName().equalsIgnoreCase(name)).findFirst().get();
+        return connectedServices.stream().filter(cloudService -> cloudService.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
 
     public boolean serviceNotNull(@NonNull String name){
@@ -32,7 +32,7 @@ public class ServicePool {
     }
 
     public List<CloudService> getServicesByGroup(@NonNull String group){
-        return connectedServices.stream().filter(cloudService -> cloudService.getGroup().getGroup().equals(group)).collect(Collectors.toList());
+        return connectedServices.stream().filter(cloudService -> cloudService.getGroup() == null ? false : cloudService.getGroup().getGroup().equals(group)).collect(Collectors.toList());
     }
 
     public List<CloudService> getServicesByState(@NonNull  ServiceState state){

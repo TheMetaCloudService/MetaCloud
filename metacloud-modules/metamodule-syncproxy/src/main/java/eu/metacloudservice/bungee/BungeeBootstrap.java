@@ -2,6 +2,7 @@ package eu.metacloudservice.bungee;
 
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
+import eu.metacloudservice.bungee.listener.CloudEventHandler;
 import eu.metacloudservice.bungee.listener.MotdListener;
 import eu.metacloudservice.bungee.listener.TabListListener;
 import eu.metacloudservice.config.Configuration;
@@ -25,6 +26,7 @@ public class BungeeBootstrap extends Plugin {
     private RestDriver restDriver;
     public Integer motdCount;
     public DesignConfig configuration;
+    public Configuration conf;
     public  Group group;
     public Integer tabCount;
 
@@ -37,10 +39,12 @@ public class BungeeBootstrap extends Plugin {
 
         liveService = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         restDriver = new RestDriver(liveService.getManagerAddress(), liveService.getRestPort());
-        Configuration conf = (Configuration) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/module/syncproxy/configuration"), Configuration.class);
+
+        conf = (Configuration) new ConfigDriver().convert(getRestDriver().get("/module/syncproxy/configuration"), Configuration.class);
         if (conf.getConfiguration().stream().anyMatch(designConfig -> designConfig.getTargetGroup().equalsIgnoreCase(liveService.getGroup()))){
             configuration = conf.getConfiguration().stream().filter(designConfig -> designConfig.getTargetGroup().equalsIgnoreCase(liveService.getGroup())).findFirst().get();
         }
+        CloudAPI.getInstance().getEventDriver().registerListener(new CloudEventHandler());
 
         group = CloudAPI.getInstance().getGroupPool().getGroup(getLiveService().getGroup());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new MotdListener());
@@ -71,13 +75,11 @@ public class BungeeBootstrap extends Plugin {
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(() -> {
-            Configuration conf = (Configuration) new ConfigDriver().convert(getRestDriver().get("/module/syncproxy/configuration"), Configuration.class);
             conf.getConfiguration().stream()
                     .filter(designConfig -> designConfig.getTargetGroup().equalsIgnoreCase(liveService.getGroup()))
                     .findFirst()
                     .ifPresent(config -> {
                         configuration = config;
-
                         group = CloudAPI.getInstance().getGroupPool().getGroup(getLiveService().getGroup());
                         tabCount = tabCount >= configuration.getTablist().size() - 1 ? 0 : tabCount + 1;
                         if (group.isMaintenance()) {

@@ -1,0 +1,9 @@
+main: eu.metacloudservice.bukkit.NPCBootstrap
+version: 1.0.0-RELEASE
+author: RauchigesEtwas
+name: metacloud-npc
+api-version: 1.16
+
+depend:
+  - metacloud-api
+  - metacloud-plugin

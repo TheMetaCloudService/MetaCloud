@@ -41,9 +41,13 @@ public class CloudService {
         cloudServiceConsumer.accept(this);
     }
 
+    public String getID(){
+        LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
 
+        return name.replace(group, "").replace(list.getCloudServiceSplitter(), "");
+    }
     public void setState(@NonNull ServiceState state){
-        CloudAPI.getInstance().sendPacketSynchronized(new PacketInChangeState(this.name, state.toString()));
+        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInChangeState(this.name, state.toString()));
     }
 
     public void sync(){

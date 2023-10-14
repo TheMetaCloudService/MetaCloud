@@ -9,6 +9,11 @@ import eu.metacloudservice.pool.service.entrys.CloudService;
 import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.serverside.bukkit.entry.CloudSign;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.WallSign;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,6 +41,7 @@ public class SignDriver {
     public List<CloudSign> getAllSignsRed() {
         return Collections.unmodifiableList(new ArrayList<>(signs.values()));
     }
+
     public List<CloudSign> getAllSigns() {
         return List.copyOf(signs.values());
     }
@@ -47,8 +53,8 @@ public class SignDriver {
 
     public UUID getUUIDByLocation(Location location) {
 
-        for (UUID uuid : signs.keySet()){
-            if (signs.get(uuid).getLocation().equals(location)){
+        for (UUID uuid : signs.keySet()) {
+            if (signs.get(uuid).getLocation().equals(location)) {
                 return uuid;
             }
         }
@@ -56,21 +62,26 @@ public class SignDriver {
         return null;
     }
 
-    public List<String> getFreeServers(String group){
+    public List<String> getFreeServers(String group) {
         return CloudAPI.getInstance().getServicePool().getServicesByGroup(group).stream()
+                .filter(Objects::nonNull)
                 .filter(cloudService -> cloudService.getState() == ServiceState.LOBBY)
-                .filter(cloudService -> getSignByService(cloudService.getName()) == null).map(CloudService::getName).toList();
+                .filter(cloudService -> getSignByService(cloudService.getName()) == null)
+                .sorted(Comparator.comparing(CloudService::getID))
+                .map(CloudService::getName).toList();
     }
 
-    public List<UUID>  getFreeSigns(){
+    public List<UUID> getFreeSigns() {
         List<UUID> uuids = new ArrayList<>();
-        for (UUID uuid : signs.keySet()){
-            if (signs.get(uuid).getService().equalsIgnoreCase("")){
+        for (UUID uuid : signs.keySet()) {
+            if (signs.get(uuid).getService().equalsIgnoreCase("")) {
                 uuids.add(uuid);
             }
         }
         return uuids;
     }
+
+
     public CloudSign getSignByService(String service) {
         for (CloudSign sign : signs.values()) {
             if (sign.getService().equals(service)) {

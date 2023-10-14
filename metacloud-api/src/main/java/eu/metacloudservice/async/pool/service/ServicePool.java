@@ -23,11 +23,11 @@ public class ServicePool {
     }
 
     public CompletableFuture<CloudService> getService(@NonNull String name){
-        return CompletableFuture.supplyAsync(() -> connectedServices.stream().filter(cloudService -> cloudService.getName().equalsIgnoreCase(name)).findFirst().get());
+        return CompletableFuture.supplyAsync(() -> connectedServices.stream().filter(cloudService -> cloudService.getName().equalsIgnoreCase(name)).findFirst().orElse(null));
     }
 
     public CompletableFuture<List<CloudService>> getServicesByGroup(@NonNull String group){
-        return CompletableFuture.supplyAsync(() -> connectedServices.stream().filter(cloudService -> cloudService.getGroup().getGroup().equals(group)).collect(Collectors.toList()));
+        return CompletableFuture.supplyAsync(() -> connectedServices.stream().filter(cloudService -> cloudService.getGroup()== null ? false : cloudService.getGroup().getGroup().equals(group)).collect(Collectors.toList()));
     }
 
     public CompletableFuture<List<CloudService>> getServicesByState(@NonNull  ServiceState state){

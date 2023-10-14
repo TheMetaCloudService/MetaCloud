@@ -16,14 +16,15 @@ public class HubCommand implements SimpleCommand {
             Player player = (Player) invocation.source();
             Messages messages = CloudAPI.getInstance().getMessages();
             if (CloudAPI.getInstance().getPlayerPool().getPlayer(player.getUsername()).getServer().getGroup().getGroupType().equalsIgnoreCase("LOBBY")){
-                player.sendMessage(Component.text(messages.getAlreadyOnFallback().replace("%PREFIX%", messages.getPrefix())));
+                player.sendMessage(Component.text(messages.getMessages().get("alreadyOnFallback").replace("%PREFIX%", messages.getMessages().get("prefix"))));
             }else {
                 if (VelocityBootstrap.getLobby(player) == null){
-                    player.sendMessage(Component.text(messages.getNoFallbackServer().replace("%PREFIX%", messages.getPrefix())));
+                    player.sendMessage(Component.text((messages.getMessages().get("noFallbackServer").replace("%PREFIX%", messages.getMessages().get("prefix")))));
                   }else {
                     CloudService fallback = VelocityBootstrap.getLobby(player);
                     player.createConnectionRequest(VelocityBootstrap.proxyServer.getServer(fallback.getName()).get());
-                    player.sendMessage(Component.text(messages.getSuccessfullyConnected().replace("%PREFIX%", messages.getPrefix())));
+                    player.sendMessage(Component.text(messages.getMessages().get("successfullyConnected").replace("%PREFIX%", messages.getMessages().get("prefix"))
+                            .replace("%service_name%", fallback.getName())));
                 }
             }
         }

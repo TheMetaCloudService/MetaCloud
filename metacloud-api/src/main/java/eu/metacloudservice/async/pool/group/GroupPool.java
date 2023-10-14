@@ -42,7 +42,14 @@ public class GroupPool {
         });
         return CompletableFuture.supplyAsync(()->groups );
     }
+    public boolean isGroupExists(String group){
+        try {
+            return getGroupsByName().get().stream().anyMatch(s -> s.equalsIgnoreCase(group));
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
 
+    }
 
     public void createGroup(Group group){
         AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInCreateGroup(new ConfigDriver().convert(group)));

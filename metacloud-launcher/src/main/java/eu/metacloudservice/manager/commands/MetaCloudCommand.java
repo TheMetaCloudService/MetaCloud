@@ -17,10 +17,7 @@ import java.util.ArrayList;
 public class MetaCloudCommand extends CommandAdapter {
     @Override
     public void performCommand(CommandAdapter command, String[] args) {
-
-
         MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
-
         OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
         double usedMemory = (double) memoryMXBean.getHeapMemoryUsage().getUsed() / 1048576;
         double maxMemory =    (double) memoryMXBean.getHeapMemoryUsage().getMax() / 1048576;
@@ -41,12 +38,10 @@ public class MetaCloudCommand extends CommandAdapter {
                 "Current Services: §f" + CloudManager.serviceDriver.getServices().size(),
                 "Loaded Classes: §f" + loadedClassCount,
                 "Totale Classes: §f" + totalLoadedClassCount);
-
-
     }
 
     @Override
     public ArrayList<String> tabComplete(TerminalStorageLine consoleInput, String[] args) {
-        return null;
+        return new ArrayList<>();
     }
 }

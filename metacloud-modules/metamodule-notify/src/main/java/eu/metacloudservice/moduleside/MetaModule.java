@@ -34,14 +34,14 @@ public class MetaModule implements IModule {
             new File("./modules/notify/").mkdirs();
             try {
                 Configuration configuration = new Configuration();
-                configuration.setProxiedServiceConnected("§8[§a▷§8] §7proxy: §a%service_name% §7was §aconnected §8| §b%node_name%");
-                configuration.setProxiedServicePrepared("§8[§b▷§8] §7proxy: §e%service_name% §7was §bPrepared §8| §b%node_name%");
-                configuration.setProxiedServiceLaunch("§8[§b▷§8] §7proxy: §e%service_name% §7was §eLaunched §8| §b%node_name%");
+                configuration.setProxiedServiceConnected("§8[§a▷§8] §7proxy: §a%service_name% §7was §aconnected §8| §b%service_node%");
+                configuration.setProxiedServicePrepared("§8[§b▷§8] §7proxy: §e%service_name% §7was §bPrepared §8| §b%service_node%");
+                configuration.setProxiedServiceLaunch("§8[§b▷§8] §7proxy: §e%service_name% §7was §eLaunched §8| §b%service_node%");
                 configuration.setProxiedServiceDiconnected("§8[§c◁§8] §7proxy: §c%service_name% §7was §cdisconnected");
 
-                configuration.setServiceConnected("§8[§a▷§8] §7service: §a%service_name% §7was §aconnected §8| §b%node_name%");
-                configuration.setServicePrepared("§8[§b▷§8] §7service: §e%service_name% §7was §bPrepared §8| §b%node_name%");
-                configuration.setServiceLaunch("§8[§e▷§8] §7service: §e%service_name% §7was §eLaunched §8| §b%node_name%");
+                configuration.setServiceConnected("§8[§a▷§8] §7service: §a%service_name% §7was §aconnected §8| §b%service_node%");
+                configuration.setServicePrepared("§8[§b▷§8] §7service: §e%service_name% §7was §bPrepared §8| §b%service_node%");
+                configuration.setServiceLaunch("§8[§e▷§8] §7service: §e%service_name% §7was §eLaunched §8| §b%service_node%");
                 configuration.setServiceDiconnected("§8[§c◁§8] §7service: §c%service_name% §7was §cdisconnected");
 
                 new ConfigDriver("./modules/notify/config.json").save(configuration);

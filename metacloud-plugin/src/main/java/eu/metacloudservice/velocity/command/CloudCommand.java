@@ -30,7 +30,6 @@ public class CloudCommand implements SimpleCommand {
        String[] args = invocation.arguments();
         if (invocation.source() instanceof  Player player){
             Messages messages = CloudAPI.getInstance().getMessages();
-            String PREFIX = messages.getPrefix().replace("&", "§");
             if (player.hasPermission("metacloud.command.use")){
                 if (args.length == 0){
                     sendHelp(player);
@@ -52,7 +51,7 @@ public class CloudCommand implements SimpleCommand {
 
     public void sendHelp(Player player){
         Messages messages = CloudAPI.getInstance().getMessages();
-        String PREFIX = messages.getPrefix().replace("&", "§");
+        String PREFIX = messages.getMessages().get("prefix").replace("&", "§");
         PluginDriver.getInstance().getCommands().forEach(proxyCommand -> {
             player.sendMessage(Component.text(PREFIX + proxyCommand.getDescription()));
         });

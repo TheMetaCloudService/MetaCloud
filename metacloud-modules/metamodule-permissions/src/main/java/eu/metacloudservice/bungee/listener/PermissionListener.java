@@ -19,7 +19,6 @@ public class PermissionListener implements Listener {
 
      @EventHandler
     public void handle(PermissionCheckEvent event){
-
          if (event.getSender() instanceof ProxiedPlayer){
              ArrayList<PermissionAble> permissions = CloudPermissionAPI.getInstance().getPermissionsFormPlayer(event.getSender().getName());
 

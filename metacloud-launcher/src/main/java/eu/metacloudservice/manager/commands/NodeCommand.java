@@ -29,7 +29,6 @@ public class NodeCommand extends CommandAdapter {
                 CloudManager.config.getNodes().forEach(managerConfigNodes -> {
                     if (NettyDriver.getInstance().nettyServer.isChannelFound(managerConfigNodes.getName()) || managerConfigNodes.getName().equalsIgnoreCase("InternalNode")){
                         Driver.getInstance().getTerminalDriver().log(Type.COMMAND,"§f" + managerConfigNodes.getName() + "~" + managerConfigNodes.getAddress()+ "-Connected");
-
                     }else {
                         Driver.getInstance().getTerminalDriver().log(Type.COMMAND,"§f" + managerConfigNodes.getName() + "~" + managerConfigNodes.getAddress() + "-Offline");
                     }
@@ -44,9 +43,7 @@ public class NodeCommand extends CommandAdapter {
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS,
                             "der angegebene Node '§f"+node+"§r' wurde erfolgreich gelöscht",
                             "the specified node '§f"+node+"§r' was successfully deleted");
-
                     CloudManager.config.getNodes().removeIf(managerConfigNodes -> managerConfigNodes.getName().equalsIgnoreCase(node));
-
                     new ConfigDriver("./service.json").save(CloudManager.config);
                 }else {
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
@@ -59,9 +56,7 @@ public class NodeCommand extends CommandAdapter {
                     CloudManager.serviceDriver.getServicesFromNode(node).forEach(taskedService -> {
                         Driver.getInstance().getTerminalDriver().log(Type.COMMAND, taskedService.getEntry().getServiceName() + "~" + taskedService.getEntry().getCurrentPlayers());
                     });
-
                     CloudManager.config.getNodes().removeIf(managerConfigNodes -> managerConfigNodes.getName().equalsIgnoreCase(node));
-
                     new ConfigDriver("./service.json").save(CloudManager.config);
                 }else {
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
@@ -79,14 +74,10 @@ public class NodeCommand extends CommandAdapter {
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS,
                             "der angegebene Node '§f"+node+"§r' wurde erfolgreich erstellt",
                             "the specified node '§f"+node+"§r' was successfully createt");
-
-
                     ManagerConfigNodes nodes = new ManagerConfigNodes();
                     nodes.setName(node);
                     nodes.setAddress(address);
-
                     CloudManager.config.getNodes().add(nodes);
-
                     new ConfigDriver("./service.json").save(CloudManager.config);
                 }else {
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,

@@ -15,7 +15,6 @@ public interface ICloudServiceDriver {
     Integer getFreeUUID(String group);
     String getFreeUUID();
     Integer getActiveServices(String group);
-
     Integer getLobbiedServices(String group);
     Integer getFreePort(boolean proxy);
     void shutdown(ArrayList<String> tasks);

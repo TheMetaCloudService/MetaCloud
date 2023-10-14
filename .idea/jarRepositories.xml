@@ -52,6 +52,11 @@
       <option name="url" value="https://repo.papermc.io/repository/maven-public/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="ranull-repo-external" />
+      <option name="name" value="Ranull's Maven Repository" />
+      <option name="url" value="https://repo.ranull.com/maven/external" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="MetaCloud" />
       <option name="name" value="MetaCloud" />
       <option name="url" value="https://repo.metacloudservice.eu/repository" />

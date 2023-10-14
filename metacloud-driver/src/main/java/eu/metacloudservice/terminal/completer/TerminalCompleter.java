@@ -125,13 +125,35 @@ public final class TerminalCompleter  implements Completer {
                     }
                 }
                 if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 6){
+                    if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("MANAGER")){
+                        if (!input.contains(" ")){
+                            result.add("Y");
+                            result.add("N");
+                        }
+                    }else
                     if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("NODE")){
                         if (!input.contains(" ")){
                             result.addAll(new PacketLoader().availableBungeecords());
                         }
                     }
                 }
+
+                if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 8){
+                    if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("MANAGER")){
+                        if (!input.contains(" ")){
+                            result.add("Y");
+                            result.add("N");
+                        }
+                    }
+                }
+
                 if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 7){
+                    if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("MANAGER")){
+                        if (!input.contains(" ")){
+                            result.add("Y");
+                            result.add("N");
+                        }
+                    }else
                     if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("NODE")){
                         if (!input.contains(" ")){
                             if ( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("chosespigot").toString().equalsIgnoreCase("none")){

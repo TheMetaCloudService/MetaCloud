@@ -7,6 +7,8 @@ import lombok.SneakyThrows;
 import javax.crypto.Cipher;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class PacketDriver {
 
@@ -24,14 +26,13 @@ public class PacketDriver {
         return adaptor;
     }
 
-    public boolean handle(Integer id, Channel channel, Packet packet) {
+    public void handle(Integer id, Channel channel, Packet packet) {
         NettyAdaptor nettyAdaptor = adaptor.get(id);
         if (nettyAdaptor != null) {
             nettyAdaptor.handle(channel, packet);
-            return true;
         }
-        return false;
     }
+
 
     public PacketDriver registerHandler(Integer id, NettyAdaptor nettyAdaptor, Class<? extends Packet> pc) {
         adaptor.putIfAbsent(id, nettyAdaptor);

@@ -9,12 +9,8 @@ import io.netty.handler.codec.MessageToByteEncoder;
 public class PacketEncoder extends MessageToByteEncoder<Packet> {
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, Packet packet, ByteBuf byteBuf) {
-        try {
-            int packetUUID = packet.getPacketUUID();
-            byteBuf.writeInt(packetUUID);
-            packet.writePacket(new NettyBuffer(byteBuf));
-        } catch (Exception ignored) {
-            ignored.printStackTrace();
-        }
+        int packetUUID = packet.getPacketUUID();
+        byteBuf.writeInt(packetUUID);
+        packet.writePacket(new NettyBuffer(byteBuf));
     }
 }

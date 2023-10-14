@@ -24,7 +24,7 @@ public class GroupCommand extends PluginCommand {
     @Override
     public void performCommand(PluginCommand command, ProxiedPlayer proxiedPlayer, Player veloPlayer, org.bukkit.entity.Player bukkitPlayer, String[] args) {
         Messages messages = CloudAPI.getInstance().getMessages();
-        String PREFIX = messages.getPrefix().replace("&", "§");
+        String PREFIX = messages.getMessages().get("prefix").replace("&", "§");
         if (args.length == 0){
             if (proxiedPlayer == null) {
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud group list"));
@@ -57,15 +57,12 @@ public class GroupCommand extends PluginCommand {
                     else
                         proxiedPlayer.sendMessage(PREFIX + "The '§fnetwork§7' is no longer in maintenance");
                 } else {
-
                     CloudAPI.getInstance().sendPacketSynchronized(new PacketInCommandMaintenance( CloudAPI.getInstance().getCurrentService().getGroup(), true));
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX +"The '§fnetwork§7' is now in maintenance"));
                     else
                         proxiedPlayer.sendMessage(PREFIX + "The '§fnetwork§7' is now in maintenance");
-
                 }
-
             }else {
                 String group = args[1];
                 if ( CloudAPI.getInstance().getGroupPool().getGroupsByName().contains(group)) {
@@ -109,8 +106,6 @@ public class GroupCommand extends PluginCommand {
                     else
                         proxiedPlayer.sendMessage(PREFIX +  "The group you are looking for was not found, please check that it is spelled correctly.");
                 }
-
-
             }else {
                     if (proxiedPlayer == null) {
                         veloPlayer.sendMessage(Component.text(PREFIX + "/cloud group list"));
@@ -127,26 +122,21 @@ public class GroupCommand extends PluginCommand {
                     }
             }
         }else if (args[0].equalsIgnoreCase("mincount")){
-
             if (args.length == 3){
                 int amount = Integer.parseInt(args[2]);
                 String group = args[1];
                 if (CloudAPI.getInstance().getGroupPool().getGroupsByName().contains(group)){
-
                     CloudAPI.getInstance().sendPacketSynchronized(new PacketInCommandMinCount( group, amount));
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX + "The minimum amount of the group '§f"+group+"§7' adjusted to '§f"+amount+"§7'"));
                     else
                         proxiedPlayer.sendMessage(PREFIX + "The minimum amount of the group '§f"+group+"§7' adjusted to '§f"+amount+"§7'");
-
                 }else {
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX + "The group you are looking for was not found, please check that it is spelled correctly."));
                     else
                         proxiedPlayer.sendMessage(PREFIX +  "The group you are looking for was not found, please check that it is spelled correctly.");
                 }
-
-
             }else {
                 if (proxiedPlayer == null) {
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud group list"));
@@ -174,7 +164,6 @@ public class GroupCommand extends PluginCommand {
                     }
                 }
                 if (CloudAPI.getInstance().getGroupPool().getGroups().stream().anyMatch(group -> group.getGroup().equalsIgnoreCase(service))){
-
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX + "The command '§f"+msg.toString()+"§7' was sent to the group '§f"+service+"§7'"));
                     else
@@ -217,8 +206,6 @@ public class GroupCommand extends PluginCommand {
             }
         }
     }
-
-
 
     @Override
     public List<String> tabComplete(String[] args) {

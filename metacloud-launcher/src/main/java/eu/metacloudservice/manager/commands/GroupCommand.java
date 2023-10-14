@@ -16,23 +16,18 @@ import java.util.ArrayList;
 public class GroupCommand extends CommandAdapter {
     @Override
     public void performCommand(CommandAdapter command, String[] args) {
-
-
         if (args.length == 0){
             sendHelp();
         }else if (args.length == 1){
             if (args[0].equalsIgnoreCase("create")){
                 Driver.getInstance().getMessageStorage().setupType = "GROUP";
                 Driver.getInstance().getTerminalDriver().joinSetup();
-
             }else if (args[0].equalsIgnoreCase("list")){
                 if ( Driver.getInstance().getGroupDriver().getAll().isEmpty()){
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND, "es wurde keine gruppe gefunden '§fgroup create§r'", "no group was found '§fgroup create§7'");
                     return;
                 }
-
               ArrayList<Group> groups =   Driver.getInstance().getGroupDriver().getAll();
-
                 for (int i = 0; i != groups.size() ; i++) {
                     Group group =  groups.get(i);
                     Driver.getInstance().getTerminalDriver().log(Type.COMMAND, group.getGroup() +"~" + group.getGroupType() + " | "+ group.getStorage().getRunningNode());
@@ -71,7 +66,6 @@ public class GroupCommand extends CommandAdapter {
                                 "die Gruppe '§f"+group+"§r' wurde nicht gefunden",
                                 "the group '§f"+group+"§r' was not found");
                     }
-
                 }else {
                     sendHelp();
                 }
@@ -104,7 +98,6 @@ public class GroupCommand extends CommandAdapter {
                     String group = args[0];
                     if (Driver.getInstance().getGroupDriver().find(group)){
                         if (Driver.getInstance().getTemplateDriver().get().contains(args[2].replace(" ", ""))){
-
                             Group raw = Driver.getInstance().getGroupDriver().load(group);
                             raw.getStorage().setTemplate(args[2].replace(" ", ""));
                             Driver.getInstance().getGroupDriver().update(group, raw);
@@ -221,7 +214,6 @@ public class GroupCommand extends CommandAdapter {
                                 "die Gruppe '§f"+group+"§r' wurde nicht gefunden",
                                 "the group '§f"+group+"§r' was not found");
                     }
-
                 }else if (args[1].equalsIgnoreCase("setpermission")) {
                     String group = args[0];
                     if (Driver.getInstance().getGroupDriver().find(group)){
@@ -243,7 +235,6 @@ public class GroupCommand extends CommandAdapter {
                                 "die Gruppe '§f"+group+"§r' wurde nicht gefunden",
                                 "the group '§f"+group+"§r' was not found");
                     }
-
                 }else  if (args[1].equalsIgnoreCase("setmaxamount")) {
                     String group = args[0];
                     if (Driver.getInstance().getGroupDriver().find(group)){
@@ -265,16 +256,13 @@ public class GroupCommand extends CommandAdapter {
                                 "die Gruppe '§f"+group+"§r' wurde nicht gefunden",
                                 "the group '§f"+group+"§r' was not found");
                     }
-
                 }else {
                         sendHelp();
-
                 }
             }else {
                 sendHelp();
             }
         }
-
     }
 
     @Override
@@ -352,7 +340,5 @@ public class GroupCommand extends CommandAdapter {
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                 " >> §fgroup [group] setstartnewpercen [startnewpercen] §7~ die Zahl in Prozent festlegen, wann ein neuer Server gestartet werden soll",
                 " >> §fgroup [group] setstartnewpercen [startnewpercen] §7~ set the number in percent when to start a new server");
-
-
     }
 }

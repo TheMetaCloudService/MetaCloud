@@ -14,10 +14,7 @@ public class HelpCommand extends CommandAdapter {
 
     @Override
     public void performCommand(CommandAdapter command, String[] args) {
-
-
         Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().forEach(commandAdapter -> {
-
             StringBuilder aliases;
             if (commandAdapter.getAliases().size() == 1){
                 aliases = new StringBuilder(commandAdapter.getAliases().get(0));

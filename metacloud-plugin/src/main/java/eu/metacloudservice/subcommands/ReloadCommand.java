@@ -28,7 +28,7 @@ public class ReloadCommand extends PluginCommand {
             }
         }else {
             Messages messages = CloudAPI.getInstance().getMessages();
-            String PREFIX = messages.getPrefix().replace("&", "§");
+            String PREFIX = messages.getMessages().get("prefix").replace("&", "§");
             if (args[0].equalsIgnoreCase("all")){
                 if (proxiedPlayer == null){
                     veloPlayer.sendMessage(Component.text(PREFIX + "the whole cloud was reloaded"));
@@ -62,7 +62,7 @@ public class ReloadCommand extends PluginCommand {
 
     private String getHelp(){
         Messages messages = CloudAPI.getInstance().getMessages();
-        String PREFIX = messages.getPrefix().replace("&", "§");
+        String PREFIX = messages.getMessages().get("prefix").replace("&", "§");
         return PREFIX + "/cloud reload <all/config/modules>";
 
     }
@@ -70,7 +70,6 @@ public class ReloadCommand extends PluginCommand {
     @Override
     public List<String> tabComplete(String[] args) {
         List<String > suggestion =  new ArrayList<>();
-
         if (args.length == 0){
             suggestion.add("all");
             suggestion.add("config");

@@ -26,12 +26,11 @@ public class CloudCommand extends Command implements TabExecutor {
     @SneakyThrows
     @Override
     public void execute(CommandSender commandSender, String[] args) {
-
         if (commandSender instanceof ProxiedPlayer) {
             ProxiedPlayer player = (ProxiedPlayer) commandSender;
             Messages messages = CloudAPI.getInstance().getMessages();
-            String PREFIX = messages.getPrefix().replace("&", "§");
-            if (player.hasPermission("metacloud.command.use")){
+            String PREFIX = messages.getMessages().get("prefix").replace("&", "§");
+            if (player.hasPermission("metacloud.command.use") || player.hasPermission("metacloud.command.*")){
                 if (args.length == 0){
                     sendHelp(player);
                 }else {
@@ -52,7 +51,7 @@ public class CloudCommand extends Command implements TabExecutor {
 
     public void sendHelp(ProxiedPlayer player){
         Messages messages = CloudAPI.getInstance().getMessages();
-        String PREFIX = messages.getPrefix().replace("&", "§");
+        String PREFIX = messages.getMessages().get("prefix").replace("&", "§");
         PluginDriver.getInstance().getCommands().forEach(proxyCommand -> {
             player.sendMessage(PREFIX + proxyCommand.getDescription());
         });
@@ -61,7 +60,6 @@ public class CloudCommand extends Command implements TabExecutor {
     @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
         List<String> suggestions = new ArrayList<>();
-
         if (args.length == 1) {
             PluginDriver.getInstance().getCommands().forEach(proxyCommand -> {
                 suggestions.add(proxyCommand.getCommand());

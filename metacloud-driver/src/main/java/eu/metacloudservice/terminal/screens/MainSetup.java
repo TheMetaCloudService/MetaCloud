@@ -5,6 +5,8 @@ import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfigNodes;
 import eu.metacloudservice.configuration.dummys.nodeconfig.NodeConfig;
+import eu.metacloudservice.groups.dummy.Group;
+import eu.metacloudservice.groups.dummy.GroupStorage;
 import eu.metacloudservice.storage.PacketLoader;
 import eu.metacloudservice.terminal.enums.Type;
 import org.checkerframework.checker.units.qual.A;
@@ -236,13 +238,8 @@ public class MainSetup {
                     .collect(Collectors.toList()).stream().anyMatch(s -> s.equalsIgnoreCase(line) || s.replace(s, s+ " ").equalsIgnoreCase(line))){
 
                 Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("spigotversion", line.replace(" ", "").toUpperCase());
+                Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
 
-                new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        createConfiguration();
-                    }
-                }, 2000);
                 Driver.getInstance().getTerminalDriver().clearScreen();
                 Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
 
@@ -250,13 +247,13 @@ public class MainSetup {
                         "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
                         "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
                         "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                        "Das Setup ist abgeschlosen, der screen wird gleich geschlossen und die cloud startet"};
+                        "Sollen standartgemäß eine Lobby & Proxy Gruppe erstellt werden? §fY / N"};
 
                 String[] en = new String[]{"Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
                         "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
                         "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
                         "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
-                        "The setup is finished, the screen will be closed and the cloud will be started"};
+                        "Should a lobby & proxy group be created as standard? §fY / N"};
 
                 Driver.getInstance().getTerminalDriver().log(Type.SETUP, de, en);
 
@@ -296,6 +293,101 @@ public class MainSetup {
             }else {
 
                 Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP_ERROR, "Die Version wurde nicht gefunden","The version was not found");
+            }
+        }else if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 6){
+            if (line.equalsIgnoreCase("Y") || line.equalsIgnoreCase("N") ||line.equalsIgnoreCase("Y ") || line.equalsIgnoreCase("N ") ){
+
+                Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("defaultgroups", line.replace(" ", "").toUpperCase());
+                Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
+
+                Driver.getInstance().getTerminalDriver().clearScreen();
+                Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
+
+                String[] de = new String[]{"Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                        "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
+                        "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
+                        "Erstellen von Standardgruppen: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("defaultgroups"),
+                        "Sollen Spieler, die den Server betreten, angezeigt werden? §fY / N"};
+
+                String[] en = new String[]{"Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                        "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
+                        "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
+                        "Creating default groups: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("defaultgroups"),
+                        "Should players entering the server be displayed? §fY / N"};
+
+                Driver.getInstance().getTerminalDriver().log(Type.SETUP, de, en);
+            }else {
+                Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP_ERROR, "Ihre Antwortmöglichkeiten sind nur Y für Ja und N für Nein",
+                        "your answer options are only Y for yes and N for no");
+            }
+        }else if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 7){
+            if (line.equalsIgnoreCase("Y") || line.equalsIgnoreCase("N") ||line.equalsIgnoreCase("Y ") || line.equalsIgnoreCase("N ")){
+
+                Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("joingplayers", line.replace(" ", "").toUpperCase());
+                Driver.getInstance().getTerminalDriver().getSetupStorage().step++;
+
+                Driver.getInstance().getTerminalDriver().clearScreen();
+                Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
+
+                String[] de = new String[]{"Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                        "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
+                        "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
+                        "Erstellen von Standardgruppen: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("defaultgroups"),
+                        "Spieler anzeigen, wenn sie beitreten: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("joingplayers"),
+                        "Sollte das protocol verwendet werden? §fY / N "};
+
+                String[] en = new String[]{"Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                        "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
+                        "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
+                        "Creating default groups: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("defaultgroups"),
+                        "Showing players when they join: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("joingplayers"),
+                        "Should the protocol be used? §fY / N"};
+
+                Driver.getInstance().getTerminalDriver().log(Type.SETUP, de, en);
+            }else {
+                Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP_ERROR, "Ihre Antwortmöglichkeiten sind nur Y für Ja und N für Nein",
+                        "your answer options are only Y for yes and N for no");
+            }
+        }else if (Driver.getInstance().getTerminalDriver().getSetupStorage().step == 8){
+            if (line.equalsIgnoreCase("Y") || line.equalsIgnoreCase("N") ||line.equalsIgnoreCase("Y ") || line.equalsIgnoreCase("N ")){
+
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        createConfiguration();
+                    }
+                }, 2000);
+                Driver.getInstance().getTerminalDriver().getSetupStorage().storage.put("protocol", line.replace(" ", "").toUpperCase());
+
+                Driver.getInstance().getTerminalDriver().clearScreen();
+                Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
+
+                String[] de = new String[]{"Gewählte Sprache: §fDE", "Gewählte setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Gewählte Address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Gewählter Arbeitsspeicher: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                        "Gewählte Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
+                        "Gewählte Spigot Version: §f"+ Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
+                        "Erstellen von Standardgruppen: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("defaultgroups"),
+                        "Spieler anzeigen, wenn sie beitreten: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("joingplayers"),
+                        "Gewählte das protocol soll verwendet werden: §f" +Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("protocol"),
+                        "Die Einrichtung ist nun abgeschlossen, die Cloudsteht in den Startlöchern...."};
+
+                String[] en = new String[]{"Selected language: §fEN", "Selected setup: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString(),
+                        "Selected address: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address"), "Selected memory: §f"+  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory") + "MB",
+                        "Selected Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version"),
+                        "Selected spigot Version: §f" +  Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion"),
+                        "Creating default groups: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("defaultgroups"),
+                        "Showing players when they join: §f" + Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("joingplayers"),
+                        "Selected protocol will be used: §f" +Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("protocol"),
+                        "The setup is now complete, the cloud is about to start...."};
+
+                Driver.getInstance().getTerminalDriver().log(Type.SETUP, de, en);
+            }else {
+                Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP_ERROR, "Ihre Antwortmöglichkeiten sind nur Y für Ja und N für Nein",
+                        "your answer options are only Y for yes and N for no");
             }
         }
 
@@ -559,112 +651,66 @@ public class MainSetup {
 
     private void createConfiguration(){
         if (Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("type").toString().equalsIgnoreCase("MANAGER")){
+            ManagerConfig managerConfig = new ManagerConfig();
+            ManagerConfigNodes managerConfigNodes = new ManagerConfigNodes();
+            managerConfigNodes.setName("InternalNode");
+            managerConfigNodes.setAddress(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address").toString());
+            managerConfig.setLanguage(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("language").toString());
+            ArrayList<ManagerConfigNodes> nodes = new ArrayList<>();
+            nodes.add(managerConfigNodes);
+            managerConfig.setManagerAddress(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address").toString());
+            managerConfig.setCanUsedMemory(Integer.parseInt(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory").toString()));
+            managerConfig.setBungeecordVersion(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version").toString());
+            managerConfig.setSpigotVersion( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion").toString());
+            managerConfig.setNetworkingCommunication(7002);
+            managerConfig.setSplitter("#");
+            managerConfig.setUseProtocol(Boolean.parseBoolean(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("protocol").toString()
+                    .replace("Y" , "true").replace("N", "false")));
+            managerConfig.setCopyLogs(true);
+            managerConfig.setProcessorUsage(90);
+            managerConfig.setTimeOutCheckTime(120);
+            managerConfig.setServiceStartupCount(4);
+            managerConfig.setRestApiCommunication(8097);
+            managerConfig.setShowConnectingPlayers(Boolean.parseBoolean(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("joingplayers").toString()
+                    .replace("Y" , "true").replace("N", "false")));
+            managerConfig.setUuid("INT");
+            managerConfig.setBungeecordPort(25565);
+            managerConfig.setSpigotPort(5000);
+            managerConfig.setAutoUpdate(true);
+            managerConfig.setWhitelist(new ArrayList<>());
+            managerConfig.setNodes(nodes);
+            new ConfigDriver("./service.json").save(managerConfig);
+            Driver.getInstance().getMessageStorage().language = Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("language").toString();
 
-            Driver.getInstance().getTerminalDriver().log(Type.SETUP_ERROR, "The version was not found");
-            if (Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("language").toString().equalsIgnoreCase("DE")){
-                ManagerConfig managerConfig = new ManagerConfig();
-                ManagerConfigNodes managerConfigNodes = new ManagerConfigNodes();
-                managerConfigNodes.setName("InternalNode");
-                managerConfigNodes.setAddress(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address").toString());
-                managerConfig.setUseProtocol(false);
-
-                managerConfig.setLanguage("DE");
-                ArrayList<ManagerConfigNodes> nodes = new ArrayList<>();
-                nodes.add(managerConfigNodes);
-                managerConfig.setManagerAddress(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address").toString());
-                managerConfig.setCanUsedMemory(Integer.parseInt(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory").toString()));
-                managerConfig.setBungeecordVersion(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version").toString());
-                managerConfig.setSpigotVersion( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion").toString());
-                managerConfig.setNetworkingCommunication(7002);
-                managerConfig.setRestApiCommunication(8097);
-                managerConfig.setCopyLogs(true);
-                managerConfig.setServiceStartupCount(5);
-                managerConfig.setProcessorUsage(90);
-                managerConfig.setBungeecordPort(25565);
-                managerConfig.setShowConnectingPlayers(true);
-                managerConfig.setSpigotPort(5000);
-                managerConfig.setAutoUpdate(true);
-                managerConfig.setTimeOutCheckTime(120);
-                managerConfig.setUuid("INT");
-                managerConfig.setSplitter("#");
-                managerConfig.setWhitelist(new ArrayList<>());
-                managerConfig.setNodes(nodes);
-                new ConfigDriver("./service.json").save(managerConfig);
-
-                Driver.getInstance().getMessageStorage().language = "DE";
-                Driver.getInstance().getTerminalDriver().leaveSetup();
-
-            }else {
-                ManagerConfig managerConfig = new ManagerConfig();
-                ManagerConfigNodes managerConfigNodes = new ManagerConfigNodes();
-                managerConfigNodes.setName("InternalNode");
-                managerConfigNodes.setAddress(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address").toString());
-                managerConfig.setLanguage("EN");
-                ArrayList<ManagerConfigNodes> nodes = new ArrayList<>();
-                nodes.add(managerConfigNodes);
-                managerConfig.setManagerAddress(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address").toString());
-                managerConfig.setCanUsedMemory(Integer.parseInt(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory").toString()));
-                managerConfig.setBungeecordVersion(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version").toString());
-                managerConfig.setSpigotVersion( Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion").toString());
-                managerConfig.setNetworkingCommunication(7002);
-                managerConfig.setSplitter("#");
-                managerConfig.setUseProtocol(false);
-                managerConfig.setCopyLogs(true);
-                managerConfig.setProcessorUsage(90);
-                managerConfig.setTimeOutCheckTime(120);
-                managerConfig.setServiceStartupCount(3);
-                managerConfig.setRestApiCommunication(8097);
-                managerConfig.setShowConnectingPlayers(true);
-                managerConfig.setUuid("INT");
-                managerConfig.setBungeecordPort(25565);
-                managerConfig.setSpigotPort(5000);
-                managerConfig.setAutoUpdate(true);
-                managerConfig.setWhitelist(new ArrayList<>());
-                managerConfig.setNodes(nodes);
-                new ConfigDriver("./service.json").save(managerConfig);
-                Driver.getInstance().getMessageStorage().language = "EN";
-                Driver.getInstance().getTerminalDriver().leaveSetup();
+            if (Boolean.parseBoolean(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("joingplayers").toString()
+                    .replace("Y" , "true").replace("N", "false"))){
+                Driver.getInstance().getGroupDriver()
+                        .create(new Group("Proxy","PROXY", 256, true, false, 0,"", 512, 1, -1, 90, 1, 1, new GroupStorage("Proxy", "InternalNode", "", ""), 0));
+                Driver.getInstance().getGroupDriver()
+                        .create(new Group("Lobby","LOBBY", 1024, true, false, 0,"", 50, 1, -1, 90, 3, 3, new GroupStorage("Proxy", "InternalNode", "", ""), 1));
             }
+
+            Driver.getInstance().getTerminalDriver().leaveSetup();
+
         }else {
-            if (Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("language").toString().equalsIgnoreCase("DE")) {
-                NodeConfig config = new NodeConfig();
-                config.setLanguage("DE");
-                config.setManagerAddress(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address").toString());
-                config.setCanUsedMemory(Integer.parseInt(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory").toString()));
-                config.setBungeecordVersion(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version").toString());
-                config.setSpigotVersion(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion").toString());
-                config.setNetworkingCommunication(7002);
-                config.setRestApiCommunication(8097);
-                config.setCopyLogs(true);
-                config.setBungeecordPort(25565);
-                config.setProcessorUsage(90);
-                config.setAutoUpdate(true);
-                config.setSpigotPort(5000);
-                config.setNodeAddress(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress").toString());
-                config.setNodeName(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename").toString());
-                new ConfigDriver("./nodeservice.json").save(config);
-                Driver.getInstance().getMessageStorage().language = "DE";
-                Driver.getInstance().getTerminalDriver().leaveSetup();
-            } else {
-                NodeConfig config = new NodeConfig();
-                config.setLanguage("EN");
-                config.setManagerAddress(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address").toString());
-                config.setCanUsedMemory(Integer.parseInt(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory").toString()));
-                config.setBungeecordVersion(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version").toString());
-                config.setSpigotVersion(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion").toString());
-                config.setNetworkingCommunication(7002);
-                config.setRestApiCommunication(8097);
-                config.setBungeecordPort(25565);
-                config.setProcessorUsage(90);
-                config.setSpigotPort(5000);
-                config.setAutoUpdate(true);
-                config.setCopyLogs(true);
-                config.setNodeAddress(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress").toString());
-                config.setNodeName(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename").toString());
-                new ConfigDriver("./nodeservice.json").save(config);
-                Driver.getInstance().getMessageStorage().language = "EN";
-                Driver.getInstance().getTerminalDriver().leaveSetup();
-            }
+            NodeConfig config = new NodeConfig();
+            config.setLanguage(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("language").toString());
+            config.setManagerAddress(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("address").toString());
+            config.setCanUsedMemory(Integer.parseInt(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("memory").toString()));
+            config.setBungeecordVersion(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("version").toString());
+            config.setSpigotVersion(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("spigotversion").toString());
+            config.setNetworkingCommunication(7002);
+            config.setRestApiCommunication(8097);
+            config.setCopyLogs(true);
+            config.setBungeecordPort(25565);
+            config.setProcessorUsage(90);
+            config.setAutoUpdate(true);
+            config.setSpigotPort(5000);
+            config.setNodeAddress(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodeaddress").toString());
+            config.setNodeName(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("nodename").toString());
+            new ConfigDriver("./nodeservice.json").save(config);
+            Driver.getInstance().getMessageStorage().language = Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("language").toString();
+            Driver.getInstance().getTerminalDriver().leaveSetup();
         }
     }
 }

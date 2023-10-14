@@ -4,7 +4,6 @@ package eu.metacloudservice.manager.cloudservices.entry;
 import eu.metacloudservice.process.ServiceState;
 
 public class TaskedEntry {
-
     private int current_players;
     private int check_interval;
     private int check_interval_players;

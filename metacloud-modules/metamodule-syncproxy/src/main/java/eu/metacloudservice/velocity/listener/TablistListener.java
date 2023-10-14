@@ -71,7 +71,7 @@ public class TablistListener {
         String rawFooter = tablist.getFooter();
         String playerName = player.getUsername();
         String playerUuid = player.getUniqueId().toString();
-        String serviceName = player.getCurrentServer().get().getServerInfo().getName();
+        String serviceName = player.getCurrentServer() == null ? "" : player.getCurrentServer().get().getServerInfo().getName();
         String proxyName = bungeeBootstrap.getLiveService().getService();
         String proxyNode = bungeeBootstrap.getLiveService().getRunningNode();
         String serviceGroupName = cloudAPI.getPlayerPool().getPlayer(playerName).getServer().getGroup().getGroup();

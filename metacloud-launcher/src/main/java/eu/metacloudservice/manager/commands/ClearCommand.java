@@ -17,7 +17,6 @@ public class ClearCommand extends CommandAdapter {
         Driver.getInstance().getTerminalDriver().clearScreen();
         Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
         Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND, "die Konsole ist jetzt gereinigt worden", "the console has now been cleaned");
-
     }
 
     @Override

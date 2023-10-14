@@ -201,7 +201,6 @@ public class ServiceCommand extends CommandAdapter {
                     msg.append(args[i]).append(" ");
                 }
                 if (CloudManager.serviceDriver.getService(service) != null && NettyDriver.getInstance().nettyServer.isChannelFound(service) || service.equalsIgnoreCase("--all")) {
-
                   if ( service.equalsIgnoreCase("--all")){
                       Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                               "Der Befehl wurde an alle Services gesendet",
@@ -213,7 +212,6 @@ public class ServiceCommand extends CommandAdapter {
                               "the command was sent to the service '§f"+service+"§r' ");
                       CloudManager.serviceDriver.getService(service).handelExecute(msg.toString());
                   }
-
                 } else {
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                             "Der Service '§f" + service + "§r' wurde nicht gefunden",

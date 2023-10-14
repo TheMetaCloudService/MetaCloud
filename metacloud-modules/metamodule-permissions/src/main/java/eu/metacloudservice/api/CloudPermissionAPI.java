@@ -10,16 +10,28 @@ import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.moduleside.MetaModule;
 import eu.metacloudservice.moduleside.config.*;
 import eu.metacloudservice.storage.UUIDDriver;
+import eu.metacloudservice.timebaser.TimerBase;
+import eu.metacloudservice.timebaser.utils.TimeUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimerTask;
 
 public class CloudPermissionAPI {
     private static CloudPermissionAPI instance;
-
+    private Configuration configuration;
     public CloudPermissionAPI() {
         instance = this;
+        if (MetaModule.instance == null){
+            configuration = (Configuration) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/module/permission/configuration"), Configuration.class);
+            new TimerBase().scheduleAsync(new TimerTask() {
+                @Override
+                public void run() {
+                    configuration = (Configuration) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/module/permission/configuration"), Configuration.class);
+                }
+            }, 5, 5, TimeUtil.SECONDS);
+        }
     }
 
     public static CloudPermissionAPI getInstance() {
@@ -31,15 +43,16 @@ public class CloudPermissionAPI {
     }
 
     public void updateConfig(@NotNull Configuration configuration){
-        if (MetaModule.instance == null)
-             CloudAPI.getInstance().getRestDriver().put("/module/permission/configuration", new ConfigDriver().convert(configuration));
-        else
+        if (MetaModule.instance == null) {
+            this.configuration = configuration;
+            CloudAPI.getInstance().getRestDriver().put("/module/permission/configuration", new ConfigDriver().convert(configuration));
+        }else
             Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
     }
 
     public Configuration getConfig(){
         if (MetaModule.instance == null)
-           return (Configuration) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/module/permission/configuration"), Configuration.class);
+           return this.configuration;
         else
             return (Configuration) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/module/permission/configuration"), Configuration.class);
     }

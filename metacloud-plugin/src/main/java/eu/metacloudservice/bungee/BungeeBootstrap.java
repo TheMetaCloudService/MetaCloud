@@ -33,7 +33,6 @@ public class BungeeBootstrap extends Plugin {
                 LiveService service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         CloudAPI.getInstance().setState(ServiceState.LOBBY, service.getService());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new CloudConnectListener());
-
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CloudCommand("cloud"));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CloudCommand("metacloud"));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CloudCommand("mc"));
@@ -43,7 +42,6 @@ public class BungeeBootstrap extends Plugin {
         PluginDriver.getInstance().register(new ServiceCommand());
         PluginDriver.getInstance().register(new GroupCommand());
         PluginDriver.getInstance().register(new PlayerCommand());
-
         new TimerBase().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -51,7 +49,7 @@ public class BungeeBootstrap extends Plugin {
                     ProxyServer.getInstance().getPlayers().forEach(player -> {
                        if ( !player.hasPermission("metacloud.connection.maintenance") && !CloudAPI.getInstance().getWhitelist().contains(player.getName())){
                            Messages messages = CloudAPI.getInstance().getMessages();
-                           player.disconnect(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getKickNetworkIsMaintenance()).replace("&", "§"));
+                           player.disconnect(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getMessages().get("kickNetworkIsMaintenance")).replace("&", "§"));
                        }
                     });
                 }
@@ -75,12 +73,12 @@ public class BungeeBootstrap extends Plugin {
             List<CloudService> cloudServices = CloudAPI.getInstance().getServicePool().getServices().stream()
                     .filter(service -> service.getGroup().getGroupType().equalsIgnoreCase("LOBBY"))
                     .filter(service -> !service.getGroup().isMaintenance())
-                    .filter(service -> service.getState() == ServiceState.LOBBY).collect(Collectors.toList())
+                    .filter(service -> service.getState() == ServiceState.LOBBY).toList()
                     .stream().filter(service -> {
-                        if (service.getGroup().getPermission().equalsIgnoreCase("")){
+                        if (service.getGroup().getPermission().equalsIgnoreCase("")) {
                             return true;
-                        }else return player.hasPermission(service.getGroup().getPermission());
-                    }).collect(Collectors.toList());
+                        } else return player.hasPermission(service.getGroup().getPermission());
+                    }).toList();
             if (cloudServices.isEmpty()){
                 return null;
             }
@@ -88,7 +86,7 @@ public class BungeeBootstrap extends Plugin {
             cloudServices.forEach( service -> priority.add(service.getGroup().getPriority()));
             priority.sort(Collections.reverseOrder());
             int priorty = priority.get(0);
-            List<CloudService> lobbys = cloudServices.stream().filter(service -> service.getGroup().getPriority() == priorty).collect(Collectors.toList());
+            List<CloudService> lobbys = cloudServices.stream().filter(service -> service.getGroup().getPriority() == priorty).toList();
             return  lobbys.get(new Random().nextInt(lobbys.size()));
         }
     }
@@ -104,7 +102,7 @@ public class BungeeBootstrap extends Plugin {
                 .filter(service -> !service.getGroup().isMaintenance())
                 .filter(service -> !service.getName().equals(kicked))
                 .filter(service -> service.getState() == ServiceState.LOBBY)
-                .filter(service -> service.getGroup().getPermission().equals("") || player.hasPermission(service.getGroup().getPermission())).collect(Collectors.toList());
+                .filter(service -> service.getGroup().getPermission().equals("") || player.hasPermission(service.getGroup().getPermission())).toList();
 
         if (services.isEmpty()){
             return null;

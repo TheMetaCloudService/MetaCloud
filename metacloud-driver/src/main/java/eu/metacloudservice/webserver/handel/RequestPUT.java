@@ -19,7 +19,7 @@ public class RequestPUT {
         String uri = request.uri();
         if (uri.contains("/")) {
             String authenticatorKey = uri.split("/")[1];
-            if (Driver.getInstance().getWebServer().AUTH_KEY.contains(authenticatorKey)){
+            if (authenticatorKey.length() > 4 && Driver.getInstance().getWebServer().AUTH_KEY.equals(authenticatorKey)){
                 String path = uri.replace("/" + authenticatorKey, "");
                 if (Driver.getInstance().getWebServer().getRoutes(path) == null){
                     FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter a right path\"}");

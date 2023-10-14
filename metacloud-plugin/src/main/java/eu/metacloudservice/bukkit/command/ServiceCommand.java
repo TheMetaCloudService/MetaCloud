@@ -24,7 +24,7 @@ public class ServiceCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender instanceof  Player player){
-            if (player.hasPermission("metacloud.command.service")){
+            if (player.hasPermission("metacloud.command.service") || player.hasPermission("metacloud.command.*")){
                 if (args.length == 0){
                     sendHelp(player);
                 }else {
@@ -47,7 +47,7 @@ public class ServiceCommand implements CommandExecutor, TabCompleter {
 
     private void sendHelp(Player player){
         PluginDriver.getInstance().getCommands().forEach(pluginCommand -> {
-            player.sendMessage(CloudAPI.getInstance().getMessages().getPrefix() + pluginCommand.getDescription());
+            player.sendMessage(CloudAPI.getInstance().getMessages().getMessages().get("prefix") + pluginCommand.getDescription());
         });
     }
 

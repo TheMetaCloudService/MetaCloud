@@ -26,19 +26,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class TaskedService implements ITaskedService {
-
     private final TaskedEntry entry;
     private ServiceProcess process;
     public boolean hasStartedNew;
-
     private Timer base;
-
 
     public TaskedService(TaskedEntry entry) {
         this.entry = entry;
         hasStartedNew = false;
         base = new Timer();
-
         LiveServices liveServices = new LiveServices();
         liveServices.setGroup(entry.getGroupName());
         liveServices.setName(entry.getServiceName());
@@ -49,13 +45,10 @@ public class TaskedService implements ITaskedService {
         liveServices.setUuid(entry.getUsedId());
         liveServices.setState(ServiceState.QUEUED);
         liveServices.setLastReaction(-1);
-
-
         LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudManager.restDriver.get("/cloudservice/general"), LiveServiceList.class);
         list.getCloudServices().add(entry.getServiceName());
         Driver.getInstance().getWebServer().updateRoute("/cloudservice/general", new ConfigDriver().convert(list));
         Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudservice/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~"), new ConfigDriver().convert(liveServices)));
-
         if (Driver.getInstance().getGroupDriver().load(entry.getGroupName()).getGroupType().equals("PROXY")){
             NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutServicePrepared(entry.getServiceName(), true, entry.getGroupName(), entry.getNode()));
             Driver.getInstance().getMessageStorage().eventDriver .executeEvent(new CloudProxyPreparedEvent(entry.getServiceName(), entry.getGroupName(), entry.getNode()));
@@ -76,7 +69,6 @@ public class TaskedService implements ITaskedService {
        }else {
              NettyDriver.getInstance().nettyServer.sendPacketAsynchronous(entry.getNode(), new PacketOutSendCommand(line, entry.getServiceName()));
        }
-
     }
 
     @Override
@@ -94,11 +86,9 @@ public class TaskedService implements ITaskedService {
         if (this.getEntry().getNode().equals("InternalNode")){
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+getEntry().getServiceName()+"§r' wird gestartet 'node: §f"+entry.getNode()+"§r, port: §f"+entry.getUsedPort()+"§r'",
                     "The service '§f"+getEntry().getServiceName()+"§r' is starting 'node: §f"+entry.getNode()+"§r, port: §f"+entry.getUsedPort()+"§r'");
-
             LiveServices liveServices = (LiveServices) new ConfigDriver().convert(CloudManager.restDriver.get("/cloudservice/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~")), LiveServices.class);
             liveServices.setPort(entry.getUsedPort());
             Driver.getInstance().getWebServer().updateRoute("/cloudservice/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~"), new ConfigDriver().convert(liveServices));
-
             process = new ServiceProcess(Driver.getInstance().getGroupDriver().load(getEntry().getGroupName()), getEntry().getServiceName(), entry.getUsedPort(), entry.isUseProtocol());
             process.handelLaunch();
         }else {
@@ -114,7 +104,6 @@ public class TaskedService implements ITaskedService {
                 base.cancel();
                 process.handelConsole();
                 Driver.getInstance().getTerminalDriver().leaveSetup();
-
             }else {
                 Driver.getInstance().getMessageStorage().openServiceScreen = true;
                 Driver.getInstance().getMessageStorage().setupType = this.entry.getServiceName();
@@ -142,7 +131,6 @@ public class TaskedService implements ITaskedService {
                                 process.handelConsole();
                                 Driver.getInstance().getTerminalDriver().leaveSetup();
                             }
-
                         }
                     }
                 }, 100, 100);
@@ -152,7 +140,6 @@ public class TaskedService implements ITaskedService {
                 base.cancel();
                 NettyDriver.getInstance().nettyServer.sendPacketAsynchronous(entry.getNode(), new PacketOutDisableConsole(entry.getServiceName()));
                 Driver.getInstance().getTerminalDriver().leaveSetup();
-
             }else {
                 Driver.getInstance().getMessageStorage().openServiceScreen = true;
                 Driver.getInstance().getTerminalDriver().clearScreen();
@@ -172,23 +159,18 @@ public class TaskedService implements ITaskedService {
                     }
                 }, 100, 100);
             }
-
         }
-
     }
 
     @Override
     public void handelQuit() {
-
         Driver.getInstance().getWebServer().removeRoute("/cloudservice/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~"));
         NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutServiceDisconnected(this.getEntry().getServiceName(), Driver.getInstance().getGroupDriver().load(getEntry().getGroupName()).getGroupType().equalsIgnoreCase("PROXY")));
         LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudManager.restDriver.get("/cloudservice/general"), LiveServiceList.class);
         list.remove(entry.getServiceName());
-        list.remove(entry.getServiceName());
-        list.remove(entry.getServiceName());
         Driver.getInstance().getWebServer().updateRoute("/cloudservice/general", new ConfigDriver().convert(list));
         if (this.getEntry().getNode().equals("InternalNode")){
-            if (Driver.getInstance().getMessageStorage().openServiceScreen){
+            if (Driver.getInstance().getMessageStorage().openServiceScreen && Driver.getInstance().getMessageStorage().setupType.equalsIgnoreCase(entry.getServiceName())){
                 Driver.getInstance().getTerminalDriver().leaveSetup();
                 process.handelConsole();
                 base.cancel();
@@ -197,13 +179,11 @@ public class TaskedService implements ITaskedService {
                     "The service '§f"+getEntry().getServiceName()+"§r' is stopping");
             process.handelShutdown();
         }else {
-
-            if (Driver.getInstance().getMessageStorage().openServiceScreen){
+            if (Driver.getInstance().getMessageStorage().openServiceScreen && Driver.getInstance().getMessageStorage().setupType.equalsIgnoreCase(entry.getServiceName())){
                 Driver.getInstance().getTerminalDriver().leaveSetup();
                 process.handelConsole();
                 base.cancel();
             }
-
             PacketOutStopService exit = new PacketOutStopService(entry.getServiceName());
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+getEntry().getServiceName()+"/"+getEntry().getUUID()+"§r' wird angehalten",
                     "The service '§f"+getEntry().getServiceName()+"§r' is stopping");
@@ -227,28 +207,21 @@ public class TaskedService implements ITaskedService {
                 process.handelConsole();
                 base.cancel();
             }
-
-
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+getEntry().getServiceName()+"/"+getEntry().getUUID()+"§r' wird angehalten",
                     "The service '§f"+getEntry().getServiceName()+"§r' is stopping");
          Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+getEntry().getServiceName()+"§r' wird gestartet 'node: §f"+entry.getNode()+"§r, port: §f"+entry.getUsedPort()+"§r'",
                     "The service '§f"+getEntry().getServiceName()+"§r' is starting 'node: §f"+entry.getNode()+"§r, port: §f"+entry.getUsedPort()+"§r'");
-
             process.handleRestart();
-
         }else {
-
             if (Driver.getInstance().getMessageStorage().openServiceScreen){
                 Driver.getInstance().getTerminalDriver().leaveSetup();
                 process.handelConsole();
                 base.cancel();
             }
-
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+getEntry().getServiceName()+"/"+getEntry().getUUID()+"§r' wird angehalten",
                     "The service '§f"+getEntry().getServiceName()+"§r' is stopping");
             Driver.getInstance().getTerminalDriver().logSpeed(Type.INFO, "Der Service '§f"+getEntry().getServiceName()+"§r' wird gestartet 'node: §f"+entry.getNode()+"§r, port: §f"+entry.getUsedPort()+"§r'",
                     "The service '§f"+getEntry().getServiceName()+"§r' is starting 'node: §f"+entry.getNode()+"§r, port: §f"+entry.getUsedPort()+"§r'");
-
             NettyDriver.getInstance().nettyServer.sendPacketAsynchronous(entry.getNode(), new PacketOutRestartService(getEntry().getServiceName()));
         }
     }
@@ -257,7 +230,6 @@ public class TaskedService implements ITaskedService {
     @Override
     public void handelStatusChange(ServiceState status) {
         this.entry.setStatus(status);
-
         LiveServices liveServices = (LiveServices) new ConfigDriver().convert(CloudManager.restDriver.get("/cloudservice/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~")), LiveServices.class);
         liveServices.setState(status);
         if (Driver.getInstance().getGroupDriver().load(entry.getGroupName()).getGroupType().equals("PROXY")){
@@ -273,10 +245,8 @@ public class TaskedService implements ITaskedService {
             if (entry.getNode().equals("InternalNode")){
                 int freeMemory = Driver.getInstance().getMessageStorage().canUseMemory;
                 int memoryAfter = freeMemory- Driver.getInstance().getGroupDriver().load(entry.getGroupName()).getUsedMemory();
-
                 if (memoryAfter >= 0){
                     Integer id = CloudManager.serviceDriver.getFreeUUID(entry.getGroupName());
-
                     TaskedService taskedService = CloudManager.serviceDriver.register(new TaskedEntry(
                             CloudManager.serviceDriver.getFreePort(Driver.getInstance().getGroupDriver().load(entry.getGroupName()).getGroupType().equalsIgnoreCase("PROXY")),
                             getEntry().getGroupName(),
@@ -293,20 +263,21 @@ public class TaskedService implements ITaskedService {
     public void handelCloudPlayerConnection(boolean connect) {
         if (connect){
             entry.setCurrentPlayers(entry.getCurrentPlayers() + 1);
-
             LiveServices liveServices = (LiveServices) new ConfigDriver().convert(CloudManager.restDriver.get("/cloudservice/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~")), LiveServices.class);
             liveServices.setPlayers(entry.getCurrentPlayers());
             Driver.getInstance().getWebServer().updateRoute("/cloudservice/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~"), new ConfigDriver().convert(liveServices));
-
         }else {
             entry.setCurrentPlayers(entry.getCurrentPlayers()-1);
-
             LiveServices liveServices = (LiveServices) new ConfigDriver().convert(CloudManager.restDriver.get("/cloudservice/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~")), LiveServices.class);
             liveServices.setPlayers(entry.getCurrentPlayers());
             Driver.getInstance().getWebServer().updateRoute("/cloudservice/" + entry.getServiceName().replace(CloudManager.config.getSplitter(), "~"), new ConfigDriver().convert(liveServices));
 
         }
 
+    }
+
+    public ServiceProcess getProcess() {
+        return process;
     }
 
     public TaskedEntry getEntry() {

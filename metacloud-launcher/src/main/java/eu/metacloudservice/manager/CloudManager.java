@@ -67,10 +67,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class CloudManager {
 
@@ -118,17 +115,20 @@ public class CloudManager {
         initRestService();
 
         if (!new File("./local/messages.json").exists()){
-            new ConfigDriver("./local/messages.json").save(new Messages("§8▷ §bMetaCloud §8▌ §7",
-                    "%PREFIX%Successfully connected to §a%SERVICE%",
-                    "%PREFIX%§cthe service is unfortunately full",
-                    "%PREFIX%§cYou are already on a Fallback",
-                    "%PREFIX%§cthe group is in maintenance",
-                    "%PREFIX%§cCould not find a suitable fallback to connect you to!",
-                    "§8▷ §cthe network is full buy the premium to be able to despite that on it",
-                    "§8▷ §cthe network is currently undergoing maintenance",
-                    "§8▷ §cThe server you were on went down, but no fallback server was found!",
-                    "§8▷ §cpleas connect over the main proxy",
-                    "§8▷ §cYou are already on the Network"));
+            HashMap<String, String> messages = new HashMap<>();
+            messages.put("prefix", "§8▷ §bMetaCloud §8▌ §7");
+            messages.put("successfullyConnected", "%PREFIX%Successfully connected to §a%service_name%");
+            messages.put("serviceIsFull", "%PREFIX%§cThe service is unfortunately full");
+            messages.put("alreadyOnFallback", "%PREFIX%§cYou are already on a Fallback");
+            messages.put("connectingGroupMaintenance", "%PREFIX%§cThe group is in maintenance");
+            messages.put("noFallbackServer", "%PREFIX%§cCould not find a suitable fallback to connect you to!");
+            messages.put("kickNetworkIsFull", "§8▷ §cThe network is full buy the premium to be able to despite that on it");
+            messages.put("kickNetworkIsMaintenance", "§8▷ §cthe network is currently undergoing maintenance");
+            messages.put("kickNoFallback", "§8▷ §cThe server you were on went down, but no fallback server was found!");
+            messages.put("kickOnlyProxyJoin", "§8▷ §cpleas connect over the main proxy");
+            messages.put("kickAlreadyOnNetwork", "§8▷ §cYou are already on the Network");
+            messages.put("noPermsToJoinTheService", "§8▷ §cno perms to join the service");
+            new ConfigDriver("./local/messages.json").save(new Messages(messages));
         }
 
         if (!new File("./local/server-icon.png").exists()){

@@ -26,7 +26,7 @@ public class ServiceCommand extends PluginCommand {
     @Override
     public void performCommand(PluginCommand command, ProxiedPlayer proxiedPlayer, Player veloPlayer, org.bukkit.entity.Player bukkitPlayer, String[] args) {
         Messages messages = CloudAPI.getInstance().getMessages();
-        String PREFIX = messages.getPrefix().replace("&", "§");
+        String PREFIX = messages.getMessages().get("prefix").replace("&", "§");
         if (args.length == 0){
             if (proxiedPlayer == null){
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service list"));
@@ -50,7 +50,6 @@ public class ServiceCommand extends PluginCommand {
 
         }else if (args[0].equalsIgnoreCase("list")){
             CloudAPI.getInstance().getServicePool().getServices().forEach(service -> {
-
                 if (veloPlayer != null)
                     veloPlayer.sendMessage(Component.text(PREFIX + "§f" + service.getName() +
                             " §7| GROUP §8⯮ §f" + service.getGroup().getGroup() +
@@ -66,42 +65,34 @@ public class ServiceCommand extends PluginCommand {
         }else if (args[0].equalsIgnoreCase("run")){
             if (args.length == 2){
                 String group = args[1];
-
                 if (CloudAPI.getInstance().getGroupPool().getGroupsByName().contains(group)){
-
                     CloudAPI.getInstance().dispatchCommand("service run " + group + " "+  1);
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX + "services have been started from the group you have selected"));
                     else
                         proxiedPlayer.sendMessage(PREFIX +  "services have been started from the group you have selected");
-
                 }else {
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX +"The group you are looking for was not found, please check that it is spelled correctly."));
                     else
                         proxiedPlayer.sendMessage(PREFIX + "The group you are looking for was not found, please check that it is spelled correctly.");
                 }
-
-
             }else  if (args.length == 3) {
                 String group = args[1];
                 int amount = Integer.parseInt(args[2]);
 
                 if (CloudAPI.getInstance().getGroupPool().getGroupsByName().contains(group)){
-
                     CloudAPI.getInstance().dispatchCommand("service run " + group + " "+  amount);
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX + "services have been started from the group you have selected"));
                     else
                         proxiedPlayer.sendMessage(PREFIX +  "services have been started from the group you have selected");
-
                 }else {
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX +"The group you are looking for was not found, please check that it is spelled correctly."));
                     else
                         proxiedPlayer.sendMessage(PREFIX + "The group you are looking for was not found, please check that it is spelled correctly.");
                 }
-
             }else {
                 if (proxiedPlayer == null){
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service list"));
@@ -122,7 +113,6 @@ public class ServiceCommand extends PluginCommand {
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
                 }
-
             }
         }else if (args[0].equalsIgnoreCase("stop")){
             if (args.length >= 2){
@@ -154,7 +144,6 @@ public class ServiceCommand extends PluginCommand {
                             proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
                             proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
                         }
-
                     }
                 }else {
                     if (veloPlayer != null)
@@ -182,7 +171,6 @@ public class ServiceCommand extends PluginCommand {
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
                 }
-
             }
         }else if (args[0].equalsIgnoreCase("stopgroup")){
             if (args.length >= 2){
@@ -214,7 +202,6 @@ public class ServiceCommand extends PluginCommand {
                             proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
                             proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
                         }
-
                     }
                 }else {
                     if (veloPlayer != null)
@@ -242,9 +229,7 @@ public class ServiceCommand extends PluginCommand {
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
                 }
-
             }
-
         }else if (args[0].equalsIgnoreCase("restart")){
             if (args.length >= 2){
                 String service = args[1];
@@ -303,7 +288,6 @@ public class ServiceCommand extends PluginCommand {
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
                 }
-
             }
         }else if (args[0].equalsIgnoreCase("restartgroup")){
                 if (args.length >= 2){
@@ -335,7 +319,6 @@ public class ServiceCommand extends PluginCommand {
                                 proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
                                 proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
                             }
-
                         }
                     }else {
                         if (veloPlayer != null)
@@ -363,9 +346,7 @@ public class ServiceCommand extends PluginCommand {
                         proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
                         proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
                     }
-
                 }
-
         }else if (args[0].equalsIgnoreCase("sync")){
             if (args.length == 2){
                 String service = args[1];
@@ -403,7 +384,6 @@ public class ServiceCommand extends PluginCommand {
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
                 }
-
             }
         }else if (args[0].equalsIgnoreCase("dispatch")){
             if (args.length >= 3){
@@ -445,7 +425,6 @@ public class ServiceCommand extends PluginCommand {
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
                 }
-
             }
         }else {
             if (proxiedPlayer == null){
@@ -467,11 +446,8 @@ public class ServiceCommand extends PluginCommand {
                 proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
                 proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
             }
-
         }
     }
-
-
 
     @Override
     public List<String> tabComplete(String[] args) {

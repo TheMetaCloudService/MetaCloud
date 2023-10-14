@@ -47,6 +47,12 @@ public class CloudService {
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInChangeState(this.name, state.toString()));
     }
 
+    public String getID(){
+        LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
+
+        return name.replace(group, "").replace(list.getCloudServiceSplitter(), "");
+    }
+
     public void sync(){
         CloudAPI.getInstance().dispatchCommand("service sync " + name);
     }

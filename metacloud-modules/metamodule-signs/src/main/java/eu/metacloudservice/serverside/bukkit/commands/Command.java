@@ -31,7 +31,7 @@ public class Command extends PluginCommand {
 
     @Override
     public void performCommand(PluginCommand command, ProxiedPlayer proxiedPlayer, com.velocitypowered.api.proxy.Player veloPlayer, Player player, String[] args) {
-        String prefix = CloudAPI.getInstance().getMessages().getPrefix().replace("&", "§");
+        String prefix = CloudAPI.getInstance().getMessages().getMessages().get("prefix").replace("&", "§");
         if (args.length == 0){
             sendHelp(player);
 
@@ -57,7 +57,7 @@ public class Command extends PluginCommand {
 
                         }
                     }else {
-                        player.sendMessage(prefix + "The group not found.");
+                        player.sendMessage(prefix +  "The group you are looking for was not found, please check that it is spelled correctly.");
 
                     }
                 }else {
@@ -81,7 +81,7 @@ public class Command extends PluginCommand {
     }
 
     public void sendHelp(Player player){
-        String prefix = CloudAPI.getInstance().getMessages().getPrefix().replace("&", "§");
+        String prefix = CloudAPI.getInstance().getMessages().getMessages().get("prefix").replace("&", "§");
         player.sendMessage(prefix + "/service sign create [group]");
         player.sendMessage(prefix + "/service sign delete");
 

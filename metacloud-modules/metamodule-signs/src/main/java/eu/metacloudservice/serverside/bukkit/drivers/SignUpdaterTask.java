@@ -15,11 +15,12 @@ public class SignUpdaterTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        SignBootstrap.empty = incrementLayoutIndex(SignBootstrap.empty, signsAPI.getConfig().getEmpty().size());
-        SignBootstrap.online = incrementLayoutIndex(SignBootstrap.online, signsAPI.getConfig().getOnline().size());
-        SignBootstrap.full = incrementLayoutIndex(SignBootstrap.full, signsAPI.getConfig().getFull().size());
-        SignBootstrap. maintenance = incrementLayoutIndex(SignBootstrap.maintenance, signsAPI.getConfig().getMaintenance().size());
-        SignBootstrap.searching = incrementLayoutIndex(SignBootstrap.searching, signsAPI.getConfig().getSearching().size());
+        if (signsAPI.getConfig().configurations.stream().filter(signConfig -> signConfig.getTargetGroup().equalsIgnoreCase(CloudAPI.getInstance().getCurrentService().getGroup())).findFirst().orElse(null) == null) return;
+        SignBootstrap.empty = incrementLayoutIndex(SignBootstrap.empty, signsAPI.getConfig().configurations.stream().filter(signConfig -> signConfig.getTargetGroup().equalsIgnoreCase(CloudAPI.getInstance().getCurrentService().getGroup())).findFirst().orElse(null).getEmpty().size());
+        SignBootstrap.online = incrementLayoutIndex(SignBootstrap.online, signsAPI.getConfig().configurations.stream().filter(signConfig -> signConfig.getTargetGroup().equalsIgnoreCase(CloudAPI.getInstance().getCurrentService().getGroup())).findFirst().orElse(null).getOnline().size());
+        SignBootstrap.full = incrementLayoutIndex(SignBootstrap.full, signsAPI.getConfig().configurations.stream().filter(signConfig -> signConfig.getTargetGroup().equalsIgnoreCase(CloudAPI.getInstance().getCurrentService().getGroup())).findFirst().orElse(null).getFull().size());
+        SignBootstrap. maintenance = incrementLayoutIndex(SignBootstrap.maintenance, signsAPI.getConfig().configurations.stream().filter(signConfig -> signConfig.getTargetGroup().equalsIgnoreCase(CloudAPI.getInstance().getCurrentService().getGroup())).findFirst().orElse(null).getMaintenance().size());
+        SignBootstrap.searching = incrementLayoutIndex(SignBootstrap.searching, signsAPI.getConfig().configurations.stream().filter(signConfig -> signConfig.getTargetGroup().equalsIgnoreCase(CloudAPI.getInstance().getCurrentService().getGroup())).findFirst().orElse(null).getSearching().size());
 
         if (!SignBootstrap.signDriver.getFreeSigns().isEmpty() && !SignBootstrap.signDriver.getAllSigns().isEmpty()) {
             SignBootstrap.signDriver.getFreeSigns().forEach(uuid -> {

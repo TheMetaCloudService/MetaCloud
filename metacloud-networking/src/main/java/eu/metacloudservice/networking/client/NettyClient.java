@@ -1,5 +1,6 @@
 package eu.metacloudservice.networking.client;
 
+import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.codec.PacketDecoder;
 import eu.metacloudservice.networking.codec.PacketEncoder;
 import eu.metacloudservice.networking.packet.Packet;
@@ -9,13 +10,13 @@ import io.netty.channel.*;
 import io.netty.channel.epoll.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.channel.unix.UnixChannelOption;
 
 import java.net.InetSocketAddress;
 
 public class NettyClient extends ChannelInitializer<Channel> implements AutoCloseable {
     private int port;
     private String host;
-    private static final int CONNECTION_TIMEOUT_MILLIS = 5_000;
     private static final WriteBufferWaterMark WATER_MARK = new WriteBufferWaterMark(1 << 20, 1 << 21);
     private final boolean EPOLL = Epoll.isAvailable();
     private Channel channel;
@@ -31,27 +32,25 @@ public class NettyClient extends ChannelInitializer<Channel> implements AutoClos
     public void connect() {
         boolean isEpoll = Epoll.isAvailable();
 
-        int cores = Runtime.getRuntime().availableProcessors();
-        BOSS =   isEpoll ? new EpollEventLoopGroup(10 * cores) : new NioEventLoopGroup(10 * cores);
+        BOSS =   isEpoll ? new EpollEventLoopGroup() : new NioEventLoopGroup();
         Bootstrap bootstrap = new Bootstrap()
                 .group(BOSS)
-                .channel(Epoll.isAvailable() ? EpollSocketChannel.class : NioSocketChannel.class)
-                .handler(this)
                 .option(ChannelOption.IP_TOS, 0x18)
+                .option(ChannelOption.SO_BACKLOG, 128)
+                .option(ChannelOption.TCP_FASTOPEN, 3)
                 .option(ChannelOption.AUTO_READ, true)
+                .option(UnixChannelOption.SO_REUSEPORT, true)
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.SO_REUSEADDR, true)
+                .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.WRITE_BUFFER_WATER_MARK, WATER_MARK)
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, CONNECTION_TIMEOUT_MILLIS);
-
-
+                .channel(Epoll.isAvailable() ? EpollSocketChannel.class : NioSocketChannel.class)
+                .handler(this);
         try {
             this.channel = bootstrap.connect(new InetSocketAddress(host, port)).sync().channel();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
     public void close(){
@@ -65,18 +64,27 @@ public class NettyClient extends ChannelInitializer<Channel> implements AutoClos
 
     @Override
     protected void initChannel(Channel channel) {
-        ChannelPipeline pipeline = channel.pipeline();
-        pipeline.addLast(new ChannelHandler() {
-            @Override
-            public void handlerAdded(ChannelHandlerContext channelHandlerContext) throws Exception {}
-            @Override
-            public void handlerRemoved(ChannelHandlerContext channelHandlerContext) throws Exception {}
-            @Override
-            public void exceptionCaught(ChannelHandlerContext channelHandlerContext, Throwable throwable) throws Exception {}});
-        pipeline.addLast(new PacketDecoder());
-        pipeline.addLast(new PacketEncoder());
+
+            ChannelPipeline pipeline = channel.pipeline();
+            pipeline.addLast(new ChannelHandler() {
+                @Override
+                public void handlerAdded(ChannelHandlerContext channelHandlerContext) throws Exception {}
+                @Override
+                public void handlerRemoved(ChannelHandlerContext channelHandlerContext) throws Exception {}
+                @Override
+                public void exceptionCaught(ChannelHandlerContext channelHandlerContext, Throwable throwable) throws Exception {}});
+            pipeline.addLast(new PacketDecoder());
+            pipeline.addLast(new PacketEncoder());
+
     }
 
+    private boolean allowAddress(String address){
+        if (NettyDriver.getInstance().getWhitelist().contains(address)){
+            return true;
+        }else {
+            return false;
+        }
+    }
 
     public void sendPacketsSynchronized(final Packet... packets){
         for (Packet packet : packets)

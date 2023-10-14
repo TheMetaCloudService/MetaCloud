@@ -66,7 +66,7 @@ public class VelocityBootstrap {
                     proxyServer.getAllPlayers().forEach(player -> {
                         if ( !player.hasPermission("metacloud.connection.maintenance") && !CloudAPI.getInstance().getWhitelist().contains(player.getUsername())){
                             Messages messages = CloudAPI.getInstance().getMessages();
-                            player.disconnect(Component.text(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getKickNetworkIsMaintenance()).replace("&", "§")));
+                            player.disconnect(Component.text(Driver.getInstance().getMessageStorage().base64ToUTF8(messages.getMessages().get("kickNetworkIsMaintenance")).replace("&", "§")));
                         }
                     });
                 }
@@ -79,18 +79,18 @@ public class VelocityBootstrap {
     }
 
     public static CloudService getLobby(Player player){
-        if (CloudAPI.getInstance().getServicePool().getServices().stream().filter(service -> service.getGroup().getGroupType().equalsIgnoreCase("LOBBY")).collect(Collectors.toList()).isEmpty()){
+        if (CloudAPI.getInstance().getServicePool().getServices().stream().noneMatch(service -> service.getGroup().getGroupType().equalsIgnoreCase("LOBBY"))){
             return null;
         }else {
             List<CloudService> cloudServices = CloudAPI.getInstance().getServicePool().getServices().stream()
                     .filter(service -> service.getGroup().getGroupType().equalsIgnoreCase("LOBBY"))
                     .filter(service -> !service.getGroup().isMaintenance())
-                    .filter(service -> service.getState() == ServiceState.LOBBY).collect(Collectors.toList())
+                    .filter(service -> service.getState() == ServiceState.LOBBY).toList()
                     .stream().filter(service -> {
-                        if (service.getGroup().getPermission().equalsIgnoreCase("")){
+                        if (service.getGroup().getPermission().equalsIgnoreCase("")) {
                             return true;
-                        }else return player.hasPermission(service.getGroup().getPermission());
-                    }).collect(Collectors.toList());
+                        } else return player.hasPermission(service.getGroup().getPermission());
+                    }).toList();
 
 
             if (cloudServices.isEmpty()){
@@ -100,7 +100,7 @@ public class VelocityBootstrap {
             cloudServices.forEach( service -> priority.add(service.getGroup().getPriority()));
             priority.sort(Collections.reverseOrder());
             int priorty = priority.get(0);
-            List<CloudService> lobbys = cloudServices.stream().filter(service -> service.getGroup().getPriority() == priorty).collect(Collectors.toList());
+            List<CloudService> lobbys = cloudServices.stream().filter(service -> service.getGroup().getPriority() == priorty).toList();
             return  lobbys.get(new Random().nextInt(lobbys.size()));
         }
     }
@@ -114,7 +114,7 @@ public class VelocityBootstrap {
                 .filter(service -> !service.getGroup().isMaintenance())
                 .filter(service -> !service.getName().equals(kicked))
                 .filter(service -> service.getState() == ServiceState.LOBBY)
-                .filter(service -> service.getGroup().getPermission().equals("") || player.hasPermission(service.getGroup().getPermission())).collect(Collectors.toList());
+                .filter(service -> service.getGroup().getPermission().equals("") || player.hasPermission(service.getGroup().getPermission())).toList();
 
         if (services.isEmpty()){
             return null;
@@ -123,7 +123,7 @@ public class VelocityBootstrap {
         services.forEach( service -> priority.add(service.getGroup().getPriority()));
         priority.sort(Collections.reverseOrder());
         int priorty = priority.get(0);
-        List<CloudService> lobbys = services.stream().filter(service -> service.getGroup().getPriority() == priorty).collect(Collectors.toList());
+        List<CloudService> lobbys = services.stream().filter(service -> service.getGroup().getPriority() == priorty).toList();
         if (lobbys.size() == 0){
             return null;
         }

@@ -2,7 +2,11 @@
  * this class is by RauchigesEtwas
  */
 
-package eu.metacloudservice.config;
+/*
+ * this class is by RauchigesEtwas
+ */
+
+package eu.metacloudservice.config.impli;
 
 public class NPCLocation {
 
@@ -12,20 +16,22 @@ public class NPCLocation {
     private Double locationPosZ;
     private String locationWorld;
     private String groupName;
-    private String leftClickAction;
-    private String rightClickAction;
     private String skinOwner;
     private boolean skinOwnerName;
-    private boolean shouldLookAtPlayer;
-    private boolean shouldImitatePlayer;
 
-    public NPCLocation(String npcUUID, Double locationPosX, Double locationPosY, Double locationPosZ, String locationWorld, String groupName) {
+
+    public NPCLocation() {
+    }
+
+    public NPCLocation(String npcUUID, Double locationPosX, Double locationPosY, Double locationPosZ, String locationWorld, String groupName, String leftClickAction, String rightClickAction, String skinOwner, boolean skinOwnerName) {
         this.npcUUID = npcUUID;
         this.locationPosX = locationPosX;
         this.locationPosY = locationPosY;
         this.locationPosZ = locationPosZ;
         this.locationWorld = locationWorld;
         this.groupName = groupName;
+        this.skinOwner = skinOwner;
+        this.skinOwnerName = skinOwnerName;
     }
 
     public String getNpcUUID() {
@@ -50,5 +56,14 @@ public class NPCLocation {
 
     public String getGroupName() {
         return groupName;
+    }
+
+
+    public String getSkinOwner() {
+        return skinOwner;
+    }
+
+    public boolean isSkinOwnerName() {
+        return skinOwnerName;
     }
 }

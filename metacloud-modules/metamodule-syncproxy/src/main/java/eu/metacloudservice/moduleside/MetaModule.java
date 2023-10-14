@@ -71,7 +71,7 @@ public class MetaModule implements IModule {
                     ArrayList<String> maintenancePlayerInfo02 = new ArrayList<>();
                     maintenanceLayout02.setProtocol("§8▷ §c§lMaintenance");
                     maintenanceLayout02.setFirstline("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor §7Future §8• §f§l1.16-1.20.✘");
-                    maintenanceLayout02.setSecondline("§8➥ ✂ §7Download this §fCloudsystem §7on §b§lSPIGOT§3§lM");
+                    maintenanceLayout02.setSecondline("§8➥ ✂ §7Download this §fCloudsystem §7on §b§lSPIGOT§3§lMC");
 
                     maintenancePlayerInfo02.add("");
                     maintenancePlayerInfo02.add("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor §7Future");
@@ -81,6 +81,7 @@ public class MetaModule implements IModule {
                     maintenancePlayerInfo02.add("");
                     maintenanceLayout02.setPlayerinfos(maintenancePlayerInfo02);
 
+                    maintenance.add(maintenanceLayout);
                     maintenance.add(maintenanceLayout02);
 
                     ArrayList<Motd> defaults = new ArrayList<>();

@@ -22,7 +22,6 @@ public class QueueCommand extends CommandAdapter {
             if (args[0].equalsIgnoreCase("list")){
                 ConcurrentLinkedDeque<String> start =  CloudManager.queueDriver.getQueue_startup();
              ConcurrentLinkedDeque<String> stop =  CloudManager.queueDriver.getQueue_shutdown();
-
                 Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                         "Hier sind alle Dienste, die sich in der Startwarteschlange befinden: ",
                         "here are all services that are in the start queue: ");
@@ -35,12 +34,10 @@ public class QueueCommand extends CommandAdapter {
                 stop.forEach(s -> Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                         " >> " + s,
                         " >> " + s));
-
             }else if (args[0].equalsIgnoreCase("remove")){
                 String service = args[1];
                 ConcurrentLinkedDeque<String> start =  CloudManager.queueDriver.getQueue_startup();
                 ConcurrentLinkedDeque<String> stop =  CloudManager.queueDriver.getQueue_shutdown();
-
                 if (stop.stream().noneMatch(s -> s.equalsIgnoreCase(service))&& start.stream().noneMatch(s -> s.equals(s))){
                     Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
                             "Der service ist in keiner Warteschlange vertreten",
@@ -57,7 +54,6 @@ public class QueueCommand extends CommandAdapter {
                             "Der service wird nun nicht mehr gestartet",
                             "The service is now no longer started");
                 }
-
             }else {
                 sendHelp();
             }

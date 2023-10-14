@@ -42,12 +42,16 @@ import eu.metacloudservice.webserver.dummys.WhiteList;
 import eu.metacloudservice.webserver.dummys.liveservice.LiveServiceList;
 import eu.metacloudservice.webserver.dummys.liveservice.LiveServices;
 import lombok.NonNull;
+import org.bukkit.Bukkit;
 
 import java.lang.management.ManagementFactory;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class CloudAPI {
 
@@ -68,7 +72,6 @@ public class CloudAPI {
         this.playerPool = new PlayerPool();
         this.servicePool = new ServicePool();
         this.groupPool = new GroupPool();
-
         restDriver = new RestDriver(service.getManagerAddress(), service.getRestPort());
         NettyDriver.getInstance().nettyClient = new NettyClient();
         NettyDriver.getInstance().nettyClient.bind(service.getManagerAddress(), service.getNetworkPort()).connect();
@@ -84,6 +87,7 @@ public class CloudAPI {
                 .registerHandler(new PacketOutGroupCreate().getPacketUUID(), new HandlePacketOutGroupCreate(), PacketOutGroupCreate.class)
                 .registerHandler(new PacketOutGroupDelete().getPacketUUID(), new HandlePacketOutGroupDelete(), PacketOutGroupDelete.class)
                 .registerHandler(new PacketOutGroupEdit().getPacketUUID(), new HandlePacketOutGroupEdit(), PacketOutGroupEdit.class)
+                .registerHandler(new PacketOutResAPItReload().getPacketUUID(), new HandlePacketOutResAPItReload(), PacketOutResAPItReload.class)
                 .registerHandler(new PacketOutCloudServiceChangeState().getPacketUUID(), new HandlePacketOutCloudServiceChangeState(), PacketOutCloudServiceChangeState.class)
                 .registerHandler(new PacketOutCloudProxyChangeState().getPacketUUID(), new HandlePacketOutCloudProxyChangeState(), PacketOutCloudProxyChangeState.class)
                 .registerHandler(new PacketOutRestAPIPut().getPacketUUID(), new HandlePacketOutRestAPIPut(), PacketOutRestAPIPut.class);
@@ -130,7 +134,6 @@ public class CloudAPI {
 
         NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInServiceConnect(service.getService()));
 
-
         new TimerBase().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -145,11 +148,15 @@ public class CloudAPI {
                     getServicePool().unregisterService(cloudService.getName());
                     getAsyncAPI().getServicePool().unregisterService(cloudService.getName());
                 });
+                if (!NettyDriver.getInstance().nettyClient.getChannel().isOpen()){
+                    System.exit(0);
+                }
                 LiveServices liveServices = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + service.getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
                 liveServices.setLastReaction(System.currentTimeMillis());
                 CloudAPI.getInstance().getRestDriver().put("/cloudservice/" + service.getName().replace(list.getCloudServiceSplitter(), "~"), new ConfigDriver().convert(liveServices));
+
             }
-        }, 5, 30, TimeUtil.SECONDS);
+        }, 30, 30, TimeUtil.SECONDS);
     }
 
     public void launchService(String group){

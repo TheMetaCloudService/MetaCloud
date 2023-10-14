@@ -87,11 +87,13 @@ public class TabListListener implements Listener {
         String rawFooter = tablist.getFooter();
         String playerName = player.getName();
         String playerUuid = player.getUUID();
-        String serviceName = player.getServer().getInfo().getName();
+        String serviceName = player.getServer() == null ? ""  : player.getServer().getInfo().getName();
         String proxyName = bungeeBootstrap.getLiveService().getService();
         String proxyNode = bungeeBootstrap.getLiveService().getRunningNode();
-        String serviceGroupName = cloudAPI.getPlayerPool().getPlayer(playerName).getServer().getGroup().getGroup();
-        String serviceNode = cloudAPI.getPlayerPool().getPlayer(playerName).getServer().getGroup().getStorage().getRunningNode();
+        String serviceGroupName = cloudAPI.getPlayerPool().getPlayer(playerName) == null ? "" : cloudAPI.getPlayerPool().getPlayer(playerName).getServer() == null ? "" : cloudAPI.getPlayerPool().getPlayer(playerName).getServer().getGroup().getGroup();
+        String serviceID = cloudAPI.getPlayerPool().getPlayer(playerName) == null ? "" : cloudAPI.getPlayerPool().getPlayer(playerName).getServer() == null ? "" : cloudAPI.getPlayerPool().getPlayer(playerName).getServer().getID();
+        String proxyID = cloudAPI.getPlayerPool().getPlayer(playerName) == null ? "" : cloudAPI.getPlayerPool().getPlayer(playerName).getServer() == null ? "" : cloudAPI.getPlayerPool().getPlayer(playerName).getProxyServer().getID();
+        String serviceNode =  cloudAPI.getPlayerPool().getPlayer(playerName) == null ? "" : cloudAPI.getPlayerPool().getPlayer(playerName).getServer() == null ? "" : cloudAPI.getPlayerPool().getPlayer(playerName).getServer().getGroup().getStorage().getRunningNode();
         String proxyGroupName = bungeeBootstrap.getLiveService().getGroup();
         String version =  Driver.getInstance().getMessageStorage().version;
         int onlinePlayers = cloudAPI.getPlayerPool().getPlayers().size();
@@ -102,12 +104,14 @@ public class TabListListener implements Listener {
         String time = dtf.format(LocalDateTime.now());
         Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getTimeZone("UTC"));
-        cal.setTimeInMillis(CloudAPI.getInstance().getPlayerPool().getPlayer(playerName).getCurrentPlayTime());
+        cal.setTimeInMillis(CloudAPI.getInstance().getPlayerPool().getPlayer(playerName) == null ? 0 : CloudAPI.getInstance().getPlayerPool().getPlayer(playerName).getCurrentPlayTime());
         String playtime =  (cal.get(Calendar.HOUR_OF_DAY) + ":"
                 + cal.get(Calendar.MINUTE));
 
         String footer = rawFooter.replace("&", "§")
                 .replace("%service_name%", serviceName)
+                .replace("%service_id%", serviceID)
+                .replace("%proxy_id%", proxyID)
                 .replace("%time%", time)
                 .replace("%memory%", String.valueOf(memory))
                 .replace("%max_memory%", String.valueOf(maxMemory))
@@ -125,6 +129,8 @@ public class TabListListener implements Listener {
                 .replace("%proxy_group_name%", proxyGroupName);
         String header = rawHeader.replace("&", "§")
                 .replace("%service_name%", serviceName)
+                .replace("%service_id%", serviceID)
+                .replace("%proxy_id%", proxyID)
                 .replace("%time%", time)
                 .replace("%memory%", String.valueOf(memory))
                 .replace("%max_memory%", String.valueOf(maxMemory))

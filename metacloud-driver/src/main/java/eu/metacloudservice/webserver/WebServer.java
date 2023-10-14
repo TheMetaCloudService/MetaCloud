@@ -63,17 +63,12 @@ public class WebServer {
                                     ch.pipeline().addLast(new ChannelHandler() {
                                         @Override
                                         public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-
                                         }
-
                                         @Override
                                         public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-
                                         }
-
                                         @Override
                                         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-
                                         }
                                     });
 
@@ -108,6 +103,9 @@ public class WebServer {
     }
 
 
+    public boolean isContentExists(String path){
+        return getRoute(path) != null;
+    }
 
     public void addRoute(RouteEntry entry){
         ROUTES.add(entry);

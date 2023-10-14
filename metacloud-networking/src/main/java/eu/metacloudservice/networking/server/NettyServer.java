@@ -24,9 +24,7 @@ import java.util.function.BiConsumer;
 
 public class NettyServer extends ChannelInitializer<Channel> implements AutoCloseable{
     private int port;
-
     protected static final WriteBufferWaterMark WATER_MARK = new WriteBufferWaterMark(1 << 20, 1 << 21);
-    private final boolean EPOLL = Epoll.isAvailable();
     private final Map<String, Channel> CHANNELS = new ConcurrentHashMap<>();
     EventLoopGroup WORKER;
     EventLoopGroup BOSS;
@@ -41,10 +39,9 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
         boolean isEpoll = Epoll.isAvailable();
 
         int cores = Runtime.getRuntime().availableProcessors();
-        int bossThreads = Math.max(1, cores / 2);
-        int workerThreads = Math.max(1, cores / 2);
-        this.BOSS = isEpoll ? new EpollEventLoopGroup(bossThreads) : new NioEventLoopGroup(bossThreads);
-        this.WORKER = isEpoll ? new EpollEventLoopGroup(workerThreads) : new NioEventLoopGroup(workerThreads);
+
+        this.BOSS = isEpoll ? new EpollEventLoopGroup() : new NioEventLoopGroup();
+        this.WORKER = isEpoll ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 
 
         ServerBootstrap bootstrap = new ServerBootstrap()
@@ -55,6 +52,7 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
         if(isEpoll) {
             bootstrap
                     .option(ChannelOption.IP_TOS, 0x18)
+                    .option(ChannelOption.SO_BACKLOG, 128)
                     .option(ChannelOption.TCP_FASTOPEN, 3)
                     .option(ChannelOption.AUTO_READ, true)
                     .option(UnixChannelOption.SO_REUSEPORT, true)
@@ -62,6 +60,7 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
                     .option(ChannelOption.SO_REUSEADDR, true)
                     .option(ChannelOption.SO_KEEPALIVE, true)
                     .option(ChannelOption.WRITE_BUFFER_WATER_MARK, WATER_MARK);
+
         }
 
         bootstrap.bind(new InetSocketAddress(port)).sync().channel();

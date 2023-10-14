@@ -56,23 +56,23 @@ public class HandlePacketInServiceConnect implements NettyAdaptor {
                             });
 
                         }
-                    }, 3, TimeUtil.SECONDS);
+                    }, 10, TimeUtil.SECONDS);
                     Driver.getInstance().getMessageStorage().eventDriver .executeEvent(new CloudProxyConnectedEvent(((PacketInServiceConnect) packet).getService(), entry.getNode(), entry.getUsedPort(), CloudManager.config.getNodes().stream().filter(managerConfigNodes -> managerConfigNodes.getName().equals(entry.getNode())).toList().get(0).getAddress(), entry.getGroupName()));
 
                 }else {
-                    NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutServiceConnected(((PacketInServiceConnect) packet).getService(), group.getGroup()));
+                    NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutServiceConnected(((PacketInServiceConnect) packet).getService(), group.getGroup()));
                     new TimerBase().schedule(new TimerTask() {
                         @Override
                         public void run() {
                             CloudManager.serviceDriver.getServices().forEach(taskedService -> {
                                 if ( taskedService.getEntry().getStatus() != ServiceState.STARTED  && taskedService.getEntry().getStatus() != ServiceState.QUEUED) {
                                     channel.writeAndFlush(new PacketOutServiceConnected(taskedService.getEntry().getServiceName(),taskedService.getEntry().getGroupName()));
-                                    NettyDriver.getInstance().nettyServer.sendToAllAsynchronous( new PacketOutServiceConnected(taskedService.getEntry().getServiceName(),taskedService.getEntry().getGroupName()));
+                                    NettyDriver.getInstance().nettyServer.sendToAllSynchronized( new PacketOutServiceConnected(taskedService.getEntry().getServiceName(),taskedService.getEntry().getGroupName()));
                                 }
                             });
 
                         }
-                    }, 3, TimeUtil.SECONDS);
+                    },  10, TimeUtil.SECONDS);
 
                     Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudServiceConnectedEvent(((PacketInServiceConnect) packet).getService(), entry.getNode(), entry.getUsedPort(), CloudManager.config.getNodes().stream().filter(managerConfigNodes -> managerConfigNodes.getName().equals(entry.getNode())).toList().get(0).getAddress(), entry.getGroupName()));
 

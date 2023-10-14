@@ -20,9 +20,8 @@ import java.util.List;
 public class PlayerCommand extends PluginCommand {
     @Override
     public void performCommand(PluginCommand command, ProxiedPlayer proxiedPlayer, Player veloPlayer, org.bukkit.entity.Player bukkitPlayer, String[] args) {
-        String PREFIX = CloudAPI.getInstance().getMessages().getPrefix().replace("&", "§");
+        String PREFIX = CloudAPI.getInstance().getMessages().getMessages().get("prefix").replace("&", "§");
         if (args.length == 0){
-
             if (veloPlayer != null){
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud player list"));
                 veloPlayer.sendMessage(Component.text(PREFIX +  "/cloud player info [player]"));
@@ -37,7 +36,6 @@ public class PlayerCommand extends PluginCommand {
                 proxiedPlayer.sendMessage( PREFIX + "/cloud player send [player] [service]");
             }
         }else {
-
             if (args[0].equalsIgnoreCase("list")){
                 if (proxiedPlayer == null) {
                     veloPlayer.sendMessage(Component.text(PREFIX + "List of Players:"));
@@ -136,12 +134,10 @@ public class PlayerCommand extends PluginCommand {
                         msg.append(args[i]).append(" ");
                     }
                     if (CloudAPI.getInstance().getPlayerPool().getPlayers().stream().anyMatch(cloudPlayer -> cloudPlayer.getUsername().equalsIgnoreCase(player))){
-
                         if (veloPlayer != null)
                             veloPlayer.sendMessage(Component.text(PREFIX + "The command '§f"+msg.toString()+"§7' was sent to the player '§f"+player+"§7'"));
                         else
                             proxiedPlayer.sendMessage(PREFIX + "The command '§f"+msg.toString()+"§7' was sent to the player '§f"+player+"§7'");
-
                         CloudAPI.getInstance().getPlayerPool().getPlayer(player).dispatchCommand(msg.toString());
                     }else {
                         if (veloPlayer != null)
@@ -149,7 +145,6 @@ public class PlayerCommand extends PluginCommand {
                         else
                             proxiedPlayer.sendMessage(PREFIX +  "The player you are looking for was not found, please check that it is spelled correctly.");
                     }
-
                 }else {
                     if (veloPlayer != null){
                         veloPlayer.sendMessage(Component.text(PREFIX + "/cloud player list"));
@@ -175,7 +170,6 @@ public class PlayerCommand extends PluginCommand {
                                 veloPlayer.sendMessage(Component.text(PREFIX + "The player " + player + " has been successfully sent to the " + service + " service."));
                             else
                                 proxiedPlayer.sendMessage(PREFIX + "The player " + player + " has been successfully sent to the " + service + " service.");
-
                             CloudAPI.getInstance().getPlayerPool().getPlayer(player).connect(CloudAPI.getInstance().getServicePool().getService(service));
                         }else {
                             if (veloPlayer != null)
@@ -183,7 +177,6 @@ public class PlayerCommand extends PluginCommand {
                             else
                                 proxiedPlayer.sendMessage(PREFIX +  "The service you are looking for was not found, please check that it is spelled correctly.");
                         }
-
                     }else {
                         if (veloPlayer != null)
                             veloPlayer.sendMessage(Component.text(PREFIX + "The player you are looking for was not found, please check that it is spelled correctly."));
@@ -225,7 +218,6 @@ public class PlayerCommand extends PluginCommand {
                             proxiedPlayer.sendMessage( PREFIX + "time: §f" + cp.getCurrentPlayTime());
                             proxiedPlayer.sendMessage(PREFIX + "fallback?: §f" + cp.isConnectedOnFallback());
                         }
-
                     }else {
                         if (veloPlayer != null)
                             veloPlayer.sendMessage(Component.text(PREFIX + "The player you are looking for was not found, please check that it is spelled correctly."));
@@ -286,7 +278,6 @@ public class PlayerCommand extends PluginCommand {
         } else if (args.length == 3 ){
             if (args[0].equalsIgnoreCase("send")){
                 CloudAPI.getInstance().getServicePool().getServices().forEach(cloudService -> suggestion.add(cloudService.getName()));
-
             }else if (args[0].equalsIgnoreCase("whitelist") && args[1].equalsIgnoreCase("remove")){
                 suggestion.addAll(CloudAPI.getInstance().getWhitelist());
             }

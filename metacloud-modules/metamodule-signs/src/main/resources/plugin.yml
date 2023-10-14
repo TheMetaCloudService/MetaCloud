@@ -3,6 +3,7 @@ name: metacloud-signs
 version: 1.0.0-RELEASE
 author: RauchigesEtwas
 
+api-version: 1.13
 depend:
   - metacloud-api
   - metacloud-plugin

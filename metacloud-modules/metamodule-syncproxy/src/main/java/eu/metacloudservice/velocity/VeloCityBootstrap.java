@@ -12,6 +12,7 @@ import eu.metacloudservice.config.DesignConfig;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.groups.dummy.Group;
+import eu.metacloudservice.velocity.listener.CloudEventHandler;
 import eu.metacloudservice.velocity.listener.MOTDListener;
 import eu.metacloudservice.velocity.listener.TablistListener;
 import eu.metacloudservice.webserver.RestDriver;
@@ -29,6 +30,7 @@ public class VeloCityBootstrap {
     private RestDriver restDriver;
     public Integer motdCount;
     public DesignConfig configuration;
+    public  Configuration conf;
     public Group group;
     public Integer tabCount;
 
@@ -46,11 +48,13 @@ public class VeloCityBootstrap {
         instance = this;
         group = CloudAPI.getInstance().getGroupPool().getGroup(getLiveService().getGroup());
         liveService = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
+
         restDriver = new RestDriver(liveService.getManagerAddress(), liveService.getRestPort());
-        Configuration conf = (Configuration) new ConfigDriver().convert(getRestDriver().get("/module/syncproxy/configuration"), Configuration.class);
+         conf = (Configuration) new ConfigDriver().convert(getRestDriver().get("/module/syncproxy/configuration"), Configuration.class);
         if (conf.getConfiguration().stream().anyMatch(designConfig -> designConfig.getTargetGroup().equalsIgnoreCase(liveService.getGroup()))){
             configuration = conf.getConfiguration().stream().filter(designConfig -> designConfig.getTargetGroup().equalsIgnoreCase(liveService.getGroup())).findFirst().get();
         }
+        CloudAPI.getInstance().getEventDriver().registerListener(new CloudEventHandler());
         proxyServer.getEventManager().register(instance, new MOTDListener());
         proxyServer.getEventManager().register(instance, new TablistListener(proxyServer));
         updater();
@@ -92,7 +96,6 @@ public class VeloCityBootstrap {
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(() -> {
-            Configuration conf = (Configuration) new ConfigDriver().convert(getRestDriver().get("/module/syncproxy/configuration"), Configuration.class);
             conf.getConfiguration().stream()
                     .filter(designConfig -> designConfig.getTargetGroup().equalsIgnoreCase(liveService.getGroup()))
                     .findFirst()

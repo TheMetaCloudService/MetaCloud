@@ -36,6 +36,9 @@ public class GroupPool {
         return groups;
     }
 
+    public boolean isGroupExists(String group){
+        return getGroupsByName().stream().anyMatch(s -> s.equalsIgnoreCase(group));
+    }
 
     public void createGroup(Group group){
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInCreateGroup(new ConfigDriver().convert(group)));

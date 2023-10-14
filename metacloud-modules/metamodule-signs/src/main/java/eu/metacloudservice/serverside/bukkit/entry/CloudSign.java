@@ -7,10 +7,7 @@ import eu.metacloudservice.config.SignLayout;
 import eu.metacloudservice.pool.service.entrys.CloudService;
 import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.serverside.bukkit.SignBootstrap;
-import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.type.WallSign;
@@ -36,25 +33,20 @@ public class CloudSign {
 
     public void drawSign() {
         Bukkit.getScheduler().runTaskAsynchronously(SignBootstrap.instance, () -> {
-
-            if (!service.isEmpty()){
-                try {
-                    if (AsyncCloudAPI.getInstance().getGroupPool().getGroup(group).get().isMaintenance()) service = "";
-                    else if (AsyncCloudAPI.getInstance().getServicePool().serviceNotNull(service)) service = "";
-                    else if (AsyncCloudAPI.getInstance().getServicePool().getService(service).get().getState() != ServiceState.LOBBY) service = "";
-                } catch (InterruptedException | ExecutionException e) {
-                    throw new RuntimeException(e);
-                }
-
+            if (signsAPI.getConfig().configurations.stream().filter(signConfig -> signConfig.getTargetGroup().equalsIgnoreCase(group)).findFirst().orElse(null) == null){
+                return;
+            }else if (!service.isEmpty()){
+                if (CloudAPI.getInstance().getGroupPool().getGroup(group).isMaintenance()) service = "";
+                else if (!CloudAPI.getInstance().getServicePool().serviceNotNull(service)) service = "";
+                else if (signsAPI.getConfig().configurations.stream().filter(signConfig -> signConfig.getTargetGroup().equalsIgnoreCase(group)).findFirst().orElse(null).isHideFull() && CloudAPI.getInstance().getServicePool().getService(service).getPlayercount() >= CloudAPI.getInstance().getGroupPool().getGroup(group).getMaxPlayers() ) service = "";
+                else if (CloudAPI.getInstance().getServicePool().getService(service).getState() != ServiceState.LOBBY) service = "";
             }
 
             SignLayout layout = determineLayout();
             String[] lines = generateSignLines(layout);
             Bukkit.getScheduler().runTask(SignBootstrap.instance, () -> {
                 Block signBlock = location.getBlock();
-
                 if (signBlock.getState() instanceof Sign sign) {
-
                     updateSign(sign, lines, layout);
                 }
             });
@@ -69,6 +61,7 @@ public class CloudSign {
         lines[3] = layout.getLines()[3].replace("&", "§").replace("%service_group_name%", group);
 
         if (!service.isEmpty()) {
+        try {
             CloudService cloudService = CloudAPI.getInstance().getServicePool().getService(service);
             ServicePing ping = new ServicePing();
             try {
@@ -78,28 +71,39 @@ public class CloudSign {
 
             lines[0] = lines[0]
                     .replace("%service_name%", this.service)
+                    .replace("%service_id%", CloudAPI.getInstance().getServicePool().getService(this.service).getID())
                     .replace("%service_state%", cloudService.getState().toString())
+                    .replace("%service_node%", CloudAPI.getInstance().getServicePool().getService(this.service).getGroup().getStorage().getRunningNode())
                     .replace("%online_players%", String.valueOf(cloudService.getPlayercount()))
                     .replace("%service_motd%", ping.getMotd())
                     .replace("%max_players%", String.valueOf(cloudService.getGroup().getMaxPlayers()));
             lines[1] = lines[1]
                     .replace("%service_name%", this.service)
+                    .replace("%service_id%", CloudAPI.getInstance().getServicePool().getService(this.service).getID())
                     .replace("%service_state%", cloudService.getState().toString())
+                    .replace("%service_node%", CloudAPI.getInstance().getServicePool().getService(this.service).getGroup().getStorage().getRunningNode())
                     .replace("%online_players%", String.valueOf(cloudService.getPlayercount()))
                     .replace("%service_motd%", ping.getMotd())
                     .replace("%max_players%", String.valueOf(cloudService.getGroup().getMaxPlayers()));
             lines[2] = lines[2]
                     .replace("%service_name%", this.service)
+                    .replace("%service_id%", CloudAPI.getInstance().getServicePool().getService(this.service).getID())
                     .replace("%service_state%", cloudService.getState().toString())
+                    .replace("%service_node%", CloudAPI.getInstance().getServicePool().getService(this.service).getGroup().getStorage().getRunningNode())
                     .replace("%online_players%", String.valueOf(cloudService.getPlayercount()))
                     .replace("%service_motd%", ping.getMotd())
                     .replace("%max_players%", String.valueOf(cloudService.getGroup().getMaxPlayers()));
             lines[3] = lines[3]
                     .replace("%service_name%", this.service)
+                    .replace("%service_id%", CloudAPI.getInstance().getServicePool().getService(this.service).getID())
+                    .replace("%service_node%", CloudAPI.getInstance().getServicePool().getService(this.service).getGroup().getStorage().getRunningNode())
                     .replace("%service_state%", cloudService.getState().toString())
                     .replace("%online_players%", String.valueOf(cloudService.getPlayercount()))
                     .replace("%service_motd%", ping.getMotd())
                     .replace("%max_players%", String.valueOf(cloudService.getGroup().getMaxPlayers()));
+        }catch (Exception e){
+
+        }
         }
 
         return lines;
@@ -120,8 +124,8 @@ public class CloudSign {
 
         sign.setEditable(false);
 
-        if (layout.isGlowText() && !layout.getColor().isEmpty()) {
-            DyeColor color = DyeColor.valueOf(layout.getColor());
+        if (!layout.getGlowColor().isEmpty()) {
+            DyeColor color = DyeColor.valueOf(layout.getGlowColor());
             sign.setColor(color);
         }
         sign.update();
@@ -131,20 +135,19 @@ public class CloudSign {
 
     private SignLayout determineLayout() {
         if (CloudAPI.getInstance().getGroupPool().getGroup(group).isMaintenance()) {
-            return signsAPI.getConfig().getMaintenance().get(SignBootstrap.maintenance);
-        } else if (service.isEmpty() || !CloudAPI.getInstance().getServicePool().serviceNotNull(service)) {
-            return signsAPI.getConfig().getSearching().get(SignBootstrap.searching);
+            return signsAPI.getConfig().configurations.stream().filter(signConfig -> signConfig.getTargetGroup().equalsIgnoreCase(group)).findFirst().orElse(null).getMaintenance().get(SignBootstrap.maintenance);
+        } else if (service.isEmpty()  || service.equalsIgnoreCase(" ") || !CloudAPI.getInstance().getServicePool().serviceNotNull(service)) {
+            return signsAPI.getConfig().configurations.stream().filter(signConfig -> signConfig.getTargetGroup().equalsIgnoreCase(group)).findFirst().orElse(null).getSearching().get(SignBootstrap.searching);
         } else {
             CloudService cloudService = CloudAPI.getInstance().getServicePool().getService(service);
-            int playerCount = cloudService.getPlayercount();
-            int maxPlayers = CloudAPI.getInstance().getGroupPool().getGroup(group).getMaxPlayers();
-
+            int playerCount = cloudService == null ? 0 : cloudService.getPlayercount();
+            int maxPlayers = CloudAPI.getInstance().getGroupPool().getGroup(group) == null ? 0 : CloudAPI.getInstance().getGroupPool().getGroup(group).getMaxPlayers();
             if (playerCount >= maxPlayers) {
-                return signsAPI.getConfig().getFull().get(SignBootstrap.full);
+                return signsAPI.getConfig().configurations.stream().filter(signConfig -> signConfig.getTargetGroup().equalsIgnoreCase(group)).findFirst().orElse(null).getFull().get(SignBootstrap.full);
             } else if (playerCount == 0) {
-                return signsAPI.getConfig().getEmpty().get(SignBootstrap.empty);
+                return signsAPI.getConfig().configurations.stream().filter(signConfig -> signConfig.getTargetGroup().equalsIgnoreCase(group)).findFirst().orElse(null).getEmpty().get(SignBootstrap.empty);
             } else {
-                return signsAPI.getConfig().getOnline().get(SignBootstrap.online);
+                return signsAPI.getConfig().configurations.stream().filter(signConfig -> signConfig.getTargetGroup().equalsIgnoreCase(group)).findFirst().orElse(null).getOnline().get(SignBootstrap.online);
             }
         }
     }

@@ -46,7 +46,7 @@ public class PermissionCommand extends PluginCommand {
 
     private void handleUser(ProxiedPlayer proxiedPlayer, Player veloPlayer, String[] args){
         Messages messages = CloudAPI.getInstance().getMessages();
-        String PREFIX = messages.getPrefix().replace("&", "§");
+        String PREFIX = messages.getMessages().get("prefix").replace("&", "§");
         if (args.length >= 2 && args[0].equalsIgnoreCase("user")) {
             String username = args[1];
             if (CloudPermissionAPI.getInstance().getPlayers().stream().anyMatch(player -> player.getUuid().equalsIgnoreCase(UUIDDriver.getUUID(username)) )){
@@ -173,7 +173,7 @@ public class PermissionCommand extends PluginCommand {
 
     private void handleGroup(ProxiedPlayer proxiedPlayer, Player veloPlayer, String[] args){
         Messages messages = CloudAPI.getInstance().getMessages();
-        String PREFIX = messages.getPrefix().replace("&", "§");
+        String PREFIX = messages.getMessages().get("prefix").replace("&", "§");
         if (args.length >= 1 && args[0].equalsIgnoreCase("groups")) {
             // Implementiere Logik für "/permission groups"
             StringBuilder result = new StringBuilder();
@@ -400,7 +400,7 @@ public class PermissionCommand extends PluginCommand {
 
     private void sendMessage(ProxiedPlayer proxiedPlayer, Player veloPlayer){
         Messages messages = CloudAPI.getInstance().getMessages();
-        String PREFIX = messages.getPrefix().replace("&", "§");
+        String PREFIX = messages.getMessages().get("prefix").replace("&", "§");
         if (proxiedPlayer == null){
             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission user [user] info"));
             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission user [user] perms add [permission] [true/false] ([time])"));

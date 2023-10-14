@@ -20,7 +20,6 @@ public class StopCommand extends CommandAdapter {
         }else {
             Driver.getInstance().getMessageStorage().shutdownAccept = true;
             Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND, "Bitte geben Sie den Befehl für '§fBestätigung§r' erneut ein, Sie haben dafür §f15 Sekunden§r", "please enter the command again for '§fconfirmation§r', you have §f15 seconds §rto do so");
-
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {

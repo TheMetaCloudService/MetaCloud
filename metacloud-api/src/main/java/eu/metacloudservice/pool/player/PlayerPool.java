@@ -23,11 +23,11 @@ public class PlayerPool {
     }
 
     public CloudPlayer getPlayer(@NonNull String username){
-        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUsername().equals(username)).toList().get(0);
+        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUsername().equals(username)).findFirst().orElse(null);
     }
 
     public CloudPlayer getPlayer(@NonNull UUID uniqueId){
-        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString())).toList().get(0);
+        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString())).findFirst().orElse(null);
     }
 
     public List<CloudPlayer> getPlayersFromService(@NonNull String service){
@@ -35,25 +35,25 @@ public class PlayerPool {
     }
 
     public List<CloudPlayer> getPlayersFromProxy(@NonNull String Proxy){
-        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getProxyServer().getName().equals(Proxy)).collect(Collectors.toList());
+        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getProxyServer() == null ? false : cloudPlayer.getProxyServer().getName().equals(Proxy)).collect(Collectors.toList());
     }
 
     public List<CloudPlayer> getPlayersByProxyGroup(@NonNull String group){
-        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getProxyServer().getGroup().getGroup().equals(group)).collect(Collectors.toList());
+        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getProxyServer() == null ? false : cloudPlayer.getProxyServer().getGroup().getGroup().equals(group)).collect(Collectors.toList());
     }
 
     public List<CloudPlayer> getPlayersByServiceGroup(@NonNull String group){
-        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getServer().getGroup().getGroup().equals(group)).collect(Collectors.toList());
+        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getServer() == null ? false : cloudPlayer.getServer().getGroup().getGroup().equals(group)).collect(Collectors.toList());
     }
 
     public List<CloudPlayer> getPlayersFromServiceGroupByState(@NonNull String group, ServiceState state){
-        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getServer().getGroup().getGroup().equals(group))
+        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getServer() == null? false : cloudPlayer.getServer().getGroup().getGroup().equals(group))
                 .filter(cloudPlayer -> cloudPlayer.getServer().getState() == state)
                 .collect(Collectors.toList());
     }
 
     public List<CloudPlayer> getPlayersFromProxyGroupByState(@NonNull String group, ServiceState state){
-        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getProxyServer().getGroup().getGroup().equals(group))
+        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getProxyServer() == null ? false : cloudPlayer.getProxyServer().getGroup().getGroup().equals(group))
                 .filter(cloudPlayer -> cloudPlayer.getProxyServer().getState() == state)
                 .collect(Collectors.toList());
     }

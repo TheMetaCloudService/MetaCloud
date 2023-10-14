@@ -2,7 +2,11 @@
  * this class is by RauchigesEtwas
  */
 
-package eu.metacloudservice.config;
+/*
+ * this class is by RauchigesEtwas
+ */
+
+package eu.metacloudservice.config.impli;
 
 public class NPCNamesLayout {
 
@@ -11,6 +15,10 @@ public class NPCNamesLayout {
 
     public String maintenanceLine1;
     public String maintenanceLine2;
+
+
+    public NPCNamesLayout() {
+    }
 
     public NPCNamesLayout(String defaultLine1, String defaultLine2, String maintenanceLine1, String maintenanceLine2) {
         this.defaultLine1 = defaultLine1;
