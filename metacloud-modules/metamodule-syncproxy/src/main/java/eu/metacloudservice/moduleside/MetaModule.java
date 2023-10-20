@@ -55,11 +55,11 @@ public class MetaModule implements IModule {
                     Motd maintenanceLayout = new Motd();
                     ArrayList<String> maintenancePlayerInfo = new ArrayList<>();
                     maintenanceLayout.setProtocol("§8▷ §c§lMaintenance");
-                    maintenanceLayout.setFirstline("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor §7Future §8• §f§l1.16-1.20.✘");
+                    maintenanceLayout.setFirstline("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor the §7Future §8• §f§l1.16-1.20.✘");
                     maintenanceLayout.setSecondline("§8➥ ✎ §7We are in §f§lMAINTENANCE §8| §8◣ §b§l%proxy_name% §8◥");
 
                     maintenancePlayerInfo.add("");
-                    maintenancePlayerInfo.add("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor §7Future");
+                    maintenancePlayerInfo.add("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor the §7Future");
                     maintenancePlayerInfo.add("");
                     maintenancePlayerInfo.add("  Our Discord §8▷ §b4kKEcaP9WC");
                     maintenancePlayerInfo.add("  Developed by §8▷ §b§lRauchigesEtwas");
@@ -70,11 +70,11 @@ public class MetaModule implements IModule {
 
                     ArrayList<String> maintenancePlayerInfo02 = new ArrayList<>();
                     maintenanceLayout02.setProtocol("§8▷ §c§lMaintenance");
-                    maintenanceLayout02.setFirstline("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor §7Future §8• §f§l1.16-1.20.✘");
+                    maintenanceLayout02.setFirstline("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor the §7Future §8• §f§l1.16-1.20.✘");
                     maintenanceLayout02.setSecondline("§8➥ ✂ §7Download this §fCloudsystem §7on §b§lSPIGOT§3§lMC");
 
                     maintenancePlayerInfo02.add("");
-                    maintenancePlayerInfo02.add("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor §7Future");
+                    maintenancePlayerInfo02.add("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor the §7Future");
                     maintenancePlayerInfo02.add("");
                     maintenancePlayerInfo02.add("  Our Discord §8▷ §b4kKEcaP9WC");
                     maintenancePlayerInfo02.add("  Developed by §8▷ §b§lRauchigesEtwas");
@@ -89,10 +89,10 @@ public class MetaModule implements IModule {
                     Motd defaultsLayout = new Motd();
                     ArrayList<String> defaultsPlayerInfo = new ArrayList<>();
                     defaultsLayout.setProtocol("§8▷ §b§l%online_players%§8/§b§l%max_players%");
-                    defaultsLayout.setFirstline("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor §7Future §8• §f§l1.16-1.20.✘");
+                    defaultsLayout.setFirstline("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor the §7Future §8• §f§l1.16-1.20.✘");
                     defaultsLayout.setSecondline("§8➥ ✂ §7Download this §fCloudsystem §7on §b§lSPIGOT§3§lMC");
                     defaultsPlayerInfo.add("");
-                    defaultsPlayerInfo.add("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor §7Future");
+                    defaultsPlayerInfo.add("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor the §7Future");
                     defaultsPlayerInfo.add("");
                     defaultsPlayerInfo.add("  Our Discord §8▷ §b§l4kKEcaP9WC");
                     defaultsPlayerInfo.add("  Developed by §8▷ §b§lRauchigesEtwas");
@@ -102,10 +102,10 @@ public class MetaModule implements IModule {
 
                     ArrayList<String> defaultsPlayerInfo02 = new ArrayList<>();
                     defaultsLayout02.setProtocol("§8▷ §b§l%online_players%§8/§b§l%max_players%");
-                    defaultsLayout02.setFirstline("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor §7Future §8• §f§l1.16-1.20.✘");
+                    defaultsLayout02.setFirstline("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor the §7Future §8• §f§l1.16-1.20.✘");
                     defaultsLayout02.setSecondline("§8➥ ✎ §7The network now §f§lONLINE §8| §8◣ §b§l%proxy_name% §8◥");
                     defaultsPlayerInfo02.add("");
-                    defaultsPlayerInfo02.add("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor §7Futuree");
+                    defaultsPlayerInfo02.add("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor the §7Futuree");
                     defaultsPlayerInfo02.add("");
                     defaultsPlayerInfo02.add("  Our Discord §8▷ §b§l4kKEcaP9WC");
                     defaultsPlayerInfo02.add("  Developed by §8▷ §b§lRauchigesEtwas");
@@ -118,14 +118,14 @@ public class MetaModule implements IModule {
                     ArrayList<Tablist> tablist = new ArrayList<>();
 
                     Tablist tablayout01 = new Tablist();
-                    tablayout01.setHeader("\n      §8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor §7Future §8• §b§l%online_players% §7/ §3§l%max_players% §8◄      \n   §8► §7Your current server §8▷ §b§l%service_name% §8◄   \n");
+                    tablayout01.setHeader("\n      §8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor the §7Future §8• §b§l%online_players% §7/ §3§l%max_players% §8◄      \n   §8► §7Your current server §8▷ §b§l%service_name% §8◄   \n");
 
                     tablayout01.setFooter("\n        §8► §7Discord §8▷ §b§ldiscord.gg/§3§l4kKEcaP9WC §8◄       \n§8► §7Developer §8▷ §b§lReauchiges§3§lEtwas §8◄\n");
 
                     tablist.add(tablayout01);
 
                     Tablist tablayout02 = new Tablist();
-                    tablayout02.setHeader("\n      §8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor §7Future §8• §b§l%online_players% §7/ §3§l%max_players% §8◄      \n   §8► §7Your current proxy §8▷ §b§l%proxy_name% §8◄   \n");
+                    tablayout02.setHeader("\n      §8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor the §7Future §8• §b§l%online_players% §7/ §3§l%max_players% §8◄      \n   §8► §7Your current proxy §8▷ §b§l%proxy_name% §8◄   \n");
                     tablayout02.setFooter("\n        §8► §7Discord §8▷ §b§ldiscord.gg/§3§l4kKEcaP9WC §8◄       \n§8► §7Website §8▷ §b§lmetacloud§3§lservice.eu §8◄\n");
 
                     tablist.add(tablayout02);
@@ -136,8 +136,9 @@ public class MetaModule implements IModule {
                 });
                 configuration.setConfiguration(configs);
 
-
                 new ConfigDriver("./modules/syncproxy/config.json").save(configuration);
+                set();
+                update();
             }
 
         new TimerBase().scheduleAsync(new TimerTask() {
@@ -147,7 +148,6 @@ public class MetaModule implements IModule {
                 update();
             }
         }, 5, TimeUtil.SECONDS);
-
 
     }
     

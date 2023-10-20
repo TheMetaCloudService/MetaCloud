@@ -30,12 +30,13 @@ public class VelocityBootstrap {
     @Inject
     public VelocityBootstrap(ProxyServer proxyServer, Logger logger) {
         VelocityBootstrap.proxyServer = proxyServer;
+        new AsyncCloudAPI();
+        new CloudAPI(true);
     }
 
     @Subscribe
     public void onProxyInject(ProxyInitializeEvent event){
-        new AsyncCloudAPI();
-        new CloudAPI(true);
+
     }
 
     @Subscribe

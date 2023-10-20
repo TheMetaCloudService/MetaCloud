@@ -74,14 +74,14 @@ public class MessageStorage {
                         "           _  _ ____ ___ ____ ____ _    §f____ _  _ ___§r\n" +
                                 "       §bTHE§7 |\\/| |___  |  |__| §f|    |    |  | |  | |  \\ §r\n" +
                                 "           |  | |___  |  |  | |___ §f|___ |__| |__| |__/ §r[§b" + version + "§7]\n\n" +
-                                "     <§b!§r> Willkommen bei Metacloud, §bready§r for future?§r\n" +
+                                "     <§b!§r> Willkommen bei Metacloud, §bready§r for the future?§r\n" +
                                 "     <§b!§r> support: §fhttps://metacloudservice.eu/\n\n";
 
             }else return
                     "           _  _ ____ ___ ____ ____ _   §f ____ _  _ ___§r\n" +
                             "       §bTHE§7 |\\/| |___  |  |__|§f |    |    |  | |  | |  \\ §r\n" +
                             "           |  | |___  |  |  | |___ §f|___ |__| |__| |__/§r [§b" + version + "§7]\n\n" +
-                            "     <§b!§r> welcome to Metacloud §bready§r for future?§r\n" +
+                            "     <§b!§r> welcome to Metacloud §bready§r for the future?§r\n" +
                             "     <§b!§r> support: §fhttps://metacloudservice.eu/\n\n";
         }
 

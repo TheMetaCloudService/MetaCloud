@@ -49,7 +49,9 @@ public class Events implements Listener {
 
         NPCConfig config = NPCBootstrap.getInstance().npcAPI.getNPCConfig(group);
 
-        if (config == null) event.setCancelled(true);
+        if (CloudAPI.getInstance().getGroupPool().getGroup(group).isMaintenance()){
+            event.setCancelled(true);
+        }else if (config == null) event.setCancelled(true);
         else {
             if (event.isLeftClick()){
                 switch (config.getLeftClickAction()){
@@ -168,7 +170,7 @@ public class Events implements Listener {
                             .replace("%service_id%", service.getID());
                     lore.set(i2, replacedString);
                 }
-                inv.setItem(i, new ItemBuilder(Material.valueOf(config.fullItem.getMaterial()), 1)
+                inv.setItem(i, new ItemBuilder(Material.valueOf(config.fullItem.getMaterial().toUpperCase()), 1)
                         .setName(config.fullItem.displayName
                                 .replace("%group_name%", service.getGroup().getGroup())
                                 .replace("%service_name%", service.getName())
@@ -193,7 +195,7 @@ public class Events implements Listener {
                             .replace("%service_id%", service.getID());
                     lore.set(i2, replacedString);
                 }
-                inv.setItem(i, new ItemBuilder(Material.valueOf(config.emptyItem.getMaterial()), 1)
+                inv.setItem(i, new ItemBuilder(Material.valueOf(config.emptyItem.getMaterial().toUpperCase()), 1)
                         .setName(config.emptyItem.displayName
                                 .replace("%group_name%", service.getGroup().getGroup())
                                 .replace("%service_name%", service.getName())
@@ -219,7 +221,7 @@ public class Events implements Listener {
                             .replace("%service_id%", service.getID());
                     lore.set(i2, replacedString);
                 }
-                inv.setItem(i, new ItemBuilder(Material.valueOf(config.onlineItem.getMaterial()), 1)
+                inv.setItem(i, new ItemBuilder(Material.valueOf(config.onlineItem.getMaterial().toUpperCase()), 1)
                         .setName(config.onlineItem.displayName
                                 .replace("%group_name%", service.getGroup().getGroup())
                                 .replace("%service_name%", service.getName())

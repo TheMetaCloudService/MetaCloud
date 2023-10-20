@@ -62,13 +62,17 @@ public class GroupDriver implements IGroupDriver {
                 }
             }
             Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudGroupCreateEvent(group.getGroup()));
-            NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutGroupCreate(group.getGroup()));
+                if ( NettyDriver.getInstance() != null ) NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutGroupCreate(group.getGroup()));
+
+            if (   Driver.getInstance().getWebServer() != null){
+                GroupList groupList = (GroupList) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudgroup/general"), GroupList.class);
+                groupList.getGroups().add(group.getGroup());
+                Driver.getInstance().getWebServer().updateRoute("/cloudgroup/general", new ConfigDriver().convert(groupList));
+                Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudgroup/" + group.getGroup(), new ConfigDriver().convert(group)));
+
+            }
             new ConfigDriver("./local/groups/" + group.getGroup()+ ".json").save(group);
-            GroupList groupList = (GroupList) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudgroup/general"), GroupList.class);
-            groupList.getGroups().add(group.getGroup());
-            Driver.getInstance().getWebServer().updateRoute("/cloudgroup/general", new ConfigDriver().convert(groupList));
-            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudgroup/" + group.getGroup(), new ConfigDriver().convert(group)));
-           Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS, "die Gruppe '§f"+group.getGroup()+"§r' wurde erfolgreich erstellt", "the group '§f"+group.getGroup()+"§r' was successfully created");
+      Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS, "die Gruppe '§f"+group.getGroup()+"§r' wurde erfolgreich erstellt", "the group '§f"+group.getGroup()+"§r' was successfully created");
         }
     }
 

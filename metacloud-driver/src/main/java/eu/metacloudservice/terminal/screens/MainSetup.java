@@ -11,6 +11,7 @@ import eu.metacloudservice.storage.PacketLoader;
 import eu.metacloudservice.terminal.enums.Type;
 import org.checkerframework.checker.units.qual.A;
 
+import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -682,12 +683,19 @@ public class MainSetup {
             new ConfigDriver("./service.json").save(managerConfig);
             Driver.getInstance().getMessageStorage().language = Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("language").toString();
 
-            if (Boolean.parseBoolean(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("joingplayers").toString()
+            if (Boolean.parseBoolean(Driver.getInstance().getTerminalDriver().getSetupStorage().storage.get("defaultgroups").toString()
                     .replace("Y" , "true").replace("N", "false"))){
+
+                new File("./local/groups/").mkdirs();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 Driver.getInstance().getGroupDriver()
                         .create(new Group("Proxy","PROXY", 256, true, false, 0,"", 512, 1, -1, 90, 1, 1, new GroupStorage("Proxy", "InternalNode", "", ""), 0));
                 Driver.getInstance().getGroupDriver()
-                        .create(new Group("Lobby","LOBBY", 1024, true, false, 0,"", 50, 1, -1, 90, 3, 3, new GroupStorage("Proxy", "InternalNode", "", ""), 1));
+                        .create(new Group("Lobby","LOBBY", 1024, true, false, 0,"", 50, 1, -1, 90, 3, 3, new GroupStorage("Lobby", "InternalNode", "", ""), 1));
             }
 
             Driver.getInstance().getTerminalDriver().leaveSetup();

@@ -7,8 +7,10 @@ package eu.metacloudservice.bungee;
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.bungee.command.HubCommand;
+import eu.metacloudservice.cloudplayer.codec.gamemode.GameMode;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
+import eu.metacloudservice.pool.player.entrys.CloudPlayer;
 import eu.metacloudservice.pool.service.entrys.CloudService;
 import eu.metacloudservice.process.ServiceState;
 import net.md_5.bungee.api.ProxyServer;
@@ -35,6 +37,7 @@ public class BungeeBootstrap extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new HubCommand("l"));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new HubCommand("leave"));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new HubCommand("quit"));
+
     }
 
     public CloudService getLobby(ProxiedPlayer player){

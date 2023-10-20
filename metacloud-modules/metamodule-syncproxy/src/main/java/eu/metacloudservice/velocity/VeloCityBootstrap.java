@@ -46,12 +46,12 @@ public class VeloCityBootstrap {
         tabCount = 0;
         motdCount = 0;
         instance = this;
-        group = CloudAPI.getInstance().getGroupPool().getGroup(getLiveService().getGroup());
-        liveService = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
 
+        liveService = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
+        group = CloudAPI.getInstance().getGroupPool().getGroup(getLiveService().getGroup());
         restDriver = new RestDriver(liveService.getManagerAddress(), liveService.getRestPort());
          conf = (Configuration) new ConfigDriver().convert(getRestDriver().get("/module/syncproxy/configuration"), Configuration.class);
-        if (conf.getConfiguration().stream().anyMatch(designConfig -> designConfig.getTargetGroup().equalsIgnoreCase(liveService.getGroup()))){
+        if (conf.getConfiguration() != null  && conf.getConfiguration().stream().anyMatch(designConfig -> designConfig.getTargetGroup().equalsIgnoreCase(liveService.getGroup()))){
             configuration = conf.getConfiguration().stream().filter(designConfig -> designConfig.getTargetGroup().equalsIgnoreCase(liveService.getGroup())).findFirst().get();
         }
         CloudAPI.getInstance().getEventDriver().registerListener(new CloudEventHandler());

@@ -44,20 +44,28 @@ public class CloudServiceDriver implements ICloudServiceDriver {
 
     @Override
     public TaskedService register(TaskedEntry entry) {
+
         if (entry.getServiceName() != null && entry.getUsedId() != 0) {
-            TaskedService service = getService(entry.getServiceName());
-            if (service != null) {
-                return service;
+            if (!entry.getServiceName().endsWith("0")){
+                TaskedService service = getService(entry.getServiceName());
+                if (service != null) {
+                    return service;
+                }
             }
-        }
-        if (!this.entry.group_player_potency.containsKey(entry.getGroupName())) {
+
+        }else if (!entry.getServiceName().endsWith("0")){
+            return null;
+        }else if (!this.entry.group_player_potency.containsKey(entry.getGroupName())) {
             this.entry.group_player_potency.put(entry.getGroupName(), 0);
+        }else {
+            TaskedService newService = new TaskedService(entry);
+            services.add(newService);
+            CloudManager.queueDriver.addQueuedObjectToStart(entry.getServiceName());
+            return newService;
         }
 
-        TaskedService newService = new TaskedService(entry);
-        services.add(newService);
-        CloudManager.queueDriver.addQueuedObjectToStart(entry.getServiceName());
-        return newService;
+        return null;
+
     }
 
     @Override

@@ -24,7 +24,7 @@ public class VeloBoostrap {
 
     @Inject
     public VeloBoostrap(@NonNull ProxyServer proxyServer) {
-        new CloudPermissionAPI();
+
         VeloBoostrap.proxyServer = proxyServer;
     }
 
@@ -37,6 +37,7 @@ public class VeloBoostrap {
         proxyServer.getEventManager().register(this, new PermissionListener(new PermissionBaseVelocity()));
         PluginDriver.getInstance().register(new PermissionCommand());
         PluginDriver.getInstance().register(new PermissionCommand());
+        new CloudPermissionAPI();
     }
 
 }
