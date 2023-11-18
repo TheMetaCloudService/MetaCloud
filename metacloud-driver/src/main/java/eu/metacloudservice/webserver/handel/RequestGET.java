@@ -14,27 +14,40 @@ import io.netty.util.CharsetUtil;
 public  class RequestGET  {
 
     public void handle(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
-        String uri = request.uri();
-        if (uri.contains("/")) {
-            String authenticatorKey = uri.split("/")[1];
-            if (authenticatorKey.length() > 4 && Driver.getInstance().getWebServer().AUTH_KEY.equals(authenticatorKey)){
-                String path = uri.replace("/" + authenticatorKey, "");
+        String uri = request.getUri();
+        if (uri.contains("/") && uri.length() > 7) {
+            if (uri.contains("/setup/")){
+                String path = uri;
                 if (Driver.getInstance().getWebServer().getRoutes(path) == null){
                     FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter a right path\"}");
                     ctx.writeAndFlush(response);
-                }
-                else if (!path.isEmpty()){
+                } else {
                     String json = Driver.getInstance().getWebServer().getRoute(path);
                     FullHttpResponse response = createResponse(HttpResponseStatus.OK, json);
-                    ctx.writeAndFlush(response);
-                }else {
-                    FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter a right path\"}");
+                    Driver.getInstance().getWebServer().removeRoute(path);
                     ctx.writeAndFlush(response);
                 }
             }else {
-                FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter the right auth-key\"}");
-                ctx.writeAndFlush(response);
+                String authenticatorKey = uri.split("/")[1];
+                if (authenticatorKey.length() > 4 && Driver.getInstance().getWebServer().AUTH_KEY.equals(authenticatorKey)){
+                    String path = uri.replace("/" + authenticatorKey, "");
+                    if (Driver.getInstance().getWebServer().getRoutes(path) == null){
+                        FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter a right path\"}");
+                        ctx.writeAndFlush(response);
+                    } else if (!path.isEmpty()){
+                        String json = Driver.getInstance().getWebServer().getRoute(path);
+                        FullHttpResponse response = createResponse(HttpResponseStatus.OK, json);
+                        ctx.writeAndFlush(response);
+                    }else {
+                        FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter a right path\"}");
+                        ctx.writeAndFlush(response);
+                    }
+                }else {
+                    FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter the right auth-key\"}");
+                    ctx.writeAndFlush(response);
+                }
             }
+
         } else {
             FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter the right auth-key\"}");
             ctx.writeAndFlush(response);

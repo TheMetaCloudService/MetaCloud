@@ -10,9 +10,9 @@ import eu.metacloudservice.api.PluginCommand;
 import eu.metacloudservice.api.PluginCommandInfo;
 import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.groups.dummy.Group;
-import eu.metacloudservice.networking.in.service.command.PacketInCommandMaintenance;
-import eu.metacloudservice.networking.in.service.command.PacketInCommandMaxPlayers;
-import eu.metacloudservice.networking.in.service.command.PacketInCommandMinCount;
+import eu.metacloudservice.networking.packet.packets.in.service.command.PacketInCommandMaintenance;
+import eu.metacloudservice.networking.packet.packets.in.service.command.PacketInCommandMaxPlayers;
+import eu.metacloudservice.networking.packet.packets.in.service.command.PacketInCommandMinCount;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 

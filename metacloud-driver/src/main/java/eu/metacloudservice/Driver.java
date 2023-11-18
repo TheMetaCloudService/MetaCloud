@@ -3,6 +3,7 @@ package eu.metacloudservice;
 
 import eu.metacloudservice.groups.GroupDriver;
 import eu.metacloudservice.groups.TemplateDriver;
+import eu.metacloudservice.language.LanguageDriver;
 import eu.metacloudservice.module.ModuleDriver;
 import eu.metacloudservice.storage.MessageStorage;
 import eu.metacloudservice.terminal.TerminalDriver;
@@ -19,6 +20,8 @@ public final class Driver {
     private final TemplateDriver templateDriver;
     private final ModuleDriver moduleDriver;
     private WebServer webServer;
+
+    private LanguageDriver languageDriver;
 
     public Driver(){
         /*
@@ -43,5 +46,13 @@ public final class Driver {
 
     public static Driver getInstance() {
         return instance;
+    }
+
+    public LanguageDriver getLanguageDriver() {
+        return languageDriver;
+    }
+
+    public void setLanguageDriver(LanguageDriver languageDriver) {
+        this.languageDriver = languageDriver;
     }
 }

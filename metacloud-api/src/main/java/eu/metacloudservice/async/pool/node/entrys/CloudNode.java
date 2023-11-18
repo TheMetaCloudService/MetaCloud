@@ -1,8 +1,7 @@
-/*
+package eu.metacloudservice.async.pool.node.entrys;/*
  * this class is by RauchigesEtwas
  */
 
-package eu.metacloudservice.pool.node.entrys;
 
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.pool.player.entrys.CloudPlayer;
@@ -11,6 +10,7 @@ import eu.metacloudservice.pool.service.entrys.CloudService;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class CloudNode {
 
@@ -30,11 +30,12 @@ public class CloudNode {
         return address;
     }
 
-    public List<CloudService> getService(){
-        return CloudAPI.getInstance().getServicePool().getServices().stream().filter(cloudService -> cloudService.getGroup().getStorage().getRunningNode().equals(getNodeName())).toList();
+    public CompletableFuture<List<CloudService>> getService(){
+        return CompletableFuture.supplyAsync( () ->CloudAPI.getInstance().getServicePool().getServices().stream().filter(cloudService -> cloudService.getGroup().getStorage().getRunningNode().equals(getNodeName())).toList());
     }
 
     public List<CloudPlayer> getPlayersServiceSide(){
+
         List<CloudPlayer> players = new ArrayList<>();
         CloudAPI.getInstance().getGroupPool().getGroups().stream().filter(group -> group.getStorage().getRunningNode().equals(getNodeName())).toList().forEach(group -> {
             players.addAll(CloudAPI.getInstance().getPlayerPool().getPlayersByServiceGroup(group.getGroup()));

@@ -3,7 +3,7 @@ package eu.metacloudservice.networking;
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.events.listeners.services.CloudProxyLaunchEvent;
 import eu.metacloudservice.events.listeners.services.CloudServiceLaunchEvent;
-import eu.metacloudservice.networking.out.service.PacketOutServiceLaunch;
+import eu.metacloudservice.networking.packet.packets.out.service.PacketOutServiceLaunch;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;
 import io.netty.channel.Channel;

@@ -11,8 +11,8 @@ import eu.metacloudservice.events.EventDriver;
 import eu.metacloudservice.events.entrys.ICloudListener;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.networking.NettyDriver;
-import eu.metacloudservice.networking.in.service.cloudapi.*;
 import eu.metacloudservice.networking.packet.Packet;
+import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.*;
 import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.webserver.RestDriver;
 import eu.metacloudservice.webserver.dummys.GroupList;
@@ -61,7 +61,6 @@ public class AsyncCloudAPI {
         }
     }
 
-
     public double getUsedMemory(){
         return  (double) ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1048576;
 
@@ -69,7 +68,6 @@ public class AsyncCloudAPI {
 
     public double getMaxMemory(){
         return  (double) ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getMax() / 1048576;
-
     }
 
     public ArrayList<Group> getGroups(){
@@ -80,7 +78,6 @@ public class AsyncCloudAPI {
             groups.add(g);
         });
         return groups;
-
     }
 
     public LiveService getCurrentService(){

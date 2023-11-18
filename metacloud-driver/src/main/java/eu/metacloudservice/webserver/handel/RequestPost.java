@@ -17,6 +17,9 @@ public class RequestPost {
     public void handle(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
         String uri = request.uri();
         if (uri.contains("/")) {
+            if (uri.contains("/setup/")){
+                return;
+            }
             String authenticatorKey = uri.split("/")[1];
             if (authenticatorKey.length() > 4 && Driver.getInstance().getWebServer().AUTH_KEY.equals(authenticatorKey)){
                 String path = uri.replace("/" + authenticatorKey, "");

@@ -1,3 +1,11 @@
+/*
+ * this class is by RauchigesEtwas
+ */
+
+/*
+ * this class is by RauchigesEtwas
+ */
+
 package eu.metacloudservice.terminal.animation;
 
 import eu.metacloudservice.Driver;

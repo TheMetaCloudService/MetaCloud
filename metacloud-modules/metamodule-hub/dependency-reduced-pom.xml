@@ -110,10 +110,6 @@
           <artifactId>metacloud-networking</artifactId>
           <groupId>eu.metacloudservice</groupId>
         </exclusion>
-        <exclusion>
-          <artifactId>adventure-api</artifactId>
-          <groupId>net.kyori</groupId>
-        </exclusion>
       </exclusions>
     </dependency>
     <dependency>

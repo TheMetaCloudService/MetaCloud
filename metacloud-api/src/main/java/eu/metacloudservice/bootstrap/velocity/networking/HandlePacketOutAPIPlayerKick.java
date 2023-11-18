@@ -1,9 +1,7 @@
 package eu.metacloudservice.bootstrap.velocity.networking;
 
-import com.velocitypowered.api.util.MessagePosition;
 import eu.metacloudservice.bootstrap.velocity.VelocityBootstrap;
-import eu.metacloudservice.networking.out.service.playerbased.apibased.PacketOutAPIPlayerActionBar;
-import eu.metacloudservice.networking.out.service.playerbased.apibased.PacketOutAPIPlayerKick;
+import eu.metacloudservice.networking.packet.packets.out.service.playerbased.apibased.PacketOutAPIPlayerKick;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;
 import io.netty.channel.Channel;

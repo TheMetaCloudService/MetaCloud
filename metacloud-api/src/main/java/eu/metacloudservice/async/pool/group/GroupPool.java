@@ -12,9 +12,9 @@ import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.groups.dummy.Group;
-import eu.metacloudservice.networking.in.service.cloudapi.PacketInCreateGroup;
-import eu.metacloudservice.networking.in.service.cloudapi.PacketInDeleteGroup;
-import eu.metacloudservice.networking.in.service.cloudapi.PacketInStopGroup;
+import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInCreateGroup;
+import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInDeleteGroup;
+import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInStopGroup;
 import eu.metacloudservice.webserver.dummys.GroupList;
 
 import java.util.ArrayDeque;

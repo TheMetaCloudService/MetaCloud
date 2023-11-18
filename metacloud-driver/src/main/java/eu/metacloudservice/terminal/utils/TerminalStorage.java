@@ -1,3 +1,11 @@
+/*
+ * this class is by RauchigesEtwas
+ */
+
+/*
+ * this class is by RauchigesEtwas
+ */
+
 package eu.metacloudservice.terminal.utils;
 
 import eu.metacloudservice.terminal.enums.Type;

@@ -8,7 +8,6 @@ import eu.metacloudservice.networking.packet.NettyBuffer;
 import eu.metacloudservice.networking.packet.Packet;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
-import org.checkerframework.checker.units.qual.C;
 
 
 public class PacketOutCloudPlayerComponent extends Packet {

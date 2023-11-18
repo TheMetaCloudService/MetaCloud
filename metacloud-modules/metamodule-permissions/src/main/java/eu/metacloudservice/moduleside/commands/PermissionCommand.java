@@ -4,29 +4,23 @@
 
 package eu.metacloudservice.moduleside.commands;
 
-import com.velocitypowered.api.proxy.Player;
-import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.api.CloudPermissionAPI;
 import eu.metacloudservice.configuration.ConfigDriver;
-import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.moduleside.config.*;
 import eu.metacloudservice.storage.UUIDDriver;
 import eu.metacloudservice.terminal.commands.CommandAdapter;
 import eu.metacloudservice.terminal.commands.CommandInfo;
 import eu.metacloudservice.terminal.enums.Type;
 import eu.metacloudservice.terminal.utils.TerminalStorageLine;
-import net.kyori.adventure.text.Component;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 
 import static java.lang.Boolean.parseBoolean;
 
-@CommandInfo(command = "perms", DEdescription = "Alle Berechtigungen können hier verwaltet werden", ENdescription = "All permissions can be managed here", aliases = {"permissions", "rank"})
+@CommandInfo(command = "perms",description = "command-permission-description", aliases = {"permissions", "rank"})
 public class PermissionCommand extends CommandAdapter {
     @Override
     public void performCommand(CommandAdapter command, String[] args) {
@@ -75,14 +69,12 @@ public class PermissionCommand extends CommandAdapter {
                         configuration.getPlayers().add(pp);
                         new ConfigDriver("./modules/permissions/config.json").save(configuration);
                         Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Der Spieler '§f"+username+"§r' hat die Berechtigung '§f"+permission+"§r@§f"+time+"§r' erfolgreich erhalten.",
-                                "The player '§f"+username+"§r' has successfully received the permission '§f"+permission+"§r@§f"+time+"§r' .");
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-player-has-now-permission")
+                                .replace("%player%", username).replace("%permission%", permission).replace("%time%", time));
 
                     }else {
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Der Spieler '§f"+username+"§r' besitzt diese Berechtigung bereits.",
-                                "The player '§f"+username+"§r' already has this permissions.");
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-player-has-already-permission")
+                                .replace("%player%", username));
                     }
                 }else if (args.length == 5 && args[2].equalsIgnoreCase("perms") && args[3].equalsIgnoreCase("remove")) {
                     String permission = args[4];
@@ -93,14 +85,12 @@ public class PermissionCommand extends CommandAdapter {
                         configuration.getPlayers().add(pp);
                         new ConfigDriver("./modules/permissions/config.json").save(configuration);
                         Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Dem Spieler '§F" + username + "§r' wurde die Berechtigung '" + permission + "' nun entzogen.",
-                                "The player '§f" + username + "§r' has now been deprived of the permission '" + permission+ "'.");
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-player-has-not-longer-permission")
+                                .replace("%player%", username).replace("%permission%", permission));
 
                     }else {
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Der Spieler '§f"+username+"§r' besitzt diese Berechtigung nicht.",
-                                "The player '§f"+username+"§r' does not have this permission.");
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-player-has-not-permission")
+                                .replace("%player%", username));
 
                     }
 
@@ -122,21 +112,20 @@ public class PermissionCommand extends CommandAdapter {
                         configuration.getPlayers().add(pp);
                         new ConfigDriver("./modules/permissions/config.json").save(configuration);
                         Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Der Spieler '§f"+username+"§r' hat die Gruppe '§f"+group+"§r@§f§"+time+"§r' erfolgreich erhalten.",
-                                "The player '§f"+username+"§r' has successfully received the group '§f"+group+"§r@§f§"+time+"§r'.");
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-player-has-now-group")
+                                .replace("%player%", username).replace("%group%", group).replace("%time%", time));
                               }else {
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Der Spieler '§f"+username+"§r' besitzt diese Gruppe bereits.",
-                                "The player '§f"+username+"§r' already has this group.");
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-player-has-already-group")
+                                .replace("%player%", username));
+
                     }
 
                 }else if (args.length == 5 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("remove")) {
                     String group = args[4];
                     if (pp.getGroups().isEmpty()){
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Der Spieler '§f"+username+"§r' hat die Gruppe nicht eingeschlossen.",
-                                "The player '§f"+username+"§r' has not included the group.");
+
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-player-not-included")
+                                .replace("%player%", username));
 
 
                     }
@@ -152,22 +141,19 @@ public class PermissionCommand extends CommandAdapter {
                         new ConfigDriver("./modules/permissions/config.json").save(configuration);
                         Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
 
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Die Gruppe '§f"+group+"§r' wurde erfolgreich entfernt.",
-                                "The group '§f"+group+"§r' has been successfully removed.");
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-player-remove-group" )
+                                .replace("%group%", group));
                     }else {
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Der Spieler '§f"+username+"§r' hat die Gruppe nicht eingeschlossen.",
-                                "The player '§f"+username+"§r' has not included the group.");
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-player-not-included")
+                                .replace("%player%", username));
                     }
 
                 }else {
                     sendMessage();
                 }
             }else {
-                Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                        "Die amgegebene Spieler '§f"+username+"§r' wurde nicht gefunden",
-                        "The specified player '§f" + username + "§r' was not found.");
+                Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-player-not-found")
+                        .replace("%player%", username));
             }
         } else {
             sendMessage();
@@ -216,13 +202,13 @@ public class PermissionCommand extends CommandAdapter {
                         configuration.getGroups().add(new PermissionGroup(args[1], false, 99,"&b" +groupName + " &8| &7" ,"",new ArrayList<>(), new ArrayList<>()));
                         new ConfigDriver("./modules/permissions/config.json").save(configuration);
                         Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Die Gruppe '§f" + groupName + "§r' wurde erfolgreich erstellt.",
-                                "The group '§f" + groupName + "§r' has been successfully created.");
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-group-create" )
+                                .replace("%group%", groupName));
+
                     }else {
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Die Gruppe '§f" + groupName + "§r' existiert bereits.",
-                                "The group '§f" + groupName + "§r' already exists.");
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-group-already-exists")
+                                .replace("%group%", groupName));
+
                     }
                 } else if (args.length == 3 && args[2].equalsIgnoreCase("delete")) {
                     // Implementiere Logik für "/permission group [group] delete"
@@ -237,9 +223,9 @@ public class PermissionCommand extends CommandAdapter {
                     });
                     new ConfigDriver("./modules/permissions/config.json").save(configuration);
                     Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
-                    Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                            "Die Gruppe '§f" + groupName + "§r' wurde erfolgreich gelöscht.",
-                            "The group '§f" + groupName + "§r' has been successfully deleted.");
+                     Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-group-delete")
+                            .replace("%group%", groupName));
+
 
 
                 } else if (args.length == 5 && args[2].equalsIgnoreCase("edit")) {
@@ -252,9 +238,8 @@ public class PermissionCommand extends CommandAdapter {
                         configuration.getGroups().add(pg);
                         new ConfigDriver("./modules/permissions/config.json").save(configuration);
                         Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Die Gruppe '§f" + groupName + "§r' wurde nun als Standard festgelegt.",
-                                "The group '§f" + groupName + "§r' has now been set as default.");
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-default")
+                                .replace("%group%", groupName));
                     }else if (type.equalsIgnoreCase("tagpower")){
                         int integer = Integer.parseInt(value);
                         pg.setTagPower(integer);
@@ -262,13 +247,11 @@ public class PermissionCommand extends CommandAdapter {
                         configuration.getGroups().add(pg);
                         new ConfigDriver("./modules/permissions/config.json").save(configuration);
                         Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Die Tag-Power der Gruppe '§f" + groupName + "§r' wurde geändert auf '§f" + integer + "§R'.",
-                                "The tag power of the group '§f" + groupName + "§r' has been changed to '§f" + integer + "§r'.");
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-power")
+                                .replace("%group%", groupName).replace("%power%",  "" +integer));
                     }else {
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "bitte nutze: §fdefault, tagpower ",
-                                "pleas  use: §fdefault, tagpower");
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-pleas-use"));
+
                     }
 
                 }
@@ -292,14 +275,14 @@ public class PermissionCommand extends CommandAdapter {
                         configuration.getGroups().add(pg);
                         new ConfigDriver("./modules/permissions/config.json").save(configuration);
                         Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Die Gruppe '§f" + groupName + "§r' hat nun die Berechtigung '§f" + permission + "§r@§f"+time+"§r'.",
-                                "The group '§f" + groupName + "§r' now has the permission '§f" + permission + "§r@§f"+time+"§r'.");
+                        Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-has-now-permission")
+                                .replace("%group%", groupName).replace("%permission%", permission).replace("%time%", time));
+
                     }else {
 
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Die Gruppe '§f" + groupName + "§r' hat bereits die Berechtigung '§f" + permission + "§r'.",
-                                "The group '§f" + groupName + "§r' has alreasy the permission '§f" + permission + "§r'.");
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-has-already-permission")
+                                .replace("%group%", groupName).replace("%permission%", permission));
 
                     }
                 } else if (args.length == 5 && args[2].equalsIgnoreCase("perms") && args[3].equalsIgnoreCase("remove")) {
@@ -312,13 +295,13 @@ public class PermissionCommand extends CommandAdapter {
                         configuration.getGroups().add(pg);
                         new ConfigDriver("./modules/permissions/config.json").save(configuration);
                         Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Die Gruppe '§f" + groupName + "§r' hat nun nicht mehr die Berechtigung '§f" +permission + "§r'.",
-                                "The group '§f" + groupName + "§r' no longer has the permission '§f" + permission + "§r'.");
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-has-not-longer-permission")
+                                .replace("%group%", groupName).replace("%permission%", permission));
+
                     }else {
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Die Gruppe '§f" + groupName + "§r' besitzt nicht die Berechtigung '§f" + permission + "§r'.",
-                                "The group '§f" + groupName + "§r' does not have the permission '§f" + permission + "§r'.");
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-has-not-permission")
+                                .replace("%group%", groupName).replace("%permission%", permission));
+
 
                     }
                 } else if (args.length >= 4 && args[2].equalsIgnoreCase("include")) {
@@ -328,9 +311,8 @@ public class PermissionCommand extends CommandAdapter {
                     if (pg.getIncluded().stream().noneMatch(includedAble -> includedAble.getGroup().equalsIgnoreCase(includedGroup))) {
                         if (CloudPermissionAPI.getInstance().getGroups().stream().noneMatch(permissionGroup -> permissionGroup.getGroup().equalsIgnoreCase(includedGroup))) {
 
-                            Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                    "Die amgegebene Gruppe '§f"+includedGroup+"§r' wurde nicht gefunden",
-                                    "The specified group '§f" + includedGroup + "§r' was not found.");
+                            Driver.getInstance().getTerminalDriver().log(Type.COMMAND,  Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-group-not-found")
+                                    .replace("%group%", includedGroup));
                             return;
                         }
                         if (!time.equalsIgnoreCase("LIFETIME")){
@@ -347,14 +329,12 @@ public class PermissionCommand extends CommandAdapter {
                         configuration.getGroups().add(pg);
                         new ConfigDriver("./modules/permissions/config.json").save(configuration);
                         Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Die Gruppe '§f" + groupName + "§r' erbt nun von der Gruppe '§f"+includedGroup+"§r@§f§"+time+"§r'.",
-                                "The group '§f" + groupName + "§r' now inherits from the group '§f"+includedGroup+"§r@§f§"+time+"§r'.");
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-now-included")
+                                .replace("%group%", groupName).replace("%target%", includedGroup).replace("%time%", time));
                     }else {
 
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Die Gruppe '§f" + groupName + "§r' erbt bereits von der Gruppe '§f" + includedGroup +"§r'r'.",
-                                "The group '§f" + groupName + "§r' does already inherit from the group '§f" + includedGroup + "§r'.");
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-already-included")
+                                .replace("%group%", groupName).replace("%target%", includedGroup));
 
                     }
 
@@ -370,23 +350,19 @@ public class PermissionCommand extends CommandAdapter {
                         new ConfigDriver("./modules/permissions/config.json").save(configuration);
                         Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
 
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Die Gruppe '§f" + groupName + "§r' erbt nicht länger von der Gruppe '§f" + excludedGroup + "§r'.",
-                                "The group '§f" + groupName + "§r' no longer inherits from the group '§f" + excludedGroup+ "§r'.");
-
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-not-longer-excluded")
+                                .replace("%group%", groupName).replace("%target%", excludedGroup));
                            }else {
-                        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                                "Die Gruppe '§f" + groupName + "§r' erbt nicht von der Gruppe '§f" + excludedGroup + "§r'.",
-                                "The group '§f" + groupName + "§r' does not inherit from the group '§f" + excludedGroup + "§r'.");
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-not-excluded")
+                                .replace("%group%", groupName).replace("%target%", excludedGroup));
                     }
                 }else {
                     sendMessage();
                 }
             }else {
 
-                Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                        "Die amgegebene Gruppe '§f"+groupName+"§r' wurde nicht gefunden",
-                        "The specified group '§f" + groupName + "§r' was not found.");
+                Driver.getInstance().getTerminalDriver().log(Type.COMMAND,  Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-group-not-found")
+                        .replace("%group%", groupName));
             }
         } else {
             sendMessage();
@@ -398,54 +374,32 @@ public class PermissionCommand extends CommandAdapter {
     private void sendMessage(){
 
 
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fperms user [player] info §7~ sehe alle daten zum Spieler ",
-                " >> §fperms user [player] info §7~ see all data about the player ");
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fperms user [player] perms add [permission] [true/false] ([time]) §7~ einem Spieler eine positive oder negative Erlaubnis erteilen",
-                " >> §fperms user [player] perms add [permission] [true/false] ([time])  §7~ to give a player positive or negative permissions");
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fperms user [player] perms remove [permission] §7~ einem Spieler die Berechtigungen entziehen ",
-                " >> §fperms user [player] perms remove [permission] §7~ revoke a player's privileges ");
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fperms user [player] group add [group] ([time]) §7~ Füge einen Spieler zur Gruppe hinzu",
-                " >> §fperms user [player] group add [group] ([time]) §7~ Add a player to the group");
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fperms user [player] group remove [group] §7~ Remove einen Spieler von einer Gruppe ",
-                " >> §fperms user [player] group remove [group] §7~ Remove a player from a group ");
 
 
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                "", "");
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fperms groups §7~ sehe alle vorhandenen Gruppe ",
-                " >> §fperms groups §7~ see all available group ");
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fperms group [group] info §7~ sehe alle daten von einer Gruppe ",
-                " >> §fperms group [group] info §7~ see all data about the group ");
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fperms group [group] create §7~ um eine Gruppe zu erstellen",
-                " >> §fperms group [group] create §7~ to create a new group");
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fperms group [group] delete §7~ um eine Gruppe zu löschen ",
-                " >> §fperms group [group] delete §7~ to delete an group");
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fperms group [group] edit [type] [value]  §7~ um die Gruppe zu bearbeiten",
-                " >> §fperms group [group] edit [type] [value] §7~ to edit the group");
 
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fperms group [group] perms add [permission] [true/false] [time] §7~ einer Grouppe eine positive oder negative Erlaubnis erteilen",
-                " >> §fperms group [group] perms add [permission] [true/false] [time]  §7~ to give a group positive or negative permissions");
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fperms group [group] perms remove [permission] §7~ einer Gruppe die Berechtigungen entziehen ",
-                " >> §fperms group [group] perms remove [permission] §7~ revoke a groups's privileges ");
+        Driver.getInstance().getTerminalDriver().log(Type.COMMAND,
+                Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-1"),
+                Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-2"),
+                Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-3"),
+                Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-4"),
+                Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-5")
 
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fperms group [group] include [group] [time] §7~ um eine Gruppe in diese Gruppe aufzunehmen",
-                " >> §fperms group [group] include [group]  [time]  §7~ to add a group to this group");
-        Driver.getInstance().getTerminalDriver().logSpeed(Type.COMMAND,
-                " >> §fperms group [group] exclude [group] §7~ um eine Gruppe aus dieser Gruppe zu entfernen ",
-                " >> §fperms group [group] exclude [group] §7~ to remove a group from this group ");
+                );
+        Driver.getInstance().getTerminalDriver().log(Type.COMMAND,
+                "");
+
+        Driver.getInstance().getTerminalDriver().log(Type.COMMAND,
+
+                Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-6"),
+                Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-7"),
+                Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-8"),
+                Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-9"),
+                Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-10"),
+                Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-12"),
+                Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-13"),
+                Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-14")
+                );
+
     }
 
     @Override

@@ -4,8 +4,8 @@ import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.groups.dummy.Group;
-import eu.metacloudservice.networking.in.service.cloudapi.PacketInChangeState;
-import eu.metacloudservice.networking.in.service.cloudapi.PacketInDispatchCommand;
+import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInChangeState;
+import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInDispatchCommand;
 import eu.metacloudservice.pool.player.entrys.CloudPlayer;
 import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.webserver.dummys.liveservice.LiveServiceList;
@@ -13,14 +13,6 @@ import eu.metacloudservice.webserver.dummys.liveservice.LiveServices;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 
-import java.io.*;
-import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
-import java.lang.management.OperatingSystemMXBean;
-import java.net.ConnectException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.List;
 import java.util.function.Consumer;
 

@@ -1,8 +1,17 @@
+/*
+ * this class is by RauchigesEtwas
+ */
+
+/*
+ * this class is by RauchigesEtwas
+ */
+
 package eu.metacloudservice.terminal;
 
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.terminal.commands.CommandDriver;
 import eu.metacloudservice.terminal.enums.Type;
+import org.jline.reader.EndOfFileException;
 import org.jline.reader.UserInterruptException;
 
 public final class TerminalReader extends Thread {
@@ -37,7 +46,13 @@ public final class TerminalReader extends Thread {
 
                 }
             } catch (UserInterruptException ignored) {
-                commandDriver.executeCommand("stop");
+                System.exit(0);
+            }catch (EndOfFileException end){
+                if (consoleDriver.getSetupDriver().getSetup() != null){
+                    consoleDriver.leaveSetup();
+                }else {
+                    commandDriver.executeCommand("stop");
+                }
             }
         }
     }

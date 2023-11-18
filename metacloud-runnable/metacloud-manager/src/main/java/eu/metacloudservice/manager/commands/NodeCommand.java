@@ -1,17 +1,25 @@
+/*
+ * this class is by RauchigesEtwas
+ */
+
 package eu.metacloudservice.manager.commands;
 
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfigNodes;
+import eu.metacloudservice.configuration.dummys.nodeconfig.NodeConfig;
 import eu.metacloudservice.manager.CloudManager;
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.terminal.commands.CommandAdapter;
 import eu.metacloudservice.terminal.commands.CommandInfo;
 import eu.metacloudservice.terminal.enums.Type;
 import eu.metacloudservice.terminal.utils.TerminalStorageLine;
+import eu.metacloudservice.webserver.entry.RouteEntry;
 
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.UUID;
 
 
 @CommandInfo(command = "node", description = "command-node-description", aliases = {"nodes", "cluster", "wrapper"})
@@ -74,7 +82,27 @@ public class NodeCommand extends CommandAdapter {
                     nodes.setName(node);
                     nodes.setAddress(address);
                     CloudManager.config.getNodes().add(nodes);
+
+                    String link = "http://" + CloudManager.config.getManagerAddress() + ":" + CloudManager.config.getRestApiCommunication() + "/setup/" + node;
+                    NodeConfig config = new NodeConfig();
+                    config.setLanguage(CloudManager.config.getLanguage());
+                    config.setManagerAddress(CloudManager.config.getManagerAddress());
+                    config.setCanUsedMemory(1024);
+                    config.setBungeecordVersion(CloudManager.config.getBungeecordVersion());
+                    config.setSpigotVersion(CloudManager.config.getSpigotVersion());
+                    config.setNetworkingCommunication(CloudManager.config.getNetworkingCommunication());
+                    config.setRestApiCommunication(CloudManager.config.getRestApiCommunication());
+                    config.setCopyLogs(CloudManager.config.isCopyLogs());
+                    config.setBungeecordPort(CloudManager.config.getBungeecordPort());
+                    config.setProcessorUsage(CloudManager.config.getProcessorUsage());
+                    config.setAutoUpdate(CloudManager.config.isAutoUpdate());
+                    config.setSpigotPort(CloudManager.config.getSpigotPort());
+                    config.setNodeAddress(address);
+                    config.setNodeName(node);
+                    Driver.getInstance().getWebServer().addRoute(new RouteEntry("/setup/" + node, new ConfigDriver().convert(config)));
                     new ConfigDriver("./service.json").save(CloudManager.config);
+                    Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-node-link")
+                            .replace("%link%", link));
                 }else {
                     Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-node-exists")
                             .replace("%node%", node));

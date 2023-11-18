@@ -17,9 +17,12 @@ public class RequestHandler  extends ChannelInboundHandlerAdapter {
             FullHttpRequest request = (FullHttpRequest) msg;
             if (request.method() == HttpMethod.GET){
                 new RequestGET().handle(ctx, request);
-
             }else if (request.method() == HttpMethod.PUT){
                 new RequestPUT().handle(ctx, request);
+            }else if (request.method() == HttpMethod.POST){
+                new RequestPost().handle(ctx, request);
+            }else if (request.method() == HttpMethod.DELETE){
+                new RequestDELETE().handle(ctx, request);
             }else {
                 new RequestNotFound().handle(ctx);
             }

@@ -2,8 +2,12 @@
  * this class is by RauchigesEtwas
  */
 
-package eu.metacloudservice.runnable;
+/*
+ * this class is by RauchigesEtwas
+ */
+
+package eu.metacloudservice.storage;
 
 public interface IRunAble {
-    void run(String[] args);
+    void run();
 }

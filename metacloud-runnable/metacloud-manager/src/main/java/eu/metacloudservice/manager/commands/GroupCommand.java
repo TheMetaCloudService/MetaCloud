@@ -1,16 +1,30 @@
+/*
+ * this class is by RauchigesEtwas
+ */
+
 package eu.metacloudservice.manager.commands;
 
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
+import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfigNodes;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.manager.CloudManager;
+import eu.metacloudservice.networking.NettyDriver;
+import eu.metacloudservice.networking.packet.packets.out.node.PacketOutPullTemplate;
 import eu.metacloudservice.terminal.commands.CommandAdapter;
 import eu.metacloudservice.terminal.commands.CommandInfo;
 import eu.metacloudservice.terminal.enums.Type;
-import eu.metacloudservice.terminal.setup.setups.group.GroupSetup;
 import eu.metacloudservice.terminal.utils.TerminalStorageLine;
+import eu.metacloudservice.timebaser.TimerBase;
+import eu.metacloudservice.timebaser.utils.TimeUtil;
+import eu.metacloudservice.webserver.dummys.UpdateConfig;
+import eu.metacloudservice.webserver.entry.RouteEntry;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.TimerTask;
 
 @CommandInfo(command = "group", aliases = {"g", "template", "temp"}, description = "command-group-description")
 public class GroupCommand extends CommandAdapter {
@@ -20,7 +34,6 @@ public class GroupCommand extends CommandAdapter {
             sendHelp();
         }else if (args.length == 1){
             if (args[0].equalsIgnoreCase("create")){
-                Driver.getInstance().getTerminalDriver().getSetupDriver().setSetup(new GroupSetup());
                 Driver.getInstance().getTerminalDriver().joinSetup();
             }else if (args[0].equalsIgnoreCase("list")){
                 if ( Driver.getInstance().getGroupDriver().getAll().isEmpty()){
@@ -260,6 +273,12 @@ public class GroupCommand extends CommandAdapter {
                 commands.add("false");
             }  if (args[1].equalsIgnoreCase("settemplate") && !args[0].equalsIgnoreCase("create") && !args[0].equalsIgnoreCase("list")) {
                 ArrayList<String> rawtemplates = Driver.getInstance().getTemplateDriver().get();
+                commands.addAll(rawtemplates);
+            } if (args[1].equalsIgnoreCase("push") && !args[0].equalsIgnoreCase("create") && !args[0].equalsIgnoreCase("list")) {
+                List<String> rawtemplates = CloudManager.config.getNodes().stream().map(ManagerConfigNodes::getName).toList();
+                commands.addAll(rawtemplates);
+            }if (args[1].equalsIgnoreCase("pull") && !args[0].equalsIgnoreCase("create") && !args[0].equalsIgnoreCase("list")) {
+                List<String> rawtemplates = CloudManager.config.getNodes().stream().map(ManagerConfigNodes::getName).toList();
                 commands.addAll(rawtemplates);
             }
         }

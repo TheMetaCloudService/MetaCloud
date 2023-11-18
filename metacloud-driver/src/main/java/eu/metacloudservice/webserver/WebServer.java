@@ -35,6 +35,7 @@ public class WebServer {
 
 
     private ConcurrentLinkedDeque<RouteEntry> ROUTES;
+
     public  String AUTH_KEY;
 
     private  EventLoopGroup boosGroup;

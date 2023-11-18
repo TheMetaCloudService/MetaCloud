@@ -8,9 +8,9 @@ import eu.metacloudservice.events.listeners.group.CloudGroupUpdateEditEvent;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.groups.interfaces.IGroupDriver;
 import eu.metacloudservice.networking.NettyDriver;
-import eu.metacloudservice.networking.out.service.group.PacketOutGroupCreate;
-import eu.metacloudservice.networking.out.service.group.PacketOutGroupDelete;
-import eu.metacloudservice.networking.out.service.group.PacketOutGroupEdit;
+import eu.metacloudservice.networking.packet.packets.out.service.group.PacketOutGroupCreate;
+import eu.metacloudservice.networking.packet.packets.out.service.group.PacketOutGroupDelete;
+import eu.metacloudservice.networking.packet.packets.out.service.group.PacketOutGroupEdit;
 import eu.metacloudservice.terminal.enums.Type;
 import eu.metacloudservice.timebaser.TimerBase;
 import eu.metacloudservice.timebaser.utils.TimeUtil;
@@ -72,7 +72,7 @@ public class GroupDriver implements IGroupDriver {
 
             }
             new ConfigDriver("./local/groups/" + group.getGroup()+ ".json").save(group);
-      Driver.getInstance().getTerminalDriver().logSpeed(Type.SUCCESS, "die Gruppe '§f"+group.getGroup()+"§r' wurde erfolgreich erstellt", "the group '§f"+group.getGroup()+"§r' was successfully created");
+      Driver.getInstance().getTerminalDriver().log(Type.SUCCESS, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-is-not-found").replace("%group%", group.getGroup()));
         }
     }
 

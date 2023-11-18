@@ -4,9 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
-import eu.metacloudservice.terminal.enums.Type;
 import lombok.SneakyThrows;
 
 import java.io.*;

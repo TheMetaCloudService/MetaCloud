@@ -4,13 +4,6 @@
 
 package eu.metacloudservice.api;
 
-import com.velocitypowered.api.proxy.Player;
-import eu.metacloudservice.Driver;
-import eu.metacloudservice.terminal.commands.CommandAdapter;
-import eu.metacloudservice.terminal.enums.Type;
-import lombok.SneakyThrows;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-
 import java.util.ArrayList;
 import java.util.List;
 

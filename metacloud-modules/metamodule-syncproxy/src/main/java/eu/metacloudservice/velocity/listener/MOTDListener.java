@@ -3,6 +3,7 @@ package eu.metacloudservice.velocity.listener;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 import com.velocitypowered.api.proxy.server.ServerPing;
+import com.velocitypowered.api.util.Favicon;
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.config.Motd;
@@ -84,6 +85,7 @@ public class MOTDListener {
             if (protocol != null) {
                 ping.version(new ServerPing.Version(1, protocol));
             }
+
             event.setPing(ping.build());
 
     }

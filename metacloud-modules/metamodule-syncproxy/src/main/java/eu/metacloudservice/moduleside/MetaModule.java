@@ -4,7 +4,6 @@ import eu.metacloudservice.config.*;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.module.extention.IModule;
-import eu.metacloudservice.moduleside.commands.SyncProxyCommand;
 import eu.metacloudservice.moduleside.events.SyncEvents;
 import eu.metacloudservice.timebaser.TimerBase;
 import eu.metacloudservice.timebaser.utils.TimeUtil;
@@ -12,7 +11,6 @@ import eu.metacloudservice.webserver.entry.RouteEntry;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Timer;
 import java.util.TimerTask;
 
 public class MetaModule implements IModule {
@@ -22,7 +20,6 @@ public class MetaModule implements IModule {
 
         create();
         set();
-        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new SyncProxyCommand());
         Driver.getInstance().getMessageStorage().eventDriver.registerListener(new SyncEvents());
     }
 

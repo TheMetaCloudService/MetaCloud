@@ -1,3 +1,11 @@
+/*
+ * this class is by RauchigesEtwas
+ */
+
+/*
+ * this class is by RauchigesEtwas
+ */
+
 package eu.metacloudservice.terminal;
 
 import eu.metacloudservice.Driver;
@@ -103,19 +111,23 @@ public final class TerminalDriver {
 
 
     public void joinSetup(){
+
         this.isInSetup = true;
+
         if (!new File("./service.json").exists() && !new File("./nodeservice.json").exists()){
             String joinedLanguages = String.join(", ", Driver.getInstance().getLanguageDriver().getSupportedLanguages());
             clearScreen();
             log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-            Driver.getInstance().getTerminalDriver().log(Type.INSTALLATION, Driver.getInstance().getLanguageDriver().getLang().getMessage("setup-general-question-1"));
+            Driver.getInstance().getTerminalDriver().log(Type.INSTALLATION, Driver.getInstance().getLanguageDriver().getLang().getMessage("setup-group-question-1"));
             Driver.getInstance().getTerminalDriver().log(Type.INSTALLATION, Driver.getInstance().getLanguageDriver().getLang().getMessage("setup-general-question-possible-answers")
                     .replace("%possible_answers%", joinedLanguages));
 
             setupDriver.setSetup(new GeneralSetup());
-        }else if (setupDriver.getSetup() instanceof GroupSetup){
+        }else {
             clearScreen();
             log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
+            Driver.getInstance().getTerminalDriver().log(Type.INSTALLATION, Driver.getInstance().getLanguageDriver().getLang().getMessage("setup-group-question-1"));
+            setupDriver.setSetup(new GroupSetup());
         }
     }
 
@@ -128,6 +140,7 @@ public final class TerminalDriver {
         this.isInSetup = false;
         if (setupDriver.getSetup() instanceof GroupSetup){
             Driver.getInstance().getGroupDriver().getAll().forEach(group -> {
+                if (group == null) return;
                 if (Driver.getInstance().getWebServer().getRoute("/"+group.getGroup()) == null){
                     Driver.getInstance().getWebServer().addRoute(new RouteEntry("/" + group.getGroup(), new ConfigDriver().convert(group)));
                 }else {

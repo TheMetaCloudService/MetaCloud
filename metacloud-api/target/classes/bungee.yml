@@ -1,0 +1,4 @@
+main: eu.metacloudservice.bootstrap.bungee.BungeeBootstrap
+name: metacloud-api
+version: 1.0.0-RELEASE
+author: RauchigesEtwas

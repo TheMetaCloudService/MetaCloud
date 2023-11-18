@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 
 public class MessageStorage {
-    public final String version = "1.0.0-RELEASE";
+    public final String version = "1.0.2-RELEASE";
     public String language;
     public Integer canUseMemory = 0;
     public PacketLoader packetLoader;
@@ -26,10 +26,10 @@ public class MessageStorage {
     public boolean shutdownAccept;
 
     public boolean openServiceScreen = false;
+    public String screenForm = "";
 
     public LinkedList<String> consoleInput;
 
-    public String setupType = "";
 
     public MessageStorage() {
         packetLoader = new PacketLoader();
@@ -54,34 +54,18 @@ public class MessageStorage {
     public String getAsciiArt(){
 
         if (Driver.getInstance().getTerminalDriver().isInSetup()){
-            if (language.equalsIgnoreCase("DE")){
                 return
-                        "           _  _ ____ ___ ____ ____ _    §f____ _  _ ___§r\n" +
-                                "       §bTHE§7 |\\/| |___  |  |__| §f|    |    |  | |  | |  \\ §r\n" +
-                                "           |  | |___  |  |  | |___ §f|___ |__| |__| |__/ §r[§b" + version + "§7]\n\n" +
-                                "     <§b!§r> zum verlassen des Screens, gebe `§bleave§r` in die Console ein\n" +
+                        "           _  _ ____ ___ ____ §b____ _    ____ _  _ ___§r\n" +
+                                "       §bTHE§7 |\\/| |___  |  |__|§b |    |    |  | |  | |  \\ §r\n" +
+                                "           |  | |___  |  |  | §b|___ |___ |__| |__| |__/§r [§f" + version + "§7]\n\n" +
+                                "     <§b!§r> type '§fleave§r' to leave the §bconsole §r\n" +
                                 "     <§b!§r> support: §fhttps://metacloudservice.eu/\n\n";
-
-            }else return
-                    "           _  _ ____ ___ ____ ____ _    §f____ _  _ ___§r\n" +
-                            "       §bTHE§7 |\\/| |___  |  |__| §f|    |    |  | |  | |  \\ §r\n" +
-                            "           |  | |___  |  |  | §f|___ |___ |__| |__| |__/ §r[§b" + version + "§7]\n\n" +
-                            "     <§b!§r> to leave this screen again, type `§bleave§r` in the console \n" +
-                            "     <§b!§r> support: §fhttps://metacloudservice.eu/\n\n";
         }else {
-            if (language.equalsIgnoreCase("DE")){
-                return
-                        "           _  _ ____ ___ ____ ____ _    §f____ _  _ ___§r\n" +
-                                "       §bTHE§7 |\\/| |___  |  |__| §f|    |    |  | |  | |  \\ §r\n" +
-                                "           |  | |___  |  |  | |___ §f|___ |__| |__| |__/ §r[§b" + version + "§7]\n\n" +
-                                "     <§b!§r> Willkommen bei Metacloud, §bready§r for the future?§r\n" +
-                                "     <§b!§r> support: §fhttps://metacloudservice.eu/\n\n";
-
-            }else return
-                    "           _  _ ____ ___ ____ ____ _   §f ____ _  _ ___§r\n" +
-                            "       §bTHE§7 |\\/| |___  |  |__|§f |    |    |  | |  | |  \\ §r\n" +
-                            "           |  | |___  |  |  | |___ §f|___ |__| |__| |__/§r [§b" + version + "§7]\n\n" +
-                            "     <§b!§r> welcome to Metacloud §bready§r for the future?§r\n" +
+            return
+                    "           _  _ ____ ___ ____ §b____ _    ____ _  _ ___§r\n" +
+                            "       §bTHE§7 |\\/| |___  |  |__|§b |    |    |  | |  | |  \\ §r\n" +
+                            "           |  | |___  |  |  | §b|___ |___ |__| |__| |__/§r [§f" + version + "§7]\n\n" +
+                            "     <§b!§r> §fMetaCloudService - ready §ffor§r the future?§r\n" +
                             "     <§b!§r> support: §fhttps://metacloudservice.eu/\n\n";
         }
 

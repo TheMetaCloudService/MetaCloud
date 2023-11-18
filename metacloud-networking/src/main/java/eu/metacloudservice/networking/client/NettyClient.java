@@ -35,14 +35,8 @@ public class NettyClient extends ChannelInitializer<Channel> implements AutoClos
         BOSS =   isEpoll ? new EpollEventLoopGroup() : new NioEventLoopGroup();
         Bootstrap bootstrap = new Bootstrap()
                 .group(BOSS)
-                .option(ChannelOption.IP_TOS, 0x18)
-                .option(ChannelOption.SO_BACKLOG, 128)
-                .option(ChannelOption.TCP_FASTOPEN, 3)
                 .option(ChannelOption.AUTO_READ, true)
-                .option(UnixChannelOption.SO_REUSEPORT, true)
-                .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.SO_REUSEADDR, true)
-                .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.WRITE_BUFFER_WATER_MARK, WATER_MARK)
                 .channel(Epoll.isAvailable() ? EpollSocketChannel.class : NioSocketChannel.class)
                 .handler(this);

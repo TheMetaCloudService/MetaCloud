@@ -8,7 +8,7 @@ import eu.metacloudservice.cloudplayer.codec.sounds.Sounds;
 import eu.metacloudservice.cloudplayer.codec.teleport.Teleport;
 import eu.metacloudservice.cloudplayer.codec.title.Title;
 import eu.metacloudservice.configuration.ConfigDriver;
-import eu.metacloudservice.networking.in.service.playerbased.apibased.*;
+import eu.metacloudservice.networking.packet.packets.in.service.playerbased.apibased.*;
 import eu.metacloudservice.pool.service.entrys.CloudService;
 import eu.metacloudservice.process.ServiceState;
 import lombok.Getter;

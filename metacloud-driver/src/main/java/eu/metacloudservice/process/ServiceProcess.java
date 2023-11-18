@@ -7,7 +7,7 @@ import eu.metacloudservice.configuration.dummys.nodeconfig.NodeConfig;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.networking.NettyDriver;
-import eu.metacloudservice.networking.in.node.PacketInSendConsole;
+import eu.metacloudservice.networking.packet.packets.in.node.PacketInSendConsole;
 import eu.metacloudservice.process.interfaces.IServiceProcess;
 import eu.metacloudservice.timebaser.TimerBase;
 import eu.metacloudservice.timebaser.utils.TimeUtil;

@@ -4,10 +4,7 @@ import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.codec.PacketDecoder;
 import eu.metacloudservice.networking.codec.PacketEncoder;
 import eu.metacloudservice.networking.packet.Packet;
-import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.ByteBufAllocator;
-import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.*;
 import io.netty.channel.epoll.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -43,24 +40,16 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
         this.BOSS = isEpoll ? new EpollEventLoopGroup() : new NioEventLoopGroup();
         this.WORKER = isEpoll ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 
-
         ServerBootstrap bootstrap = new ServerBootstrap()
                 .group(BOSS, WORKER)
                 .channel(isEpoll ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
                 .childHandler(this);
 
-        if(isEpoll) {
+        if (isEpoll) {
             bootstrap
-                    .option(ChannelOption.IP_TOS, 0x18)
-                    .option(ChannelOption.SO_BACKLOG, 128)
-                    .option(ChannelOption.TCP_FASTOPEN, 3)
-                    .option(ChannelOption.AUTO_READ, true)
                     .option(UnixChannelOption.SO_REUSEPORT, true)
-                    .option(ChannelOption.TCP_NODELAY, true)
                     .option(ChannelOption.SO_REUSEADDR, true)
-                    .option(ChannelOption.SO_KEEPALIVE, true)
                     .option(ChannelOption.WRITE_BUFFER_WATER_MARK, WATER_MARK);
-
         }
 
         bootstrap.bind(new InetSocketAddress(port)).sync().channel();

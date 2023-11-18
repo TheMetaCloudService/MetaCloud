@@ -11,20 +11,21 @@ import eu.metacloudservice.events.entrys.ICloudListener;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.networking.*;
 import eu.metacloudservice.networking.client.NettyClient;
-import eu.metacloudservice.networking.in.service.PacketInServiceConnect;
-import eu.metacloudservice.networking.in.service.cloudapi.*;
-import eu.metacloudservice.networking.in.service.command.PacketInCommandMinCount;
-import eu.metacloudservice.networking.in.service.command.PacketInCommandWhitelist;
-import eu.metacloudservice.networking.in.service.playerbased.apibased.PacketOutAPIPlayerDispactchCommand;
-import eu.metacloudservice.networking.out.service.playerbased.apibased.PacketOutCloudPlayerComponent;
-import eu.metacloudservice.networking.out.service.*;
-import eu.metacloudservice.networking.out.service.group.PacketOutGroupCreate;
-import eu.metacloudservice.networking.out.service.group.PacketOutGroupDelete;
-import eu.metacloudservice.networking.out.service.group.PacketOutGroupEdit;
-import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerConnect;
-import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerDisconnect;
-import eu.metacloudservice.networking.out.service.playerbased.PacketOutPlayerSwitchService;
-import eu.metacloudservice.networking.out.service.playerbased.apibased.*;
+import eu.metacloudservice.networking.packet.packets.in.service.PacketInServiceConnect;
+import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInChangeState;
+import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInDispatchMainCommand;
+import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInLaunchService;
+import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInStopService;
+import eu.metacloudservice.networking.packet.packets.in.service.command.PacketInCommandWhitelist;
+import eu.metacloudservice.networking.packet.packets.in.service.playerbased.apibased.PacketOutAPIPlayerDispactchCommand;
+import eu.metacloudservice.networking.packet.packets.out.service.*;
+import eu.metacloudservice.networking.packet.packets.out.service.playerbased.apibased.*;
+import eu.metacloudservice.networking.packet.packets.out.service.group.PacketOutGroupCreate;
+import eu.metacloudservice.networking.packet.packets.out.service.group.PacketOutGroupDelete;
+import eu.metacloudservice.networking.packet.packets.out.service.group.PacketOutGroupEdit;
+import eu.metacloudservice.networking.packet.packets.out.service.playerbased.PacketOutPlayerConnect;
+import eu.metacloudservice.networking.packet.packets.out.service.playerbased.PacketOutPlayerDisconnect;
+import eu.metacloudservice.networking.packet.packets.out.service.playerbased.PacketOutPlayerSwitchService;
 import eu.metacloudservice.networking.packet.Packet;
 import eu.metacloudservice.pool.groupe.GroupPool;
 import eu.metacloudservice.pool.player.PlayerPool;
@@ -36,22 +37,15 @@ import eu.metacloudservice.storage.UUIDDriver;
 import eu.metacloudservice.timebaser.TimerBase;
 import eu.metacloudservice.timebaser.utils.TimeUtil;
 import eu.metacloudservice.webserver.RestDriver;
-import eu.metacloudservice.webserver.dummys.GroupList;
 import eu.metacloudservice.webserver.dummys.PlayerGeneral;
 import eu.metacloudservice.webserver.dummys.WhiteList;
 import eu.metacloudservice.webserver.dummys.liveservice.LiveServiceList;
 import eu.metacloudservice.webserver.dummys.liveservice.LiveServices;
 import lombok.NonNull;
-import org.bukkit.Bukkit;
 
 import java.lang.management.ManagementFactory;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class CloudAPI {
 
@@ -213,7 +207,6 @@ public class CloudAPI {
             CloudAPI.getInstance().sendPacketSynchronized(new PacketInCommandWhitelist(username));
             return true;
         }
-
         return false;
     }
 
@@ -231,14 +224,11 @@ public class CloudAPI {
     
     public double getUsedMemory(){
         return  (double) ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1048576;
-
     }
 
     public double getMaxMemory(){
         return  (double) ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getMax() / 1048576;
-
     }
-
     public AsyncCloudAPI getAsyncAPI(){
         return AsyncCloudAPI.getInstance();
     }
@@ -246,7 +236,6 @@ public class CloudAPI {
     public void sendPacketSynchronized(Packet packet){
         NettyDriver.getInstance().nettyClient.sendPacketSynchronized(packet);
     }
-
     public RestDriver getRestDriver() {
         return restDriver;
     }

@@ -36,7 +36,6 @@ public class VeloBoostrap {
     public void handelInject(ProxyInitializeEvent event){
         proxyServer.getEventManager().register(this, new PermissionListener(new PermissionBaseVelocity()));
         PluginDriver.getInstance().register(new PermissionCommand());
-        PluginDriver.getInstance().register(new PermissionCommand());
         new CloudPermissionAPI();
     }
 

@@ -1,2 +1,8 @@
-package eu.metacloudservice.manager.commands;public class ScreenCommand {
+/*
+ * this class is by RauchigesEtwas
+ */
+
+package eu.metacloudservice.manager.commands;
+
+public class ScreenCommand {
 }

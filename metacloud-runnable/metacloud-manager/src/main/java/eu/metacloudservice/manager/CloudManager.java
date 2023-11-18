@@ -1,3 +1,7 @@
+/*
+ * this class is by RauchigesEtwas
+ */
+
 package eu.metacloudservice.manager;
 
 import eu.metacloudservice.Driver;
@@ -37,7 +41,9 @@ import eu.metacloudservice.networking.packet.packets.in.service.playerbased.Pack
 import eu.metacloudservice.networking.packet.packets.in.service.playerbased.PacketInPlayerDisconnect;
 import eu.metacloudservice.networking.packet.packets.in.service.playerbased.PacketInPlayerSwitchService;
 import eu.metacloudservice.networking.packet.packets.in.service.playerbased.apibased.*;
+import eu.metacloudservice.networking.packet.packets.out.node.PacketOutShutdownNode;
 import eu.metacloudservice.networking.server.NettyServer;
+import eu.metacloudservice.storage.IRunAble;
 import eu.metacloudservice.storage.ModuleLoader;
 import eu.metacloudservice.terminal.animation.AnimationDriver;
 import eu.metacloudservice.terminal.enums.Type;
@@ -52,7 +58,7 @@ import eu.metacloudservice.webserver.entry.RouteEntry;
 import java.io.File;
 import java.util.*;
 
-public class CloudManager {
+public class CloudManager implements IRunAble {
 
     public static CloudServiceDriver serviceDriver;
 
@@ -61,8 +67,37 @@ public class CloudManager {
     public static ManagerConfig config;
     public static boolean shutdown;
 
-    public CloudManager() {
+    public void initRestService(){
+        Driver.getInstance().getTerminalDriver().log(Type.INFO, Driver.getInstance().getLanguageDriver().getLang().getMessage("web-server-prepared"));
+        Driver.getInstance().runWebServer();
+        Driver.getInstance().getTerminalDriver().log(Type.INFO, Driver.getInstance().getLanguageDriver().getLang().getMessage("web-server-connected").replace("%port%", "" + config.getRestApiCommunication()));
+    }
 
+    public static void shutdownHook(){
+        shutdown = true;
+        NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutShutdownNode());
+        NettyDriver.getInstance().getPacketDriver().getAdaptor().clear();
+        serviceDriver.getServicesFromNode("InternalNode").stream().filter(taskedService -> Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName()).getGroupType().equalsIgnoreCase("PROXY"))
+                .forEach(TaskedService::handelQuit);
+
+        serviceDriver.getServicesFromNode("InternalNode").stream().filter(taskedService -> !Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName()).getGroupType().equalsIgnoreCase("PROXY"))
+                .forEach(TaskedService::handelQuit);
+        Driver.getInstance().getModuleDriver().unload();
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Driver.getInstance().getWebServer().close();
+        NettyDriver.getInstance().nettyServer.close();
+        Driver.getInstance().getMessageStorage().eventDriver.clearListeners();
+        Driver.getInstance().getTerminalDriver().log(Type.INFO, Driver.getInstance().getLanguageDriver().getLang().getMessage("cloud-shutting-down"));
+        System.exit(0);
+    }
+
+    @Override
+    public void run() {
         Driver.getInstance().getTerminalDriver().log(Type.INFO, Driver.getInstance().getLanguageDriver().getLang().getMessage("manager-try-start"));
 
         System.setProperty("io.netty.noPreferDirect", "true");
@@ -71,19 +106,7 @@ public class CloudManager {
         System.setProperty("io.netty.leakDetectionLevel", "DISABLED");
         System.setProperty("io.netty.recycler.maxCapacity", "0");
         System.setProperty("io.netty.recycler.maxCapacity.default", "0");
-        if (!new File("./modules/").exists()){
-            new File("./modules/").mkdirs();
-            new ModuleLoader().downloadAllModules();
-        }
 
-
-
-        new File("./local/GLOBAL/EVERY/plugins/").mkdirs();
-        new File("./local/GLOBAL/EVERY_SERVER/plugins/").mkdirs();
-        new File("./local/GLOBAL/EVERY_PROXY/plugins/").mkdirs();
-        new File("./local/GLOBAL/EVERY_LOBBY/plugins/").mkdirs();
-        new File("./local/groups/").mkdirs();
-        new File( "./local/templates/").mkdirs();
         config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
         if (!new File("./connection.key").exists()){
             AuthenticatorKey key = new AuthenticatorKey();
@@ -212,9 +235,9 @@ public class CloudManager {
         //PACKETS
         NettyDriver.getInstance().getPacketDriver()
                 /*
-                * in this part all packages and traders sent to the server are registered
-                * {@link NettyAdaptor} handles the packet and looks where it belongs
-                * {@link Packet} handles the packets are written and read via a ByteBuf
+                 * in this part all packages and traders sent to the server are registered
+                 * {@link NettyAdaptor} handles the packet and looks where it belongs
+                 * {@link Packet} handles the packets are written and read via a ByteBuf
                  * */
                 //NODE
                 .registerHandler(new PacketInAuthNode().getPacketUUID(), new HandlePacketInAuthNode(), PacketInAuthNode.class)
@@ -253,32 +276,5 @@ public class CloudManager {
                 .registerHandler(new PacketInPlayerDisconnect().getPacketUUID(), new HandlePacketInPlayerDisconnect(), PacketInPlayerDisconnect.class)
                 .registerHandler(new PacketInPlayerSwitchService().getPacketUUID(), new HandlePacketInPlayerSwitchService(), PacketInPlayerSwitchService.class);
 
-    }
-    public void initRestService(){
-        Driver.getInstance().getTerminalDriver().log(Type.INFO, Driver.getInstance().getLanguageDriver().getLang().getMessage("web-server-prepared"));
-        Driver.getInstance().runWebServer();
-        Driver.getInstance().getTerminalDriver().log(Type.INFO, Driver.getInstance().getLanguageDriver().getLang().getMessage("web-server-connected").replace("%port%", "" + config.getRestApiCommunication()));
-    }
-
-    public static void shutdownHook(){
-        shutdown = true;
-        NettyDriver.getInstance().getPacketDriver().getAdaptor().clear();
-        serviceDriver.getServicesFromNode("InternalNode").stream().filter(taskedService -> Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName()).getGroupType().equalsIgnoreCase("PROXY"))
-                .forEach(TaskedService::handelQuit);
-
-        serviceDriver.getServicesFromNode("InternalNode").stream().filter(taskedService -> !Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName()).getGroupType().equalsIgnoreCase("PROXY"))
-                .forEach(TaskedService::handelQuit);
-        Driver.getInstance().getModuleDriver().unload();
-
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        Driver.getInstance().getWebServer().close();
-        NettyDriver.getInstance().nettyServer.close();
-        Driver.getInstance().getMessageStorage().eventDriver.clearListeners();
-        Driver.getInstance().getTerminalDriver().log(Type.INFO, Driver.getInstance().getLanguageDriver().getLang().getMessage("cloud-shutting-down"));
-        System.exit(0);
     }
 }

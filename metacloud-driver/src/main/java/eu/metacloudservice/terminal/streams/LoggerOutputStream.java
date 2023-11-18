@@ -1,3 +1,11 @@
+/*
+ * this class is by RauchigesEtwas
+ */
+
+/*
+ * this class is by RauchigesEtwas
+ */
+
 package eu.metacloudservice.terminal.streams;
 
 import eu.metacloudservice.Driver;
@@ -20,9 +28,6 @@ public final class LoggerOutputStream extends ByteArrayOutputStream {
         this.reset();
         if (input != null && !input.isEmpty()) {
             Driver.getInstance().getTerminalDriver().log(this.logType, input.split("\n"));
-            Driver.getInstance().getTerminalDriver().getLineReader().getTerminal().flush();
-            String prompt = Driver.getInstance().getTerminalDriver().getColoredString(String.format("§bmetacloud§f@%s §7=> ", System.getProperty("user.name")));
-            Driver.getInstance().getTerminalDriver().getTerminal().writer().print(prompt);
             Driver.getInstance().getTerminalDriver().getLineReader().getTerminal().flush();
         }
     }

@@ -143,4 +143,57 @@ public class RestDriver {
         }
         return content;
     }
+
+    public String getWithoutAuth(String urls){
+        String content = null;
+        HttpURLConnection con = null;
+        InputStream inputStream = null;
+        BufferedReader in = null;
+
+        try {
+            URL url = new URL(urls);
+            con = (HttpURLConnection) url.openConnection();
+
+            con.setRequestMethod("GET");
+            con.setDoOutput(false);
+            con.setConnectTimeout(5000); // Set connection timeout to 5 seconds
+            con.setReadTimeout(5000);    // Set read timeout to 5 seconds
+            con.connect();
+
+            int statusCode = con.getResponseCode();
+            if (statusCode == HttpURLConnection.HTTP_OK) {
+                inputStream = con.getInputStream();
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+                in = new BufferedReader(inputStreamReader);
+
+                StringBuilder response = new StringBuilder();
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                content = response.toString();
+            }
+        } catch (IOException ignored) {
+        } finally {
+            // Ressourcenfreigabe im finally-Block
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    // Handle exception
+                }
+            }
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    // Handle exception
+                }
+            }
+            if (con != null) {
+                con.disconnect();
+            }
+        }
+        return content;
+    }
 }

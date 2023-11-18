@@ -1,4 +1,4 @@
-package eu.metacloudservice.async.pool.node.entrys;/*
+package eu.metacloudservice.pool.node.entrys;/*
  * this class is by RauchigesEtwas
  */
 
@@ -8,7 +8,6 @@ import eu.metacloudservice.pool.player.entrys.CloudPlayer;
 import eu.metacloudservice.pool.service.entrys.CloudService;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class CloudNode {

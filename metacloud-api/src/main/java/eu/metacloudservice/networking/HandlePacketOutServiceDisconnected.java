@@ -4,7 +4,7 @@ import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.events.listeners.services.CloudProxyDisconnectedEvent;
 import eu.metacloudservice.events.listeners.services.CloudServiceDisconnectedEvent;
-import eu.metacloudservice.networking.out.service.PacketOutServiceDisconnected;
+import eu.metacloudservice.networking.packet.packets.out.service.PacketOutServiceDisconnected;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;
 import io.netty.channel.Channel;

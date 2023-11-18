@@ -5,6 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
     <modules>
         <module>metamodule-npc</module>
+        <module>metamodule-signs</module>
+        <module>metamodule-hub</module>
+        <module>metamodule-notify</module>
+        <module>metamodule-syncproxy</module>
+        <module>metamodule-permissions</module>
+        <module>metamodule-cloudflare</module>
     </modules>
     <parent>
         <groupId>eu.metacloudservice</groupId>

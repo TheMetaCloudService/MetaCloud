@@ -1,19 +1,16 @@
 package eu.metacloudservice.bungee.listener;
 
 import eu.metacloudservice.CloudAPI;
-import eu.metacloudservice.Driver;
 import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.bungee.BungeeBootstrap;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.groups.dummy.Group;
-import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerConnect;
-import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerDisconnect;
-import eu.metacloudservice.networking.in.service.playerbased.PacketInPlayerSwitchService;
-import eu.metacloudservice.networking.packet.Packet;
+import eu.metacloudservice.networking.packet.packets.in.service.playerbased.PacketInPlayerConnect;
+import eu.metacloudservice.networking.packet.packets.in.service.playerbased.PacketInPlayerDisconnect;
+import eu.metacloudservice.networking.packet.packets.in.service.playerbased.PacketInPlayerSwitchService;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;

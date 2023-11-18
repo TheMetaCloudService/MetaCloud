@@ -1,8 +1,7 @@
-/*
+package eu.metacloudservice.async.pool.node;/*
  * this class is by RauchigesEtwas
  */
 
-package eu.metacloudservice.pool.node;
 
 import eu.metacloudservice.configuration.dummys.nodeconfig.NodeConfig;
 import eu.metacloudservice.pool.node.entrys.CloudNode;
@@ -10,6 +9,7 @@ import eu.metacloudservice.pool.service.entrys.CloudService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class NodePool {
@@ -21,16 +21,16 @@ public class NodePool {
     }
 
 
-    public List<CloudNode> getNodes() {
-        return connectedNodes;
+    public CompletableFuture<List<CloudNode>> getNodes() {
+        return CompletableFuture.supplyAsync(()->connectedNodes);
     }
 
-    public List<String> getNodesByName() {
-        return connectedNodes.stream().map(CloudNode::getNodeName).toList();
+    public CompletableFuture<List<String>> getNodesByName() {
+        return CompletableFuture.supplyAsync( () ->connectedNodes.stream().map(CloudNode::getNodeName).toList());
     }
 
-    public CloudNode getNode(String node){
-        return connectedNodes.stream().filter(cloudNode -> cloudNode.getNodeName().equals(node)).findFirst().orElse(null);
+    public CompletableFuture<CloudNode> getNode(String node){
+        return CompletableFuture.supplyAsync( () ->connectedNodes.stream().filter(cloudNode -> cloudNode.getNodeName().equals(node)).findFirst().orElse(null));
     }
 
     public void createNode(CloudNode cloudNode){

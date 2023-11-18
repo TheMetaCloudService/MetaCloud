@@ -11,17 +11,10 @@ import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.networking.NettyDriver;
-import eu.metacloudservice.networking.in.service.PacketInServiceDisconnect;
+import eu.metacloudservice.networking.packet.packets.in.service.PacketInServiceDisconnect;
 
-import eu.metacloudservice.pool.service.entrys.CloudService;
-import eu.metacloudservice.timebaser.TimerBase;
-import eu.metacloudservice.timebaser.utils.TimeUtil;
-import eu.metacloudservice.webserver.dummys.liveservice.LiveServiceList;
-import eu.metacloudservice.webserver.dummys.liveservice.LiveServices;
 import net.kyori.adventure.text.Component;
 import org.slf4j.Logger;
-
-import java.util.TimerTask;
 
 @Plugin(id = "metacloudapi", name = "metacloud-api", version = "1.0", authors = "RauchigesEtwas")
 public class VelocityBootstrap {

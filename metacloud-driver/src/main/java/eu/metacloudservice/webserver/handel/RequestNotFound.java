@@ -21,7 +21,7 @@ public  class RequestNotFound {
         FullHttpResponse response = new DefaultFullHttpResponse(
                 HttpVersion.HTTP_1_1,
                 HttpResponseStatus.METHOD_NOT_ALLOWED,
-                Unpooled.copiedBuffer("{\"reason\":\"please enter the right auth-key\"}", CharsetUtil.UTF_8));
+                Unpooled.copiedBuffer("{\"reason\":\"Failed, because no HttpRequest was found\"}", CharsetUtil.UTF_8));
 
         response.headers().set(HttpHeaderNames.CONTENT_TYPE, "application/json; charset=UTF-8");
         response.headers().set(HttpHeaderNames.CONTENT_LENGTH, response.content().readableBytes());

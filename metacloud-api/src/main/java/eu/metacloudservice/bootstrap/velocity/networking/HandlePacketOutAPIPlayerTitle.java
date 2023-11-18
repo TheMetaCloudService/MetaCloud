@@ -2,13 +2,12 @@ package eu.metacloudservice.bootstrap.velocity.networking;
 
 
 import eu.metacloudservice.bootstrap.velocity.VelocityBootstrap;
-import eu.metacloudservice.networking.out.service.playerbased.apibased.PacketOutAPIPlayerTitle;
+import eu.metacloudservice.networking.packet.packets.out.service.playerbased.apibased.PacketOutAPIPlayerTitle;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;
 import io.netty.channel.Channel;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
-import org.checkerframework.checker.units.qual.C;
 
 import java.time.Duration;
 

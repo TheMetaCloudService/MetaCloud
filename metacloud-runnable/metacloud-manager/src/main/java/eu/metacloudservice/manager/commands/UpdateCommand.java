@@ -1,3 +1,7 @@
+/*
+ * this class is by RauchigesEtwas
+ */
+
 package eu.metacloudservice.manager.commands;
 
 import eu.metacloudservice.Driver;
@@ -35,9 +39,10 @@ public class UpdateCommand extends CommandAdapter {
             }
 
             new AnimationDriver().play();
-            new File("./local/GLOBAL/EVERY/plugins/metacloud-api.jar").delete();
-            new File("./local/GLOBAL/EVERY/plugins/metacloud-plugin.jar").delete();
-
+            new File("./local/GLOBAL/EVERY/plugins/metacloud-api.jar").deleteOnExit();
+            new File("./local/GLOBAL/EVERY/plugins/metacloud-plugin.jar").deleteOnExit();
+            new File("./dependency/runnable-manager.jar").deleteOnExit();
+            new File("./dependency/runnable-node.jar").deleteOnExit();
 
             Driver.getInstance().getTerminalDriver().log(Type.INFO, "Update §fmetacloud-plugin.jar...");
 
