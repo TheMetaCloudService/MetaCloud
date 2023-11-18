@@ -1,3 +1,7 @@
+/*
+ * this class is by RauchigesEtwas
+ */
+
 package eu.metacloudservice.terminal.commands;
 
 
@@ -6,9 +10,7 @@ import eu.metacloudservice.terminal.enums.Type;
 import lombok.SneakyThrows;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public final class CommandDriver {
 
@@ -31,11 +33,7 @@ public final class CommandDriver {
         if(command != null){
             command.performCommand(command, args);
         }else {
-            if (Driver.getInstance().getMessageStorage().language.equalsIgnoreCase("DE")){
-                Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "der eingegebene Befehl wurde nicht gefunden bitte tippe '§fhelp§r'");
-            }else {
-                Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "the entered command was not found please type '§fhelp§r'");
-            }
+            Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-is-not-found"));
         }
     }
 

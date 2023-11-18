@@ -9,8 +9,7 @@ import java.lang.annotation.Target;
 public @interface CommandInfo {
 
     String command();
-    String ENdescription() default "";
-    String DEdescription() default "";
+    String description() default "";
     String permission() default  "";
     String[] aliases() default {};
 

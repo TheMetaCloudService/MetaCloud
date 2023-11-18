@@ -3,8 +3,6 @@ package eu.metacloudservice.terminal;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.terminal.commands.CommandDriver;
 import eu.metacloudservice.terminal.enums.Type;
-import eu.metacloudservice.terminal.screens.GroupSetup;
-import eu.metacloudservice.terminal.screens.MainSetup;
 import org.jline.reader.UserInterruptException;
 
 public final class TerminalReader extends Thread {
@@ -25,7 +23,6 @@ public final class TerminalReader extends Thread {
                 final var line = consoleDriver.getLineReader().readLine(consoleDriver.getColoredString(prompt));
                 if (line != null && !line.trim().isEmpty()) {
                     final var input = consoleDriver.getInputs().poll();
-
                     if (Driver.getInstance().getMessageStorage().openServiceScreen) {
                         Driver.getInstance().getMessageStorage().consoleInput.add(line);
                     } else if (consoleDriver.isInSetup()) {
@@ -36,8 +33,7 @@ public final class TerminalReader extends Thread {
                         commandDriver.executeCommand(line);
                     }
                 } else {
-                    consoleDriver.logSpeed(Type.COMMAND, "Der eingegebene Befehl wurde nicht gefunden bitte tippe '§fhelp§r'",
-                            "The entered command was not found please type '§fhelp§r'");
+                    consoleDriver.log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-is-not-found"));
 
                 }
             } catch (UserInterruptException ignored) {
@@ -49,10 +45,8 @@ public final class TerminalReader extends Thread {
     private void handleSetupInput(String line) {
         if (line.equalsIgnoreCase("leave") ||line.equalsIgnoreCase("leave ")) {
             consoleDriver.leaveSetup();
-        } else if (Driver.getInstance().getMessageStorage().setupType.equalsIgnoreCase("MAINSETUP")) {
-            new MainSetup(line);
-        } else if (Driver.getInstance().getMessageStorage().setupType.equalsIgnoreCase("GROUP")) {
-            new GroupSetup(line);
+        }else {
+            Driver.getInstance().getTerminalDriver().getSetupDriver().getSetup().call(line.replace(" ", ""));
         }
     }
 }

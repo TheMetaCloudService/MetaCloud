@@ -9,8 +9,7 @@ public abstract class CommandAdapter {
 
     private final String command;
     private final String[] aliases;
-    private final String DEdescription;
-    private final String ENdescription;
+    private final String description;
     private final String permission;
 
     public CommandAdapter(){
@@ -18,8 +17,7 @@ public abstract class CommandAdapter {
 
         this.command = annotation.command();
         this.aliases = annotation.aliases();
-        this.ENdescription = annotation.ENdescription();
-        this.DEdescription = annotation.DEdescription();
+        this.description = annotation.description();
         this.permission = annotation.permission();
     }
 
@@ -28,12 +26,11 @@ public abstract class CommandAdapter {
     public String getCommand() {
         return command;
     }
-    public String getDEdescription() {
-        return DEdescription;
+
+    public String getDescription() {
+        return description;
     }
-    public String getENdescription() {
-        return ENdescription;
-    }
+
     public ArrayList<String> getAliases() {
         ArrayList<String> resuls = new ArrayList<>();
         Collections.addAll(resuls, aliases);

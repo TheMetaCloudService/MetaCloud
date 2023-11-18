@@ -2,12 +2,14 @@ package eu.metacloudservice.terminal;
 
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
-import eu.metacloudservice.storage.SetupStorage;
 import eu.metacloudservice.terminal.commands.CommandDriver;
 import eu.metacloudservice.terminal.completer.TerminalCompleter;
 import eu.metacloudservice.terminal.enums.Color;
 import eu.metacloudservice.terminal.enums.Type;
 import eu.metacloudservice.terminal.logging.SimpleLatestLog;
+import eu.metacloudservice.terminal.setup.SetupDriver;
+import eu.metacloudservice.terminal.setup.setups.main.GeneralSetup;
+import eu.metacloudservice.terminal.setup.setups.group.GroupSetup;
 import eu.metacloudservice.terminal.streams.LoggerOutputStream;
 import eu.metacloudservice.terminal.utils.TerminalStorage;
 import eu.metacloudservice.terminal.utils.TerminalStorageLine;
@@ -32,8 +34,10 @@ public final class TerminalDriver {
     private boolean isInSetup;
     private final LinkedList<TerminalStorage> mainScreenStorage;
     private final Queue<TerminalStorageLine> inputs;
+
+    private final SetupDriver setupDriver;
+
     private final Terminal terminal;
-    private SetupStorage setupStorage;
     private final LineReader lineReader;
     private final SimpleLatestLog simpleLatestLog;
     private final CommandDriver commandDriver;
@@ -50,11 +54,10 @@ public final class TerminalDriver {
          * @Coder: RauchigesEtwas (Robin B.)
          * */
 
-
         System.setOut(new PrintStream(new LoggerOutputStream(Type.INFO), true));
         System.setErr(new PrintStream(new LoggerOutputStream(Type.ERROR), true));
-        this.setupStorage = new SetupStorage();
         this.commandDriver = new CommandDriver();
+        setupDriver = new SetupDriver();
         this.mainScreenStorage = new LinkedList<>();
         this.inputs = new LinkedList<>();
         this.simpleLatestLog = new SimpleLatestLog();
@@ -81,16 +84,13 @@ public final class TerminalDriver {
                 .parser(new DefaultParser().eofOnUnclosedQuote(true))
                 .build();
 
-
-
         Thread consoleReadingThread = new TerminalReader(this);
+        consoleReadingThread.setName("CONSOLE");
+        consoleReadingThread.setPriority(Thread.MAX_PRIORITY);
         consoleReadingThread.start();
 
     }
 
-    public SetupStorage getSetupStorage() {
-        return setupStorage;
-    }
 
 
     public Terminal getTerminal() {
@@ -101,25 +101,21 @@ public final class TerminalDriver {
         return lineReader;
     }
 
-    public void logSpeed(Type type, String detext, String entext){
-      if (Driver.getInstance().getMessageStorage().language.equalsIgnoreCase("DE")){
-          log(type, detext);
-      }else {
-          log(type, entext);
-      }
-    }
 
     public void joinSetup(){
         this.isInSetup = true;
-        clearScreen();
-        this.setupStorage = new SetupStorage();
-        log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
         if (!new File("./service.json").exists() && !new File("./nodeservice.json").exists()){
-            Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP, "Welche Sprache möchten Sie haben?", "What language would you like to have?");
-            Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP, "Mögliche Antworten: §fDE, §fEN", "Possible answers: §fDE, §fEN");
-        }else if (Driver.getInstance().getMessageStorage().setupType.equalsIgnoreCase("GROUP")){
+            String joinedLanguages = String.join(", ", Driver.getInstance().getLanguageDriver().getSupportedLanguages());
+            clearScreen();
+            log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
+            Driver.getInstance().getTerminalDriver().log(Type.INSTALLATION, Driver.getInstance().getLanguageDriver().getLang().getMessage("setup-general-question-1"));
+            Driver.getInstance().getTerminalDriver().log(Type.INSTALLATION, Driver.getInstance().getLanguageDriver().getLang().getMessage("setup-general-question-possible-answers")
+                    .replace("%possible_answers%", joinedLanguages));
 
-            Driver.getInstance().getTerminalDriver().logSpeed(Type.SETUP, "Wie soll die Gruppe heißen?", "What should the group be called?");
+            setupDriver.setSetup(new GeneralSetup());
+        }else if (setupDriver.getSetup() instanceof GroupSetup){
+            clearScreen();
+            log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
         }
     }
 
@@ -127,9 +123,10 @@ public final class TerminalDriver {
         clearScreen();
         if (Driver.getInstance().getMessageStorage().openServiceScreen){
             Driver.getInstance().getMessageStorage().openServiceScreen = false;
+            Driver.getInstance().getMessageStorage().screenForm = "";
         }
         this.isInSetup = false;
-        if (Driver.getInstance().getMessageStorage().setupType.equalsIgnoreCase("GROUP")){
+        if (setupDriver.getSetup() instanceof GroupSetup){
             Driver.getInstance().getGroupDriver().getAll().forEach(group -> {
                 if (Driver.getInstance().getWebServer().getRoute("/"+group.getGroup()) == null){
                     Driver.getInstance().getWebServer().addRoute(new RouteEntry("/" + group.getGroup(), new ConfigDriver().convert(group)));
@@ -138,7 +135,7 @@ public final class TerminalDriver {
                 }
             });
         }
-        Driver.getInstance().getMessageStorage().setupType = "";
+        setupDriver.setSetup(null);
         this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
         if ( this.mainScreenStorage.size() > 200){
             for (int i =  this.mainScreenStorage.size()-200; i != this.mainScreenStorage.size(); i++) {
@@ -214,63 +211,6 @@ public final class TerminalDriver {
         this.redraw();
     }
 
-
-    public void log(Type type, String[] de, String[] en){
-        if (Driver.getInstance().getMessageStorage().language.equalsIgnoreCase("DE")){
-
-            this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
-            for (int i = 0; i != de.length; i++){
-                this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase().replace("INFORMATION", "§bINFORMATION")
-
-                        .replace("ERROR", "§cERROR").replace("WARNING", "§eWARN")+"§7: §r" + de[i] +Color.RESET.getAnsiCode()));
-                simpleLatestLog.log(getClearSting("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase()+"§7: §r" + de[i] ));
-                
-                this.lineReader.getTerminal().flush();
-            }
-        }else {
-            this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
-            for (int i = 0; i != en.length; i++){
-                this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase().replace("INFORMATION", "§bINFORMATION")
-                        .replace("ERROR", "§cERROR").replace("WARNING", "§eWARN")+"§7: §r" + en[i] +Color.RESET.getAnsiCode()));
-                simpleLatestLog.log(getClearSting("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase()+"§7: §r" + en[i] ));
-                
-                this.lineReader.getTerminal().flush();
-            }
-        }
-    }
-
-    public void log(String service, String[] de, String[] en){
-        if (Driver.getInstance().getMessageStorage().language.equalsIgnoreCase("DE")){
-
-            this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
-            for (int i = 0; i != de.length; i++){
-                this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+service
-                      +"§7: §r" + de[i] +Color.RESET.getAnsiCode()));
-                this.lineReader.getTerminal().flush();
-                simpleLatestLog.log(getClearSting("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §c"+service+"§7: §r" + de[i]));
-                
-                this.lineReader.getTerminal().flush();
-                if (!this.lineReader.isReading()) return;
-                this.lineReader.callWidget(LineReader.REDRAW_LINE);
-                this.lineReader.callWidget(LineReader.REDISPLAY);
-            }
-        }else {
-            this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
-            for (int i = 0; i != en.length; i++){
-                this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+
-                        service +"§7: §r" + en[i] +Color.RESET.getAnsiCode()));
-                this.lineReader.getTerminal().flush();
-                simpleLatestLog.log("["  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "] "+service+": " + getClearSting(en[i]) );
-                
-                this.lineReader.getTerminal().flush();
-                if (!this.lineReader.isReading()) return;
-                this.lineReader.callWidget(LineReader.REDRAW_LINE);
-                this.lineReader.callWidget(LineReader.REDISPLAY);
-            }
-        }
-    }
-
-
     public void log(String service, String messages){
 
         this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
@@ -292,10 +232,13 @@ public final class TerminalDriver {
             this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase().replace("INFORMATION", "§bINFORMATION")
                     .replace("ERROR", "§cERROR").replace("WARNING", "§eWARN")+"§7: §r" + messages[i] +Color.RESET.getAnsiCode()));
             simpleLatestLog.log(getClearSting("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase()+"§7: §r" + messages[i]));
-            
-            this.lineReader.getTerminal().flush();
+
 
         }
+        this.lineReader.getTerminal().flush();
+        if (!this.lineReader.isReading()) return;
+        this.lineReader.callWidget(LineReader.REDRAW_LINE);
+        this.lineReader.callWidget(LineReader.REDISPLAY);
     }
 
     public void log(Type type, String message){
@@ -365,9 +308,9 @@ public final class TerminalDriver {
             }
 
         }else {
-            if (type == Type.SETUP){
+            if (type == Type.INSTALLATION){
                 this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
-                this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §bSETUP§7: §r" + message +Color.RESET.getAnsiCode()));
+                this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §bINSTALLATION§7: §r" + message +Color.RESET.getAnsiCode()));
                 simpleLatestLog.log(getClearSting("["  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "] SETUP: " + message ));
                 
                 this.lineReader.getTerminal().flush();
@@ -407,7 +350,6 @@ public final class TerminalDriver {
 
 
     /**
-     * Color string string.
      *
      * @param text the text
      * @return the string
@@ -422,7 +364,6 @@ public final class TerminalDriver {
     }
 
     public String getClearSting(String text){
-
         text = text.replace("§r", "")
                 .replace("§f", "")
                 .replace("§0", "")
@@ -453,6 +394,10 @@ public final class TerminalDriver {
 
     public Queue<TerminalStorageLine> getInputs() {
         return this.inputs;
+    }
+
+    public SetupDriver getSetupDriver() {
+        return setupDriver;
     }
 
     public CommandDriver getCommandDriver() {
