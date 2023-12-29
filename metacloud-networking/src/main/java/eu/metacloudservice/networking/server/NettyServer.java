@@ -9,15 +9,12 @@ import io.netty.channel.*;
 import io.netty.channel.epoll.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.channel.unix.UnixChannelOption;
 import lombok.SneakyThrows;
 
 import java.net.InetSocketAddress;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.BiConsumer;
 
 public class NettyServer extends ChannelInitializer<Channel> implements AutoCloseable{
     private int port;
@@ -34,9 +31,6 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
     public void start() {
 
         boolean isEpoll = Epoll.isAvailable();
-
-        int cores = Runtime.getRuntime().availableProcessors();
-
         this.BOSS = isEpoll ? new EpollEventLoopGroup() : new NioEventLoopGroup();
         this.WORKER = isEpoll ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 
@@ -44,13 +38,6 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
                 .group(BOSS, WORKER)
                 .channel(isEpoll ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
                 .childHandler(this);
-
-        if (isEpoll) {
-            bootstrap
-                    .option(UnixChannelOption.SO_REUSEPORT, true)
-                    .option(ChannelOption.SO_REUSEADDR, true)
-                    .option(ChannelOption.WRITE_BUFFER_WATER_MARK, WATER_MARK);
-        }
 
         bootstrap.bind(new InetSocketAddress(port)).sync().channel();
     }
@@ -89,14 +76,7 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
 
         if (allowAddress(inetSocketAddress.getAddress().getHostAddress())){
             ChannelPipeline pipeline = channel.pipeline();
-            pipeline.addLast(new ChannelHandler() {
-                @Override
-                public void handlerAdded(ChannelHandlerContext channelHandlerContext) throws Exception {}
-                @Override
-                public void handlerRemoved(ChannelHandlerContext channelHandlerContext) throws Exception {}
-                @Override
-                public void exceptionCaught(ChannelHandlerContext channelHandlerContext, Throwable throwable) throws Exception {}});
-            pipeline.addLast(new PacketDecoder());
+        pipeline.addLast(new PacketDecoder());
             pipeline.addLast(new PacketEncoder());
         }else {
             channel.close().addListener(ChannelFutureListener.CLOSE_ON_FAILURE).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);

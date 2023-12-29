@@ -8,10 +8,9 @@ import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInCreateGroup;
+import io.netty.channel.Channel;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;
-import io.netty.channel.Channel;
-
 public class HandlePacketInCreateGroup implements NettyAdaptor {
     @Override
     public void handle(Channel channel, Packet packet) {

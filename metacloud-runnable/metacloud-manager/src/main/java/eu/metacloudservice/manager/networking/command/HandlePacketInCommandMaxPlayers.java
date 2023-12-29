@@ -7,9 +7,9 @@ package eu.metacloudservice.manager.networking.command;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.groups.dummy.Group;
-import eu.metacloudservice.networking.packet.packets.in.service.command.PacketInCommandMaxPlayers;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;
+import eu.metacloudservice.networking.packet.packets.in.service.command.PacketInCommandMaxPlayers;
 import io.netty.channel.Channel;
 
 public class HandlePacketInCommandMaxPlayers implements NettyAdaptor {

@@ -2,9 +2,9 @@ package eu.metacloudservice.manager.networking.service;
 
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInLaunchService;
+import io.netty.channel.Channel;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;
-import io.netty.channel.Channel;
 
 public class HandlePacketInLaunchService implements NettyAdaptor {
     @Override

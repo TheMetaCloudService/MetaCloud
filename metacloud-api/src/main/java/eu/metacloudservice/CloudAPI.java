@@ -11,22 +11,21 @@ import eu.metacloudservice.events.entrys.ICloudListener;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.networking.*;
 import eu.metacloudservice.networking.client.NettyClient;
+import eu.metacloudservice.networking.packet.Packet;
 import eu.metacloudservice.networking.packet.packets.in.service.PacketInServiceConnect;
 import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInChangeState;
 import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInDispatchMainCommand;
 import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInLaunchService;
 import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInStopService;
 import eu.metacloudservice.networking.packet.packets.in.service.command.PacketInCommandWhitelist;
-import eu.metacloudservice.networking.packet.packets.in.service.playerbased.apibased.PacketOutAPIPlayerDispactchCommand;
 import eu.metacloudservice.networking.packet.packets.out.service.*;
-import eu.metacloudservice.networking.packet.packets.out.service.playerbased.apibased.*;
 import eu.metacloudservice.networking.packet.packets.out.service.group.PacketOutGroupCreate;
 import eu.metacloudservice.networking.packet.packets.out.service.group.PacketOutGroupDelete;
 import eu.metacloudservice.networking.packet.packets.out.service.group.PacketOutGroupEdit;
 import eu.metacloudservice.networking.packet.packets.out.service.playerbased.PacketOutPlayerConnect;
 import eu.metacloudservice.networking.packet.packets.out.service.playerbased.PacketOutPlayerDisconnect;
 import eu.metacloudservice.networking.packet.packets.out.service.playerbased.PacketOutPlayerSwitchService;
-import eu.metacloudservice.networking.packet.Packet;
+import eu.metacloudservice.networking.packet.packets.out.service.playerbased.apibased.*;
 import eu.metacloudservice.pool.groupe.GroupPool;
 import eu.metacloudservice.pool.player.PlayerPool;
 import eu.metacloudservice.pool.player.entrys.CloudPlayer;
@@ -86,6 +85,7 @@ public class CloudAPI {
                 .registerHandler(new PacketOutCloudProxyChangeState().getPacketUUID(), new HandlePacketOutCloudProxyChangeState(), PacketOutCloudProxyChangeState.class)
                 .registerHandler(new PacketOutRestAPIPut().getPacketUUID(), new HandlePacketOutRestAPIPut(), PacketOutRestAPIPut.class);
 
+
         this.eventDriver = new EventDriver();
 
         Group group = (Group) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/" + service.getGroup()), Group.class);
@@ -108,7 +108,6 @@ public class CloudAPI {
                         .registerHandler(new PacketOutAPIPlayerKick().getPacketUUID(), new eu.metacloudservice.bootstrap.velocity.networking.HandlePacketOutAPIPlayerKick(), PacketOutAPIPlayerKick.class)
                         .registerHandler(new PacketOutCloudPlayerComponent().getPacketUUID(), new eu.metacloudservice.bootstrap.velocity.networking.HandlePacketOutCloudPlayerComponent(), PacketOutCloudPlayerComponent.class)
                         .registerHandler(new PacketOutAPIPlayerTab().getPacketUUID(), new eu.metacloudservice.bootstrap.velocity.networking.HandlePacketOutAPIPlayerTab(), PacketOutAPIPlayerTab.class);
-
             }else {
                 eventDriver.registerListener(new CloudEvents());
                 NettyDriver.getInstance().getPacketDriver()
@@ -153,26 +152,13 @@ public class CloudAPI {
         }, 30, 30, TimeUtil.SECONDS);
     }
 
-    public void launchService(String group){
-        sendPacketSynchronized(new PacketInLaunchService(group));
-    }
 
-    public void launchServices(String group, int count){
-        for (int i = 0; i != count-1; i++) {
-            launchService(group);
-        }
-    }
 
     public void dispatchCommand(String command){
         sendPacketSynchronized(new PacketInDispatchMainCommand(command));
     }
 
-    public void stopService(String service){
-        sendPacketSynchronized(new PacketInStopService(service));
-    }
 
-
-    
     public EventDriver getEventDriver() {
         return eventDriver;
     }

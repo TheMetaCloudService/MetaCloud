@@ -13,6 +13,7 @@ import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.authenticator.AuthenticatorKey;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
 import eu.metacloudservice.webserver.entry.RouteEntry;
+import eu.metacloudservice.webserver.entry.RouteFileEntry;
 import eu.metacloudservice.webserver.handel.RequestGET;
 import eu.metacloudservice.webserver.handel.RequestHandler;
 import eu.metacloudservice.webserver.handel.RequestNotFound;
@@ -26,6 +27,7 @@ import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import lombok.SneakyThrows;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -35,6 +37,8 @@ public class WebServer {
 
 
     private ConcurrentLinkedDeque<RouteEntry> ROUTES;
+
+    private ConcurrentLinkedDeque<RouteFileEntry> FILES;
 
     public  String AUTH_KEY;
 
@@ -49,6 +53,7 @@ public class WebServer {
         this.AUTH_KEY = Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey());
         ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
         this.ROUTES = new ConcurrentLinkedDeque<>();
+        this.FILES = new ConcurrentLinkedDeque<>();
 
          boosGroup = new NioEventLoopGroup(1);
          workerGroup = new NioEventLoopGroup();
@@ -107,6 +112,28 @@ public class WebServer {
     public boolean isContentExists(String path){
         return getRoute(path) != null;
     }
+    public boolean isTemplateExists(String template){
+        return getTemplate(template) != null;
+    }
+
+
+    public RouteFileEntry getTemplate(String template){
+        return  FILES.parallelStream().filter(routeEntry -> routeEntry.template.equalsIgnoreCase(template)).findFirst().orElse(null);
+    }
+
+
+    public void updateTemplate(String template, File zip){
+        this.FILES.parallelStream().filter(routeEntry -> routeEntry.template.equalsIgnoreCase(template)).findFirst().get().file = zip;
+    }
+
+    public void addTemplate(RouteFileEntry entry){
+        FILES.add(entry);
+    }
+
+    public void removeTemplate(String template){
+        FILES.removeIf(entry -> entry.template.equalsIgnoreCase(template));
+    }
+
 
     public void addRoute(RouteEntry entry){
         ROUTES.add(entry);

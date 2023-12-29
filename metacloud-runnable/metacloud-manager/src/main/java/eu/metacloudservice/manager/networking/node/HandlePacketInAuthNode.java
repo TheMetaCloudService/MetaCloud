@@ -4,11 +4,11 @@ import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.authenticator.AuthenticatorKey;
 import eu.metacloudservice.manager.CloudManager;
+import eu.metacloudservice.networking.packet.NettyAdaptor;
+import eu.metacloudservice.networking.packet.Packet;
 import eu.metacloudservice.networking.packet.packets.in.node.PacketInAuthNode;
 import eu.metacloudservice.networking.packet.packets.out.node.PacketOutAuthSuccess;
 import eu.metacloudservice.networking.NettyDriver;
-import eu.metacloudservice.networking.packet.NettyAdaptor;
-import eu.metacloudservice.networking.packet.Packet;
 import eu.metacloudservice.terminal.enums.Type;
 import io.netty.channel.Channel;
 

@@ -69,14 +69,6 @@ public class ServiceCommand extends CommandAdapter {
                     Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-service-service-not-found")
                             .replace("%servuce%", service));
                 }
-            }else  if (args[0].equalsIgnoreCase("joinscreen")){
-                String service = args[1];
-                if (CloudManager.serviceDriver.getService(service) != null && CloudManager.serviceDriver.getService(service).getEntry().getStatus() != ServiceState.QUEUED){
-                    CloudManager.serviceDriver.getService(service).handelScreen();
-                }else {
-                    Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-service-service-sync")
-                            .replace("%servuce%", service));
-                }
             }else  if (args[0].equalsIgnoreCase("sync")){
                 String service = args[1];
                 if (CloudManager.serviceDriver.getService(service) != null){
@@ -236,7 +228,6 @@ public class ServiceCommand extends CommandAdapter {
             commands.add("list");
             commands.add("run");
             commands.add("stopgroup");
-            commands.add("joinscreen");
             commands.add("restart");
             commands.add("stop");
             commands.add("sync");
@@ -282,7 +273,6 @@ public class ServiceCommand extends CommandAdapter {
         Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-service-help-9"));
         Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-service-help-10"));
         Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-service-help-11"));
-        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-service-help-12"));
-    }
+         }
 
 }

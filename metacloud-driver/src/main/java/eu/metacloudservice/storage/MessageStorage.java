@@ -22,6 +22,9 @@ public class MessageStorage {
     public Integer canUseMemory = 0;
     public PacketLoader packetLoader;
 
+    public boolean sendConsoleToManager;
+    public String sendConsoleToManagerName;
+
     public EventDriver eventDriver;
     public boolean shutdownAccept;
 

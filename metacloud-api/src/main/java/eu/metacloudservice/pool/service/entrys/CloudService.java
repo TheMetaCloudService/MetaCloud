@@ -58,7 +58,7 @@ public class CloudService {
     }
 
     public void shutdown(){
-        CloudAPI.getInstance().stopService(name);
+        CloudAPI.getInstance().getServicePool().stopService(name);
     }
 
     public boolean isTypeProxy(){

@@ -10,6 +10,8 @@ package eu.metacloudservice.terminal;
 
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
+import eu.metacloudservice.networking.NettyDriver;
+import eu.metacloudservice.networking.packet.packets.in.node.PacketInSendConsole;
 import eu.metacloudservice.terminal.commands.CommandDriver;
 import eu.metacloudservice.terminal.completer.TerminalCompleter;
 import eu.metacloudservice.terminal.enums.Color;
@@ -368,7 +370,9 @@ public final class TerminalDriver {
      * @return the string
      */
     public String getColoredString(String text) {
-
+        if (Driver.getInstance().getMessageStorage().sendConsoleToManager){
+            NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInSendConsole(Driver.getInstance().getMessageStorage().sendConsoleToManagerName, text));
+        }
         for (Color consoleColour : Color.values()) {
             text = text.replace('§' + String.valueOf(consoleColour.getIndex()), consoleColour.getAnsiCode());
         }

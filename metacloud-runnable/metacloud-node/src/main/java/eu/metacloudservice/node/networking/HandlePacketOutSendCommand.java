@@ -1,8 +1,8 @@
 package eu.metacloudservice.node.networking;
 
-import eu.metacloudservice.networking.packet.packets.out.node.PacketOutSendCommand;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;
+import eu.metacloudservice.networking.packet.packets.out.node.PacketOutSendCommand;
 import eu.metacloudservice.node.CloudNode;
 import io.netty.channel.Channel;
 

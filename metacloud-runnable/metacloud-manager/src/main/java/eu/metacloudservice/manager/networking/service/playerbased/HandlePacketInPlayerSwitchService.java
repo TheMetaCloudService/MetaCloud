@@ -7,8 +7,6 @@ import eu.metacloudservice.manager.CloudManager;
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.packet.packets.in.service.playerbased.PacketInPlayerSwitchService;
 import eu.metacloudservice.networking.packet.packets.out.service.playerbased.PacketOutPlayerSwitchService;
-import eu.metacloudservice.networking.packet.NettyAdaptor;
-import eu.metacloudservice.networking.packet.Packet;
 import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.storage.UUIDDriver;
 import eu.metacloudservice.terminal.enums.Type;
@@ -16,7 +14,8 @@ import eu.metacloudservice.webserver.RestDriver;
 import io.netty.channel.Channel;
 
 import java.util.Objects;
-
+import eu.metacloudservice.networking.packet.NettyAdaptor;
+import eu.metacloudservice.networking.packet.Packet;
 public class HandlePacketInPlayerSwitchService implements NettyAdaptor {
     @Override
     public void handle(Channel channel, Packet packet) {

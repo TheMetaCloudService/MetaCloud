@@ -9,6 +9,8 @@
 package eu.metacloudservice.terminal.streams;
 
 import eu.metacloudservice.Driver;
+import eu.metacloudservice.networking.NettyDriver;
+import eu.metacloudservice.networking.packet.packets.in.node.PacketInSendConsole;
 import eu.metacloudservice.terminal.enums.Type;
 
 import java.io.ByteArrayOutputStream;
@@ -27,6 +29,9 @@ public final class LoggerOutputStream extends ByteArrayOutputStream {
         final var input = this.toString(StandardCharsets.UTF_8);
         this.reset();
         if (input != null && !input.isEmpty()) {
+            if (Driver.getInstance().getMessageStorage().sendConsoleToManager){
+                NettyDriver.getInstance().nettyClient.sendPacketsAsynchronous(new PacketInSendConsole(Driver.getInstance().getMessageStorage().sendConsoleToManagerName, input));
+            }
             Driver.getInstance().getTerminalDriver().log(this.logType, input.split("\n"));
             Driver.getInstance().getTerminalDriver().getLineReader().getTerminal().flush();
         }

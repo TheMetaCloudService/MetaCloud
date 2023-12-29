@@ -21,13 +21,17 @@ public class NettyBuffer {
     }
 
     public void writeString(String message){
-        byteBuf.writeInt(message.length());
-        byteBuf.writeCharSequence(message, StandardCharsets.UTF_8);
+        byte[] bytes = message.getBytes(StandardCharsets.UTF_8);
+        byteBuf.writeLong(bytes.length);
+        byteBuf.writeBytes(bytes);
     }
 
     public String readString(){
-        int messageLength = byteBuf.readInt();
-        return byteBuf.readCharSequence(messageLength, StandardCharsets.UTF_8).toString();
+        long messageLength = byteBuf.readLong();
+        byte[] bytes = new byte[(int) messageLength];
+        byteBuf.readBytes(bytes);
+        return new String(bytes, StandardCharsets.UTF_8);
+
     }
 
     public void writeInt(int integer) {
@@ -111,7 +115,7 @@ public class NettyBuffer {
     }
 
     public void writeList(ArrayList list){
-        byteBuf.writeInt(list.size()*2);
+        byteBuf.writeLong(list.size() * 2);
         list.forEach(o -> {
             if (o instanceof String){
                 writeString("STRING");

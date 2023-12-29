@@ -1,6 +1,9 @@
 package eu.metacloudservice.pool.service;
 
 import eu.metacloudservice.CloudAPI;
+import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
+import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInLaunchService;
+import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInStopService;
 import eu.metacloudservice.pool.player.entrys.CloudPlayer;
 import eu.metacloudservice.pool.service.entrys.CloudService;
 import eu.metacloudservice.process.ServiceState;
@@ -56,4 +59,23 @@ public class ServicePool {
             return false;
         }
     }
+
+
+    public void launchService(String group){
+
+        CloudAPI.getInstance().sendPacketSynchronized(new PacketInLaunchService(group));
+    }
+
+    public void launchServices(String group, int count){
+        for (int i = 0; i != count-1; i++) {
+            launchService(group);
+        }
+    }
+
+    public void stopService(String service){
+        CloudAPI.getInstance().sendPacketSynchronized(new PacketInStopService(service));
+    }
+
+
+
 }

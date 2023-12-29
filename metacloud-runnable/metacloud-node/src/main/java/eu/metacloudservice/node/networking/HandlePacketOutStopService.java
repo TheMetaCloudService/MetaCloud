@@ -1,9 +1,9 @@
 package eu.metacloudservice.node.networking;
 
 import eu.metacloudservice.Driver;
-import eu.metacloudservice.networking.packet.packets.out.node.PacketOutStopService;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;
+import eu.metacloudservice.networking.packet.packets.out.node.PacketOutStopService;
 import eu.metacloudservice.node.CloudNode;
 import eu.metacloudservice.node.cloudservices.entry.QueueEntry;
 import eu.metacloudservice.terminal.enums.Type;

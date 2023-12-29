@@ -7,10 +7,10 @@ import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.manager.CloudManager;
 import eu.metacloudservice.manager.cloudservices.entry.TaskedEntry;
 import eu.metacloudservice.networking.NettyDriver;
-import eu.metacloudservice.networking.packet.packets.in.service.PacketInServiceConnect;
-import eu.metacloudservice.networking.packet.packets.out.service.PacketOutServiceConnected;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;
+import eu.metacloudservice.networking.packet.packets.in.service.PacketInServiceConnect;
+import eu.metacloudservice.networking.packet.packets.out.service.PacketOutServiceConnected;
 import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.terminal.enums.Type;
 import eu.metacloudservice.timebaser.TimerBase;
@@ -22,14 +22,10 @@ import java.util.TimerTask;
 public class HandlePacketInServiceConnect implements NettyAdaptor {
     @Override
     public void handle(Channel channel, Packet packet) {
-
-
         if (packet instanceof PacketInServiceConnect){
             if (CloudManager.serviceDriver.getService(((PacketInServiceConnect) packet).getService()) == null){
-
                 channel.disconnect();
             }else if (NettyDriver.getInstance().nettyServer.isChannelFound(((PacketInServiceConnect) packet).getService())){
-
                 channel.disconnect();
             }else {
                 NettyDriver.getInstance().nettyServer.registerChannel(((PacketInServiceConnect) packet).getService(), channel);

@@ -4,10 +4,9 @@ import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.events.listeners.services.CloudProxyPreparedEvent;
 import eu.metacloudservice.events.listeners.services.CloudServicePreparedEvent;
 import eu.metacloudservice.networking.packet.packets.out.service.PacketOutServicePrepared;
+import io.netty.channel.Channel;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;
-import io.netty.channel.Channel;
-
 public class HandlePacketOutServicePrepared implements NettyAdaptor {
     @Override
     public void handle(Channel channel, Packet packet) {

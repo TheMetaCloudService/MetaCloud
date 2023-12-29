@@ -41,7 +41,7 @@ import eu.metacloudservice.networking.packet.packets.in.service.playerbased.Pack
 import eu.metacloudservice.networking.packet.packets.in.service.playerbased.PacketInPlayerDisconnect;
 import eu.metacloudservice.networking.packet.packets.in.service.playerbased.PacketInPlayerSwitchService;
 import eu.metacloudservice.networking.packet.packets.in.service.playerbased.apibased.*;
-import eu.metacloudservice.networking.packet.packets.out.node.PacketOutShutdownNode;
+import eu.metacloudservice.networking.packet.packets.out.node.*;
 import eu.metacloudservice.networking.server.NettyServer;
 import eu.metacloudservice.storage.IRunAble;
 import eu.metacloudservice.storage.ModuleLoader;
@@ -65,6 +65,9 @@ public class CloudManager implements IRunAble {
     public static QueueDriver queueDriver;
     public static RestDriver restDriver;
     public static ManagerConfig config;
+
+    private static Timer base;
+
     public static boolean shutdown;
 
     public void initRestService(){
@@ -76,7 +79,6 @@ public class CloudManager implements IRunAble {
     public static void shutdownHook(){
         shutdown = true;
         NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutShutdownNode());
-        NettyDriver.getInstance().getPacketDriver().getAdaptor().clear();
         serviceDriver.getServicesFromNode("InternalNode").stream().filter(taskedService -> Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName()).getGroupType().equalsIgnoreCase("PROXY"))
                 .forEach(TaskedService::handelQuit);
 
@@ -165,6 +167,7 @@ public class CloudManager implements IRunAble {
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new MetaCloudCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new QueueCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new PlayersCommand());
+        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new ScreenCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new UpdateCommand());
 
         Driver.getInstance().getTerminalDriver().log(Type.INFO, Driver.getInstance().getLanguageDriver().getLang().getMessage("commands-was-loaded")
@@ -276,5 +279,32 @@ public class CloudManager implements IRunAble {
                 .registerHandler(new PacketInPlayerDisconnect().getPacketUUID(), new HandlePacketInPlayerDisconnect(), PacketInPlayerDisconnect.class)
                 .registerHandler(new PacketInPlayerSwitchService().getPacketUUID(), new HandlePacketInPlayerSwitchService(), PacketInPlayerSwitchService.class);
 
+    }
+
+    public static void screenNode(String node){
+        if (Driver.getInstance().getMessageStorage().openServiceScreen){
+            base.cancel();
+
+
+            Driver.getInstance().getTerminalDriver().leaveSetup();
+        }else {
+            Driver.getInstance().getMessageStorage().openServiceScreen = true;
+            Driver.getInstance().getMessageStorage().screenForm = node;
+            Driver.getInstance().getTerminalDriver().clearScreen();
+
+            base = new Timer();
+            base.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if (! Driver.getInstance().getMessageStorage().consoleInput.isEmpty()){
+                        String line =  Driver.getInstance().getMessageStorage().consoleInput.removeFirst();
+                        if (line.equalsIgnoreCase("leave") ||line.equalsIgnoreCase("leave ")){
+                            screenNode(Driver.getInstance().getMessageStorage().screenForm);
+                        }else {
+                        }
+                    }
+                }
+            }, 100, 100);
+    }
     }
 }

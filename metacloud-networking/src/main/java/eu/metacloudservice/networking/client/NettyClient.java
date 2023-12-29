@@ -5,20 +5,16 @@ import eu.metacloudservice.networking.codec.PacketDecoder;
 import eu.metacloudservice.networking.codec.PacketEncoder;
 import eu.metacloudservice.networking.packet.Packet;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.*;
 import io.netty.channel.epoll.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.channel.unix.UnixChannelOption;
 
 import java.net.InetSocketAddress;
 
 public class NettyClient extends ChannelInitializer<Channel> implements AutoCloseable {
     private int port;
     private String host;
-    private static final WriteBufferWaterMark WATER_MARK = new WriteBufferWaterMark(1 << 20, 1 << 21);
-    private final boolean EPOLL = Epoll.isAvailable();
     private Channel channel;
 
     private EventLoopGroup  BOSS;
@@ -35,9 +31,6 @@ public class NettyClient extends ChannelInitializer<Channel> implements AutoClos
         BOSS =   isEpoll ? new EpollEventLoopGroup() : new NioEventLoopGroup();
         Bootstrap bootstrap = new Bootstrap()
                 .group(BOSS)
-                .option(ChannelOption.AUTO_READ, true)
-                .option(ChannelOption.SO_REUSEADDR, true)
-                .option(ChannelOption.WRITE_BUFFER_WATER_MARK, WATER_MARK)
                 .channel(Epoll.isAvailable() ? EpollSocketChannel.class : NioSocketChannel.class)
                 .handler(this);
         try {
@@ -60,13 +53,6 @@ public class NettyClient extends ChannelInitializer<Channel> implements AutoClos
     protected void initChannel(Channel channel) {
 
             ChannelPipeline pipeline = channel.pipeline();
-            pipeline.addLast(new ChannelHandler() {
-                @Override
-                public void handlerAdded(ChannelHandlerContext channelHandlerContext) throws Exception {}
-                @Override
-                public void handlerRemoved(ChannelHandlerContext channelHandlerContext) throws Exception {}
-                @Override
-                public void exceptionCaught(ChannelHandlerContext channelHandlerContext, Throwable throwable) throws Exception {}});
             pipeline.addLast(new PacketDecoder());
             pipeline.addLast(new PacketEncoder());
 

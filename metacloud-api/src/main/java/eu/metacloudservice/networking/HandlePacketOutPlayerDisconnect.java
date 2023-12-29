@@ -4,10 +4,10 @@ import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.events.listeners.player.CloudPlayerDisconnectedEvent;
 import eu.metacloudservice.networking.packet.packets.out.service.playerbased.PacketOutPlayerDisconnect;
-import eu.metacloudservice.networking.packet.NettyAdaptor;
-import eu.metacloudservice.networking.packet.Packet;
 import eu.metacloudservice.storage.UUIDDriver;
 import io.netty.channel.Channel;
+import eu.metacloudservice.networking.packet.NettyAdaptor;
+import eu.metacloudservice.networking.packet.Packet;
 
 public class HandlePacketOutPlayerDisconnect implements NettyAdaptor {
     @Override

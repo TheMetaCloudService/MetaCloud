@@ -5,9 +5,9 @@ import eu.metacloudservice.events.listeners.services.CloudProxyDisconnectedEvent
 import eu.metacloudservice.events.listeners.services.CloudServiceDisconnectedEvent;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.manager.CloudManager;
-import eu.metacloudservice.networking.packet.packets.in.service.PacketInServiceDisconnect;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;
+import eu.metacloudservice.networking.packet.packets.in.service.PacketInServiceDisconnect;
 import io.netty.channel.Channel;
 
 public class HandlePacketInServiceDisconnect implements NettyAdaptor {

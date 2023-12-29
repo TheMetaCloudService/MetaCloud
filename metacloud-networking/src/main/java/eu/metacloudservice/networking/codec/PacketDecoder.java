@@ -9,31 +9,28 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import lombok.SneakyThrows;
 import lombok.var;
 
-import javax.naming.spi.DirObjectFactory;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class PacketDecoder extends ByteToMessageDecoder {
     @SneakyThrows
     @Override
-    protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list)  {
-         if (byteBuf.readableBytes() < 4 ){
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
+        if (in.readableBytes() < 4) {
             return;
-        }else {
-                int id = byteBuf.readInt();
-                if (id == 0) return;
-                var packetClass = NettyDriver.getInstance().getPacketDriver().getPacket(id);
-                if (packetClass != null) {
-                    Packet packet = null;
-                    packet = packetClass.getDeclaredConstructor().newInstance();
-                    packet.setPacketUUID(id); // Setze die UUID manuell
-                    packet.readPacket(new NettyBuffer(byteBuf));
-                    list.add(packet);
-                    NettyDriver.getInstance().getPacketDriver().handle(id,channelHandlerContext.channel(), packet);
-                }else {
-                    return;
-                }
         }
+        int packetUUID = in.readInt();
+        if (NettyDriver.getInstance().getPacketDriver().getPacket(packetUUID) != null){
+            var packetClass = NettyDriver.getInstance().getPacketDriver().getPacket(packetUUID);
 
+            if (packetClass != null) {
+                ByteBuf payload = in.readBytes(in.readableBytes());
+                NettyBuffer nettyBuffer = new NettyBuffer(payload);
+                Packet packet = packetClass.getDeclaredConstructor().newInstance();
+                packet.setPacketUUID(packetUUID);
+                packet.readPacket(nettyBuffer);
+                out.add(packet);
+                NettyDriver.getInstance().getPacketDriver().handle(packetUUID, ctx.channel(), packet);
+            }
+        }
     }
 }

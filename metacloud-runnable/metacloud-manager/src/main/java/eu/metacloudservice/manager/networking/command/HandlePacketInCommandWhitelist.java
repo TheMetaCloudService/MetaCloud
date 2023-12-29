@@ -7,9 +7,9 @@ package eu.metacloudservice.manager.networking.command;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.manager.CloudManager;
-import eu.metacloudservice.networking.packet.packets.in.service.command.PacketInCommandWhitelist;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;
+import eu.metacloudservice.networking.packet.packets.in.service.command.PacketInCommandWhitelist;
 import eu.metacloudservice.webserver.dummys.WhiteList;
 import io.netty.channel.Channel;
 
