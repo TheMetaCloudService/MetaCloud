@@ -20,10 +20,15 @@ public class NettyBuffer {
         this.byteBuf = byteBuf;
     }
 
-    public void writeString(String message){
+    public void writeString(String message) {
         byte[] bytes = message.getBytes(StandardCharsets.UTF_8);
-        byteBuf.writeLong(bytes.length);
-        byteBuf.writeBytes(bytes);
+        byteBuf.ensureWritable(8 + bytes.length);
+        try {
+            byteBuf.writeLong(bytes.length);
+            byteBuf.writeBytes(bytes);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String readString(){
