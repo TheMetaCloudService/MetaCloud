@@ -15,7 +15,7 @@
 </p>
 
 ## Documentation
-You can find the new german documentation at https://metacloud.gitbook.io/metacloud-willkommen/ and the english documentation at https://metacloud.gitbook.io/metacloud-welcome/.
+You can find the new german documentation <a href="https://metacloud.gitbook.io/deutsch/">here</a> and the english documentation <a href="https://metacloud.gitbook.io/english/">here</a>.
 
 ## Requirements
 minimal requirements: 
