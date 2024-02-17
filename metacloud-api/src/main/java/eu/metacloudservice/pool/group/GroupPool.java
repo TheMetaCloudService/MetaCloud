@@ -2,7 +2,7 @@
  * this class is by RauchigesEtwas
  */
 
-package eu.metacloudservice.pool.groupe;
+package eu.metacloudservice.pool.group;
 
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.configuration.ConfigDriver;

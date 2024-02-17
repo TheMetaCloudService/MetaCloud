@@ -15,8 +15,6 @@ import eu.metacloudservice.networking.packet.Packet;
 import eu.metacloudservice.networking.packet.packets.in.service.PacketInServiceConnect;
 import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInChangeState;
 import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInDispatchMainCommand;
-import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInLaunchService;
-import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInStopService;
 import eu.metacloudservice.networking.packet.packets.in.service.command.PacketInCommandWhitelist;
 import eu.metacloudservice.networking.packet.packets.out.service.*;
 import eu.metacloudservice.networking.packet.packets.out.service.group.PacketOutGroupCreate;
@@ -26,7 +24,7 @@ import eu.metacloudservice.networking.packet.packets.out.service.playerbased.Pac
 import eu.metacloudservice.networking.packet.packets.out.service.playerbased.PacketOutPlayerDisconnect;
 import eu.metacloudservice.networking.packet.packets.out.service.playerbased.PacketOutPlayerSwitchService;
 import eu.metacloudservice.networking.packet.packets.out.service.playerbased.apibased.*;
-import eu.metacloudservice.pool.groupe.GroupPool;
+import eu.metacloudservice.pool.group.GroupPool;
 import eu.metacloudservice.pool.player.PlayerPool;
 import eu.metacloudservice.pool.player.entrys.CloudPlayer;
 import eu.metacloudservice.pool.service.ServicePool;
