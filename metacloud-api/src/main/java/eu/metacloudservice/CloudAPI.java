@@ -172,13 +172,6 @@ public class CloudAPI {
         sendPacketSynchronized(new PacketInDispatchMainCommand(command));
     }
 
-
-    public EventDriver getEventDriver() {
-        return eventDriver;
-    }
-
-
-
     public LiveService getCurrentService(){
         return service;
     }
@@ -237,23 +230,5 @@ public class CloudAPI {
     public void sendPacketAsynchronous(Packet packet){
         NettyDriver.getInstance().nettyClient.sendPacketsAsynchronous(packet);
     }
-    public RestDriver getRestDriver() {
-        return restDriver;
-    }
 
-    public PlayerPool getPlayerPool() {
-        return playerPool;
-    }
-
-    public ServicePool getServicePool() {
-        return servicePool;
-    }
-
-    public GroupPool getGroupPool() {
-        return groupPool;
-    }
-
-    public static CloudAPI getInstance() {
-        return instance;
-    }
 }
