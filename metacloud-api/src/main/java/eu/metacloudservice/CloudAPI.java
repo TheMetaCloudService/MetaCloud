@@ -52,7 +52,9 @@ import java.util.TimerTask;
 @Getter
 public class CloudAPI {
 
+    @Getter
     private static CloudAPI instance;
+
     private final LiveService service;
 
     private final PlayerPool playerPool;
@@ -149,11 +151,11 @@ public class CloudAPI {
                 PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/genernal"), PlayerGeneral.class);
                 getPlayerPool().getPlayers().stream().filter(cloudPlayer -> general.getCloudplayers().stream().noneMatch(s -> s.equalsIgnoreCase(cloudPlayer.getUniqueId()))).toList().forEach(cloudPlayer -> {
                     getPlayerPool().unregisterPlayer(cloudPlayer.getUniqueId());
-                    getAsyncAPI().getPlayerPool().unregisterPlayer(cloudPlayer.getUniqueId());
+                    getAsyncPlayerPool().unregisterPlayer(cloudPlayer.getUniqueId());
                 });
                 getServicePool().getServices().stream().filter(cloudService -> list.getCloudServices().stream().noneMatch(s -> s.equalsIgnoreCase(cloudService.getName()))).toList().forEach(cloudService -> {
                     getServicePool().unregisterService(cloudService.getName());
-                    getAsyncAPI().getServicePool().unregisterService(cloudService.getName());
+                    getAsyncServicePool().unregisterService(cloudService.getName());
                 });
                 if (!NettyDriver.getInstance().nettyClient.getChannel().isOpen()){
                     System.exit(0);
