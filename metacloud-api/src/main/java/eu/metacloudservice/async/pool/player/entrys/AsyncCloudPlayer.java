@@ -2,7 +2,7 @@ package eu.metacloudservice.async.pool.player.entrys;
 
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.async.AsyncCloudAPI;
-import eu.metacloudservice.async.pool.service.entrys.CloudService;
+import eu.metacloudservice.async.pool.service.entrys.AsyncCloudService;
 import eu.metacloudservice.cloudplayer.CloudPlayerRestCache;
 import eu.metacloudservice.cloudplayer.codec.gamemode.GameMode;
 import eu.metacloudservice.cloudplayer.codec.sounds.Sounds;
@@ -22,22 +22,22 @@ import java.util.Comparator;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
-public class CloudPlayer {
+public class AsyncCloudPlayer {
 
     @lombok.Getter
     private final String username;
     @lombok.Getter
     private final String uniqueId;
-    public CloudPlayer(@NonNull String username, @NonNull String uniqueId) {
+    public AsyncCloudPlayer(@NonNull String username, @NonNull String uniqueId) {
         this.username = username;
         this.uniqueId = uniqueId;
     }
 
-    public void performMore(Consumer<CloudPlayer> cloudPlayerConsumer) {
+    public void performMore(Consumer<AsyncCloudPlayer> cloudPlayerConsumer) {
         cloudPlayerConsumer.accept(this);
     }
 
-    public CloudService getProxyServer(){
+    public AsyncCloudService getProxyServer(){
         CloudPlayerRestCache cech = (CloudPlayerRestCache) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/" + getUniqueId()), CloudPlayerRestCache.class);
         try {
             return  AsyncCloudAPI.getInstance().getServicePool().getService(cech.getCloudplayerproxy()).get();
@@ -46,7 +46,7 @@ public class CloudPlayer {
         }
     }
 
-    public CloudService getServer(){
+    public AsyncCloudService getServer(){
         CloudPlayerRestCache cech = (CloudPlayerRestCache) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/" + getUniqueId()), CloudPlayerRestCache.class);
 
         try {
@@ -56,8 +56,8 @@ public class CloudPlayer {
         }
     }
 
-    public void connect(@NonNull CloudService cloudService){
-        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerConnect(username, cloudService.getName()));
+    public void connect(@NonNull AsyncCloudService asyncCloudService){
+        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerConnect(username, asyncCloudService.getName()));
     }
 
     public void dispatchCommand(@NonNull String command){
@@ -69,17 +69,17 @@ public class CloudPlayer {
     }
 
     public void connectRandom(String group){
-        CloudService cloudService = null;
+        AsyncCloudService asyncCloudService = null;
         try {
-            cloudService = (CloudService) AsyncCloudAPI.getInstance().getServicePool().getServicesByGroup(group).get();
+            asyncCloudService = (AsyncCloudService) AsyncCloudAPI.getInstance().getServicePool().getServicesByGroup(group).get();
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
-        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerConnect(username, cloudService.getName()));
+        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerConnect(username, asyncCloudService.getName()));
     }
 
-    public void connect(CloudPlayer cloudPlayer){
-        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerConnect(username, cloudPlayer.getServer().getName()));
+    public void connect(AsyncCloudPlayer asyncCloudPlayer){
+        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerConnect(username, asyncCloudPlayer.getServer().getName()));
     }
     public void sendTabList(String header, String footer){
         AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerTab(username, header, footer));
@@ -119,8 +119,8 @@ public class CloudPlayer {
                     .getServicePool()
                     .getServicesByGroup(group).get()
                     .stream()
-                    .filter(cloudService -> (cloudService.getState() == ServiceState.LOBBY))
-                    .min(Comparator.comparingInt(CloudService::getPlayercount))
+                    .filter(asyncCloudService -> (asyncCloudService.getState() == ServiceState.LOBBY))
+                    .min(Comparator.comparingInt(AsyncCloudService::getPlayercount))
                     .ifPresent(service -> AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerConnect(this.username, service.getName())));
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);

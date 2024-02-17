@@ -1,6 +1,10 @@
 package eu.metacloudservice;
 
 import eu.metacloudservice.async.AsyncCloudAPI;
+import eu.metacloudservice.async.pool.group.AsyncGroupPool;
+import eu.metacloudservice.async.pool.player.AsyncPlayerPool;
+import eu.metacloudservice.async.pool.player.entrys.AsyncCloudPlayer;
+import eu.metacloudservice.async.pool.service.AsyncServicePool;
 import eu.metacloudservice.bootstrap.bungee.listener.CloudEvents;
 import eu.metacloudservice.bootstrap.bungee.networking.*;
 import eu.metacloudservice.configuration.ConfigDriver;
@@ -38,12 +42,14 @@ import eu.metacloudservice.webserver.dummys.PlayerGeneral;
 import eu.metacloudservice.webserver.dummys.WhiteList;
 import eu.metacloudservice.webserver.dummys.liveservice.LiveServiceList;
 import eu.metacloudservice.webserver.dummys.liveservice.LiveServices;
+import lombok.Getter;
 import lombok.NonNull;
 
 import java.lang.management.ManagementFactory;
 import java.util.List;
 import java.util.TimerTask;
 
+@Getter
 public class CloudAPI {
 
     private static CloudAPI instance;
@@ -55,6 +61,11 @@ public class CloudAPI {
     private final RestDriver restDriver;
     private final EventDriver eventDriver;
 
+
+    private AsyncPlayerPool asyncPlayerPool;
+    private AsyncServicePool asyncServicePool;
+    private AsyncGroupPool asyncGroupPool;
+
     public CloudAPI(boolean isVelo) {
         instance = this;
         new Driver();
@@ -63,6 +74,11 @@ public class CloudAPI {
         this.playerPool = new PlayerPool();
         this.servicePool = new ServicePool();
         this.groupPool = new GroupPool();
+
+        this.asyncGroupPool = new AsyncGroupPool();
+        this.asyncServicePool = new AsyncServicePool();
+        this.asyncPlayerPool = new AsyncPlayerPool();
+
         restDriver = new RestDriver(service.getManagerAddress(), service.getRestPort());
         NettyDriver.getInstance().nettyClient = new NettyClient();
         NettyDriver.getInstance().nettyClient.bind(service.getManagerAddress(), service.getNetworkPort()).connect();
@@ -90,7 +106,7 @@ public class CloudAPI {
         PlayerGeneral players = (PlayerGeneral) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/genernal"), PlayerGeneral.class);
         players.getCloudplayers().forEach(s -> {
             if (!CloudAPI.getInstance().getPlayerPool().playerIsNotNull(s)){
-                AsyncCloudAPI.getInstance().getPlayerPool().registerPlayer(new eu.metacloudservice.async.pool.player.entrys.CloudPlayer(s, UUIDDriver.getUUID(s)));
+                getAsyncPlayerPool().registerPlayer(new AsyncCloudPlayer(s, UUIDDriver.getUUID(s)));
                 getPlayerPool().registerPlayer(new CloudPlayer(s, UUIDDriver.getUUID(s)));
             }
         });

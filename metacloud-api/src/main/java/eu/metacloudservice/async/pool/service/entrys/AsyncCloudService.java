@@ -2,7 +2,7 @@ package eu.metacloudservice.async.pool.service.entrys;
 
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.async.AsyncCloudAPI;
-import eu.metacloudservice.async.pool.player.entrys.CloudPlayer;
+import eu.metacloudservice.async.pool.player.entrys.AsyncCloudPlayer;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInChangeState;
@@ -16,12 +16,12 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
-public class CloudService {
+public class AsyncCloudService {
 
     private final String name;
     private final String group;
 
-    public CloudService(String name, String group) {
+    public AsyncCloudService(String name, String group) {
         this.name = name;
         this.group = group;
     }
@@ -30,7 +30,7 @@ public class CloudService {
         return name;
     }
 
-    public void performMore(Consumer<CloudService> cloudServiceConsumer) {
+    public void performMore(Consumer<AsyncCloudService> cloudServiceConsumer) {
         cloudServiceConsumer.accept(this);
     }
 
@@ -90,7 +90,7 @@ public class CloudService {
         return services.getPort();
     }
 
-    public List<CloudPlayer> getPlayers(){
+    public List<AsyncCloudPlayer> getPlayers(){
         if (getGroup().getGroupType().equalsIgnoreCase("PROXY")){
             try {
                 return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromProxy(name).get();

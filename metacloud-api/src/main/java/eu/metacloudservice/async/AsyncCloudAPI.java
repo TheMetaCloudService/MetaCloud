@@ -1,9 +1,9 @@
 package eu.metacloudservice.async;
 
 import eu.metacloudservice.CloudAPI;
-import eu.metacloudservice.async.pool.group.GroupPool;
-import eu.metacloudservice.async.pool.player.PlayerPool;
-import eu.metacloudservice.async.pool.service.ServicePool;
+import eu.metacloudservice.async.pool.group.AsyncGroupPool;
+import eu.metacloudservice.async.pool.player.AsyncPlayerPool;
+import eu.metacloudservice.async.pool.service.AsyncServicePool;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
@@ -28,15 +28,15 @@ public class AsyncCloudAPI {
 
     private static AsyncCloudAPI instance;
 
-    private PlayerPool playerPool;
-    private ServicePool servicePool;
-    private GroupPool groupPool;
+    private AsyncPlayerPool asyncPlayerPool;
+    private AsyncServicePool asyncServicePool;
+    private AsyncGroupPool asyncGroupPool;
 
     public AsyncCloudAPI() {
         instance = this;
-        this.playerPool = new PlayerPool();
-        this.servicePool = new ServicePool();
-        this.groupPool = new GroupPool();
+        this.asyncPlayerPool = new AsyncPlayerPool();
+        this.asyncServicePool = new AsyncServicePool();
+        this.asyncGroupPool = new AsyncGroupPool();
     }
 
     public void launchService(String group){
@@ -143,16 +143,16 @@ public class AsyncCloudAPI {
         return CloudAPI.getInstance().getRestDriver();
     }
 
-    public PlayerPool getPlayerPool() {
-        return playerPool;
+    public AsyncPlayerPool getPlayerPool() {
+        return asyncPlayerPool;
     }
 
-    public ServicePool getServicePool() {
-        return servicePool;
+    public AsyncServicePool getServicePool() {
+        return asyncServicePool;
     }
 
-    public GroupPool getGroupPool() {
-        return groupPool;
+    public AsyncGroupPool getGroupPool() {
+        return asyncGroupPool;
     }
 
     public static AsyncCloudAPI getInstance() {

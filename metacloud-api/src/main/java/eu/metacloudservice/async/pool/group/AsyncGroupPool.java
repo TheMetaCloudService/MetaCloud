@@ -25,9 +25,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-public class GroupPool {
+public class AsyncGroupPool {
 
-    public GroupPool() {}
+    public AsyncGroupPool() {}
 
     public CompletableFuture<ArrayDeque<String>> getGroupsByName(){
         GroupList cech = (GroupList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/general"), GroupList.class);

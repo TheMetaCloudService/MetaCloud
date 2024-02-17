@@ -2,6 +2,7 @@ package eu.metacloudservice.networking;
 
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.async.AsyncCloudAPI;
+import eu.metacloudservice.async.pool.player.entrys.AsyncCloudPlayer;
 import eu.metacloudservice.events.listeners.player.CloudPlayerConnectedEvent;
 import eu.metacloudservice.networking.packet.packets.out.service.playerbased.PacketOutPlayerConnect;
 import eu.metacloudservice.pool.player.entrys.CloudPlayer;
@@ -18,7 +19,7 @@ public class HandlePacketOutPlayerConnect implements NettyAdaptor {
 
 
 
-                AsyncCloudAPI.getInstance().getPlayerPool().registerPlayer(new eu.metacloudservice.async.pool.player.entrys.CloudPlayer(((PacketOutPlayerConnect) packet).getName(),
+                AsyncCloudAPI.getInstance().getPlayerPool().registerPlayer(new AsyncCloudPlayer(((PacketOutPlayerConnect) packet).getName(),
                         UUIDDriver.getUUID(((PacketOutPlayerConnect) packet).getName())));
                 CloudAPI.getInstance().getPlayerPool().registerPlayer(new CloudPlayer(((PacketOutPlayerConnect) packet).getName(),
                         UUIDDriver.getUUID(((PacketOutPlayerConnect) packet).getName())));

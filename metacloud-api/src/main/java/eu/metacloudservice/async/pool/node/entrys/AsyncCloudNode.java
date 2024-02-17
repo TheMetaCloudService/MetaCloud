@@ -8,16 +8,15 @@ import eu.metacloudservice.pool.player.entrys.CloudPlayer;
 import eu.metacloudservice.pool.service.entrys.CloudService;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class CloudNode {
+public class AsyncCloudNode {
 
     private String nodeName;
     private String address;
 
-    public CloudNode(String nodeName, String address) {
+    public AsyncCloudNode(String nodeName, String address) {
         this.nodeName = nodeName;
         this.address = address;
     }

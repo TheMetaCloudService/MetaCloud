@@ -2,6 +2,7 @@ package eu.metacloudservice.networking;
 
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.async.AsyncCloudAPI;
+import eu.metacloudservice.async.pool.service.entrys.AsyncCloudService;
 import eu.metacloudservice.events.listeners.services.CloudProxyConnectedEvent;
 import eu.metacloudservice.events.listeners.services.CloudServiceConnectedEvent;
 import eu.metacloudservice.networking.packet.packets.out.service.PacketOutServiceConnected;
@@ -15,7 +16,7 @@ public class HandlePacketOutServiceConnected implements NettyAdaptor {
         if (packet instanceof PacketOutServiceConnected){
             if (!CloudAPI.getInstance().getServicePool().serviceNotNull(((PacketOutServiceConnected) packet).getName())){
                 CloudAPI.getInstance().getServicePool().registerService(new CloudService(((PacketOutServiceConnected) packet).getName(), ((PacketOutServiceConnected) packet).getGroup()));
-                AsyncCloudAPI.getInstance().getServicePool().registerService(new eu.metacloudservice.async.pool.service.entrys.CloudService(((PacketOutServiceConnected) packet).getName(), ((PacketOutServiceConnected) packet).getGroup()));
+                AsyncCloudAPI.getInstance().getServicePool().registerService(new AsyncCloudService(((PacketOutServiceConnected) packet).getName(), ((PacketOutServiceConnected) packet).getGroup()));
                 CloudService cloudService = CloudAPI.getInstance().getServicePool().getService(((PacketOutServiceConnected) packet).getName());
                 if (cloudService.getGroup().getGroupType().equals("PROXY")){
                     try {
