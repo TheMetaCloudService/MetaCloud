@@ -14,6 +14,9 @@
   </p>
 </p>
 
+## Documentation
+You can find the new german documentation at https://metacloud.gitbook.io/metacloud-willkommen/ and the english documentation at https://metacloud.gitbook.io/metacloud-welcome/.
+
 ## Requirements
 minimal requirements: 
  * Java 17
@@ -60,6 +63,3 @@ chmod +u start.sh
 - Modular system with **comprehensive modules** like (*Syncproxy, Notify, Cloudflare, Hub, NPC, Sign & Permission *)
 - Great scalability, thanks to the **multi-proxy** and **multi-root** function
 - **Multiversion** support for bungeecord's (*Bungeecod, Waterfall, Velocity*) and Spigot's (*Spigot, Paperspigot, Foliaspigot, Bukkit, Purpurspigot*)
-
-## Documentation
-You can find the new german documentation at https://metacloud.gitbook.io/metacloud-willkommen/ and the english documentation at https://metacloud.gitbook.io/metacloud-welcome/.
