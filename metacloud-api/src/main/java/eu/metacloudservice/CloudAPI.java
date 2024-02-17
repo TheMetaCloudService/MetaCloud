@@ -1,6 +1,9 @@
 package eu.metacloudservice;
 
-import eu.metacloudservice.async.AsyncCloudAPI;
+import eu.metacloudservice.async.pool.group.AsyncGroupPool;
+import eu.metacloudservice.async.pool.player.AsyncPlayerPool;
+import eu.metacloudservice.async.pool.player.entrys.AsyncCloudPlayer;
+import eu.metacloudservice.async.pool.service.AsyncServicePool;
 import eu.metacloudservice.bootstrap.bungee.listener.CloudEvents;
 import eu.metacloudservice.bootstrap.bungee.networking.*;
 import eu.metacloudservice.configuration.ConfigDriver;
@@ -15,8 +18,6 @@ import eu.metacloudservice.networking.packet.Packet;
 import eu.metacloudservice.networking.packet.packets.in.service.PacketInServiceConnect;
 import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInChangeState;
 import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInDispatchMainCommand;
-import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInLaunchService;
-import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInStopService;
 import eu.metacloudservice.networking.packet.packets.in.service.command.PacketInCommandWhitelist;
 import eu.metacloudservice.networking.packet.packets.out.service.*;
 import eu.metacloudservice.networking.packet.packets.out.service.group.PacketOutGroupCreate;
@@ -26,7 +27,7 @@ import eu.metacloudservice.networking.packet.packets.out.service.playerbased.Pac
 import eu.metacloudservice.networking.packet.packets.out.service.playerbased.PacketOutPlayerDisconnect;
 import eu.metacloudservice.networking.packet.packets.out.service.playerbased.PacketOutPlayerSwitchService;
 import eu.metacloudservice.networking.packet.packets.out.service.playerbased.apibased.*;
-import eu.metacloudservice.pool.groupe.GroupPool;
+import eu.metacloudservice.pool.group.GroupPool;
 import eu.metacloudservice.pool.player.PlayerPool;
 import eu.metacloudservice.pool.player.entrys.CloudPlayer;
 import eu.metacloudservice.pool.service.ServicePool;
@@ -40,15 +41,19 @@ import eu.metacloudservice.webserver.dummys.PlayerGeneral;
 import eu.metacloudservice.webserver.dummys.WhiteList;
 import eu.metacloudservice.webserver.dummys.liveservice.LiveServiceList;
 import eu.metacloudservice.webserver.dummys.liveservice.LiveServices;
+import lombok.Getter;
 import lombok.NonNull;
 
 import java.lang.management.ManagementFactory;
 import java.util.List;
 import java.util.TimerTask;
 
+@Getter
 public class CloudAPI {
 
+    @Getter
     private static CloudAPI instance;
+
     private final LiveService service;
 
     private final PlayerPool playerPool;
@@ -56,6 +61,11 @@ public class CloudAPI {
     private final ServicePool servicePool;
     private final RestDriver restDriver;
     private final EventDriver eventDriver;
+
+
+    private AsyncPlayerPool asyncPlayerPool;
+    private AsyncServicePool asyncServicePool;
+    private AsyncGroupPool asyncGroupPool;
 
     public CloudAPI(boolean isVelo) {
         instance = this;
@@ -65,6 +75,11 @@ public class CloudAPI {
         this.playerPool = new PlayerPool();
         this.servicePool = new ServicePool();
         this.groupPool = new GroupPool();
+
+        this.asyncGroupPool = new AsyncGroupPool();
+        this.asyncServicePool = new AsyncServicePool();
+        this.asyncPlayerPool = new AsyncPlayerPool();
+
         restDriver = new RestDriver(service.getManagerAddress(), service.getRestPort());
         NettyDriver.getInstance().nettyClient = new NettyClient();
         NettyDriver.getInstance().nettyClient.bind(service.getManagerAddress(), service.getNetworkPort()).connect();
@@ -92,7 +107,7 @@ public class CloudAPI {
         PlayerGeneral players = (PlayerGeneral) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/genernal"), PlayerGeneral.class);
         players.getCloudplayers().forEach(s -> {
             if (!CloudAPI.getInstance().getPlayerPool().playerIsNotNull(s)){
-                AsyncCloudAPI.getInstance().getPlayerPool().registerPlayer(new eu.metacloudservice.async.pool.player.entrys.CloudPlayer(s, UUIDDriver.getUUID(s)));
+                getAsyncPlayerPool().registerPlayer(new AsyncCloudPlayer(s, UUIDDriver.getUUID(s)));
                 getPlayerPool().registerPlayer(new CloudPlayer(s, UUIDDriver.getUUID(s)));
             }
         });
@@ -135,11 +150,11 @@ public class CloudAPI {
                 PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/genernal"), PlayerGeneral.class);
                 getPlayerPool().getPlayers().stream().filter(cloudPlayer -> general.getCloudplayers().stream().noneMatch(s -> s.equalsIgnoreCase(cloudPlayer.getUniqueId()))).toList().forEach(cloudPlayer -> {
                     getPlayerPool().unregisterPlayer(cloudPlayer.getUniqueId());
-                    getAsyncAPI().getPlayerPool().unregisterPlayer(cloudPlayer.getUniqueId());
+                    getAsyncPlayerPool().unregisterPlayer(cloudPlayer.getUniqueId());
                 });
                 getServicePool().getServices().stream().filter(cloudService -> list.getCloudServices().stream().noneMatch(s -> s.equalsIgnoreCase(cloudService.getName()))).toList().forEach(cloudService -> {
                     getServicePool().unregisterService(cloudService.getName());
-                    getAsyncAPI().getServicePool().unregisterService(cloudService.getName());
+                    getAsyncServicePool().unregisterService(cloudService.getName());
                 });
                 if (!NettyDriver.getInstance().nettyClient.getChannel().isOpen()){
                     System.exit(0);
@@ -157,13 +172,6 @@ public class CloudAPI {
     public void dispatchCommand(String command){
         sendPacketSynchronized(new PacketInDispatchMainCommand(command));
     }
-
-
-    public EventDriver getEventDriver() {
-        return eventDriver;
-    }
-
-
 
     public LiveService getCurrentService(){
         return service;
@@ -215,30 +223,13 @@ public class CloudAPI {
     public double getMaxMemory(){
         return  (double) ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getMax() / 1048576;
     }
-    public AsyncCloudAPI getAsyncAPI(){
-        return AsyncCloudAPI.getInstance();
-    }
 
     public void sendPacketSynchronized(Packet packet){
         NettyDriver.getInstance().nettyClient.sendPacketSynchronized(packet);
     }
-    public RestDriver getRestDriver() {
-        return restDriver;
+
+    public void sendPacketAsynchronous(Packet packet){
+        NettyDriver.getInstance().nettyClient.sendPacketsAsynchronous(packet);
     }
 
-    public PlayerPool getPlayerPool() {
-        return playerPool;
-    }
-
-    public ServicePool getServicePool() {
-        return servicePool;
-    }
-
-    public GroupPool getGroupPool() {
-        return groupPool;
-    }
-
-    public static CloudAPI getInstance() {
-        return instance;
-    }
 }

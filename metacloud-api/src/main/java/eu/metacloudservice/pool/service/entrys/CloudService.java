@@ -1,7 +1,6 @@
 package eu.metacloudservice.pool.service.entrys;
 
 import eu.metacloudservice.CloudAPI;
-import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInChangeState;
@@ -84,8 +83,8 @@ public class CloudService {
     @SneakyThrows
     public int getPlayercount() {
         if (getGroup().getGroupType().equalsIgnoreCase("PROXY"))
-            return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromProxy(this.name).get().size();
-        return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromService(this.name).get().size();
+            return CloudAPI.getInstance().getAsyncPlayerPool().getPlayersFromProxy(this.name).get().size();
+        return CloudAPI.getInstance().getAsyncPlayerPool().getPlayersFromService(this.name).get().size();
     }
 
     public ServiceState getState(){

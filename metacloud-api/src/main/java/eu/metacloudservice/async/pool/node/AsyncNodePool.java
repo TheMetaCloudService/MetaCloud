@@ -3,20 +3,17 @@ package eu.metacloudservice.async.pool.node;/*
  */
 
 
-import eu.metacloudservice.configuration.dummys.nodeconfig.NodeConfig;
 import eu.metacloudservice.pool.node.entrys.CloudNode;
-import eu.metacloudservice.pool.service.entrys.CloudService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
-public class NodePool {
+public class AsyncNodePool {
 
     private final ArrayList<CloudNode> connectedNodes;
 
-    public NodePool(ArrayList<CloudNode> connectedNodes) {
+    public AsyncNodePool(ArrayList<CloudNode> connectedNodes) {
         this.connectedNodes = connectedNodes;
     }
 

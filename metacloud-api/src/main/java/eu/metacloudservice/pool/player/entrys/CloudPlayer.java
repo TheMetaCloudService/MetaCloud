@@ -1,7 +1,6 @@
 package eu.metacloudservice.pool.player.entrys;
 
 import eu.metacloudservice.CloudAPI;
-import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.cloudplayer.CloudPlayerRestCache;
 import eu.metacloudservice.cloudplayer.codec.gamemode.GameMode;
 import eu.metacloudservice.cloudplayer.codec.sounds.Sounds;
@@ -145,7 +144,7 @@ public class CloudPlayer {
     }
 
     public void connect(CloudPlayer cloudPlayer){
-        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerConnect(username, cloudPlayer.getServer().getName()));
+        CloudAPI.getInstance().sendPacketAsynchronous(new PacketInAPIPlayerConnect(username, cloudPlayer.getServer().getName()));
     }
 
     public void disconnect(@NonNull String message){

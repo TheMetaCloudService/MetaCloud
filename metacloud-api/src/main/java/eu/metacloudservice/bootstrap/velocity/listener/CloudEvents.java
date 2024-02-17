@@ -20,6 +20,7 @@ public class CloudEvents implements ICloudListener {
 
     @Subscribe
     public void handle(CloudServiceDisconnectedEvent event){
+        if (!VelocityBootstrap.proxyServer.getServer(event.getName()).isPresent()) return;
         VelocityBootstrap.proxyServer.unregisterServer(VelocityBootstrap.proxyServer.getServer(event.getName()).get().getServerInfo());
     }
 

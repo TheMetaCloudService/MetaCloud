@@ -9,7 +9,6 @@
 package eu.metacloudservice.async.pool.group;
 
 import eu.metacloudservice.CloudAPI;
-import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInCreateGroup;
@@ -25,9 +24,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-public class GroupPool {
+public class AsyncGroupPool {
 
-    public GroupPool() {}
+    public AsyncGroupPool() {}
 
     public CompletableFuture<ArrayDeque<String>> getGroupsByName(){
         GroupList cech = (GroupList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/general"), GroupList.class);
@@ -52,16 +51,16 @@ public class GroupPool {
     }
 
     public void createGroup(Group group){
-        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInCreateGroup(new ConfigDriver().convert(group)));
+        CloudAPI.getInstance().sendPacketAsynchronous(new PacketInCreateGroup(new ConfigDriver().convert(group)));
     }
 
     public void deleteGroup(String group){
-        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInDeleteGroup(group));
+        CloudAPI.getInstance().sendPacketAsynchronous(new PacketInDeleteGroup(group));
     }
 
 
     public void stopGroup(String group){
-        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInStopGroup(group));
+        CloudAPI.getInstance().sendPacketAsynchronous(new PacketInStopGroup(group));
     }
 
     public CompletableFuture<Group> getGroup(String group){

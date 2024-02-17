@@ -1,7 +1,6 @@
 package eu.metacloudservice.bootstrap.bungee;
 
 import eu.metacloudservice.CloudAPI;
-import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.networking.NettyDriver;
@@ -17,7 +16,6 @@ public class BungeeBootstrap extends Plugin {
 
     @Override
     public void onLoad() {
-        new AsyncCloudAPI();
         new CloudAPI(false);
     }
 
