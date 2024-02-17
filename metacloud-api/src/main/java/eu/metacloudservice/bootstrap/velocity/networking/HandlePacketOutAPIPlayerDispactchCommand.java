@@ -9,7 +9,7 @@ public class HandlePacketOutAPIPlayerDispactchCommand implements NettyAdaptor {
     @Override
     public void handle(Channel channel, Packet packet) {
         if (packet instanceof PacketOutAPIPlayerDispactchCommand) {
-            if (VelocityBootstrap.proxyServer.getPlayer(((PacketOutAPIPlayerDispactchCommand) packet).getUserName()).get() != null){
+            if (VelocityBootstrap.proxyServer.getPlayer(((PacketOutAPIPlayerDispactchCommand) packet).getUserName()).isPresent()){
                VelocityBootstrap.proxyServer.getCommandManager().executeAsync( VelocityBootstrap.proxyServer.getPlayer(((PacketOutAPIPlayerDispactchCommand) packet).getUserName()).get(), ((PacketOutAPIPlayerDispactchCommand) packet).getCommand());
             }
         }

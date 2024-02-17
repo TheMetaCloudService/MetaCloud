@@ -9,7 +9,6 @@
 package eu.metacloudservice.async.pool.group;
 
 import eu.metacloudservice.CloudAPI;
-import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInCreateGroup;
@@ -52,16 +51,16 @@ public class AsyncGroupPool {
     }
 
     public void createGroup(Group group){
-        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInCreateGroup(new ConfigDriver().convert(group)));
+        CloudAPI.getInstance().sendPacketAsynchronous(new PacketInCreateGroup(new ConfigDriver().convert(group)));
     }
 
     public void deleteGroup(String group){
-        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInDeleteGroup(group));
+        CloudAPI.getInstance().sendPacketAsynchronous(new PacketInDeleteGroup(group));
     }
 
 
     public void stopGroup(String group){
-        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInStopGroup(group));
+        CloudAPI.getInstance().sendPacketAsynchronous(new PacketInStopGroup(group));
     }
 
     public CompletableFuture<Group> getGroup(String group){

@@ -10,7 +10,7 @@ public class HandlePacketOutAPIPlayerMessage implements NettyAdaptor {
     @Override
     public void handle(Channel channel, Packet packet) {
         if (packet instanceof PacketOutAPIPlayerMessage) {
-            if (VelocityBootstrap.proxyServer.getPlayer(((PacketOutAPIPlayerMessage) packet).getUsername()).get() != null){
+            if (VelocityBootstrap.proxyServer.getPlayer(((PacketOutAPIPlayerMessage) packet).getUsername()).isPresent()){
                 VelocityBootstrap.proxyServer.getPlayer(((PacketOutAPIPlayerMessage) packet).getUsername()).get().sendMessage(Component.text(((PacketOutAPIPlayerMessage) packet).getMessage()));
             }
         }

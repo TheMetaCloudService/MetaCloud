@@ -12,7 +12,6 @@ import com.velocitypowered.api.proxy.Player;
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.api.PluginCommand;
 import eu.metacloudservice.api.PluginCommandInfo;
-import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.configuration.dummys.message.Messages;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.connection.ProxiedPlayer;

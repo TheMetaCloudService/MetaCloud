@@ -1,7 +1,6 @@
 package eu.metacloudservice.async.pool.service.entrys;
 
 import eu.metacloudservice.CloudAPI;
-import eu.metacloudservice.async.AsyncCloudAPI;
 import eu.metacloudservice.async.pool.player.entrys.AsyncCloudPlayer;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.groups.dummy.Group;

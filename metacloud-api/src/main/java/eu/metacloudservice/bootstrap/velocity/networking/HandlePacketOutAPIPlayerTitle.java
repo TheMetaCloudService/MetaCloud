@@ -14,9 +14,8 @@ public class HandlePacketOutAPIPlayerTitle implements NettyAdaptor {
     @Override
     public void handle(Channel channel, Packet packet) {
         if (packet instanceof PacketOutAPIPlayerTitle){
-            if (         VelocityBootstrap.proxyServer.getPlayer(((PacketOutAPIPlayerTitle) packet).getUsername()).isPresent()){
+            if (VelocityBootstrap.proxyServer.getPlayer(((PacketOutAPIPlayerTitle) packet).getUsername()).isPresent()){
                 Title title = Title.title(Component.text(((PacketOutAPIPlayerTitle) packet).getTitle()), Component.text(((PacketOutAPIPlayerTitle) packet).getSubTitle()), Title.Times.times(Duration.ofSeconds(Long.getLong(String.valueOf(((PacketOutAPIPlayerTitle) packet).getFadeIn()))), Duration.ofSeconds(Long.getLong(String.valueOf(((PacketOutAPIPlayerTitle) packet).getStay()))), Duration.ofSeconds(Long.getLong(String.valueOf(((PacketOutAPIPlayerTitle) packet).getFadeOut())))));
-
                 VelocityBootstrap.proxyServer.getPlayer(((PacketOutAPIPlayerTitle) packet).getUsername()).get().getCurrentServer().get().getServer().showTitle(title);
             }
 
