@@ -213,12 +213,13 @@ public class CloudAPI {
     public double getMaxMemory(){
         return  (double) ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getMax() / 1048576;
     }
-    public AsyncCloudAPI getAsyncAPI(){
-        return AsyncCloudAPI.getInstance();
-    }
 
     public void sendPacketSynchronized(Packet packet){
         NettyDriver.getInstance().nettyClient.sendPacketSynchronized(packet);
+    }
+
+    public void sendPacketAsynchronous(Packet packet){
+        NettyDriver.getInstance().nettyClient.sendPacketsAsynchronous(packet);
     }
     public RestDriver getRestDriver() {
         return restDriver;
