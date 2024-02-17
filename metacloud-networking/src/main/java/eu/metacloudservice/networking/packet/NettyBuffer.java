@@ -31,13 +31,19 @@ public class NettyBuffer {
         }
     }
 
-    public String readString(){
+    public String readString() {
+        if (byteBuf.readableBytes() < 8) {
+            throw new IllegalStateException("Not enough data to read message length (byteBuf.readableBytes() < 8): " + byteBuf.readableBytes());
+        }
         long messageLength = byteBuf.readLong();
+        if (byteBuf.readableBytes() < messageLength) {
+            throw new IllegalStateException("Not enough data to read message length (byteBuf.readableBytes() < messageLength): " + byteBuf.readableBytes());
+        }
         byte[] bytes = new byte[(int) messageLength];
         byteBuf.readBytes(bytes);
         return new String(bytes, StandardCharsets.UTF_8);
-
     }
+
 
     public void writeInt(int integer) {
         byteBuf.writeInt(integer);
