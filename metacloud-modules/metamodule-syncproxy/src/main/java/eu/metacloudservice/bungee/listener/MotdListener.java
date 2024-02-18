@@ -63,7 +63,6 @@ public class MotdListener  implements Listener {
 
                     "§7" + cloudAPI.getPlayerPool().getPlayers().size() + "/" + bungeeBootstrap.group.getMaxPlayers();
 
-            ServerPing.Protocol serverProtocol = new ServerPing.Protocol(protocolString, ping.getVersion().getProtocol() - 1);
             String firstLine =motd.getFirstline()
                     .replace("&", "§")
                     .replace("%proxy_name%", bungeeBootstrap.getLiveService().getService())
@@ -85,11 +84,16 @@ public class MotdListener  implements Listener {
                     .replace("%max_players%", "" + bungeeBootstrap.group.getMaxPlayers());
 
             String description = firstLine + "\n" + secondLine;
+            ServerPing.Protocol serverProtocol = new ServerPing.Protocol(protocolString, ping.getVersion().getProtocol() - 1);
+
+
             ping.setDescription(description);
             ping.setVersion(serverProtocol);
             ping.setPlayers(players);
-
             event.setResponse(ping);
+
+
+
 
         }
 

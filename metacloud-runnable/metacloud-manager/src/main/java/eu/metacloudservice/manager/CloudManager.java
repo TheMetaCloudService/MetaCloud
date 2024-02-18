@@ -61,13 +61,10 @@ import java.util.*;
 public class CloudManager implements IRunAble {
 
     public static CloudServiceDriver serviceDriver;
-
     public static QueueDriver queueDriver;
     public static RestDriver restDriver;
     public static ManagerConfig config;
-
     private static Timer base;
-
     public static boolean shutdown;
 
     public void initRestService(){
@@ -79,21 +76,19 @@ public class CloudManager implements IRunAble {
     public static void shutdownHook(){
         shutdown = true;
         NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutShutdownNode());
-        serviceDriver.getServicesFromNode("InternalNode").stream().filter(taskedService -> Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName()).getGroupType().equalsIgnoreCase("PROXY"))
-                .forEach(TaskedService::handelQuit);
-
-        serviceDriver.getServicesFromNode("InternalNode").stream().filter(taskedService -> !Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName()).getGroupType().equalsIgnoreCase("PROXY"))
-                .forEach(TaskedService::handelQuit);
         Driver.getInstance().getModuleDriver().unload();
-
+        Driver.getInstance().getMessageStorage().eventDriver.clearListeners();
+        NettyDriver.getInstance().nettyServer.close();
+        serviceDriver.getServicesFromNode("InternalNode").forEach(TaskedService::handelQuit);
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+
         Driver.getInstance().getWebServer().close();
-        NettyDriver.getInstance().nettyServer.close();
-        Driver.getInstance().getMessageStorage().eventDriver.clearListeners();
+
         Driver.getInstance().getTerminalDriver().log(Type.INFO, Driver.getInstance().getLanguageDriver().getLang().getMessage("cloud-shutting-down"));
         System.exit(0);
     }
@@ -169,15 +164,11 @@ public class CloudManager implements IRunAble {
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new PlayersCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new ScreenCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new UpdateCommand());
-
         Driver.getInstance().getTerminalDriver().log(Type.INFO, Driver.getInstance().getLanguageDriver().getLang().getMessage("commands-was-loaded")
                 .replace("%commands%", "" + Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().size()));
         Driver.getInstance().getTerminalDriver().log(Type.INFO, Driver.getInstance().getLanguageDriver().getLang().getMessage("cloud-start-successful"));
-
         queueDriver= new QueueDriver();
-
         Messages msg = (Messages) new ConfigDriver("./local/messages.json").read(Messages.class);
-
 
         Driver.getInstance().getWebServer().addRoute(new RouteEntry("/message/default", new ConfigDriver().convert(msg)));
         GroupList groupList = new GroupList();
@@ -204,7 +195,6 @@ public class CloudManager implements IRunAble {
         Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudplayer/genernal", new ConfigDriver().convert(general)));
 
         Addresses AddressesConfig = new Addresses();
-
         ArrayList<String> addresses = new ArrayList<>();
         config.getNodes().forEach(managerConfigNodes -> {
             addresses.add(managerConfigNodes.getAddress());
@@ -219,13 +209,11 @@ public class CloudManager implements IRunAble {
         Driver.getInstance().getTerminalDriver().log(Type.NETWORK, Driver.getInstance().getLanguageDriver().getLang().getMessage("netty-server-prepared"));
 
         NettyDriver.getInstance().getWhitelist().add("127.0.0.1");
-
         config.getNodes().forEach(managerConfigNodes -> {
             if (!NettyDriver.getInstance().getWhitelist().contains(managerConfigNodes.getAddress())){
                 NettyDriver.getInstance().getWhitelist().add(managerConfigNodes.getAddress());
             }
         });
-
         /*
          * this starts a new NettyServer with Epoll on EpollEventLoopGroup or NioEventLoopGroup basis.
          * */
@@ -283,9 +271,8 @@ public class CloudManager implements IRunAble {
 
     public static void screenNode(String node){
         if (Driver.getInstance().getMessageStorage().openServiceScreen){
+
             base.cancel();
-
-
             Driver.getInstance().getTerminalDriver().leaveSetup();
         }else {
             Driver.getInstance().getMessageStorage().openServiceScreen = true;
@@ -305,6 +292,6 @@ public class CloudManager implements IRunAble {
                     }
                 }
             }, 100, 100);
-    }
+         }
     }
 }

@@ -11,6 +11,9 @@ import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.webserver.RestDriver;
+import lombok.Getter;
+import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -27,6 +30,7 @@ public class BungeeBootstrap extends Plugin {
     public Integer motdCount;
     public DesignConfig configuration;
     public Configuration conf;
+
     public  Group group;
     public Integer tabCount;
 
