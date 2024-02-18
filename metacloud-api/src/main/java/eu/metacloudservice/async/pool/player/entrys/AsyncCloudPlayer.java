@@ -22,7 +22,7 @@ import java.util.Comparator;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
-@Getter
+
 public record AsyncCloudPlayer(String username, String uniqueId) {
 
     public AsyncCloudPlayer(@NonNull String username, @NonNull String uniqueId) {
@@ -30,6 +30,12 @@ public record AsyncCloudPlayer(String username, String uniqueId) {
         this.uniqueId = uniqueId;
     }
 
+    public String getUniqueId(){
+        return this.uniqueId;
+    }
+    public String getUsername(){
+        return this.username;
+    }
     public void performMore(Consumer<AsyncCloudPlayer> cloudPlayerConsumer) {
         cloudPlayerConsumer.accept(this);
     }
