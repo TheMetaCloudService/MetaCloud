@@ -81,21 +81,21 @@ public class GroupCommand extends CommandAdapter {
             }else  if (args.length== 3) {
                 if (args[1].equalsIgnoreCase("setmaintenance")){
                     String group = args[0];
-                    if (Driver.getInstance().getGroupDriver().find(group)){
+                    if (group.equals("--all")) {
+                        Driver.getInstance().getGroupDriver().getAll().forEach(group1 -> {
+                            group1.setMaintenance(args[2].equalsIgnoreCase("true"));
+                            Driver.getInstance().getGroupDriver().update(group, group1);
+                            Driver.getInstance().getWebServer().updateRoute("/cloudgroup/" + group, new ConfigDriver().convert(group1));
+                        });
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-group-change-maintenance"));
+
+                    } else if (Driver.getInstance().getGroupDriver().find(group)){
                         Group raw = Driver.getInstance().getGroupDriver().load(group);
                         raw.setMaintenance(args[2].equalsIgnoreCase("true"));
                         Driver.getInstance().getGroupDriver().update(group, raw);
                         Driver.getInstance().getTerminalDriver().log(Type.COMMAND,Driver.getInstance().getLanguageDriver().getLang().getMessage("command-group-change-maintenance" ));
 
                         Driver.getInstance().getWebServer().updateRoute("/cloudgroup/" + raw.getGroup(), new ConfigDriver().convert(raw));
-                    }else if (group.equals("--all")) {
-                        Driver.getInstance().getGroupDriver().getAll().forEach(group1 -> {
-                            group1.setMaintenance(args[2].equalsIgnoreCase("true"));
-                            Driver.getInstance().getGroupDriver().update(group, group1);
-                            Driver.getInstance().getWebServer().updateRoute("/cloudgroup/" + group, new ConfigDriver().convert(group1));
-                        });
-                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND,Driver.getInstance().getLanguageDriver().getLang().getMessage("command-group-change-maintenance" ));
-
                     }else{
                         Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-group-not-found")
                                 .replace("%group%", group));
