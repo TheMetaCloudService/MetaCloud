@@ -39,15 +39,21 @@ public class AsyncCloudService {
         return name.replace(group, "").replace(list.getCloudServiceSplitter(), "");
     }
     public void setState(@NonNull ServiceState state){
-        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInChangeState(this.name, state.toString()));
+        CloudAPI.getInstance().sendPacketAsynchronous(new PacketInChangeState(this.name, state.toString()));
     }
 
     public void sync(){
-        AsyncCloudAPI.getInstance().dispatchCommand("service sync " + name);
+        CloudAPI.getInstance().dispatchCommand("service sync " + name);
     }
 
     public void shutdown(){
-        AsyncCloudAPI.getInstance().stopService(name);
+        try {
+            CloudAPI.getInstance().getAsyncServicePool().getService(name).get().shutdown();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean isTypeProxy(){
@@ -92,13 +98,13 @@ public class AsyncCloudService {
     public List<AsyncCloudPlayer> getPlayers(){
         if (getGroup().getGroupType().equalsIgnoreCase("PROXY")){
             try {
-                return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromProxy(name).get();
+                return CloudAPI.getInstance().getAsyncPlayerPool().getPlayersFromProxy(name).get();
             } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e);
             }
         }else {
             try {
-                return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromService(name).get();
+                return CloudAPI.getInstance().getAsyncPlayerPool().getPlayersFromService(name).get();
             } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e);
             }
@@ -109,13 +115,13 @@ public class AsyncCloudService {
     public int getPlayercount() {
         if (getGroup().getGroupType().equalsIgnoreCase("PROXY")) {
             try {
-                return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromProxy(this.name).get().size();
+                return CloudAPI.getInstance().getAsyncPlayerPool().getPlayersFromProxy(this.name).get().size();
             } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e);
             }
         }
         try {
-            return AsyncCloudAPI.getInstance().getPlayerPool().getPlayersFromService(this.name).get().size();
+            return CloudAPI.getInstance().getAsyncPlayerPool().getPlayersFromService(this.name).get().size();
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -127,7 +133,7 @@ public class AsyncCloudService {
 
     public void connect(String playername){
         try {
-            AsyncCloudAPI.getInstance().getPlayerPool().getPlayer(playername).get().connect(this);
+            CloudAPI.getInstance().getAsyncPlayerPool().getPlayer(playername).get().connect(this);
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }

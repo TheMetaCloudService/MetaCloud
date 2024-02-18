@@ -48,7 +48,7 @@ public class CloudConnectListener implements Listener {
         }
 
         this.connected.add(event.getPlayer().getUniqueId());
-        AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInPlayerConnect(event.getPlayer().getName(), service.getService()));
+        CloudAPI.getInstance().sendPacketAsynchronous(new PacketInPlayerConnect(event.getPlayer().getName(), service.getService()));
 
         if (group.isMaintenance()
                 && !ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()).hasPermission("metacloud.bypass.connection.maintenance")
@@ -71,14 +71,14 @@ public class CloudConnectListener implements Listener {
     public void handle(final PlayerDisconnectEvent event) {
         if (this.connected.contains(event.getPlayer().getUniqueId())) {
             this.connected.remove(event.getPlayer().getUniqueId());
-            AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInPlayerDisconnect(event.getPlayer().getName()));
+            CloudAPI.getInstance().sendPacketAsynchronous(new PacketInPlayerDisconnect(event.getPlayer().getName()));
         }
     }
 
     @EventHandler
     public void handle(ServerSwitchEvent event){
         if (this.connected.contains(event.getPlayer().getUniqueId())) {
-            AsyncCloudAPI.getInstance().sendPacketAsynchronous(new PacketInPlayerSwitchService(event.getPlayer().getName(), event.getPlayer().getServer().getInfo().getName()));
+            CloudAPI.getInstance().sendPacketAsynchronous(new PacketInPlayerSwitchService(event.getPlayer().getName(), event.getPlayer().getServer().getInfo().getName()));
         }
     }
 
