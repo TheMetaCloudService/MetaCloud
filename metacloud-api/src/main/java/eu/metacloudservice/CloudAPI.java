@@ -62,10 +62,9 @@ public class CloudAPI {
     private final RestDriver restDriver;
     private final EventDriver eventDriver;
 
-
-    private AsyncPlayerPool asyncPlayerPool;
-    private AsyncServicePool asyncServicePool;
-    private AsyncGroupPool asyncGroupPool;
+    private final AsyncPlayerPool asyncPlayerPool;
+    private final AsyncServicePool asyncServicePool;
+    private final AsyncGroupPool asyncGroupPool;
 
     public CloudAPI(boolean isVelo) {
         instance = this;
@@ -75,7 +74,6 @@ public class CloudAPI {
         this.playerPool = new PlayerPool();
         this.servicePool = new ServicePool();
         this.groupPool = new GroupPool();
-
         this.asyncGroupPool = new AsyncGroupPool();
         this.asyncServicePool = new AsyncServicePool();
         this.asyncPlayerPool = new AsyncPlayerPool();
