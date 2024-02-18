@@ -76,6 +76,19 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
 
         if (allowAddress(inetSocketAddress.getAddress().getHostAddress())){
             ChannelPipeline pipeline = channel.pipeline();
+            pipeline.addLast(new ChannelHandler() {
+                @Override
+                public void handlerAdded(ChannelHandlerContext channelHandlerContext) throws Exception {
+                }
+
+                @Override
+                public void handlerRemoved(ChannelHandlerContext channelHandlerContext) throws Exception {
+                }
+
+                @Override
+                public void exceptionCaught(ChannelHandlerContext channelHandlerContext, Throwable throwable) throws Exception {
+                }
+            });
         pipeline.addLast(new PacketDecoder());
             pipeline.addLast(new PacketEncoder());
         }else {
