@@ -351,7 +351,7 @@ public class ServiceCommand extends PluginCommand {
                 String service = args[1];
                 if (CloudAPI.getInstance().getServicePool().serviceNotNull(service)){
                     try {
-                        AsyncCloudAPI.getInstance().getServicePool().getService(service).get().sync();
+                        CloudAPI.getInstance().getAsyncServicePool().getService(service).get().sync();
                     } catch (InterruptedException | ExecutionException e) {throw new RuntimeException(e);}
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX +"The service '§f"+service+"§7' was successfully synchronized"));
