@@ -44,13 +44,16 @@ public class CloudNode implements IRunAble {
         new NettyDriver();
         Driver.getInstance().getTerminalDriver().log(Type.NETWORK, Driver.getInstance().getLanguageDriver().getLang().getMessage("netty-client-prepared"));
         NettyDriver.getInstance().nettyClient = new NettyClient();
-         NettyDriver.getInstance().nettyClient.bind(config.getManagerAddress(), config.getNetworkingCommunication()).connect();
+        NettyDriver.getInstance().nettyClient.bind(config.getManagerAddress(), config.getNetworkingCommunication()).connect();
         NettyDriver.getInstance().getPacketDriver()
                 /*
                 * in this part all packages and trader sent form the server are registered
                 * {@link NettyAdaptor} handles the packet and looks where it belongs
                 * {@link Packet} handles the packets are written and read via a ByteBuf
                 * */
+                .registerHandler(new PacketOutDisableNodeConsole().getPacketUUID(), new HandlePacketOutDisableNodeConsole(), PacketOutDisableNodeConsole.class)
+                .registerHandler(new PacketOutEnableNodeConsole().getPacketUUID(), new HandlePacketOutEnableNodeConsole(), PacketOutEnableNodeConsole.class)
+                .registerHandler(new PacketOutSendCommandToNodeConsole().getPacketUUID(), new HandlePacketOutSendCommandToNodeConsole(), PacketOutSendCommandToNodeConsole.class)
                 .registerHandler(new PacketOutEnableConsole().getPacketUUID(), new HandlePacketOutEnableConsole(), PacketOutEnableConsole.class)
                 .registerHandler(new PacketOutDisableConsole().getPacketUUID(), new HandlePacketOutDisableConsole(), PacketOutDisableConsole.class)
                 .registerHandler(new PacketOutAuthSuccess().getPacketUUID(), new HandlePacketOutAuthSuccess(), PacketOutAuthSuccess.class)
