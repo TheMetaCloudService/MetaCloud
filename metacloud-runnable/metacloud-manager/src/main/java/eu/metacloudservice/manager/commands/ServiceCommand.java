@@ -1,24 +1,31 @@
 package eu.metacloudservice.manager.commands;
 
 import eu.metacloudservice.Driver;
+import eu.metacloudservice.cloudplayer.CloudPlayerRestCache;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
+import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.manager.CloudManager;
 import eu.metacloudservice.manager.cloudservices.entry.TaskedEntry;
 import eu.metacloudservice.manager.cloudservices.entry.TaskedService;
 import eu.metacloudservice.networking.NettyDriver;
+import eu.metacloudservice.networking.packet.packets.in.service.playerbased.PacketInPlayerSwitchService;
+import eu.metacloudservice.networking.packet.packets.out.service.playerbased.apibased.PacketOutAPIPlayerKick;
 import eu.metacloudservice.process.ServiceState;
+import eu.metacloudservice.storage.UUIDDriver;
 import eu.metacloudservice.terminal.commands.CommandAdapter;
 import eu.metacloudservice.terminal.commands.CommandInfo;
 import eu.metacloudservice.terminal.enums.Type;
 import eu.metacloudservice.terminal.utils.TerminalStorageLine;
+import eu.metacloudservice.webserver.RestDriver;
+import eu.metacloudservice.webserver.dummys.PlayerGeneral;
 import eu.metacloudservice.webserver.dummys.WhiteList;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-@CommandInfo(command = "service", description = "command-service-description", aliases = {"serv", "task", "start"})
+@CommandInfo(command = "service", description = "command-service-description", aliases = {"s","serv", "task", "start"})
 public class ServiceCommand extends CommandAdapter {
 
 
@@ -59,7 +66,7 @@ public class ServiceCommand extends CommandAdapter {
                     CloudManager.serviceDriver.unregister(service);
                 }else {
                     Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-service-service-not-found")
-                            .replace("%servuce%", service));
+                            .replace("%service%", service));
                 }
             }else  if (args[0].equalsIgnoreCase("restart")){
                 String service = args[1];
@@ -67,17 +74,17 @@ public class ServiceCommand extends CommandAdapter {
                     CloudManager.serviceDriver.getService(service).handelRestart();
                 }else {
                     Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-service-service-not-found")
-                            .replace("%servuce%", service));
+                            .replace("%service%", service));
                 }
             }else  if (args[0].equalsIgnoreCase("sync")){
                 String service = args[1];
                 if (CloudManager.serviceDriver.getService(service) != null){
                     Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-service-service-not-found")
-                            .replace("%servuce%", service));
+                            .replace("%service%", service));
                     CloudManager.serviceDriver.getService(service).handelSync();
                 }else {
                     Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-service-service-not-found")
-                            .replace("%servuce%", service));
+                            .replace("%service%", service));
                 }
             }else  if (args[0].equalsIgnoreCase("restartgroup")){
                 String group = args[1];
@@ -123,7 +130,7 @@ public class ServiceCommand extends CommandAdapter {
                             "Service IDLE: §f" + time+ " Second(s)");
                 }else {
                     Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-service-service-not-found")
-                            .replace("%servuce%", service));
+                            .replace("%service%", service));
                 }
             }else {
                 sendHelp();
@@ -175,12 +182,12 @@ public class ServiceCommand extends CommandAdapter {
                       CloudManager.serviceDriver.getServices().forEach(taskedService -> taskedService.handelExecute(msg.toString()));
                   }else {
                       Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-service-service-not-found")
-                              .replace("%servuce%", service));
+                              .replace("%service%", service));
                       CloudManager.serviceDriver.getService(service).handelExecute(msg.toString());
                   }
                 } else {
                     Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-service-send-command")
-                            .replace("%servuce%", service));
+                            .replace("%service%", service));
                 }
             } else if (args[0].equalsIgnoreCase("whitelist")) {
                 String  option = args[1];
@@ -207,6 +214,12 @@ public class ServiceCommand extends CommandAdapter {
                         Driver.getInstance().getWebServer().updateRoute("/default/whitelist", new ConfigDriver().convert(whitelistConfig));
                         Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-service-player-remove-whitelist")
                                 .replace("%player%", user));
+
+                        PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/genernal"), PlayerGeneral.class);
+                        if (general.getCloudplayers().stream().anyMatch(s -> s.equalsIgnoreCase(user))){
+                            NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutAPIPlayerKick(user, ((Messages) new ConfigDriver("./local/messages.json").read(Messages.class)).getMessages().get("kickNetworkIsMaintenance")));
+
+                        }
                     }else {
                         Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-service-player-not-found")
                                 .replace("%player%", user));
@@ -242,17 +255,17 @@ public class ServiceCommand extends CommandAdapter {
                 commands.add("--all");
             }
 
-        }else if (args.length == 1 && args[0].equalsIgnoreCase("whitelist")){
+        }else if (args.length == 1 && args[0].equalsIgnoreCase("whitelist") ){
             commands.add("add");
             commands.add("remove");
-        }else if (args.length== 1 && args[0].equalsIgnoreCase("restartnode")) {
+        }else if (args.length == 1 && args[0].equalsIgnoreCase("restartnode")) {
 
             ((ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class)).getNodes().forEach(managerConfigNodes -> {
                 commands.add(managerConfigNodes.getName());
             });
         }else if (args.length == 2 && args[0].equalsIgnoreCase("whitelist") && args[1].equalsIgnoreCase("remove")){
             commands.addAll(CloudManager.config.getWhitelist());
-        }else if (args.length== 1 ){
+        }else if (args.length == 1 ){
             Driver.getInstance().getGroupDriver().getAll().forEach(group -> commands.add(group.getGroup()));
         }
 

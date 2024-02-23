@@ -271,12 +271,13 @@ public class CloudManager implements IRunAble {
 
     public static void screenNode(String node){
         if (Driver.getInstance().getMessageStorage().openServiceScreen){
-
             base.cancel();
+            NettyDriver.getInstance().nettyServer.sendPacketSynchronized(node, new PacketOutDisableNodeConsole());
             Driver.getInstance().getTerminalDriver().leaveSetup();
         }else {
             Driver.getInstance().getMessageStorage().openServiceScreen = true;
             Driver.getInstance().getMessageStorage().screenForm = node;
+            NettyDriver.getInstance().nettyServer.sendPacketSynchronized(node, new PacketOutEnableNodeConsole());
             Driver.getInstance().getTerminalDriver().clearScreen();
 
             base = new Timer();
@@ -288,6 +289,7 @@ public class CloudManager implements IRunAble {
                         if (line.equalsIgnoreCase("leave") ||line.equalsIgnoreCase("leave ")){
                             screenNode(Driver.getInstance().getMessageStorage().screenForm);
                         }else {
+                            NettyDriver.getInstance().nettyServer.sendPacketSynchronized(node, new PacketOutSendCommandToNodeConsole(line));
                         }
                     }
                 }

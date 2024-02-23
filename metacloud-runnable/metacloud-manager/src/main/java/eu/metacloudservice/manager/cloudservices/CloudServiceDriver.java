@@ -338,7 +338,7 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                             }
                         });
                         CloudManager.serviceDriver.getServices().parallelStream().filter(taskedService -> taskedService.getEntry().getStatus() != ServiceState.QUEUED || taskedService.getEntry().getStatus() == ServiceState.STARTED).toList().forEach(taskedService -> {
-                            if (taskedService.getProcess() != null &&taskedService.getProcess().getProcess() != null &&!taskedService.getProcess().getProcess().isAlive()){
+                            if (taskedService.getProcess() != null && taskedService.getProcess().getProcess() != null &&!taskedService.getProcess().getProcess().isAlive()){
                                 unregister(taskedService.getEntry().getServiceName());
                             }
                         });

@@ -5,6 +5,7 @@ import eu.metacloudservice.networking.codec.PacketDecoder;
 import eu.metacloudservice.networking.codec.PacketEncoder;
 import eu.metacloudservice.networking.packet.Packet;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.*;
 import io.netty.channel.epoll.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -15,6 +16,8 @@ import lombok.SneakyThrows;
 import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static io.netty.channel.ChannelOption.*;
 
 public class NettyServer extends ChannelInitializer<Channel> implements AutoCloseable{
     private int port;

@@ -95,7 +95,9 @@ public class TaskedService implements ITaskedService {
             process.handelLaunch();
         }else {
             PacketOutLaunchService launch = new PacketOutLaunchService(entry.getServiceName(), new ConfigDriver().convert(Driver.getInstance().getGroupDriver().load(getEntry().getGroupName())), entry.isUseProtocol());
-            NettyDriver.getInstance().nettyServer.sendPacketAsynchronous(getEntry().getNode(), launch);
+
+            NettyDriver.getInstance().nettyServer.sendPacketSynchronized(getEntry().getNode(), launch);
+
         }
     }
 

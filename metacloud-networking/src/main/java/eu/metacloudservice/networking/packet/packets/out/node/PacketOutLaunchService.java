@@ -18,11 +18,11 @@ public class PacketOutLaunchService extends Packet {
     private boolean useProtocol;
 
     public PacketOutLaunchService() {
-        setPacketUUID(7843215);
+        setPacketUUID(290938191);
     }
 
     public PacketOutLaunchService(String service, String group, boolean useProtocol) {
-        setPacketUUID(7843215);
+        setPacketUUID(290938191);
         this.service = service;
         this.group = group;
         this.useProtocol = useProtocol;
