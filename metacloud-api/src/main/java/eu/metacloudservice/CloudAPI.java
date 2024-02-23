@@ -196,6 +196,7 @@ public class CloudAPI {
 
     public boolean removeWhiteList(String username){
         if (getWhitelist().stream().anyMatch(s -> s.equals(username))){
+            if (getPlayerPool().getPlayer(username) != null) getPlayerPool().getPlayer(username).disconnect(getMessages().getMessages().get("kickNetworkIsMaintenance"));
             CloudAPI.getInstance().sendPacketSynchronized(new PacketInCommandWhitelist(username));
             return true;
         }
