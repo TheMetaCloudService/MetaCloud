@@ -250,15 +250,17 @@ public final class ServiceProcess implements IServiceProcess {
                         "server.jar",
                         group.getStorage().getStartArguments()
                 };
-                File configFile = new File(System.getProperty("user.dir") + "/live/" + group.getGroup()+ "/" + service + "/", "velocity.toml");
-                final FileWriter fileWriter;
-                try {
-                    fileWriter = new FileWriter(configFile);
-                    fileWriter.write(Driver.getInstance().getMessageStorage().getVelocityToml(port, getGroup().getMaxPlayers(), useProtocol));
-                    fileWriter.flush();
-                    fileWriter.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (!new File("./live/" + group.getGroup()+ "/" + service + "/", "velocity.toml").exists()){
+                    File configFile = new File(System.getProperty("user.dir") + "/live/" + group.getGroup()+ "/" + service + "/", "velocity.toml");
+                    final FileWriter fileWriter;
+                    try {
+                        fileWriter = new FileWriter(configFile);
+                        fileWriter.write(Driver.getInstance().getMessageStorage().getVelocityToml(port, getGroup().getMaxPlayers(), useProtocol));
+                        fileWriter.flush();
+                        fileWriter.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 int leftLimit = 97; // letter 'a'
                 int rightLimit = 122; // letter 'z'
@@ -304,17 +306,19 @@ public final class ServiceProcess implements IServiceProcess {
                         "server.jar",
                         group.getStorage().getStartArguments()
                 };
-                File configFile = new File(System.getProperty("user.dir") + "/live/" + group.getGroup()+ "/" + service + "/", "config.yml");
-                final FileWriter fileWriter;
-                try {
-                    fileWriter = new FileWriter(configFile);
-                    fileWriter.write(Driver.getInstance().getMessageStorage().getBungeeCordConfiguration(port, group.getMaxPlayers(), useProtocol));
-                    fileWriter.flush();
-                    fileWriter.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
+                if (!new File("./live/" + group.getGroup()+ "/" + service + "/", "config.yml").exists()){
+                    File configFile = new File(System.getProperty("user.dir") + "/live/" + group.getGroup()+ "/" + service + "/", "config.yml");
+                    final FileWriter fileWriter;
+                    try {
+                        fileWriter = new FileWriter(configFile);
+                        fileWriter.write(Driver.getInstance().getMessageStorage().getBungeeCordConfiguration(port, group.getMaxPlayers(), useProtocol));
+                        fileWriter.flush();
+                        fileWriter.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
 
                 processBuilder.command(command);
                 try {

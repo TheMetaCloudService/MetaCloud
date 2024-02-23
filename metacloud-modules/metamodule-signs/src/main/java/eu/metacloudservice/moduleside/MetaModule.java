@@ -94,19 +94,26 @@ public class MetaModule implements IModule {
 
             Configuration configuration = new Configuration(configs);
             new ConfigDriver("./modules/signs/config.json").save(configuration);
+            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/signs/configuration", new ConfigDriver().convert(new ConfigDriver("./modules/signs/config.json").read(Configuration.class))));
+
 
         }
         if (!new File("./modules/signs/locations.json").exists()){
             Locations locations = new Locations(new ArrayList<>());
             new ConfigDriver("./modules/signs/locations.json").save(locations);
-        }
+            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/signs/locations", new ConfigDriver().convert(new ConfigDriver("./modules/signs/locations.json").read(Locations.class))));        }
         set();
         update();
     }
 
     public void set(){
+        if ( !Driver.getInstance().getWebServer().isContentExists("/module/signs/configuration")){
             Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/signs/configuration", new ConfigDriver().convert(new ConfigDriver("./modules/signs/config.json").read(Configuration.class))));
+
+        }
+        if ( !Driver.getInstance().getWebServer().isContentExists("/module/signs/locations")){
             Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/signs/locations", new ConfigDriver().convert(new ConfigDriver("./modules/signs/locations.json").read(Locations.class))));
+        }
     }
 
     public static void update(){

@@ -12,6 +12,7 @@ import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.packet.packets.in.node.PacketInSendConsole;
+import eu.metacloudservice.networking.packet.packets.in.node.PacketInSendConsoleFromNode;
 import eu.metacloudservice.terminal.commands.CommandDriver;
 import eu.metacloudservice.terminal.completer.TerminalCompleter;
 import eu.metacloudservice.terminal.enums.Color;
@@ -120,7 +121,7 @@ public final class TerminalDriver {
             String joinedLanguages = String.join(", ", Driver.getInstance().getLanguageDriver().getSupportedLanguages());
             clearScreen();
             log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-            Driver.getInstance().getTerminalDriver().log(Type.INSTALLATION, Driver.getInstance().getLanguageDriver().getLang().getMessage("setup-group-question-1"));
+            Driver.getInstance().getTerminalDriver().log(Type.INSTALLATION, Driver.getInstance().getLanguageDriver().getLang().getMessage("setup-general-question-1"));
             Driver.getInstance().getTerminalDriver().log(Type.INSTALLATION, Driver.getInstance().getLanguageDriver().getLang().getMessage("setup-general-question-possible-answers")
                     .replace("%possible_answers%", joinedLanguages));
 
@@ -244,6 +245,10 @@ public final class TerminalDriver {
 
         this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
         for (int i = 0; i != messages.length ; i++) {
+            if (Driver.getInstance().getMessageStorage().sendConsoleToManager && (Driver.getInstance().getMessageStorage().sendConsoleToManagerName == null || Driver.getInstance().getMessageStorage().sendConsoleToManagerName.equalsIgnoreCase(""))){
+                NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInSendConsoleFromNode(messages[i]));
+            }
+
             this.terminal.writer().println("\r" + getColoredString("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase().replace("INFORMATION", "§bINFORMATION")
                     .replace("ERROR", "§cERROR").replace("WARNING", "§eWARN")+"§7: §r" + messages[i] +Color.RESET.getAnsiCode()));
             simpleLatestLog.log(getClearSting("§7[§f"  + new SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis()) + "§7] §b"+type.toString().toUpperCase()+"§7: §r" + messages[i]));
@@ -262,6 +267,10 @@ public final class TerminalDriver {
          * @ARGUMENTS: Type type, String raw
          * @Coder: RauchigesEtwas (Robin B.)
          * */
+
+        if (Driver.getInstance().getMessageStorage().sendConsoleToManager && (Driver.getInstance().getMessageStorage().sendConsoleToManagerName == null || Driver.getInstance().getMessageStorage().sendConsoleToManagerName.equalsIgnoreCase(""))){
+            NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInSendConsoleFromNode(message));
+        }
 
         if (Driver.getInstance().getMessageStorage().openServiceScreen){
 

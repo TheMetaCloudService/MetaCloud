@@ -53,6 +53,8 @@ public final class TerminalReader extends Thread {
                 }else {
                     commandDriver.executeCommand("stop");
                 }
+            }catch (NoSuchMethodError ignored){
+                consoleDriver.log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-is-not-work"));
             }
         }
     }
