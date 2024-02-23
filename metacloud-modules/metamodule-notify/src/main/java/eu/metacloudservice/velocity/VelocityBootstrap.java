@@ -11,7 +11,7 @@ import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.velocity.listener.CloudListener;
 import eu.metacloudservice.webserver.RestDriver;
 
-@Plugin(id = "metacloudmodulenotify", version = "1.0.0", name = "metacloud-notify", authors = "RauchigesEtwas")
+@Plugin(id = "metacloudmodulenotify", version = "1.0.3-RELEASE", name = "metacloud-notify", authors = "RauchigesEtwas")
 public class VelocityBootstrap {
 
     private static VelocityBootstrap instance;

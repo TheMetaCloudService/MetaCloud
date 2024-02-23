@@ -28,7 +28,7 @@ import org.slf4j.Logger;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Plugin(id = "metacloudplugin", name = "metacloud-plugin", version = "1.0.0", authors = "RauchigesEtwas")
+@Plugin(id = "metacloudplugin", name = "metacloud-plugin", version = "1.0.3-RELEASE", authors = "RauchigesEtwas")
 public class VelocityBootstrap {
 
     public static ProxyServer proxyServer;
