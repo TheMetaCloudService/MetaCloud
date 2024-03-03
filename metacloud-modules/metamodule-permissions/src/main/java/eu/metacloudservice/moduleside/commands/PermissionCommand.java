@@ -94,7 +94,38 @@ public class PermissionCommand extends CommandAdapter {
 
                     }
 
-                } else if (args.length >= 5 && args.length < 7 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("add")) {
+                }
+
+
+                else if (args.length >= 5 && args.length < 7 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("set")) {
+
+                    String group = args[4];
+                    String time = args.length == 6 ? args[5] : "LIFETIME";
+                    // Implementiere Logik für "/permission user [user] group add [group] [time]"
+                    if (pp.getGroups().stream().noneMatch(includedAble -> includedAble.getGroup().equalsIgnoreCase(group))){
+                        if (!time.equalsIgnoreCase("LIFETIME")){
+                            LocalDateTime currentDateTime = LocalDateTime.now(); // das aktuelle Datum und die aktuelle Uhrzeit
+                            LocalDateTime calculatedDateTime = currentDateTime.plusDays(Integer.parseInt(time)); // berechne das Datum und die Uhrzeit, indem Tage zum aktuellen Datum und zur aktuellen Uhrzeit hinzugefügt werden
+
+                            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+                            time = calculatedDateTime.format(dateTimeFormatter);
+                        }
+                        pp.getGroups().clear();
+                        pp.getGroups().add(new IncludedAble(group, time));
+                        configuration.getPlayers().removeIf(permissionPlayer -> permissionPlayer.getUuid().equalsIgnoreCase(UUIDDriver.getUUID(username)));
+                        configuration.getPlayers().add(pp);
+                        new ConfigDriver("./modules/permissions/config.json").save(configuration);
+                        Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-player-has-now-group")
+                                .replace("%player%", username).replace("%group%", group).replace("%time%", time));
+                    }else {
+                        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-player-has-already-group")
+                                .replace("%player%", username));
+
+                    }
+
+                }
+                else if (args.length >= 5 && args.length < 7 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("add")) {
                     String group = args[4];
                     String time = args.length == 6 ? args[5] : "LIFETIME";
                     // Implementiere Logik für "/permission user [user] group add [group] [time]"
@@ -133,8 +164,9 @@ public class PermissionCommand extends CommandAdapter {
                     if (pp.getGroups().stream().anyMatch(includedAble -> includedAble.getGroup().equalsIgnoreCase(group))){
                         pp.getGroups().removeIf(includedAble -> includedAble.getGroup().equalsIgnoreCase(group));
                         if (pp.getGroups().isEmpty()){
-                            ArrayList<PermissionGroup> groups  = (ArrayList<PermissionGroup>) configuration.getGroups().stream().filter(PermissionGroup::getIsDefault).toList();
-                            groups.forEach(permissionGroup ->      pp.getGroups().add(new IncludedAble(permissionGroup.getGroup(), "LIFETIME")));
+                            ArrayList<String> groups = new ArrayList<>();
+                            groups.addAll(CloudPermissionAPI.getInstance().getGroups().stream().filter(PermissionGroup::getIsDefault).map(PermissionGroup::getGroup).toList());
+                            groups.forEach(permissionGroup -> pp.getGroups().add(new IncludedAble(permissionGroup, "LIFETIME")));
                         }
                         configuration.getPlayers().removeIf(permissionPlayer -> permissionPlayer.getUuid().equalsIgnoreCase(UUIDDriver.getUUID(username)));
                         configuration.getPlayers().add(pp);
@@ -373,8 +405,7 @@ public class PermissionCommand extends CommandAdapter {
 
     private void sendMessage(){
 
-
-
+        //TODO: change help page because "/perms user [name] group set [name] [time]" was added
 
 
         Driver.getInstance().getTerminalDriver().log(Type.COMMAND,
@@ -382,22 +413,22 @@ public class PermissionCommand extends CommandAdapter {
                 Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-2"),
                 Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-3"),
                 Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-4"),
-                Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-5")
-
+                Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-5"),
+                Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-6")
                 );
         Driver.getInstance().getTerminalDriver().log(Type.COMMAND,
                 "");
 
         Driver.getInstance().getTerminalDriver().log(Type.COMMAND,
 
-                Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-6"),
                 Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-7"),
                 Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-8"),
                 Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-9"),
                 Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-10"),
                 Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-12"),
                 Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-13"),
-                Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-14")
+                Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-14"),
+                Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-help-15")
                 );
 
     }
@@ -419,11 +450,22 @@ public class PermissionCommand extends CommandAdapter {
             }else if (args.length == 3 && !args[2].equalsIgnoreCase("info")){
                 suggestion.add("add");
                 suggestion.add("remove");
-
+            if (args[2].equalsIgnoreCase("group")){
+                suggestion.add("set");
+            }
+            }else if (args.length == 4 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("set")){
+                CloudPermissionAPI.getInstance().getGroups().forEach(permissionGroup -> suggestion.add(permissionGroup.getGroup()));
             }else if (args.length == 4 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("add")){
                 CloudPermissionAPI.getInstance().getGroups().forEach(permissionGroup -> suggestion.add(permissionGroup.getGroup()));
             }else if (args.length == 4 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("remove")){
                 CloudPermissionAPI.getInstance().getPlayer(args[1]).getGroups().forEach(includedAble -> suggestion.add(includedAble.getGroup()));
+            }else if (args.length == 5 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("set")){
+                suggestion.add("LIFETIME");
+                suggestion.add("120");
+                suggestion.add("90");
+                suggestion.add("60");
+                suggestion.add("30");
+                suggestion.add("15");
             }else if (args.length == 5 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("add")){
                 suggestion.add("LIFETIME");
                 suggestion.add("120");
