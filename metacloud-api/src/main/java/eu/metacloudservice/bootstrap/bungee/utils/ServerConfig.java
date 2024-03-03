@@ -17,7 +17,7 @@ public class ServerConfig {
 
     private static File file;
     private static Configuration bungeeConfig;
-    private static boolean locked; // TODO: This is dumb. Writes are lost when locked
+    private static boolean locked;
 
     static {
         setupConfig();
