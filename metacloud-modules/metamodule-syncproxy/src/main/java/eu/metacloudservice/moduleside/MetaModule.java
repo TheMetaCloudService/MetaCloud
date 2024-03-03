@@ -133,9 +133,7 @@ public class MetaModule implements IModule {
                 });
                 configuration.setConfiguration(configs);
                 Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/syncproxy/configuration", new ConfigDriver().convert(configuration)));
-
                 Driver.getInstance().getWebServer().updateRoute("/module/syncproxy/configuration", new ConfigDriver().convert(configuration));
-
                 new ConfigDriver("./modules/syncproxy/config.json").save(configuration);
                 set();
                 update();

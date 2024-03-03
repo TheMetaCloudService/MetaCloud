@@ -45,6 +45,8 @@ public class MetaModule implements IModule {
                 configuration.setServiceDiconnected("§8[§c◁§8] §7service: §c%service_name% §7was §cdisconnected");
 
                 new ConfigDriver("./modules/notify/config.json").save(configuration);
+                Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/notify/configuration", new ConfigDriver().convert(configuration)));
+
 
             }catch (Exception e){
                 create();
