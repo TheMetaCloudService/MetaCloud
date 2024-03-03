@@ -58,21 +58,23 @@ public class CloudConnectListener {
         this.connected.add(event.getPlayer().getUniqueId());
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInPlayerConnect(event.getPlayer().getUsername(), service.getService()));
 
-        if (group.isMaintenance()
-                && !server.getPlayer(event.getPlayer().getUniqueId()).get().hasPermission("metacloud.connection.maintenance")
-                && !CloudAPI.getInstance().getWhitelist().contains(server.getPlayer(event.getPlayer().getUniqueId()).get().getUsername())){
-            event.getPlayer().disconnect(Component.text(CloudAPI.getInstance().getMessages().getMessages().get("kickNetworkIsMaintenance").replace("&", "§")));
+        if (group.isMaintenance()) {
+            if (!server.getPlayer(event.getPlayer().getUniqueId()).get().hasPermission("metacloud.connection.maintenance")
+                    && !CloudAPI.getInstance().getWhitelist().contains(server.getPlayer(event.getPlayer().getUniqueId()).get().getUsername())){
+                event.getPlayer().disconnect(Component.text(CloudAPI.getInstance().getMessages().getMessages().get("kickNetworkIsMaintenance").replace("&", "§")));
+            }
+        }else {
+            if (CloudAPI.getInstance().getPlayerPool().getPlayers().size() >= group.getMaxPlayers()
+                    && !server.getPlayer(event.getPlayer().getUniqueId()).get().hasPermission("metacloud.connection.full")
+                    && !CloudAPI.getInstance().getWhitelist().contains(server.getPlayer(event.getPlayer().getUniqueId()).get().getUsername())){
+                event.getPlayer().disconnect(Component.text(CloudAPI.getInstance().getMessages().getMessages().get("kickNetworkIsFull").replace("&", "§")));
 
-        }else if (CloudAPI.getInstance().getPlayerPool().getPlayers().size() >= group.getMaxPlayers().intValue()
+            }else if (server.getPlayer(event.getPlayer().getUniqueId()).isPresent()
+                    && VelocityBootstrap.getLobby( server.getPlayer(event.getPlayer().getUniqueId()).get()) == null){
 
-                && !server.getPlayer(event.getPlayer().getUniqueId()).get().hasPermission("metacloud.connection.full")
-                && !CloudAPI.getInstance().getWhitelist().contains(server.getPlayer(event.getPlayer().getUniqueId()).get().getUsername())){
-            event.getPlayer().disconnect(Component.text(CloudAPI.getInstance().getMessages().getMessages().get("kickNetworkIsFull").replace("&", "§")));
+                event.getPlayer().disconnect(Component.text(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback").replace("&", "§")));
 
-        }else if (server.getPlayer(event.getPlayer().getUniqueId()).isPresent()
-                && VelocityBootstrap.getLobby( server.getPlayer(event.getPlayer().getUniqueId()).get()) == null){
-            event.getPlayer().disconnect(Component.text(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback").replace("&", "§")));
-
+            }
         }
     }
 

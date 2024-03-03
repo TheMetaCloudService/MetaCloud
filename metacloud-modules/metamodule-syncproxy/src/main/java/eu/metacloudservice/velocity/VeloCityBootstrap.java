@@ -50,10 +50,6 @@ public class VeloCityBootstrap {
         liveService = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         group = CloudAPI.getInstance().getGroupPool().getGroup(getLiveService().getGroup());
         restDriver = new RestDriver(liveService.getManagerAddress(), liveService.getRestPort());
-         conf = (Configuration) new ConfigDriver().convert(getRestDriver().get("/module/syncproxy/configuration"), Configuration.class);
-        if (conf.getConfiguration() != null  && conf.getConfiguration().stream().anyMatch(designConfig -> designConfig.getTargetGroup().equalsIgnoreCase(liveService.getGroup()))){
-            configuration = conf.getConfiguration().stream().filter(designConfig -> designConfig.getTargetGroup().equalsIgnoreCase(liveService.getGroup())).findFirst().get();
-        }
         CloudAPI.getInstance().getEventDriver().registerListener(new CloudEventHandler());
         proxyServer.getEventManager().register(instance, new MOTDListener());
         proxyServer.getEventManager().register(instance, new TablistListener(proxyServer));
@@ -96,6 +92,7 @@ public class VeloCityBootstrap {
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(() -> {
+            conf = (Configuration) new ConfigDriver().convert(getRestDriver().get("/module/syncproxy/configuration"), Configuration.class);
             conf.getConfiguration().stream()
                     .filter(designConfig -> designConfig.getTargetGroup().equalsIgnoreCase(liveService.getGroup()))
                     .findFirst()

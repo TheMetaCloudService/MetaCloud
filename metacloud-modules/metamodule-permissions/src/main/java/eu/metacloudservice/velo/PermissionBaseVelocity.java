@@ -29,7 +29,7 @@ public class PermissionBaseVelocity implements PermissionProvider {
         @Override
         public Tristate getPermissionValue(String permission) {
 
-            ArrayList<PermissionAble> permissions = CloudPermissionAPI.getInstance().getPermissionsFormPlayer(player.getUsername());
+            ArrayList<PermissionAble> permissions = CloudPermissionAPI.getInstance().getPermissionsFromPlayer(player.getUsername());
 
             if (permissions.parallelStream().anyMatch(permissionAble -> permissionAble.getPermission().equalsIgnoreCase("*") && permissionAble.getAble())){
                 return Tristate.fromBoolean(true);

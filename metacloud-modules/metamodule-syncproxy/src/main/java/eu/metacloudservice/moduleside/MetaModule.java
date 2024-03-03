@@ -132,6 +132,9 @@ public class MetaModule implements IModule {
                     configs.add(config);
                 });
                 configuration.setConfiguration(configs);
+                Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/syncproxy/configuration", new ConfigDriver().convert(configuration)));
+
+                Driver.getInstance().getWebServer().updateRoute("/module/syncproxy/configuration", new ConfigDriver().convert(configuration));
 
                 new ConfigDriver("./modules/syncproxy/config.json").save(configuration);
                 set();
@@ -149,8 +152,7 @@ public class MetaModule implements IModule {
     }
     
     public static void set(){
-
-
+        if (Driver.getInstance().getWebServer().getRoute("/module/syncproxy/configuration") != null) return;
         Configuration config = (Configuration) new ConfigDriver("./modules/syncproxy/config.json").read(Configuration.class);
         Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/syncproxy/configuration", new ConfigDriver().convert(config)));
     }
