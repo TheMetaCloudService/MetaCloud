@@ -17,8 +17,13 @@ public class BukkitBootstrap extends JavaPlugin  implements Listener {
 
 
     @Override
-    public void onEnable() {
+    public void onLoad() {
         new CloudPermissionAPI();
+    }
+
+    @Override
+    public void onEnable() {
+
         Bukkit.getPluginManager().registerEvents(this, this);
     }
 
