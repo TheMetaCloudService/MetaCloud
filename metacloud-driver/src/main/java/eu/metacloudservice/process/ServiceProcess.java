@@ -73,6 +73,7 @@ public final class ServiceProcess implements IServiceProcess {
                     new File("./local/templates/" + group.getStorage().getTemplate()+"/" + service + "/").mkdirs();
                     try {
                         FileUtils.copyDirectory(new File("./live/" + group.getGroup() + "/" + service + "/"), new File("./local/templates/" + group.getStorage().getTemplate()+"/" + service +"/"));
+                        FileUtils.copyDirectory(new File("./live/" + group.getGroup() + "/" + service + "/plugins/"), new File("./local/templates/" + group.getStorage().getTemplate()+"/" + service +"/plugins/"));
                     } catch (IOException ignored) {}
                 };
             }

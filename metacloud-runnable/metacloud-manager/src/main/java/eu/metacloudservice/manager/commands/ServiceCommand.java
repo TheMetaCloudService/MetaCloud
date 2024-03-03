@@ -76,10 +76,10 @@ public class ServiceCommand extends CommandAdapter {
                     Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-service-service-not-found")
                             .replace("%service%", service));
                 }
-            }else  if (args[0].equalsIgnoreCase("sync")){
+            }else  if (args[0].equalsIgnoreCase("copy")){
                 String service = args[1];
                 if (CloudManager.serviceDriver.getService(service) != null){
-                    Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-service-service-not-found")
+                    Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-service-service-sync")
                             .replace("%service%", service));
                     CloudManager.serviceDriver.getService(service).handelSync();
                 }else {
@@ -243,7 +243,7 @@ public class ServiceCommand extends CommandAdapter {
             commands.add("stopgroup");
             commands.add("restart");
             commands.add("stop");
-            commands.add("sync");
+            commands.add("copy");
             commands.add("info");
             commands.add("execute");
             commands.add("restartgroup");
@@ -251,7 +251,7 @@ public class ServiceCommand extends CommandAdapter {
             commands.add("whitelist");
         }else if (args.length == 1 && !args[0].equalsIgnoreCase("list") && !args[0].equalsIgnoreCase("stopgroup") && ! args[0].equalsIgnoreCase("whitelist") && !args[0].equalsIgnoreCase("run") && !args[0].equalsIgnoreCase("restartgroup") && !args[0].equalsIgnoreCase("restartnode")){
             CloudManager.serviceDriver.getServices().forEach(taskedService -> commands.add(taskedService.getEntry().getServiceName()));
-            if (args[0].equalsIgnoreCase("execute") || args[0].equalsIgnoreCase("sync")){
+            if (args[0].equalsIgnoreCase("execute") || args[0].equalsIgnoreCase("copy")){
                 commands.add("--all");
             }
 

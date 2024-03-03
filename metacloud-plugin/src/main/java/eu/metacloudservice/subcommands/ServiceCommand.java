@@ -31,7 +31,7 @@ public class ServiceCommand extends PluginCommand {
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service list"));
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service run [group] ([amount])"));
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stop [service]"));
-                veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service sync [service]"));
+                veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service copy [service]"));
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stopgroup [group]"));
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restart [service]"));
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
@@ -40,7 +40,7 @@ public class ServiceCommand extends PluginCommand {
                 proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
                 proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
                 proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud service sync [service]");
+                proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
                 proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
                 proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
                 proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
@@ -97,7 +97,7 @@ public class ServiceCommand extends PluginCommand {
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service list"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service run [group] ([amount])"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stop [service]"));
-                    veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service sync [service]"));
+                    veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service copy [service]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stopgroup [group]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restart [service]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
@@ -106,7 +106,7 @@ public class ServiceCommand extends PluginCommand {
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service sync [service]");
+                    proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
@@ -128,7 +128,7 @@ public class ServiceCommand extends PluginCommand {
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service list"));
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service run [group] ([amount])"));
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stop [service]"));
-                            veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service sync [service]"));
+                            veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service copy [service]"));
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stopgroup [group]"));
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restart [service]"));
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
@@ -137,7 +137,7 @@ public class ServiceCommand extends PluginCommand {
                             proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
                             proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
                             proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service sync [service]");
+                            proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
                             proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
                             proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
                             proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
@@ -155,7 +155,7 @@ public class ServiceCommand extends PluginCommand {
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service list"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service run [group] ([amount])"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stop [service]"));
-                    veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service sync [service]"));
+                    veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service copy [service]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stopgroup [group]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restart [service]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
@@ -164,7 +164,7 @@ public class ServiceCommand extends PluginCommand {
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service sync [service]");
+                    proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
@@ -186,7 +186,7 @@ public class ServiceCommand extends PluginCommand {
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service list"));
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service run [group] ([amount])"));
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stop [service]"));
-                            veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service sync [service]"));
+                            veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service copy [service]"));
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stopgroup [group]"));
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restart [service]"));
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
@@ -195,7 +195,7 @@ public class ServiceCommand extends PluginCommand {
                             proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
                             proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
                             proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service sync [service]");
+                            proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
                             proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
                             proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
                             proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
@@ -213,7 +213,7 @@ public class ServiceCommand extends PluginCommand {
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service list"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service run [group] ([amount])"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stop [service]"));
-                    veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service sync [service]"));
+                    veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service copy [service]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stopgroup [group]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restart [service]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
@@ -222,7 +222,7 @@ public class ServiceCommand extends PluginCommand {
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service sync [service]");
+                    proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
@@ -244,7 +244,7 @@ public class ServiceCommand extends PluginCommand {
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service list"));
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service run [group] ([amount])"));
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stop [service]"));
-                            veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service sync [service]"));
+                            veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service copy [service]"));
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stopgroup [group]"));
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restart [service]"));
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
@@ -253,7 +253,7 @@ public class ServiceCommand extends PluginCommand {
                             proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
                             proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
                             proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service sync [service]");
+                            proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
                             proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
                             proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
                             proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
@@ -272,7 +272,7 @@ public class ServiceCommand extends PluginCommand {
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service list"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service run [group] ([amount])"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stop [service]"));
-                    veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service sync [service]"));
+                    veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service copy [service]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stopgroup [group]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restart [service]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
@@ -281,7 +281,7 @@ public class ServiceCommand extends PluginCommand {
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service sync [service]");
+                    proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
@@ -303,7 +303,7 @@ public class ServiceCommand extends PluginCommand {
                                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service list"));
                                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service run [group] ([amount])"));
                                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stop [service]"));
-                                veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service sync [service]"));
+                                veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service copy [service]"));
                                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stopgroup [group]"));
                                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restart [service]"));
                                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
@@ -312,7 +312,7 @@ public class ServiceCommand extends PluginCommand {
                                 proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
                                 proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
                                 proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                                proxiedPlayer.sendMessage(PREFIX + "/cloud service sync [service]");
+                                proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
                                 proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
                                 proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
                                 proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
@@ -330,7 +330,7 @@ public class ServiceCommand extends PluginCommand {
                         veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service list"));
                         veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service run [group] ([amount])"));
                         veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stop [service]"));
-                        veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service sync [service]"));
+                        veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service copy [service]"));
                         veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stopgroup [group]"));
                         veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restart [service]"));
                         veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
@@ -339,14 +339,14 @@ public class ServiceCommand extends PluginCommand {
                         proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
                         proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
                         proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                        proxiedPlayer.sendMessage(PREFIX + "/cloud service sync [service]");
+                        proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
                         proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
                         proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
                         proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
                         proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
                     }
                 }
-        }else if (args[0].equalsIgnoreCase("sync")){
+        }else if (args[0].equalsIgnoreCase("copy")){
             if (args.length == 2){
                 String service = args[1];
                 if (CloudAPI.getInstance().getServicePool().serviceNotNull(service)){
@@ -354,21 +354,21 @@ public class ServiceCommand extends PluginCommand {
                         CloudAPI.getInstance().getAsyncServicePool().getService(service).get().sync();
                     } catch (InterruptedException | ExecutionException e) {throw new RuntimeException(e);}
                     if (veloPlayer != null)
-                        veloPlayer.sendMessage(Component.text(PREFIX +"The service '§f"+service+"§7' was successfully synchronized"));
+                        veloPlayer.sendMessage(Component.text(PREFIX +"The service '§f"+service+"§7' was successfully copied"));
                     else
-                        proxiedPlayer.sendMessage(PREFIX + "The service '§f"+service+"§7' was successfully synchronized");
+                        proxiedPlayer.sendMessage(PREFIX + "The service '§f"+service+"§7' was successfully copied");
                 }else {
                     if (veloPlayer != null)
-                        veloPlayer.sendMessage(Component.text(PREFIX +"The service was not found and therefore cannot be synced"));
+                        veloPlayer.sendMessage(Component.text(PREFIX +"The service was not found and therefore cannot be copy"));
                     else
-                        proxiedPlayer.sendMessage(PREFIX + "The service was not found and therefore cannot be synced");
+                        proxiedPlayer.sendMessage(PREFIX + "The service was not found and therefore cannot be copy");
                 }
             }else {
                 if (proxiedPlayer == null){
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service list"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service run [group] ([amount])"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stop [service]"));
-                    veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service sync [service]"));
+                    veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service copy [service]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stopgroup [group]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restart [service]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
@@ -377,7 +377,7 @@ public class ServiceCommand extends PluginCommand {
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service sync [service]");
+                    proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
@@ -409,7 +409,7 @@ public class ServiceCommand extends PluginCommand {
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service list"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service run [group] ([amount])"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stop [service]"));
-                    veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service sync [service]"));
+                    veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service copy [service]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stopgroup [group]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restart [service]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
@@ -418,7 +418,7 @@ public class ServiceCommand extends PluginCommand {
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service sync [service]");
+                    proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
                     proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
@@ -430,7 +430,7 @@ public class ServiceCommand extends PluginCommand {
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service list"));
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service run [group] ([amount])"));
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stop [service]"));
-                veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service sync [service]"));
+                veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service copy [service]"));
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service stopgroup [group]"));
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restart [service]"));
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
@@ -439,7 +439,7 @@ public class ServiceCommand extends PluginCommand {
                 proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
                 proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
                 proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud service sync [service]");
+                proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
                 proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
                 proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
                 proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
@@ -455,7 +455,7 @@ public class ServiceCommand extends PluginCommand {
             suggestion.add("list");
             suggestion.add("run");
             suggestion.add("stop");
-            suggestion.add("sync");
+            suggestion.add("copy");
             suggestion.add("stopgroup");
             suggestion.add("restart");
             suggestion.add("restartgroup");
@@ -463,7 +463,7 @@ public class ServiceCommand extends PluginCommand {
         }else if (args.length == 2 ){
             if (args[0].equalsIgnoreCase("run") || args[0].equalsIgnoreCase("stopgroup") || args[0].equalsIgnoreCase("restartgroup")){
                 suggestion.addAll(CloudAPI.getInstance().getGroupPool().getGroupsByName());
-            }else if (args[0].equalsIgnoreCase("stop") || args[0].equalsIgnoreCase("restart") || args[0].equalsIgnoreCase("dispatch") || args[0].equalsIgnoreCase("sync")){
+            }else if (args[0].equalsIgnoreCase("stop") || args[0].equalsIgnoreCase("restart") || args[0].equalsIgnoreCase("dispatch") || args[0].equalsIgnoreCase("copy")){
                 CloudAPI.getInstance().getServicePool().getServices().forEach(cloudService -> suggestion.add(cloudService.getName()));
             }
         }

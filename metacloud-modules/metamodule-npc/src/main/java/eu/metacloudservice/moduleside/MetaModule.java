@@ -61,11 +61,16 @@ public class MetaModule implements IModule {
                     configs.add(cc);
                 }
             });
-            new ConfigDriver("./modules/npc/config.json").save(new Configuration(configs));
+            Configuration c =new Configuration(configs);
+            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/npc/configuration", new ConfigDriver().convert(c)));
+            new ConfigDriver("./modules/npc/config.json").save(c);
+
         }
 
         if (!new File("./modules/npc/locations.json").exists()){
             Locations locations = new Locations(new ArrayList<>());
+            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/npc/locations", new ConfigDriver().convert(locations)));
+
             new ConfigDriver("./modules/npc/locations.json").save(locations);
             Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/npc/configuration", new ConfigDriver().convert(new ConfigDriver("./modules/npc/config.json").read(Configuration.class))));
 

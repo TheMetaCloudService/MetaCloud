@@ -93,8 +93,9 @@ public class MetaModule implements IModule {
             });
 
             Configuration configuration = new Configuration(configs);
+            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/signs/configuration", new ConfigDriver().convert(configuration)));
+
             new ConfigDriver("./modules/signs/config.json").save(configuration);
-            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/signs/configuration", new ConfigDriver().convert(new ConfigDriver("./modules/signs/config.json").read(Configuration.class))));
 
 
         }
