@@ -87,9 +87,7 @@ public class UUIDDriver {
                             reader.close();
                             uuids.add(new UUIDStorage(name, uuid));
                             return uuid;
-                        }catch (Exception exception){
-
-                        }
+                        }catch (Exception exception){}
                     }
                 }
             }

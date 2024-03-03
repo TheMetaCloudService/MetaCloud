@@ -169,7 +169,6 @@ public class CloudManager implements IRunAble {
         Driver.getInstance().getTerminalDriver().log(Type.INFO, Driver.getInstance().getLanguageDriver().getLang().getMessage("cloud-start-successful"));
         queueDriver= new QueueDriver();
         Messages msg = (Messages) new ConfigDriver("./local/messages.json").read(Messages.class);
-
         Driver.getInstance().getWebServer().addRoute(new RouteEntry("/message/default", new ConfigDriver().convert(msg)));
         GroupList groupList = new GroupList();
         groupList.setGroups(Driver.getInstance().getGroupDriver().getAllStrings());

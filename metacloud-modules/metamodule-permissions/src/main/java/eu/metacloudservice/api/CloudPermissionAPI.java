@@ -16,11 +16,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.TimerTask;
 
 public class CloudPermissionAPI {
     private static CloudPermissionAPI instance;
     private Configuration configuration;
+
     public CloudPermissionAPI() {
         instance = this;
         if (MetaModule.instance == null){
@@ -39,7 +41,7 @@ public class CloudPermissionAPI {
     }
 
     public ArrayList<PermissionPlayer> getPlayers(){
-        return getConfig().getPlayers();
+        return getConfig() == null ? new ArrayList<>() : getConfig().getPlayers();
     }
 
     public void updateConfig(@NotNull Configuration configuration){
@@ -69,7 +71,7 @@ public class CloudPermissionAPI {
         return getPlayers().stream().filter(permissionPlayer -> permissionPlayer.getUuid().equalsIgnoreCase(uuid)).findFirst().orElse(null);
     }
 
-    public ArrayList<PermissionAble> getPermissionsFormPlayer(@NotNull String username){
+    public ArrayList<PermissionAble> getPermissionsFromPlayer(@NotNull String username){
         ArrayList<PermissionAble> permissionAbles = new ArrayList<>();
         getPlayer(username).getGroups().forEach(includedAble -> permissionAbles.addAll(getPermissionsFormGroup(includedAble.getGroup())));
         permissionAbles.addAll(getPlayer(username).getPermissions());
@@ -138,22 +140,27 @@ public class CloudPermissionAPI {
         }
     }
 
+
     public boolean removeGroupFromPlayer(@NotNull String player, @NotNull String group){
         PermissionPlayer player2 = getPlayer(player);
         if (player2 == null) {
             return false;
         }
 
-        List<IncludedAble> playerGroups = player2.getGroups();
+        List<IncludedAble> playerGroups = new ArrayList<>();
+
+        playerGroups.addAll(player2.getGroups());
         if (playerGroups.stream().noneMatch(group2 -> group2.getGroup().equalsIgnoreCase(group))) {
             return false;
         }
 
-        playerGroups.removeIf(group2 -> group2.getGroup().equalsIgnoreCase(group));
-        if (playerGroups.isEmpty()) {
-            List<PermissionGroup> defaultGroups = getGroups().stream().filter(PermissionGroup::getIsDefault).toList();
-            defaultGroups.forEach(permissionGroup -> playerGroups.add(new IncludedAble(permissionGroup.getGroup(), "LIFETIME")));
+        if (playerGroups.stream().filter(includedAble -> !includedAble.getGroup().equalsIgnoreCase(group)).toList().isEmpty()) {
+            List<String> groups = new ArrayList<>();
+                    groups.addAll(CloudPermissionAPI.getInstance().getGroups().stream().filter(PermissionGroup::getIsDefault).map(PermissionGroup::getGroup).toList());
+            groups.forEach(permissionGroup ->      player2.getGroups().add(new IncludedAble(permissionGroup, "LIFETIME")));
         }
+
+        playerGroups.removeIf(group2 -> group2.getGroup().equalsIgnoreCase(group));
 
         updatePlayer(player2);
         return true;
@@ -247,7 +254,7 @@ public class CloudPermissionAPI {
         if (configuration == null) return false;
         if (configuration.getGroups().stream().anyMatch(permissionGroup -> permissionGroup.getGroup().equalsIgnoreCase(group))){
             configuration.getGroups().removeIf(permissionGroup -> permissionGroup.getGroup().equalsIgnoreCase(group));
-            getPlayers().forEach(permissionPlayer -> removeGroupFromPlayer(UUIDDriver.getUsername(permissionPlayer.getUuid()), group));
+            getPlayers().forEach(permissionPlayer -> removeGroupFromPlayer(Objects.requireNonNull(UUIDDriver.getUsername(permissionPlayer.getUuid())), group));
             updateConfig(configuration);
             return true;
         }

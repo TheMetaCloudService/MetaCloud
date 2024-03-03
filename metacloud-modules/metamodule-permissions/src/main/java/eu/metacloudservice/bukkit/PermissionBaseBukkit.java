@@ -42,7 +42,7 @@ public class PermissionBaseBukkit extends PermissibleBase {
     @Override
     public boolean hasPermission(@NotNull String inName) {
         if (player.isOp()) return true;
-        ArrayList<PermissionAble> permissions = CloudPermissionAPI.getInstance().getPermissionsFormPlayer(player.getName());
+        ArrayList<PermissionAble> permissions = CloudPermissionAPI.getInstance().getPermissionsFromPlayer(player.getName());
         if (permissions.parallelStream().anyMatch(permissionAble -> permissionAble.getPermission().equalsIgnoreCase("*") && permissionAble.getAble())){
             return true;
         }else if (!permissions.parallelStream().filter(permissionAble -> permissionAble.getPermission().equalsIgnoreCase(inName) && permissionAble.getAble()).toList().isEmpty()){
