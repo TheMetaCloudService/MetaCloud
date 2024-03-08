@@ -24,7 +24,7 @@ import java.util.List;
 public class CloudEvents implements ICloudListener {
 
 
-    @Subscribe(priority =  Priority.MEDIUM)
+    @Subscribe(priority =  Priority.HIGHEST)
     public void handle(CloudRestAPIPutEvent event){
         if (event.getPath().equalsIgnoreCase("/module/permission/configuration")){
             new ConfigDriver("./modules/permissions/config.json").save(new ConfigDriver().convert(event.getContent(), Configuration.class));
@@ -78,6 +78,7 @@ public class CloudEvents implements ICloudListener {
         config.getGroups().clear();
         config.getGroups().addAll(updateGroup);
 
+        Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(config));
 
         new ConfigDriver("./modules/permissions/config.json").save(config);
         Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(config));
@@ -154,6 +155,7 @@ public class CloudEvents implements ICloudListener {
         config.getGroups().clear();
         config.getGroups().addAll(updateGroup);
 
+        Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(config));
         new ConfigDriver("./modules/permissions/config.json").save(config);
         Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(new ConfigDriver("./modules/permissions/config.json").read(Configuration.class)));
 
