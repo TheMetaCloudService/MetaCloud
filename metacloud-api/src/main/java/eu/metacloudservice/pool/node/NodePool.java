@@ -16,7 +16,6 @@ public class NodePool {
         this.connectedNodes = connectedNodes;
     }
 
-
     public List<CloudNode> getNodes() {
         return connectedNodes;
     }
@@ -36,7 +35,5 @@ public class NodePool {
     public void deleteNode(String node){
         connectedNodes.removeIf(cloudNode -> cloudNode.getNodeName().equals(node));
     }
-
-
-
+    
 }
