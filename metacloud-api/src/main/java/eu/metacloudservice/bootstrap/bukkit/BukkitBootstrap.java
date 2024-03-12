@@ -13,6 +13,7 @@ public class BukkitBootstrap extends JavaPlugin {
     @Override
     public void onLoad() {
         new CloudAPI(false);
+
     }
 
     @Override
