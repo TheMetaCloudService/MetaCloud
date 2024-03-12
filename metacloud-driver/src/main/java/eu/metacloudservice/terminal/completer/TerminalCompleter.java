@@ -41,7 +41,8 @@ public final class TerminalCompleter  implements Completer {
             final var result = new LinkedList<String>();
             var arguments = input.split(" ");
             final var consoleInput = Driver.getInstance().getTerminalDriver().getInputs().peek();
-            result.addAll(Driver.getInstance().getTerminalDriver().getSetupDriver().getSetup().tabComplete());
+            result.addAll(Driver.getInstance().getTerminalDriver().getSetupDriver().getSetup().tabComplete() != null
+                    ? Driver.getInstance().getTerminalDriver().getSetupDriver().getSetup().tabComplete() : new ArrayList<>());
 
             suggestions = result;
             suggestions.stream().map(Candidate::new).forEach(list::add);

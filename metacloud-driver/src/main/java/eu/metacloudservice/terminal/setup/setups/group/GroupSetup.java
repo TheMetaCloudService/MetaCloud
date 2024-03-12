@@ -432,7 +432,35 @@ public class GroupSetup extends SetupClass {
 
     @Override
     public List<String> tabComplete() {
-        return null;
+        List<String> complete = new ArrayList<>();
+        if (getStep() == 1){
+            complete.add("PROXY");
+            complete.add("GAME");
+            complete.add("LOBBY");
+        }else  if (getStep() == 2){
+            complete.add("512");
+            complete.add("1024");
+            complete.add("2048");
+        }else  if (getStep() == 3){
+            complete.add("yes");
+            complete.add("no");
+        }else  if (getStep() == 6){
+            complete.add("-1");
+        }else  if (getStep() == 7){
+            complete.add("25");
+            complete.add("50");
+            complete.add("75");
+            complete.add("100");
+        }else  if (getStep() == 10){
+            complete.addAll(Driver.getInstance().getTemplateDriver().get());
+            complete.add("create");
+        }else  if (getStep() == 11){
+            ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+            config.getNodes().forEach(managerConfigNodes -> complete.add(managerConfigNodes.getName()));
+        }
+
+
+        return complete;
     }
 
 
