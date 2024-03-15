@@ -1,3 +1,11 @@
+/*
+ * this class is by RauchigesEtwas
+ */
+
+/*
+ * this class is by RauchigesEtwas
+ */
+
 package eu.metacloudservice.velocity;
 
 import com.google.inject.Inject;
@@ -11,7 +19,7 @@ import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.velocity.listener.CloudListener;
 import eu.metacloudservice.webserver.RestDriver;
 
-@Plugin(id = "metacloudmodulenotify", version = "1.0.4-RELEASE", name = "metacloud-notify", authors = "RauchigesEtwas")
+@Plugin(id = "metacloudmodulenotify", version = "1.0.5-RELEASE", name = "metacloud-notify", authors = "RauchigesEtwas")
 public class VelocityBootstrap {
 
     private static VelocityBootstrap instance;
