@@ -27,7 +27,7 @@ public class PlayerPool {
     }
 
     public CloudPlayer getPlayer(@NonNull UUID uniqueId){
-        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString())).findFirst().orElse(null);
+        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUniqueId().replace("-", "").equals(uniqueId.toString().replace("-", ""))).findFirst().orElse(null);
     }
 
     public List<CloudPlayer> getPlayersFromService(@NonNull String service){
@@ -60,7 +60,7 @@ public class PlayerPool {
 
 
     public boolean playerIsNotNull(@NonNull UUID uniqueId){
-        return connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString()));
+        return connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString().replace("-", "")));
     }
 
     public boolean playerIsNotNull(@NonNull String username){
@@ -68,7 +68,7 @@ public class PlayerPool {
     }
 
     public void registerPlayer(@NonNull CloudPlayer cloudPlayer){
-        if (connectedPlayers.stream().noneMatch(cloudPlayer1 -> cloudPlayer1.getUniqueId().equals(cloudPlayer.getUniqueId()))){
+        if (connectedPlayers.stream().noneMatch(cloudPlayer1 -> cloudPlayer1.getUniqueId().replace("-", "").equals(cloudPlayer.getUniqueId().replace("-", "")))){
             connectedPlayers.add(cloudPlayer);
         }
     }
@@ -78,8 +78,8 @@ public class PlayerPool {
     }
 
     public boolean unregisterPlayer(@NonNull UUID uniqueId){
-        if (connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString()))){
-            connectedPlayers.removeIf(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString()));
+        if (connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString().replace("-", "")))){
+            connectedPlayers.removeIf(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString().replace("-", "")));
             return true;
         }else {
             return false;

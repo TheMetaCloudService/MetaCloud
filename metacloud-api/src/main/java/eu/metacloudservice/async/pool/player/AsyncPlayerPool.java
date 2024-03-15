@@ -27,7 +27,7 @@ public class AsyncPlayerPool {
     }
 
     public CompletableFuture<AsyncCloudPlayer> getPlayer(@NonNull UUID uniqueId){
-        return CompletableFuture.supplyAsync( () -> connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.uniqueId().equals(uniqueId.toString())).findFirst().orElse(null));
+        return CompletableFuture.supplyAsync( () -> connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.uniqueId().equals(uniqueId.toString().replace("-", ""))).findFirst().orElse(null));
     }
 
     public CompletableFuture<List<AsyncCloudPlayer>> getPlayersFromService(@NonNull String service){
@@ -62,7 +62,7 @@ public class AsyncPlayerPool {
 
 
     public boolean playerIsNotNull(@NonNull UUID uniqueId){
-        return connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.uniqueId().equals(uniqueId.toString()));
+        return connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.uniqueId().replace("-", "").equals(uniqueId.toString().replace("-", "")));
     }
 
     public boolean playerIsNotNull(@NonNull String username){
@@ -70,7 +70,7 @@ public class AsyncPlayerPool {
     }
 
     public void registerPlayer(@NonNull AsyncCloudPlayer asyncCloudPlayer){
-        if (connectedPlayers.stream().noneMatch(cloudPlayer1 -> cloudPlayer1.uniqueId().equals(asyncCloudPlayer.uniqueId()))){
+        if (connectedPlayers.stream().noneMatch(cloudPlayer1 -> cloudPlayer1.uniqueId().replace("-", "").equals(asyncCloudPlayer.uniqueId().replace("-", "")))){
             connectedPlayers.add(asyncCloudPlayer);
         }
     }
@@ -79,8 +79,8 @@ public class AsyncPlayerPool {
         connectedPlayers.removeIf(cloudPlayer -> cloudPlayer.username().equalsIgnoreCase(username));
     }
     public boolean unregisterPlayer(@NonNull UUID uniqueId){
-        if (connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.uniqueId().equals(uniqueId.toString()))){
-            connectedPlayers.removeIf(cloudPlayer -> cloudPlayer.uniqueId().equals(uniqueId.toString()));
+        if (connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.uniqueId().equals(uniqueId.toString().replace("-", "")))){
+            connectedPlayers.removeIf(cloudPlayer -> cloudPlayer.uniqueId().equals(uniqueId.toString().replace("-", "")));
             return true;
         }else {
             return false;

@@ -35,13 +35,7 @@ public class UUIDDriver {
                     builder.append(line);
                 }
                 JSONObject json = new JSONObject(builder.toString());
-                String trimmedUUIDString = json.getString("uuid");
-                StringBuilder fullUUIDBuilder = new StringBuilder(trimmedUUIDString);
-                fullUUIDBuilder.insert(20, "-");
-                fullUUIDBuilder.insert(16, "-");
-                fullUUIDBuilder.insert(12, "-");
-                fullUUIDBuilder.insert(8, "-");
-                String uuid = fullUUIDBuilder.toString();
+                String uuid = json.getString("uuid");
                 uuids.add(new UUIDStorage(name, uuid));
 
                 reader.close();
@@ -57,13 +51,7 @@ public class UUIDDriver {
                         builder.append(line);
                     }
                     JSONObject json = new JSONObject(builder.toString());
-                    String trimmedUUIDString = json.getString("id");
-                    StringBuilder fullUUIDBuilder = new StringBuilder(trimmedUUIDString);
-                    fullUUIDBuilder.insert(20, "-");
-                    fullUUIDBuilder.insert(16, "-");
-                    fullUUIDBuilder.insert(12, "-");
-                    fullUUIDBuilder.insert(8, "-");
-                    String uuid = fullUUIDBuilder.toString();
+                    String uuid = json.getString("id");
                     reader.close();
                     uuids.add(new UUIDStorage(name, uuid));
                     return uuid;
@@ -77,13 +65,7 @@ public class UUIDDriver {
                             builder.append(line);
                         }
                         JSONObject json = new JSONObject(builder.toString());
-                        String trimmedUUIDString = json.getString("id");
-                        StringBuilder fullUUIDBuilder = new StringBuilder(trimmedUUIDString);
-                        fullUUIDBuilder.insert(20, "-");
-                        fullUUIDBuilder.insert(16, "-");
-                        fullUUIDBuilder.insert(12, "-");
-                        fullUUIDBuilder.insert(8, "-");
-                        String uuid = fullUUIDBuilder.toString();
+                        String uuid = json.getString("id");
                         reader.close();
                         uuids.add(new UUIDStorage(name, uuid));
                         return uuid;
@@ -97,13 +79,7 @@ public class UUIDDriver {
                                 builder.append(line);
                             }
                             JSONObject json = new JSONObject(builder.toString());
-                            String trimmedUUIDString = json.getString("id");
-                            StringBuilder fullUUIDBuilder = new StringBuilder(trimmedUUIDString);
-                            fullUUIDBuilder.insert(20, "-");
-                            fullUUIDBuilder.insert(16, "-");
-                            fullUUIDBuilder.insert(12, "-");
-                            fullUUIDBuilder.insert(8, "-");
-                            String uuid = fullUUIDBuilder.toString();
+                            String uuid = json.getString("id");
                             reader.close();
                             uuids.add(new UUIDStorage(name, uuid));
                             return uuid;
