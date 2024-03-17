@@ -18,7 +18,7 @@ import lombok.NonNull;
 
 
 
-@Plugin(id = "permissions", name = "metacloud-permissions", version = "1.0.5-RELEASE", authors = "RauchigesEtwas", dependencies = {@Dependency(id = "metacloudapi"), @Dependency(id = "metacloudplugin")})
+@Plugin(id = "permissions", name = "metacloud-permissions", version = "1.0.6-RELEASE", authors = "RauchigesEtwas", dependencies = {@Dependency(id = "metacloudapi"), @Dependency(id = "metacloudplugin")})
 public class VeloBoostrap {
 
     private static ProxyServer proxyServer;
