@@ -29,6 +29,7 @@
       <module name="metacloud-updater" target="16" />
       <module name="metamodule-autoicon" target="17" />
       <module name="metamodule-balancer" target="16" />
+      <module name="metamodule-permissions" target="16" />
     </bytecodeTargetLevel>
   </component>
 </project>

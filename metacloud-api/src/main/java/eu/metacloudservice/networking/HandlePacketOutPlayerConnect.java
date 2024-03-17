@@ -20,7 +20,6 @@ public class HandlePacketOutPlayerConnect implements NettyAdaptor {
 
                 String uniqueId = UUIDDriver.getUUID(((PacketOutPlayerConnect) packet).getName());
 
-
                 CloudAPI.getInstance().getAsyncPlayerPool().registerPlayer(new AsyncCloudPlayer(((PacketOutPlayerConnect) packet).getName(),
                         uniqueId));
 

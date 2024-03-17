@@ -10,7 +10,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>metamodule-permissions</artifactId>
+    <artifactId>metamodule-permission</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

@@ -7,7 +7,9 @@ package eu.metacloudservice.velocity;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
+import com.velocitypowered.api.plugin.ap.SerializedPluginDescription;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import eu.metacloudservice.CloudAPI;
@@ -27,7 +29,7 @@ import org.slf4j.Logger;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Plugin(id = "metacloudhub", name = "metacloud-hub", version = "1.0.5-RELEASE", authors = "RauchigesEtwas")
+@Plugin(id = "metacloudhub", name = "metacloud-hub", version = "1.0.5-RELEASE", authors = "RauchigesEtwas", dependencies = {@Dependency(id = "metacloudapi"), @Dependency(id = "metacloudplugin")})
 public class VelocityBootstrap {
 
 

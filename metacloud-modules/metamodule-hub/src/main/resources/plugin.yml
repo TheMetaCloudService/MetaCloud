@@ -2,3 +2,6 @@ main: eu.metacloudservice.bungee.BungeeBootstrap
 name: metacloud-hub
 version: 1.0.5-RELEASE
 author: RauchigesEtwas
+depend:
+  - metacloud-api
+  - metacloud-plugin

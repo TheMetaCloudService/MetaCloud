@@ -176,9 +176,9 @@ public class PermissionCommand extends PluginCommand {
                             proxiedPlayer.sendMessage(PREFIX + "The player '§f"+username+"§7' has successfully received the group '§f"+group+"§7@§f§"+time+"§7'.");
 
                     } else if (veloPlayer != null) {
-                        veloPlayer.sendMessage((Component)Component.text(PREFIX + "The player '"+ PREFIX + "already has this group."));
+                        veloPlayer.sendMessage((Component)Component.text(PREFIX + "The player '§f"+ username + "§7' already has this group."));
                     } else {
-                        proxiedPlayer.sendMessage(PREFIX + "The player '"+ PREFIX + "already has this group.");
+                        proxiedPlayer.sendMessage(PREFIX + "The player '§f"+username+"§7' already has this group.");
                     }
                 }else {
                     sendMessage(proxiedPlayer, veloPlayer);
@@ -478,6 +478,9 @@ public class PermissionCommand extends PluginCommand {
             }else if (args.length == 4 && !args[2].equalsIgnoreCase("info")){
                 suggestion.add("add");
                 suggestion.add("remove");
+                if (args[2].equalsIgnoreCase("group")){
+                    suggestion.add("set");
+                }
             }else if (args.length == 5 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("set")){
                 CloudPermissionAPI.getInstance().getGroups().forEach(permissionGroup -> suggestion.add(permissionGroup.getGroup()));
             }else if (args.length == 5 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("add")){
