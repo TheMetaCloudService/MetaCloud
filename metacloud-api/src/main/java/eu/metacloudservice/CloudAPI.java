@@ -46,6 +46,7 @@ import lombok.NonNull;
 
 import java.lang.management.ManagementFactory;
 import java.util.List;
+import java.util.Objects;
 import java.util.TimerTask;
 
 @Getter
@@ -104,8 +105,8 @@ public class CloudAPI {
         PlayerGeneral players = (PlayerGeneral) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/genernal"), PlayerGeneral.class);
         players.getCloudplayers().forEach(s -> {
             if (!CloudAPI.getInstance().getPlayerPool().playerIsNotNull(s)){
-                getAsyncPlayerPool().registerPlayer(new AsyncCloudPlayer(s, UUIDDriver.getUUID(s)));
-                getPlayerPool().registerPlayer(new CloudPlayer(s, UUIDDriver.getUUID(s)));
+                getAsyncPlayerPool().registerPlayer(new AsyncCloudPlayer(s, Objects.requireNonNull(UUIDDriver.getUUID(s))));
+                getPlayerPool().registerPlayer(new CloudPlayer(s, Objects.requireNonNull(UUIDDriver.getUUID(s))));
             }
         });
         if (group.getGroupType().equals("PROXY")){
@@ -145,6 +146,12 @@ public class CloudAPI {
                 CloudService service = CloudAPI.getInstance().getServicePool().getService(CloudAPI.getInstance().getCurrentService().getService());
                 LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
                 PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/genernal"), PlayerGeneral.class);
+                general.getCloudplayers().forEach(s -> {
+                    if (!CloudAPI.getInstance().getPlayerPool().playerIsNotNull(s)){
+                        getAsyncPlayerPool().registerPlayer(new AsyncCloudPlayer(s, Objects.requireNonNull(UUIDDriver.getUUID(s))));
+                        getPlayerPool().registerPlayer(new CloudPlayer(s, Objects.requireNonNull(UUIDDriver.getUUID(s))));
+                    }
+                });
                 getPlayerPool().getPlayers().stream().filter(cloudPlayer -> general.getCloudplayers().stream().noneMatch(s -> s.equalsIgnoreCase(cloudPlayer.getUniqueId()))).toList().forEach(cloudPlayer -> {
                     getPlayerPool().unregisterPlayer(cloudPlayer.getUniqueId());
                     getAsyncPlayerPool().unregisterPlayer(cloudPlayer.getUniqueId());

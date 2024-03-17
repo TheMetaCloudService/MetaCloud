@@ -362,8 +362,9 @@ public class CloudServiceDriver implements ICloudServiceDriver {
 
                         PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/genernal"), PlayerGeneral.class);
                         general.getCloudplayers().forEach(s -> {
-                            CloudPlayerRestCache restCech = (CloudPlayerRestCache)(new RestDriver()).convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/" + UUIDDriver.getUUID(s)), CloudPlayerRestCache.class);
-                            NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutPlayerConnect(s, restCech.getCloudplayerproxy()));
+                            CloudPlayerRestCache restCech = (CloudPlayerRestCache)(new RestDriver()).convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/" + s), CloudPlayerRestCache.class);
+
+                            NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutPlayerConnect(UUIDDriver.getUsername(s), restCech.getCloudplayerproxy()));
                         });
                     }
                 }
