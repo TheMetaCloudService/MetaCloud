@@ -9,6 +9,7 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import lombok.SneakyThrows;
 import lombok.var;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class PacketDecoder extends ByteToMessageDecoder {
@@ -19,18 +20,17 @@ public class PacketDecoder extends ByteToMessageDecoder {
             return;
         }
         int packetUUID = in.readInt();
-        if (NettyDriver.getInstance().getPacketDriver().getPacket(packetUUID) != null){
-            var packetClass = NettyDriver.getInstance().getPacketDriver().getPacket(packetUUID);
-
-            if (packetClass != null) {
-                ByteBuf payload = in.readBytes(in.readableBytes());
-                NettyBuffer nettyBuffer = new NettyBuffer(payload);
-                Packet packet = packetClass.getDeclaredConstructor().newInstance();
-                packet.setPacketUUID(packetUUID);
-                packet.readPacket(nettyBuffer);
+        var packetClass = NettyDriver.getInstance().getPacketDriver().getPacket(packetUUID);
+        if (packetClass != null) {
+            try {
+                final var packet = packetClass.getDeclaredConstructor().newInstance();
+                packet.readPacket(new NettyBuffer(in));
                 out.add(packet);
-                NettyDriver.getInstance().getPacketDriver().handle(packetUUID, ctx.channel(), packet);
+            }catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException exception){
+                exception.printStackTrace();
             }
+        }else {
+            System.out.println("ERROR, CLASS=NULL");
         }
     }
 }
