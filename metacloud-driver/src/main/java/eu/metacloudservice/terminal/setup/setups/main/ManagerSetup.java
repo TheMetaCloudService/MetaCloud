@@ -314,7 +314,8 @@ public class ManagerSetup extends SetupClass {
                 }, 2, TimeUtil.SECONDS);
             }
        }else if (getStep() == 6){
-            if (line.equalsIgnoreCase("yes") || line.equalsIgnoreCase("y") || line.equalsIgnoreCase("no") || line.equalsIgnoreCase("n")) {
+            boolean b = line.equalsIgnoreCase("yes") || line.equalsIgnoreCase("y") || line.equalsIgnoreCase("no") || line.equalsIgnoreCase("n");
+            if (b) {
 
                 addStep();
                 getAnswers().put("groups", line.equalsIgnoreCase("yes") || line.equalsIgnoreCase("y"));
@@ -337,7 +338,7 @@ public class ManagerSetup extends SetupClass {
                         managerConfig.setBungeecordVersion((String) getAnswers().get("bungee"));
                         managerConfig.setSpigotVersion( (String) getAnswers().get("spigot"));
                         managerConfig.setNetworkingCommunication(7002);
-                        managerConfig.setSplitter("#");
+                        managerConfig.setSplitter("-");
                         managerConfig.setUseProtocol(false);
                         managerConfig.setCopyLogs(true);
                         managerConfig.setProcessorUsage(90);
@@ -363,10 +364,11 @@ public class ManagerSetup extends SetupClass {
                             Driver.getInstance().getGroupDriver()
                                     .create(new Group("Proxy","PROXY", 256, true, false, 0,"", 512, 1, -1, 90, 1, 1, new GroupStorage("Proxy", "InternalNode", "", ""), 0));
                             Driver.getInstance().getGroupDriver()
-                                    .create(new Group("Lobby","LOBBY", 1024, true, false, 0,"", 50, 1, -1, 90, 3, 3, new GroupStorage("Lobby", "InternalNode", "", ""), 1));
+                                    .create(new Group("Lobby","LOBBY", 1024, false, false, 0,"", 50, 1, -1, 90, 3, 3, new GroupStorage("Lobby", "InternalNode", "", ""), 1));
                         }
 
                         Driver.getInstance().getTerminalDriver().leaveSetup();
+                        
                     }
                 }, 5, TimeUtil.SECONDS);
 

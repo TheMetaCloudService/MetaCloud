@@ -1,6 +1,6 @@
 package eu.metacloudservice.networking.packet;
 
-import eu.metacloudservice.networking.packet.NettyBuffer;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class Packet {
 
@@ -13,11 +13,11 @@ public abstract class Packet {
         return packetUUID;
     }
 
-    public void setPacketUUID(int packetUUID) {
+    public void setPacketUUID(@NotNull int packetUUID) {
         this.packetUUID = packetUUID;
     }
 
-    public abstract void readPacket(NettyBuffer buffer);
+    public abstract void readPacket(@NotNull NettyBuffer buffer);
 
-    public abstract void writePacket(NettyBuffer buffer);
+    public abstract void writePacket(@NotNull NettyBuffer buffer);
 }

@@ -3,28 +3,27 @@ package eu.metacloudservice.networking.server;
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.codec.PacketDecoder;
 import eu.metacloudservice.networking.codec.PacketEncoder;
+import eu.metacloudservice.networking.codec.PacketLengthDeserializer;
+import eu.metacloudservice.networking.codec.PacketLengthSerializer;
 import eu.metacloudservice.networking.packet.Packet;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.*;
 import io.netty.channel.epoll.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.channel.unix.UnixChannelOption;
 import lombok.SneakyThrows;
 
 import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static io.netty.channel.ChannelOption.*;
-
 public class NettyServer extends ChannelInitializer<Channel> implements AutoCloseable{
     private int port;
-    protected static final WriteBufferWaterMark WATER_MARK = new WriteBufferWaterMark(1 << 20, 1 << 21);
     private final Map<String, Channel> CHANNELS = new ConcurrentHashMap<>();
     EventLoopGroup WORKER;
     EventLoopGroup BOSS;
+
+    private ChannelFuture channelFuture;
     public NettyServer bind(int port) {
         this.port = port;
         return this;
@@ -37,12 +36,17 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
         this.BOSS = isEpoll ? new EpollEventLoopGroup() : new NioEventLoopGroup();
         this.WORKER = isEpoll ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 
-        ServerBootstrap bootstrap = new ServerBootstrap()
+        channelFuture = new ServerBootstrap()
                 .group(BOSS, WORKER)
                 .channel(isEpoll ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
-                .childHandler(this);
-
-        bootstrap.bind(new InetSocketAddress(port)).sync().channel();
+                .childHandler(this)
+                .childOption(ChannelOption.SO_KEEPALIVE, true)
+                .childOption(ChannelOption.TCP_NODELAY, true)
+                .childOption(ChannelOption.AUTO_READ, true)
+                .bind(new InetSocketAddress(port))
+                .addListener(ChannelFutureListener.CLOSE_ON_FAILURE)
+                .addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE)
+                .sync().channel().closeFuture();
     }
 
     public void registerChannel(String receiver, Channel channel) {
@@ -69,6 +73,8 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
         this.CHANNELS.forEach((s, channel) -> {
             channel.close();
         });
+
+        this.channelFuture.cancel(true);
         WORKER.shutdownGracefully();
         BOSS.shutdownGracefully();
     }
@@ -78,22 +84,13 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
         final InetSocketAddress inetSocketAddress = ((InetSocketAddress) channel.remoteAddress());
 
         if (allowAddress(inetSocketAddress.getAddress().getHostAddress())){
-            ChannelPipeline pipeline = channel.pipeline();
-            pipeline.addLast(new ChannelHandler() {
-                @Override
-                public void handlerAdded(ChannelHandlerContext channelHandlerContext) throws Exception {
-                }
 
-                @Override
-                public void handlerRemoved(ChannelHandlerContext channelHandlerContext) throws Exception {
-                }
-
-                @Override
-                public void exceptionCaught(ChannelHandlerContext channelHandlerContext, Throwable throwable) throws Exception {
-                }
-            });
-        pipeline.addLast(new PacketDecoder());
-            pipeline.addLast(new PacketEncoder());
+            channel.pipeline()
+                    .addLast("packet-length-deserializer", new PacketLengthDeserializer())
+                    .addLast("packet-decoder", new PacketDecoder())
+                    .addLast("packet-length-serializer", new PacketLengthSerializer())
+                    .addLast("packet-encoder", new PacketEncoder())
+                    .addLast("worker", new NettyServerWorker());
         }else {
             channel.close().addListener(ChannelFutureListener.CLOSE_ON_FAILURE).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
         }
