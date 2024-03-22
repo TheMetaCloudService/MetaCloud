@@ -2,3 +2,4 @@ main: eu.metacloudservice.bungee.BungeeBootstrap
 name: metacloud-syncporxy
 version: 1.0.6-RELEASE
 author: RauchigesEtwas
+depend: ["metacloud-api", "metacloud-plugin"]

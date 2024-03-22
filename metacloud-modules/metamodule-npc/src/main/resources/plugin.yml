@@ -4,6 +4,5 @@ author: RauchigesEtwas
 name: metacloud-npc
 api-version: 1.16
 
-depend:
-  - metacloud-api
-  - metacloud-plugin
+depend: ["metacloud-api", "metacloud-plugin"]
+

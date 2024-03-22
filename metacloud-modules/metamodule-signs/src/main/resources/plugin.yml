@@ -4,7 +4,5 @@ version: 1.0.6-RELEASE
 author: RauchigesEtwas
 
 api-version: 1.13
-depend:
-  - metacloud-api
-  - metacloud-plugin
+depend: ["metacloud-api", "metacloud-plugin"]
 

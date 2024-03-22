@@ -3,6 +3,4 @@ version: 1.0.6-RELEASE
 author: RauchigesEtwas
 name: metacloud-permissions
 
-depend:
-  - metacloud-api
-  - metacloud-plugin
+depend: ["metacloud-api", "metacloud-plugin"]

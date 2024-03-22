@@ -2,4 +2,4 @@ main: eu.metacloudservice.bungee.BungeeBootstrap
 version: 1.0.6-RELEASE
 author: RauchigesEtwas
 name: metacloud-plugin
-depend: metacloud-api
+depend: ["metacloud-api"]
