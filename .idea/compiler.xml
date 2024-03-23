@@ -8,7 +8,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="metacloud-api" />
-        <module name="untitled" />
         <module name="metacloud-plugin" />
         <module name="metamodule-signs" />
         <module name="metacloud-networking" />
@@ -25,5 +24,8 @@
         <module name="metamodule-permission" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="untitled" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>
