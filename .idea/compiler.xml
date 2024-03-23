@@ -8,12 +8,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="metacloud-api" />
-        <module name="metamodule-signs" />
+        <module name="untitled" />
         <module name="metacloud-plugin" />
+        <module name="metamodule-signs" />
         <module name="metacloud-networking" />
         <module name="metacloud-node" />
+        <module name="metamodule-discord" />
         <module name="metamodule-notify" />
-        <module name="metamodule-permissions" />
         <module name="metacloud-driver" />
         <module name="metamodule-hub" />
         <module name="metamodule-syncproxy" />
@@ -21,15 +22,8 @@
         <module name="metamodule-npc" />
         <module name="metamodule-cloudflare" />
         <module name="metacloud-manager" />
+        <module name="metamodule-permission" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="metacloud-cloudupdater" target="17" />
-      <module name="metacloud-terminal" target="17" />
-      <module name="metacloud-updater" target="16" />
-      <module name="metamodule-autoicon" target="17" />
-      <module name="metamodule-balancer" target="16" />
-      <module name="metamodule-permissions" target="16" />
-    </bytecodeTargetLevel>
   </component>
 </project>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9c64d84d-69de-4a92-8ef4-8136674adb0d" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-discord/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-discord/src/main/java/eu/metacloudservice/DiscordModule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-discord/src/main/java/eu/metacloudservice/config/Configuration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-discord/src/main/java/eu/metacloudservice/events/CloudEvents.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-discord/src/main/resources/module.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/untitled/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/untitled/src/main/java/eu/metacloudservice/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codestream.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codestream_BACKUP_1217.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codestream_BACKUP_1428.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codestream_BASE_1217.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codestream_BASE_1428.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codestream_LOCAL_1217.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codestream_LOCAL_1428.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codestream_REMOTE_1217.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codestream_REMOTE_1428.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copyright/normal.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/icon.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-api/metacloud-api.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/bootstrap/velocity/networking/HandlePacketOutAPIPlayerConnect.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/bootstrap/velocity/networking/HandlePacketOutAPIPlayerConnect.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/bootstrap/velocity/networking/HandlePacketOutAPIPlayerDispactchCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/bootstrap/velocity/networking/HandlePacketOutAPIPlayerDispactchCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/pool/node/entrys/CloudNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/pool/node/entrys/CloudNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/pool/service/entrys/CloudService.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/pool/service/entrys/CloudService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-driver/metacloud-driver.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-launcher/metacloud-launcher.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-notify/metamodule-notify.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-notify/src/main/java/eu/metacloudservice/velocity/listener/CloudListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-notify/src/main/java/eu/metacloudservice/velocity/listener/CloudListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-npc/metamodule-npc.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-signs/metamodule-signs.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/metamodule-syncproxy.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-modules/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-networking/metacloud-networking.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-networking/src/main/java/eu/metacloudservice/networking/codec/PacketDecoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-networking/src/main/java/eu/metacloudservice/networking/codec/PacketDecoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-networking/src/main/java/eu/metacloudservice/networking/packet/packets/in/service/playerbased/apibased/PacketInAPIPlayerConnect.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-networking/src/main/java/eu/metacloudservice/networking/packet/packets/in/service/playerbased/apibased/PacketInAPIPlayerConnect.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-plugin/metacloud-plugin.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-runnable/metacloud-manager/src/main/java/eu/metacloudservice/manager/networking/service/HandlePacketInAPIPlayerConnect.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-runnable/metacloud-manager/src/main/java/eu/metacloudservice/manager/networking/service/HandlePacketInAPIPlayerConnect.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="2" />
+  </component>
+  <component name="ProjectId" id="2e5dnzJo8reK9UlragPTFXrEnXm" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "D:/work/metacloud-project/MetaCloud/metacloud-modules/metamodule-discord/src/main/resources",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\work\metacloud-project\MetaCloud\metacloud-modules\metamodule-discord\src\main\resources" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="DiscordModule" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="eu.metacloudservice.DiscordModule" />
+      <module name="metamodule-discord" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="eu.metacloudservice.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.DiscordModule" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9c64d84d-69de-4a92-8ef4-8136674adb0d" name="Changes" comment="" />
+      <created>1711198547766</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1711198547766</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
