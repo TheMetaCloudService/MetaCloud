@@ -111,7 +111,6 @@ public class CloudService {
         }else {
             return CloudAPI.getInstance().getPlayerPool().getPlayersFromService(name);
         }
-
     }
 
     public String toString(){

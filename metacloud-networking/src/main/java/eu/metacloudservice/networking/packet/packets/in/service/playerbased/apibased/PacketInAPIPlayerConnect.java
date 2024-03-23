@@ -16,11 +16,11 @@ public class PacketInAPIPlayerConnect extends Packet {
     private String service;
 
     public PacketInAPIPlayerConnect() {
-        setPacketUUID(100230);
+        setPacketUUID(10220230);
     }
 
     public PacketInAPIPlayerConnect(String username, String service) {
-        setPacketUUID(100230);
+        setPacketUUID(10220230);
         this.username = username;
         this.service = service;
     }

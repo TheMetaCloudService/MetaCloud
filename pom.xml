@@ -16,6 +16,7 @@
         <module>metacloud-api</module>
         <module>metacloud-modules</module>
         <module>metacloud-runnable</module>
+        <module>untitled</module>
     </modules>
 
     <properties>

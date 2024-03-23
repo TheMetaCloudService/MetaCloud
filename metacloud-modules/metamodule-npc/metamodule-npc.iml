@@ -5,8 +5,8 @@
       <configuration>
         <autoDetectTypes>
           <platformType>SPIGOT</platformType>
-          <platformType>ADVENTURE</platformType>
           <platformType>VELOCITY</platformType>
+          <platformType>ADVENTURE</platformType>
           <platformType>BUNGEECORD</platformType>
         </autoDetectTypes>
       </configuration>

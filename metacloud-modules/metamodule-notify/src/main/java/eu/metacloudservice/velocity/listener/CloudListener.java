@@ -30,7 +30,6 @@ public class CloudListener implements ICloudListener {
     public void handle(CloudProxyDisconnectedEvent event){
 
         Configuration configuration = (Configuration) new ConfigDriver().convert(BungeeBootstrap.getInstance().getRestDriver().get("/module/notify/configuration"), Configuration.class);
-
         proxyServer.getAllPlayers().forEach(player -> {
             if (player.hasPermission("metacloud.notify")){
                 player.sendMessage((Component.text(configuration.getProxiedServiceDiconnected().replace("&", "§").replace("%service_name%", event.getName()))));

@@ -29,8 +29,6 @@ public class PacketDecoder extends ByteToMessageDecoder {
             }catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException exception){
                 exception.printStackTrace();
             }
-        }else {
-            System.out.println("ERROR, CLASS=NULL");
         }
     }
 }
