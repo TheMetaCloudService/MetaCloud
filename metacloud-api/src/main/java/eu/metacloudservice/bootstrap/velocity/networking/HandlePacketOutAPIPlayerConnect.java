@@ -10,7 +10,7 @@ public class HandlePacketOutAPIPlayerConnect implements NettyAdaptor {
     public void handle(Channel channel, Packet packet) {
         if (packet instanceof PacketOutAPIPlayerConnect) {
             if (VelocityBootstrap.proxyServer.getPlayer(((PacketOutAPIPlayerConnect) packet).getUsername()).isPresent()){
-                VelocityBootstrap.proxyServer.getPlayer(((PacketOutAPIPlayerConnect) packet).getUsername()).get().createConnectionRequest(VelocityBootstrap.proxyServer.getServer(((PacketOutAPIPlayerConnect) packet).getService()).get());
+              VelocityBootstrap.proxyServer.getPlayer(((PacketOutAPIPlayerConnect) packet).getUsername()).get().createConnectionRequest(VelocityBootstrap.proxyServer.getServer(((PacketOutAPIPlayerConnect) packet).getService()).get()).connect();
             }
         }
     }
