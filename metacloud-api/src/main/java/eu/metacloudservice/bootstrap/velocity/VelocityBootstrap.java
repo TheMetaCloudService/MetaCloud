@@ -15,7 +15,7 @@ import eu.metacloudservice.networking.packet.packets.in.service.PacketInServiceD
 import net.kyori.adventure.text.Component;
 import org.slf4j.Logger;
 
-@Plugin(id = "metacloudapi", name = "metacloud-api", version = "1.0.6-RELEASE", authors = "RauchigesEtwas")
+@Plugin(id = "metacloudapi", name = "metacloud-api", version = "1.0.7-RELEASE", authors = "RauchigesEtwas")
 public class VelocityBootstrap {
 
     public static ProxyServer proxyServer;
