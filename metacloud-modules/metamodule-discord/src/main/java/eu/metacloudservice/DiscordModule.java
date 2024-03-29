@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import java.io.File;
 
@@ -32,7 +33,7 @@ public class DiscordModule implements IModule {
             activityConfiguration.setActivity(eu.metacloudservice.config.Activity.custom);
             configuration.setActivity(activityConfiguration);
             configuration.setLogo("https://i.ibb.co/VBZTQ6F/metacloud.png");
-            configuration.setChannelID(0);
+            configuration.setChannelID("0");
             configuration.setFooter("► metacloudservice • Ready for the Future");
             configuration.setDiscordGuild("");
 
@@ -55,7 +56,7 @@ public class DiscordModule implements IModule {
             activityConfiguration.setActivity(eu.metacloudservice.config.Activity.custom);
             configuration.setActivity(activityConfiguration);
             configuration.setLogo("https://i.ibb.co/VBZTQ6F/metacloud.png");
-            configuration.setChannelID(0);
+            configuration.setChannelID("0");
             configuration.setFooter("► metacloudservice • Ready for the Future");
             configuration.setDiscordGuild("");
             new ConfigDriver("./modules/discord/config.json").save(configuration);
@@ -74,7 +75,7 @@ public class DiscordModule implements IModule {
             activityConfiguration.setActivity(eu.metacloudservice.config.Activity.custom);
             configuration.setActivity(activityConfiguration);
             configuration.setLogo("https://i.ibb.co/VBZTQ6F/metacloud.png");
-            configuration.setChannelID(0);
+            configuration.setChannelID("0");
             configuration.setFooter("► metacloudservice • Ready for the Future");
             configuration.setDiscordGuild("");
 
@@ -92,6 +93,13 @@ public class DiscordModule implements IModule {
         if (configuration.getDiscordToken().equalsIgnoreCase("")) return;
         jda = JDABuilder
                 .createDefault(configuration.getDiscordToken())
+                .setStatus(OnlineStatus.ONLINE)
+                .setActivity(
+                        configuration.getActivity().getActivity() == eu.metacloudservice.config.Activity.competing ? Activity.competing(configuration.getActivity().getDiscordActivity()) :
+                                configuration.getActivity().getActivity() == eu.metacloudservice.config.Activity.listening ? Activity.listening(configuration.getActivity().getDiscordActivity()) :
+                                        configuration.getActivity().getActivity() == eu.metacloudservice.config.Activity.playing ? Activity.playing(configuration.getActivity().getDiscordActivity()) :
+                                                configuration.getActivity().getActivity() == eu.metacloudservice.config.Activity.watching ? Activity.customStatus(configuration.getActivity().getDiscordActivity()) :
+                                                        Activity.watching(configuration.getActivity().getDiscordActivity()))
                 .setAutoReconnect(true)
                 .build();
 

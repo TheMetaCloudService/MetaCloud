@@ -3,6 +3,7 @@ package eu.metacloudservice.velocity.listener;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
 import com.velocitypowered.api.event.player.ServerConnectedEvent;
+import com.velocitypowered.api.event.proxy.ProxyReloadEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import eu.metacloudservice.CloudAPI;
@@ -26,7 +27,13 @@ public class TablistListener {
         this.proxyServer = proxyServer;
         proxyServer.getScheduler().buildTask(VeloCityBootstrap.getInstance(), () -> {
             proxyServer.getAllPlayers().forEach(TablistListener::sendTab);
-        }).repeat(2, TimeUnit.SECONDS).schedule();
+        }).repeat(500, TimeUnit.MILLISECONDS).schedule();
+    }
+
+
+    @Subscribe
+    public void handle(ProxyReloadEvent event){
+        proxyServer.getAllPlayers().forEach(TablistListener::sendTab);
     }
 
     @Subscribe

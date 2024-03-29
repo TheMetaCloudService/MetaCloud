@@ -1,2 +1,3 @@
-package eu.metacloudservice.events.listeners.node;public class CloudNodeConnectEvent {
+package eu.metacloudservice.events.listeners.node;
+public class CloudNodeConnectEvent {
 }

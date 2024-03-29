@@ -13,7 +13,7 @@ public class Configuration implements IConfigAdapter {
 
     private String discordToken;
     private String discordGuild;
-    private Integer channelID;
+    private String channelID;
     private String footer;
     private String logo;
     private ActivityConfiguration activity;
