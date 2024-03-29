@@ -17,10 +17,6 @@ import java.util.stream.Collectors;
 
 public class CloudCommand implements SimpleCommand {
 
-
- 
-
-
     @SneakyThrows
     @Override
     public void execute(Invocation invocation) {

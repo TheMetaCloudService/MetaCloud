@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 
 public class MessageStorage {
-    public final String version = "1.0.7-RELEASE";
+    public final String version = "1.0.8-RELEASE";
     public String language;
     public Integer canUseMemory = 0;
     public PacketLoader packetLoader;
