@@ -1,5 +1,6 @@
 package eu.metacloudservice.velocity.listeners;
 
+import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
@@ -34,9 +35,14 @@ public class CloudConnectListener {
     }
 
 
-    @Subscribe
+    @Subscribe(order = PostOrder.FIRST)
     public void handel(ServerPreConnectEvent event){
-        if (event.getOriginalServer() == null){
+        if (event.getOriginalServer().getServerInfo().getName().equalsIgnoreCase("lobby")){
+            target = server.getServer(VelocityBootstrap.getLobby(event.getPlayer()).getName()).get().getServerInfo();
+            if (target != null){
+                event.setResult(ServerPreConnectEvent.ServerResult.allowed(server.getServer(target.getName()).get()));
+            }else event.setResult(ServerPreConnectEvent.ServerResult.denied());
+        }else if (event.getOriginalServer() == null){
             target = server.getServer(VelocityBootstrap.getLobby(event.getPlayer()).getName()).get().getServerInfo();
             if (target != null){
                 event.setResult(ServerPreConnectEvent.ServerResult.allowed(server.getServer(target.getName()).get()));
