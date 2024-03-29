@@ -22,7 +22,7 @@ public class HubCommand implements SimpleCommand {
                     player.sendMessage(Component.text((messages.getMessages().get("noFallbackServer").replace("%PREFIX%", messages.getMessages().get("prefix")))));
                   }else {
                     CloudService fallback = VelocityBootstrap.getLobby(player);
-                    player.createConnectionRequest(VelocityBootstrap.proxyServer.getServer(fallback.getName()).get());
+                    player.createConnectionRequest(VelocityBootstrap.proxyServer.getServer(fallback.getName()).get()).connect();
                     player.sendMessage(Component.text(messages.getMessages().get("successfullyConnected").replace("%PREFIX%", messages.getMessages().get("prefix"))
                             .replace("%service_name%", fallback.getName())));
                 }
