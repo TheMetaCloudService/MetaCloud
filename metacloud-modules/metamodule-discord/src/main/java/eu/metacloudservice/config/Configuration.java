@@ -6,23 +6,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-
+@Getter
+@Setter
 @NoArgsConstructor
 public class Configuration implements IConfigAdapter {
-    @Setter
-    @Getter
+
     private String discordToken;
-    @Setter
-    @Getter
-    private String discordActivity;
-    @Setter
-    @Getter
+    private String discordGuild;
     private Integer channelID;
-    @Setter
-    @Getter
     private String footer;
-    @Setter
-    @Getter
     private String logo;
+    private ActivityConfiguration activity;
+
 
 }

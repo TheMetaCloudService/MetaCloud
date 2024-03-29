@@ -21,7 +21,7 @@ public class CloudEvents implements ICloudListener {
                 .setTitle("◣ UPDATE ○ CLOUDPLAYER ◥")
                 .setDescription("\n\n\n\nName: "+event.getName()+"\nUUID: "+event.getUniqueId()+"\nOn proxy: "+event.getProxy()+"\n\n\n\n")
                 .setFooter(DiscordModule.getConfiguration().getFooter(), DiscordModule.getConfiguration().getLogo());
-        TextChannel channel = DiscordModule.getJda().getTextChannelById(DiscordModule.getConfiguration().getChannelID());
+        TextChannel channel = DiscordModule.getJda().getGuildById(DiscordModule.getConfiguration().getDiscordGuild()).getTextChannelById(DiscordModule.getConfiguration().getChannelID());
         channel.sendMessageEmbeds(builder.build()).queue();
     }
 
@@ -32,7 +32,7 @@ public class CloudEvents implements ICloudListener {
                 .setTitle("◣ UPDATE ○ CLOUDPLAYER ◥")
                 .setDescription("\n\n\n\nName: "+event.getName()+"\nUUID: "+event.getUniqueId()+"\n\n\n\n")
                 .setFooter(DiscordModule.getConfiguration().getFooter(), DiscordModule.getConfiguration().getLogo());
-        TextChannel channel = DiscordModule.getJda().getTextChannelById(DiscordModule.getConfiguration().getChannelID());
+        TextChannel channel = DiscordModule.getJda().getGuildById(DiscordModule.getConfiguration().getDiscordGuild()).getTextChannelById(DiscordModule.getConfiguration().getChannelID());
         channel.sendMessageEmbeds(builder.build()).queue();
     }
 
@@ -43,7 +43,7 @@ public class CloudEvents implements ICloudListener {
                 .setTitle("◣ UPDATE ○ CLOUDSERVICE ◥")
                 .setDescription("\n\n\n\nService: "+event.getName()+"\nUsed Node: "+event.getNode()+"\nUsed Group: "+event.getGroup()+"\n\n\n\n")
                 .setFooter(DiscordModule.getConfiguration().getFooter(), DiscordModule.getConfiguration().getLogo());
-        TextChannel channel = DiscordModule.getJda().getTextChannelById(DiscordModule.getConfiguration().getChannelID());
+        TextChannel channel = DiscordModule.getJda().getGuildById(DiscordModule.getConfiguration().getDiscordGuild()).getTextChannelById(DiscordModule.getConfiguration().getChannelID());
         channel.sendMessageEmbeds(builder.build()).queue();
     }
 
@@ -54,7 +54,7 @@ public class CloudEvents implements ICloudListener {
                 .setTitle("◣ UPDATE ○ CLOUDSERVICE ◥")
                 .setDescription("\n\n\n\nService: "+event.getName()+"\n\n\n\n")
                 .setFooter(DiscordModule.getConfiguration().getFooter(), DiscordModule.getConfiguration().getLogo());
-        TextChannel channel = DiscordModule.getJda().getTextChannelById(DiscordModule.getConfiguration().getChannelID());
+        TextChannel channel = DiscordModule.getJda().getGuildById(DiscordModule.getConfiguration().getDiscordGuild()).getTextChannelById(DiscordModule.getConfiguration().getChannelID());
         channel.sendMessageEmbeds(builder.build()).queue();
 
     }
@@ -66,7 +66,7 @@ public class CloudEvents implements ICloudListener {
                 .setTitle("◣ UPDATE ○ CLOUDSERVICE ◥")
                 .setDescription("\n\n\n\nService: "+event.getName()+"\nUsed Node: "+event.getNode()+"\nUsed Group: "+event.getGroup()+"\n\n\n\n")
                 .setFooter(DiscordModule.getConfiguration().getFooter(), DiscordModule.getConfiguration().getLogo());
-        TextChannel channel = DiscordModule.getJda().getTextChannelById(DiscordModule.getConfiguration().getChannelID());
+        TextChannel channel = DiscordModule.getJda().getGuildById(DiscordModule.getConfiguration().getDiscordGuild()).getTextChannelById(DiscordModule.getConfiguration().getChannelID());
         channel.sendMessageEmbeds(builder.build()).queue();
     }
 
@@ -77,7 +77,7 @@ public class CloudEvents implements ICloudListener {
                 .setTitle("◣ UPDATE ○ CLOUDSERVICE ◥")
                 .setDescription("\n\n\n\nService: "+event.getName()+"\n\n\n\n")
                 .setFooter(DiscordModule.getConfiguration().getFooter(), DiscordModule.getConfiguration().getLogo());
-        TextChannel channel = DiscordModule.getJda().getTextChannelById(DiscordModule.getConfiguration().getChannelID());
+        TextChannel channel = DiscordModule.getJda().getGuildById(DiscordModule.getConfiguration().getDiscordGuild()).getTextChannelById(DiscordModule.getConfiguration().getChannelID());
         channel.sendMessageEmbeds(builder.build()).queue();
     }
 

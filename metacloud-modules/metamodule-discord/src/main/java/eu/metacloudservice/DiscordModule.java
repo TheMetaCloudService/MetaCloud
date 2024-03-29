@@ -1,17 +1,16 @@
 package eu.metacloudservice;
 
+import eu.metacloudservice.config.ActivityConfiguration;
 import eu.metacloudservice.config.Configuration;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.events.CloudEvents;
 import eu.metacloudservice.module.extention.IModule;
 import lombok.Getter;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
-import java.awt.*;
 import java.io.File;
 
 public class DiscordModule implements IModule {
@@ -27,10 +26,16 @@ public class DiscordModule implements IModule {
             new File("./modules/discord/").mkdirs();
             Configuration configuration = new Configuration();
             configuration.setDiscordToken("");
-            configuration.setDiscordActivity("Download me ► https://metacloudservice.eu");
+
+            ActivityConfiguration activityConfiguration = new ActivityConfiguration();
+            activityConfiguration.setDiscordActivity("Download me ► https://metacloudservice.eu");
+            activityConfiguration.setActivity(eu.metacloudservice.config.Activity.custom);
+            configuration.setActivity(activityConfiguration);
             configuration.setLogo("https://i.ibb.co/VBZTQ6F/metacloud.png");
             configuration.setChannelID(0);
             configuration.setFooter("► metacloudservice • Ready for the Future");
+            configuration.setDiscordGuild("");
+
             new ConfigDriver("./modules/discord/config.json").save(configuration);
         }
 
@@ -44,10 +49,15 @@ public class DiscordModule implements IModule {
             new File("./modules/discord/").mkdirs();
             Configuration configuration = new Configuration();
             configuration.setDiscordToken("");
-            configuration.setDiscordActivity("Download me ► https://metacloudservice.eu");
+
+            ActivityConfiguration activityConfiguration = new ActivityConfiguration();
+            activityConfiguration.setDiscordActivity("Download me ► https://metacloudservice.eu");
+            activityConfiguration.setActivity(eu.metacloudservice.config.Activity.custom);
+            configuration.setActivity(activityConfiguration);
             configuration.setLogo("https://i.ibb.co/VBZTQ6F/metacloud.png");
             configuration.setChannelID(0);
             configuration.setFooter("► metacloudservice • Ready for the Future");
+            configuration.setDiscordGuild("");
             new ConfigDriver("./modules/discord/config.json").save(configuration);
         }
     }
@@ -58,10 +68,17 @@ public class DiscordModule implements IModule {
             new File("./modules/discord/").mkdirs();
             Configuration configuration = new Configuration();
             configuration.setDiscordToken("");
-            configuration.setDiscordActivity("Download me ► https://metacloudservice.eu");
+
+            ActivityConfiguration activityConfiguration = new ActivityConfiguration();
+            activityConfiguration.setDiscordActivity("Download me ► https://metacloudservice.eu");
+            activityConfiguration.setActivity(eu.metacloudservice.config.Activity.custom);
+            configuration.setActivity(activityConfiguration);
             configuration.setLogo("https://i.ibb.co/VBZTQ6F/metacloud.png");
             configuration.setChannelID(0);
             configuration.setFooter("► metacloudservice • Ready for the Future");
+            configuration.setDiscordGuild("");
+
+
             new ConfigDriver("./modules/discord/config.json").save(configuration);
         }
         configuration = (Configuration) new ConfigDriver("./modules/discord/config.json").read(Configuration.class);
@@ -75,7 +92,6 @@ public class DiscordModule implements IModule {
         if (configuration.getDiscordToken().equalsIgnoreCase("")) return;
         jda = JDABuilder
                 .createDefault(configuration.getDiscordToken())
-                .setActivity(Activity.customStatus(configuration.getDiscordActivity()))
                 .setAutoReconnect(true)
                 .build();
 
