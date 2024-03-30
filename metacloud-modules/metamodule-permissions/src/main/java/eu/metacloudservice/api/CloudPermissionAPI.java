@@ -47,7 +47,7 @@ public class CloudPermissionAPI {
     public void updateConfig(@NotNull Configuration configuration){
         if (MetaModule.instance == null) {
             this.configuration = configuration;
-            CloudAPI.getInstance().getRestDriver().put("/module/permission/configuration", new ConfigDriver().convert(configuration));
+            CloudAPI.getInstance().getRestDriver().update("/module/permission/configuration", new ConfigDriver().convert(configuration));
         }else
             Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
     }

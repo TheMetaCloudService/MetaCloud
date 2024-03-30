@@ -5,6 +5,8 @@ import eu.metacloudservice.configuration.dummys.managerconfig.ManagerConfig;
 import eu.metacloudservice.configuration.dummys.nodeconfig.NodeConfig;
 import eu.metacloudservice.events.EventDriver;
 import eu.metacloudservice.language.LanguageDriver;
+import eu.metacloudservice.language.entry.LanguageConfig;
+import eu.metacloudservice.language.entry.LanguagePacket;
 import eu.metacloudservice.loader.InstanceLoader;
 import eu.metacloudservice.storage.ModuleLoader;
 import eu.metacloudservice.terminal.TerminalDriver;
@@ -16,6 +18,9 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.OperatingSystemMXBean;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -30,6 +35,7 @@ public class CloudBoot {
     public static void main(String[] args) {
 
         new Driver();
+
         if (!new File("./service.json").exists()  && !new File("./nodeservice.json").exists()){
             Driver.getInstance().getMessageStorage().language = "ENGLISH";
         }else {
@@ -56,11 +62,7 @@ public class CloudBoot {
             System.exit(0);
             return;
         }
-        if (!hasSufficientMemory( Runtime.getRuntime().maxMemory())){
-            System.out.println("You need a server with a minimum of 3GB Memory to start the cloud");
-            System.exit(0);
-            return;
-        }
+
         if (isRootUser(System.getProperty("user.name"))){
             Driver.getInstance().getTerminalDriver().log(Type.INFO, Driver.getInstance().getLanguageDriver().getLang().getMessage("no-root-running"));
         }
@@ -104,9 +106,16 @@ public class CloudBoot {
                     "./local/GLOBAL/EVERY_SERVER/plugins/",
                     "./local/GLOBAL/EVERY_PROXY/plugins/",
                     "./local/GLOBAL/EVERY_LOBBY/plugins/",
+                    "./local/storage/",
                     "./local/groups/",
                     "./local/templates/"
             };
+
+
+            //CREATE STORAGE FOR MESSAGES
+            if (!new File("./local/storage/messages.storage").exists()){
+                new ConfigDriver("./local/storage/messages.storage").save(new LanguageConfig(Driver.getInstance().getLanguageDriver().getLang().getMessages()));
+            }
 
             for (String path : paths) {
                 File directory = new File(path);

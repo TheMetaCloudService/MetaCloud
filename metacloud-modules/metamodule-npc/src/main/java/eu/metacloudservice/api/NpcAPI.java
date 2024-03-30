@@ -60,7 +60,7 @@ public class NpcAPI {
             Locations l =  Locations;
             l.getLocations().add(location);
             Locations = l;
-            CloudAPI.getInstance().getRestDriver().put("/module/npc/locations", new ConfigDriver().convert(l));
+            CloudAPI.getInstance().getRestDriver().update("/module/npc/locations", new ConfigDriver().convert(l));
         }
     }
 
@@ -70,7 +70,7 @@ public class NpcAPI {
             Locations l =  Locations;
             l.getLocations().removeIf(location -> location.getNpcUUID().equals(signUUID));
             Locations = l;
-            CloudAPI.getInstance().getRestDriver().put("/module/npc/locations", new ConfigDriver().convert(l));
+            CloudAPI.getInstance().getRestDriver().update("/module/npc/locations", new ConfigDriver().convert(l));
         }
     }
 }

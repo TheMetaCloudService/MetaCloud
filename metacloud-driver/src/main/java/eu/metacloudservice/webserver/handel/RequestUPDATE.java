@@ -13,7 +13,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.*;
 import io.netty.util.CharsetUtil;
 
-public class RequestPUT {
+public class RequestUPDATE {
 
     public void handle(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
         String uri = request.uri();

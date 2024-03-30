@@ -64,6 +64,7 @@ public class AutoUpdater {
                 new ModuleLoader().updateAllModules();
             }
             Driver.getInstance().getTerminalDriver().log(Type.INFO, Driver.getInstance().getLanguageDriver().getLang().getMessage("update-is-finished"));
+            new File("./local/storage/messages.storage").deleteOnExit();
             System.exit(0);
         }else {
             Driver.getInstance().getTerminalDriver().log(Type.INFO, Driver.getInstance().getLanguageDriver().getLang().getMessage("update-no-update-was-found"));

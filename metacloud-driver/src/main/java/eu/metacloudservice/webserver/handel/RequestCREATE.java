@@ -6,13 +6,14 @@ package eu.metacloudservice.webserver.handel;
 
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.events.listeners.restapi.CloudRestAPIPutEvent;
+import eu.metacloudservice.webserver.entry.RouteEntry;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.*;
 import io.netty.util.CharsetUtil;
 
-public class RequestPost {
+public class RequestCREATE {
 
     public void handle(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
         String uri = request.uri();
@@ -23,13 +24,13 @@ public class RequestPost {
             String authenticatorKey = uri.split("/")[1];
             if (authenticatorKey.length() > 4 && Driver.getInstance().getWebServer().AUTH_KEY.equals(authenticatorKey)){
                 String path = uri.replace("/" + authenticatorKey, "");
-                if (Driver.getInstance().getWebServer().getRoutes(path) == null){
+                if (Driver.getInstance().getWebServer().getRoutes(path) != null){
                     FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter a right path\"}");
                     ctx.writeAndFlush(response);
                 } else if (!path.isEmpty()){
                     ByteBuf content = request.content();
                     String payload = content.toString(CharsetUtil.UTF_8);
-                    Driver.getInstance().getWebServer().updateRoute(path, payload);
+                    Driver.getInstance().getWebServer().addRoute(new RouteEntry(path, payload));
                     Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudRestAPIPutEvent(path, payload));
                     FullHttpResponse response = createResponse(HttpResponseStatus.OK, "{\"reason\":\"data received\"}");
                     ctx.writeAndFlush(response);

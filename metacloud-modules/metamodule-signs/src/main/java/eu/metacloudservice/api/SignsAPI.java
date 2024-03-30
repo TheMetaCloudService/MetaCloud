@@ -67,7 +67,7 @@ public class SignsAPI {
             Locations l =  Locations;
             l.getLocations().add(location);
             Locations = l;
-            CloudAPI.getInstance().getRestDriver().put("/module/signs/locations", new ConfigDriver().convert(l));
+            CloudAPI.getInstance().getRestDriver().update("/module/signs/locations", new ConfigDriver().convert(l));
         }
     }
 
@@ -77,7 +77,7 @@ public class SignsAPI {
             Locations l =  Locations;
             l.getLocations().removeIf(location -> location.getSignUUID().equals(signUUID));
             Locations = l;
-            CloudAPI.getInstance().getRestDriver().put("/module/signs/locations", new ConfigDriver().convert(l));
+            CloudAPI.getInstance().getRestDriver().update("/module/signs/locations", new ConfigDriver().convert(l));
         }
     }
 }
