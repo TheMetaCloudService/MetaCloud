@@ -6,6 +6,7 @@ import eu.metacloudservice.events.entrys.Subscribe;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.concurrent.CompletableFuture;
 
 public class EventProcess implements  Comparable<EventProcess>{
     private final ICloudListener listener;
@@ -30,9 +31,16 @@ public class EventProcess implements  Comparable<EventProcess>{
 
     public void execute(IEventAdapter event) {
         try {
-            method.invoke(listener, event);
-        } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException ignored) {
-        }
+            if (annotation.async()){
+                CompletableFuture.runAsync(() -> {
+                    try {
+                        method.invoke(listener, event);
+                    } catch (IllegalAccessException | InvocationTargetException ignored) {}
+                });
+            }else {
+                method.invoke(listener, event);
+            }
+        } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException ignored) {}
     }
     @Override
     public String toString() {

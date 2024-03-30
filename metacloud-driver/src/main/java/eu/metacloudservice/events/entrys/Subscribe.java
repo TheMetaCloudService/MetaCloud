@@ -9,4 +9,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public  @interface  Subscribe  {
     int priority() default Priority.MEDIUM;
+    boolean async() default false;
 }
