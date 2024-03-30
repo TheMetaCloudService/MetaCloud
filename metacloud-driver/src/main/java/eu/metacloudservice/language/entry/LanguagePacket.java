@@ -4,6 +4,8 @@
 
 package eu.metacloudservice.language.entry;
 
+import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
+
 import java.util.HashMap;
 
 public class LanguagePacket {
@@ -23,6 +25,9 @@ public class LanguagePacket {
         data.putAll(map);
     }
 
+    public HashMap<String, String> getMessages(){
+        return data;
+    }
     public void add(String path, String message){
         data.put(path, message);
     }

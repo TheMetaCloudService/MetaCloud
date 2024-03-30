@@ -9,14 +9,12 @@ import com.google.gson.Gson;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.restapi.ModuleConfig;
+import eu.metacloudservice.language.entry.LanguageConfig;
 import eu.metacloudservice.language.entry.LanguagePacket;
 import eu.metacloudservice.language.entry.LanguagesPacket;
 import lombok.SneakyThrows;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -56,28 +54,33 @@ public class LanguageDriver {
 
 
     public void reload(){
-        try {
-            URL apiUrl = new URL("https://metacloudservice.eu/languages/?lang="  + Driver.getInstance().getMessageStorage().language.toUpperCase());
-            HttpURLConnection connection = (HttpURLConnection) apiUrl.openConnection();
+        if (new File("./local/storage/messages.storage").exists()){
+            LanguageConfig packet = (LanguageConfig) new ConfigDriver("./local/storage/messages.storage").read(LanguageConfig.class);
+            lang.update(packet.getMessages());
+        }else {
+            try {
+                URL apiUrl = new URL("https://metacloudservice.eu/languages/?lang="  + Driver.getInstance().getMessageStorage().language.toUpperCase());
+                HttpURLConnection connection = (HttpURLConnection) apiUrl.openConnection();
 
-            connection.setRequestMethod("GET");
+                connection.setRequestMethod("GET");
 
-            int responseCode = connection.getResponseCode();
-            if (responseCode == 200) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
-                String inputLine;
-                StringBuilder content = new StringBuilder();
+                int responseCode = connection.getResponseCode();
+                if (responseCode == 200) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+                    String inputLine;
+                    StringBuilder content = new StringBuilder();
 
-                while ((inputLine = in.readLine()) != null) {
-                    content.append(inputLine);
+                    while ((inputLine = in.readLine()) != null) {
+                        content.append(inputLine);
+                    }
+                    in.close();
+
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    this.lang.update(objectMapper.readValue(content.toString(), HashMap.class));
                 }
-                in.close();
-
-                ObjectMapper objectMapper = new ObjectMapper();
-                this.lang.update(objectMapper.readValue(content.toString(), HashMap.class));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }
