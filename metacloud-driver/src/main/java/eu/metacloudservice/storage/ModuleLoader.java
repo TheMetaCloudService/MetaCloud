@@ -126,6 +126,11 @@ public class ModuleLoader {
             updateConfig.getModules().forEach((s, s2) -> {
                 if (getModuleNames().stream().anyMatch(s1 -> s1.replace("metacloud-", "").equalsIgnoreCase(s))){
                     new File("./modules/metacloud-" + s.toLowerCase() + ".jar").deleteOnExit();
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                     try (BufferedInputStream in = new BufferedInputStream(new URL(s2).openStream());
                          FileOutputStream fileOutputStream = new FileOutputStream("./modules/metacloud-" + s.toLowerCase() + ".jar")) {
                         byte[] dataBuffer = new byte[1024];
@@ -139,6 +144,11 @@ public class ModuleLoader {
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
             });
 
