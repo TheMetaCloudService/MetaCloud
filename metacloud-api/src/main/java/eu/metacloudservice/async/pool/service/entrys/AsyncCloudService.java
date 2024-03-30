@@ -49,9 +49,7 @@ public class AsyncCloudService {
     public void shutdown(){
         try {
             CloudAPI.getInstance().getAsyncServicePool().getService(name).get().shutdown();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
     }
@@ -142,7 +140,4 @@ public class AsyncCloudService {
     public String toString(){
         return "name='"+name+"', group='"+group+"', state='"+getState()+"', address='"+getAddress()+"', port='"+getPort()+"', playerCount='"+getPlayercount()+"'";
     }
-
-
-
 }

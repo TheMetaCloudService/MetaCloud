@@ -58,7 +58,6 @@ public class PlayerPool {
                 .collect(Collectors.toList());
     }
 
-
     public boolean playerIsNotNull(@NonNull UUID uniqueId){
         return connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString().replace("-", "")));
     }

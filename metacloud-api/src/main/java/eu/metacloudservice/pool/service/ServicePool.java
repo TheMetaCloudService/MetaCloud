@@ -41,7 +41,9 @@ public class ServicePool {
     public List<CloudService> getServicesByState(@NonNull  ServiceState state){
         return connectedServices.stream().filter(cloudService -> cloudService.getState() == state).collect(Collectors.toList());
     }
-
+    public List<CloudService> getServicesByGroupAndState(@NonNull String group, @NonNull ServiceState state){
+        return getServicesByGroup(group).stream().filter(cloudService -> cloudService.getState() == state).toList();
+    }
     public boolean registerService(CloudService service){
         if (connectedServices.stream().noneMatch(service1 -> service1.getName().equals(service.getName()))){
             connectedServices.add(service);
@@ -60,9 +62,7 @@ public class ServicePool {
         }
     }
 
-
     public void launchService(String group){
-
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInLaunchService(group));
     }
 
