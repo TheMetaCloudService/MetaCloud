@@ -1,6 +1,6 @@
 main: eu.metacloudservice.serverside.bukkit.SignBootstrap
 name: metacloud-signs
-version: 1.0.8-RELEASE
+version: 1.0.9-RELEASE
 author: RauchigesEtwas
 
 api-version: 1.13
