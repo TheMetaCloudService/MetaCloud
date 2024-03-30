@@ -172,6 +172,8 @@ public class CloudManager implements IRunAble {
         Driver.getInstance().getWebServer().addRoute(new RouteEntry("/message/default", new ConfigDriver().convert(msg)));
         GroupList groupList = new GroupList();
         groupList.setGroups(Driver.getInstance().getGroupDriver().getAllStrings());
+
+
         Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudgroup/general", new ConfigDriver().convert(groupList)));
         Driver.getInstance().getGroupDriver().getAll().forEach(group -> {
             if (Driver.getInstance().getWebServer().getRoute("/cloudgroup/" +group.getGroup()) == null){
@@ -182,6 +184,7 @@ public class CloudManager implements IRunAble {
             }
         });
 
+        Driver.getInstance().handleOfflinePlayerCacheDriver();
         LiveServiceList liveGroup = new LiveServiceList();
         liveGroup.setCloudServiceSplitter(config.getSplitter());
         liveGroup.setCloudServices(new ArrayDeque<>());
