@@ -30,11 +30,11 @@ public class AsyncNodePool {
         return CompletableFuture.supplyAsync( () ->connectedNodes.stream().filter(cloudNode -> cloudNode.getNodeName().equals(node)).findFirst().orElse(null));
     }
 
-    public void createNode(CloudNode cloudNode){
+    public void register(CloudNode cloudNode){
         this.connectedNodes.add(cloudNode);
     }
 
-    public void deleteNode(String node){
+    public void unregisterNode(String node){
         connectedNodes.removeIf(cloudNode -> cloudNode.getNodeName().equals(node));
     }
 
