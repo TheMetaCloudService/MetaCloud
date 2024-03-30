@@ -5,17 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9c64d84d-69de-4a92-8ef4-8136674adb0d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-discord/src/main/java/eu/metacloudservice/config/Activity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-discord/src/main/java/eu/metacloudservice/config/ActivityConfiguration.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-driver/src/main/java/eu/metacloudservice/events/listeners/node/CloudNodeConnectEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-driver/src/main/java/eu/metacloudservice/events/listeners/node/CloudNodeConnectEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-driver/src/main/java/eu/metacloudservice/events/listeners/node/CloudNodeCreateEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-driver/src/main/java/eu/metacloudservice/events/listeners/node/CloudNodeCreateEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-discord/src/main/java/eu/metacloudservice/DiscordModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-discord/src/main/java/eu/metacloudservice/DiscordModule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-discord/src/main/java/eu/metacloudservice/config/Configuration.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-discord/src/main/java/eu/metacloudservice/config/Configuration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-discord/src/main/java/eu/metacloudservice/events/CloudEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-discord/src/main/java/eu/metacloudservice/events/CloudEvents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-hub/src/main/java/eu/metacloudservice/velocity/command/HubCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-hub/src/main/java/eu/metacloudservice/velocity/command/HubCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/src/main/java/eu/metacloudservice/velocity/listener/TablistListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/src/main/java/eu/metacloudservice/velocity/listener/TablistListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-plugin/src/main/java/eu/metacloudservice/velocity/listeners/CloudConnectListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-plugin/src/main/java/eu/metacloudservice/velocity/listeners/CloudConnectListener.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +19,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -57,18 +48,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/work/metacloud-project/MetaCloud/metacloud-modules/metamodule-discord/src/main/resources&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "last_opened_file_path": "D:/work/metacloud-project/MetaCloud/metacloud-api/src/main/java/eu/metacloudservice/async/pool",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\work\metacloud-project\MetaCloud\metacloud-api\src\main\java\eu\metacloudservice\async\pool" />
       <recent name="D:\work\metacloud-project\MetaCloud\metacloud-modules\metamodule-discord\src\main\resources" />
     </key>
   </component>
