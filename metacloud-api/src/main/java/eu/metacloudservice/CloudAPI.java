@@ -1,6 +1,7 @@
 package eu.metacloudservice;
 
 import eu.metacloudservice.async.pool.group.AsyncGroupPool;
+import eu.metacloudservice.async.pool.offlineplayer.AsyncOfflinePlayerPool;
 import eu.metacloudservice.async.pool.player.AsyncPlayerPool;
 import eu.metacloudservice.async.pool.player.entrys.AsyncCloudPlayer;
 import eu.metacloudservice.async.pool.service.AsyncServicePool;
@@ -28,6 +29,7 @@ import eu.metacloudservice.networking.packet.packets.out.service.playerbased.Pac
 import eu.metacloudservice.networking.packet.packets.out.service.playerbased.PacketOutPlayerSwitchService;
 import eu.metacloudservice.networking.packet.packets.out.service.playerbased.apibased.*;
 import eu.metacloudservice.pool.group.GroupPool;
+import eu.metacloudservice.pool.offlineplayer.OfflinePlayerPool;
 import eu.metacloudservice.pool.player.PlayerPool;
 import eu.metacloudservice.pool.player.entrys.CloudPlayer;
 import eu.metacloudservice.pool.service.ServicePool;
@@ -54,10 +56,10 @@ public class CloudAPI {
 
     @Getter
     private static CloudAPI instance;
-
     private final LiveService service;
-
     private final PlayerPool playerPool;
+    private final OfflinePlayerPool offlinePlayerPool;
+    private final AsyncOfflinePlayerPool asyncOfflinePlayerPool;
     private final GroupPool groupPool;
     private final ServicePool servicePool;
     private final RestDriver restDriver;
@@ -72,6 +74,8 @@ public class CloudAPI {
         new Driver();
         service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         new NettyDriver();
+        this.offlinePlayerPool = new OfflinePlayerPool();
+        this.asyncOfflinePlayerPool = new AsyncOfflinePlayerPool();
         this.playerPool = new PlayerPool();
         this.servicePool = new ServicePool();
         this.groupPool = new GroupPool();
@@ -165,10 +169,11 @@ public class CloudAPI {
                 }
                 LiveServices liveServices = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + service.getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
                 liveServices.setLastReaction(System.currentTimeMillis());
-                CloudAPI.getInstance().getRestDriver().put("/cloudservice/" + service.getName().replace(list.getCloudServiceSplitter(), "~"), new ConfigDriver().convert(liveServices));
+                CloudAPI.getInstance().getRestDriver().update("/cloudservice/" + service.getName().replace(list.getCloudServiceSplitter(), "~"), new ConfigDriver().convert(liveServices));
 
             }
         }, 30, 30, TimeUtil.SECONDS);
+
     }
 
 
@@ -180,8 +185,6 @@ public class CloudAPI {
     public LiveService getCurrentService(){
         return service;
     }
-
-
 
     public List<String> getWhitelist(){
         WhiteList cech = (WhiteList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/default/whitelist"), WhiteList.class);
@@ -236,5 +239,6 @@ public class CloudAPI {
     public void sendPacketAsynchronous(Packet packet){
         NettyDriver.getInstance().nettyClient.sendPacketsAsynchronous(packet);
     }
+
 
 }

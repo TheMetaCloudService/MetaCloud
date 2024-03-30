@@ -1,6 +1,7 @@
 package eu.metacloudservice;
 
 
+import eu.metacloudservice.cloudplayer.offlineplayer.OfflinePlayerCacheDriver;
 import eu.metacloudservice.groups.GroupDriver;
 import eu.metacloudservice.groups.TemplateDriver;
 import eu.metacloudservice.language.LanguageDriver;
@@ -20,8 +21,8 @@ public final class Driver {
     private final TemplateDriver templateDriver;
     private final ModuleDriver moduleDriver;
     private WebServer webServer;
-
     private LanguageDriver languageDriver;
+    private OfflinePlayerCacheDriver offlinePlayerCacheDriver;
 
     public Driver(){
         /*
@@ -33,6 +34,7 @@ public final class Driver {
         this.moduleDriver = new ModuleDriver();
         this.messageStorage = new MessageStorage();
         this.templateDriver = new TemplateDriver();
+
 
     }
 
@@ -50,6 +52,14 @@ public final class Driver {
 
     public LanguageDriver getLanguageDriver() {
         return languageDriver;
+    }
+
+    public OfflinePlayerCacheDriver getOfflinePlayerCacheDriver() {
+        return offlinePlayerCacheDriver;
+    }
+
+    public void handleOfflinePlayerCacheDriver() {
+        this.offlinePlayerCacheDriver = new OfflinePlayerCacheDriver();
     }
 
     public void setLanguageDriver(LanguageDriver languageDriver) {
