@@ -19,7 +19,6 @@ public class CloudFlareEvent implements ICloudListener {
         Configuration configuration = (Configuration) new ConfigDriver("./modules/cloudflare/config.json").read(Configuration.class);
         if (!configuration.getEmail().equalsIgnoreCase("me@example.com") && !configuration.getDomain().equalsIgnoreCase("example.com") &&
                 !configuration.getApiToken().equalsIgnoreCase("your_api_token") && !configuration.getZoneID().equalsIgnoreCase("your_zone_id") && !configuration.getGroups().isEmpty()) {
-
             CloudFlareModule.flareHelper.createSRVRecord(event.getName(), event.getGroup(), event.getPort(), event.getNode());
         }
     }
