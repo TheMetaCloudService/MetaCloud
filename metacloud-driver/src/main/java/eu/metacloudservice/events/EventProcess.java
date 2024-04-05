@@ -30,7 +30,6 @@ public class EventProcess implements  Comparable<EventProcess>{
     }
 
     public void execute(IEventAdapter event) {
-        try {
             if (annotation.async()){
                 CompletableFuture.runAsync(() -> {
                     try {
@@ -38,9 +37,10 @@ public class EventProcess implements  Comparable<EventProcess>{
                     } catch (IllegalAccessException | InvocationTargetException ignored) {}
                 });
             }else {
-                method.invoke(listener, event);
+                try {
+                    method.invoke(listener, event);
+                } catch (IllegalAccessException | InvocationTargetException ignored) {};
             }
-        } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException ignored) {}
     }
     @Override
     public String toString() {

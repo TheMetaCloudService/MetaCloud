@@ -12,6 +12,7 @@ import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.events.EventDriver;
 import eu.metacloudservice.events.entrys.ICloudListener;
+import eu.metacloudservice.events.listeners.services.CloudProxyCouldNotStartEvent;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.networking.*;
 import eu.metacloudservice.networking.client.NettyClient;
@@ -21,6 +22,8 @@ import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketI
 import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInDispatchMainCommand;
 import eu.metacloudservice.networking.packet.packets.in.service.command.PacketInCommandWhitelist;
 import eu.metacloudservice.networking.packet.packets.out.service.*;
+import eu.metacloudservice.networking.packet.packets.out.service.events.PacketOutCloudProxyCouldNotStartEvent;
+import eu.metacloudservice.networking.packet.packets.out.service.events.PacketOutCloudServiceCouldNotStartEvent;
 import eu.metacloudservice.networking.packet.packets.out.service.group.PacketOutGroupCreate;
 import eu.metacloudservice.networking.packet.packets.out.service.group.PacketOutGroupDelete;
 import eu.metacloudservice.networking.packet.packets.out.service.group.PacketOutGroupEdit;
@@ -88,6 +91,8 @@ public class CloudAPI {
         NettyDriver.getInstance().nettyClient.bind(service.getManagerAddress(), service.getNetworkPort()).connect();
 
         NettyDriver.getInstance().getPacketDriver()
+                .registerHandler(new PacketOutCloudServiceCouldNotStartEvent().getPacketUUID(), new HandlePacketOutCloudServiceCouldNotStartEvent(), PacketOutCloudServiceCouldNotStartEvent.class)
+                .registerHandler(new PacketOutCloudProxyCouldNotStartEvent().getPacketUUID(), new HandlePacketOutCloudProxyCouldNotStartEvent(), PacketOutCloudProxyCouldNotStartEvent.class)
                 .registerHandler(new PacketOutServicePrepared().getPacketUUID(), new HandlePacketOutServicePrepared(), PacketOutServicePrepared.class)
                 .registerHandler(new PacketOutServiceConnected().getPacketUUID(), new HandlePacketOutServiceConnected(), PacketOutServiceConnected.class)
                 .registerHandler(new PacketOutServiceDisconnected().getPacketUUID(), new HandlePacketOutServiceDisconnected(), PacketOutServiceDisconnected.class)
