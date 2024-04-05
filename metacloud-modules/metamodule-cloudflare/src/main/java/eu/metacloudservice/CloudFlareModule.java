@@ -42,8 +42,9 @@ public class CloudFlareModule implements IModule {
                 config.getNodes().forEach(managerConfigNodes -> {
                     flareHelper.createARecord(managerConfigNodes.getName(), managerConfigNodes.getAddress());
                 });
-                Driver.getInstance().getMessageStorage().eventDriver.registerListener(new CloudFlareEvent());
             }
+
+            Driver.getInstance().getMessageStorage().eventDriver.registerListener(new CloudFlareEvent());
         }
 
         }

@@ -30,6 +30,10 @@ public final class ServiceProcess implements IServiceProcess {
     private Process process;
     private final boolean useProtocol;
 
+    private boolean useCustomTemplate;
+
+    private String customTemplate;
+
     private boolean useVelocity;
     public boolean useConsole;
     private   BufferedReader reader;
@@ -44,6 +48,8 @@ public final class ServiceProcess implements IServiceProcess {
         this.useVelocity = false;
         consoleStorage = new LinkedList<>();
         useConsole = false;
+        useCustomTemplate = false;
+        customTemplate = "";
 
 
     }
@@ -54,10 +60,20 @@ public final class ServiceProcess implements IServiceProcess {
         if (process == null || this.port == 0 || this.service == null || this.group == null){
             return;
         }
+
         new TimerBase().scheduleAsync(new TimerTask() {
             @Override
             public void run() {
-                if (!group.isRunStatic()){
+
+                if (useCustomTemplate){
+                    new File(customTemplate).deleteOnExit();
+                    new File(customTemplate).mkdirs();
+                    try {
+                        FileUtils.copyDirectory(new File("./live/" + group.getGroup() + "/" + service + "/"), new File(customTemplate));
+                    }catch (Exception e){
+
+                    }
+                }else if (!group.isRunStatic()){
                     if (            new File("./local/templates/" + group.getStorage().getTemplate() +"/").exists()){
                         new File("./local/templates/" + group.getStorage().getTemplate() +"/").delete();
                     }
@@ -125,7 +141,11 @@ public final class ServiceProcess implements IServiceProcess {
         }
         new File("./live/" + group.getGroup() + "/" + service + "/plugins/").mkdirs();
 
-        if (!group.isRunStatic()) {
+
+        if (useCustomTemplate){
+            Driver.getInstance().getTemplateDriver().copy(customTemplate, "./live/" + group.getGroup() + "/" + service + "/");
+
+        }else if (!group.isRunStatic()) {
             Driver.getInstance().getTemplateDriver().copy(group.getStorage().getTemplate(), "./live/" + group.getGroup() + "/" + service + "/");
 
         } else {
@@ -220,14 +240,6 @@ public final class ServiceProcess implements IServiceProcess {
         }
 
         if (group.getGroupType().equals("PROXY")) {
-
-            if (!new File("./live/" + group.getGroup() + "/" + service+ "/server-icon.png").exists()){
-                try {
-                    FileUtils.copyFile(new File("./local/server-icon.png"), new File("./live/" + group.getGroup() + "/" + service+ "/server-icon.png"));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
 
             try {
                 FileUtils.copyDirectory( new File("./local/GLOBAL/EVERY_PROXY/"),
@@ -428,14 +440,6 @@ public final class ServiceProcess implements IServiceProcess {
         }
 
         if (group.getGroupType().equals("PROXY")) {
-
-            if (!new File("./live/" + group.getGroup() + "/" + service + "/server-icon.png").exists()) {
-                try {
-                    FileUtils.copyFile(new File("./local/server-icon.png"), new File("./live/" + group.getGroup() + "/" + service + "/server-icon.png"));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
 
 
             if (useVelocity) {
@@ -659,7 +663,11 @@ public final class ServiceProcess implements IServiceProcess {
         }catch (IOException | InterruptedException ignored){}
     }
 
-
+    @Override
+    public void setCustomTemplate(String template) {
+        this.useCustomTemplate = true;
+        this.customTemplate = customTemplate;
+    }
 
 
 }

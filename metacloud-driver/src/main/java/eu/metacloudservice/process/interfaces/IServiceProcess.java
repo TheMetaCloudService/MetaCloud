@@ -7,4 +7,6 @@ public interface IServiceProcess {
     void handelLaunch();
     void handleRestart();
     void handelShutdown();
+
+    void setCustomTemplate(String template);
 }
