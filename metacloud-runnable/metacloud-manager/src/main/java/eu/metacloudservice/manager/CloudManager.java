@@ -134,11 +134,6 @@ public class CloudManager implements IRunAble {
             new ConfigDriver("./local/messages.json").save(new Messages(messages));
         }
 
-        if (!new File("./local/server-icon.png").exists()){
-            Driver.getInstance().getTerminalDriver().log(Type.INFO,Driver.getInstance().getLanguageDriver().getLang().getMessage("try-to-download-server-icon"));
-            Driver.getInstance().getMessageStorage().packetLoader.loadLogo();
-            new AnimationDriver().play();
-        }
         if (!new File("./local/GLOBAL/EVERY/plugins/metacloud-api.jar").exists()){
             Driver.getInstance().getTerminalDriver().log(Type.INFO,Driver.getInstance().getLanguageDriver().getLang().getMessage("try-to-download-cloudapi"));
             Driver.getInstance().getMessageStorage().packetLoader.loadAPI();
@@ -256,6 +251,7 @@ public class CloudManager implements IRunAble {
                 .registerHandler(new PacketOutAPIPlayerDispactchCommand().getPacketUUID(), new HandlePacketOutAPIPlayerDispatchCommand(), PacketOutAPIPlayerDispactchCommand.class)
                 .registerHandler(new PacketInCreateGroup().getPacketUUID(), new HandlePacketInCreateGroup(), PacketInCreateGroup.class)
                 .registerHandler(new PacketInDeleteGroup().getPacketUUID(), new HandlePacketInDeleteGroup(), PacketInDeleteGroup.class)
+                .registerHandler(new PacketLaunchServiceWithCustomTemplate().getPacketUUID(), new HandlePacketInDeleteGroup(), PacketLaunchServiceWithCustomTemplate.class)
 
 
                 //COMMAND

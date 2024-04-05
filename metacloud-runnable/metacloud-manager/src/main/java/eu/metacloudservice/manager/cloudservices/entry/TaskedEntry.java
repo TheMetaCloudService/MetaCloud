@@ -21,8 +21,12 @@ public class TaskedEntry {
     private final String UUID;
     @lombok.Getter
     private final int usedId;
+    @lombok.Getter
+    private boolean useCustomTemplate;
+    @lombok.Getter
+    private String customTemplate;
 
-    public TaskedEntry(int used_port, String group_name, String service_name, String task_node, boolean use_protocol, String usedId) {
+    public TaskedEntry(int used_port, String group_name, String service_name, String task_node, boolean use_protocol, String usedId,boolean useCustomTemplate, String customTemplate) {
         this.current_players = 0;
         this.check_interval = 0;
         this.check_interval_players = 0;
@@ -35,6 +39,8 @@ public class TaskedEntry {
         this.use_protocol = use_protocol;
         this.UUID = java.util.UUID.randomUUID().toString();
         this.usedId = Integer.parseInt(usedId);
+        this.useCustomTemplate = useCustomTemplate;
+        this.customTemplate = customTemplate;
     }
 
 

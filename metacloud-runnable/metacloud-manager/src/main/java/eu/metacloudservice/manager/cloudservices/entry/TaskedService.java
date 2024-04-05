@@ -262,7 +262,7 @@ public class TaskedService implements ITaskedService {
                             CloudManager.serviceDriver.getFreePort(Driver.getInstance().getGroupDriver().load(entry.getGroupName()).getGroupType().equalsIgnoreCase("PROXY")),
                             getEntry().getGroupName(),
                             getEntry().getGroupName() + CloudManager.config.getSplitter() + id,
-                            "InternalNode", getEntry().isUseProtocol(), String.valueOf(id)));
+                            "InternalNode", getEntry().isUseProtocol(), String.valueOf(id), false, ""));
                     Driver.getInstance().getMessageStorage().canUseMemory  =Driver.getInstance().getMessageStorage().canUseMemory -  Driver.getInstance().getGroupDriver().load(entry.getGroupName()).getUsedMemory();
                     taskedService.handelLaunch();
                 }

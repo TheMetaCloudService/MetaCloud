@@ -3,7 +3,9 @@ package eu.metacloudservice.manager.cloudservices;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.cloudplayer.CloudPlayerRestCache;
 import eu.metacloudservice.configuration.ConfigDriver;
+import eu.metacloudservice.events.listeners.services.CloudProxyCouldNotStartEvent;
 import eu.metacloudservice.events.listeners.services.CloudProxyLaunchEvent;
+import eu.metacloudservice.events.listeners.services.CloudServiceCouldNotStartEvent;
 import eu.metacloudservice.events.listeners.services.CloudServiceLaunchEvent;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.manager.CloudManager;
@@ -14,6 +16,8 @@ import eu.metacloudservice.manager.cloudservices.interfaces.ICloudServiceDriver;
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.packet.packets.out.service.PacketOutServiceConnected;
 import eu.metacloudservice.networking.packet.packets.out.service.PacketOutServiceLaunch;
+import eu.metacloudservice.networking.packet.packets.out.service.events.PacketOutCloudProxyCouldNotStartEvent;
+import eu.metacloudservice.networking.packet.packets.out.service.events.PacketOutCloudServiceCouldNotStartEvent;
 import eu.metacloudservice.networking.packet.packets.out.service.playerbased.PacketOutPlayerConnect;
 import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.storage.UUIDDriver;
@@ -265,13 +269,13 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                                                 CloudManager.serviceDriver.getFreePort(Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName()).getGroupType().equalsIgnoreCase("PROXY")),
                                                 taskedService.getEntry().getGroupName(),
                                                 taskedService.getEntry().getGroupName() + CloudManager.config.getSplitter() + id,
-                                                "InternalNode", taskedService.getEntry().isUseProtocol(), id));
+                                                "InternalNode", taskedService.getEntry().isUseProtocol(), id, false, ""));
                                     } else {
                                         CloudManager.serviceDriver.register(new TaskedEntry(
                                                 -1,
                                                 taskedService.getEntry().getGroupName(),
                                                 taskedService.getEntry().getGroupName() + CloudManager.config.getSplitter() + id,
-                                                taskedService.getEntry().getNode(), taskedService.getEntry().isUseProtocol(), id));
+                                                taskedService.getEntry().getNode(), taskedService.getEntry().isUseProtocol(), id, false, ""));
                                     }
                                 });
                     }
@@ -308,10 +312,10 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                                         int memoryAfter = Driver.getInstance().getMessageStorage().canUseMemory - group.getUsedMemory();
 
                                         if (node.equals("InternalNode") && memoryAfter >= 0) {
-                                            CloudManager.serviceDriver.register(new TaskedEntry(freePort, group.getGroup(), entryName, node, CloudManager.config.getUseProtocol(), id));
+                                            CloudManager.serviceDriver.register(new TaskedEntry(freePort, group.getGroup(), entryName, node, CloudManager.config.getUseProtocol(), id, false, ""));
                                             Driver.getInstance().getMessageStorage().canUseMemory = memoryAfter;
                                         } else if (!node.equals("InternalNode")) {
-                                            CloudManager.serviceDriver.register(new TaskedEntry(-1, group.getGroup(), entryName, node, CloudManager.config.getUseProtocol(), id));
+                                            CloudManager.serviceDriver.register(new TaskedEntry(-1, group.getGroup(), entryName, node, CloudManager.config.getUseProtocol(), id, false, ""));
                                         }
                                     }
                                 }
@@ -340,6 +344,16 @@ public class CloudServiceDriver implements ICloudServiceDriver {
                         CloudManager.serviceDriver.getServices().parallelStream().filter(taskedService -> taskedService.getEntry().getStatus() != ServiceState.QUEUED || taskedService.getEntry().getStatus() == ServiceState.STARTED).toList().forEach(taskedService -> {
                             if (taskedService.getProcess() != null && taskedService.getProcess().getProcess() != null &&!taskedService.getProcess().getProcess().isAlive()){
                                 unregister(taskedService.getEntry().getServiceName());
+                                if (Driver.getInstance().getGroupDriver().load(taskedService.getEntry().getGroupName()).getGroupType().equalsIgnoreCase("PROXY")){
+                                    Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudProxyCouldNotStartEvent(taskedService.getEntry().getServiceName()));
+                                    NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutCloudProxyCouldNotStartEvent(taskedService.getEntry().getServiceName()));
+                                }else {
+                                    Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudServiceCouldNotStartEvent(taskedService.getEntry().getServiceName()));
+
+                                    NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutCloudServiceCouldNotStartEvent(taskedService.getEntry().getServiceName()));
+
+
+                                }
                             }
                         });
                     }
