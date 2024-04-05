@@ -1,7 +1,12 @@
 package eu.metacloudservice.config;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 
+@Getter
+@Setter
 public class DesignConfig {
 
 
@@ -12,55 +17,19 @@ public class DesignConfig {
     private ArrayList<Motd> defaults;
     private ArrayList<Tablist> tablist;
 
+    private ServerIcon serverIcon;
+
     public DesignConfig() {
     }
 
 
-
-    public String getTargetGroup() {
-        return targetGroup;
+    public ServerIcon getServerIcon() {
+        return serverIcon;
     }
 
-    public void setTargetGroup(String targetGroup) {
-        this.targetGroup = targetGroup;
+    public void setServerIcon(ServerIcon serverIcon) {
+        this.serverIcon = serverIcon;
     }
 
-    public boolean isMotdEnabled() {
-        return motdEnabled;
-    }
 
-    public void setMotdEnabled(boolean motdEnabled) {
-        this.motdEnabled = motdEnabled;
-    }
-
-    public boolean isTabEnabled() {
-        return tabEnabled;
-    }
-
-    public void setTabEnabled(boolean tabEnabled) {
-        this.tabEnabled = tabEnabled;
-    }
-
-    public ArrayList<Motd> getMaintenancen() {
-        return maintenancen;
-    }
-    public void setMaintenancen(ArrayList<Motd> maintenancen) {
-        this.maintenancen = maintenancen;
-    }
-
-    public ArrayList<Motd> getDefaults() {
-        return defaults;
-    }
-
-    public void setDefaults(ArrayList<Motd> defaults) {
-        this.defaults = defaults;
-    }
-
-    public ArrayList<Tablist> getTablist() {
-        return tablist;
-    }
-
-    public void setTablist(ArrayList<Tablist> tablist) {
-        this.tablist = tablist;
-    }
 }

@@ -10,14 +10,18 @@ import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.config.Configuration;
 import eu.metacloudservice.config.DesignConfig;
+import eu.metacloudservice.config.IconBase;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.groups.dummy.Group;
+import eu.metacloudservice.moduleside.converter.IconConverter;
 import eu.metacloudservice.velocity.listener.CloudEventHandler;
 import eu.metacloudservice.velocity.listener.MOTDListener;
 import eu.metacloudservice.velocity.listener.TablistListener;
 import eu.metacloudservice.webserver.RestDriver;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -33,6 +37,7 @@ public class VeloCityBootstrap {
     public DesignConfig configuration;
     public  Configuration conf;
     public Group group;
+    public IconBase iconBase;
     public Integer tabCount;
 
     @Inject
@@ -93,6 +98,7 @@ public class VeloCityBootstrap {
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(() -> {
+            iconBase = (IconBase) new ConfigDriver().convert(getRestDriver().get("/module/syncproxy/icons"), IconBase.class);
             conf = (Configuration) new ConfigDriver().convert(getRestDriver().get("/module/syncproxy/configuration"), Configuration.class);
             conf.getConfiguration().stream()
                     .filter(designConfig -> designConfig.getTargetGroup().equalsIgnoreCase(liveService.getGroup()))

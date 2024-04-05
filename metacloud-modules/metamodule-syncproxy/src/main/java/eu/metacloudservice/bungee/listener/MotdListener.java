@@ -1,30 +1,27 @@
 package eu.metacloudservice.bungee.listener;
 
 import eu.metacloudservice.CloudAPI;
-import eu.metacloudservice.Driver;
 import eu.metacloudservice.bungee.BungeeBootstrap;
 import eu.metacloudservice.config.Motd;
-import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
+import eu.metacloudservice.moduleside.converter.IconConverter;
 import net.md_5.bungee.api.Favicon;
 import net.md_5.bungee.api.ServerPing;
-import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 public class MotdListener  implements Listener {
 
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void handelPings(ProxyPingEvent event){
+    public void handelPings(ProxyPingEvent event) throws IOException {
         ServerPing ping = event.getResponse();
 
         if (BungeeBootstrap.getInstance().configuration == null){
@@ -36,6 +33,7 @@ public class MotdListener  implements Listener {
             BungeeBootstrap bungeeBootstrap = BungeeBootstrap.getInstance();
             CloudAPI cloudAPI = CloudAPI.getInstance();
             int motdIndex = bungeeBootstrap.motdCount;
+            String icon =  bungeeBootstrap.group.isMaintenance() ? bungeeBootstrap.configuration.getServerIcon().getMaintenanceIcon() : bungeeBootstrap.configuration.getServerIcon().getDefaultIcon();
             Motd motd = bungeeBootstrap.group.isMaintenance() ? bungeeBootstrap.configuration.getMaintenancen().get(motdIndex) : bungeeBootstrap.configuration.getDefaults().get(motdIndex);
             double memory = CloudAPI.getInstance().getUsedMemory();
             double maxMemory = CloudAPI.getInstance().getUsedMemory();
@@ -90,9 +88,14 @@ public class MotdListener  implements Listener {
             ping.setDescription(description);
             ping.setVersion(serverProtocol);
             ping.setPlayers(players);
+
+            if (bungeeBootstrap.iconBase.getIcons().containsKey(icon.replace(".png", ""))) {
+                ByteArrayInputStream bais = new ByteArrayInputStream(new IconConverter().convertToByte(bungeeBootstrap.iconBase.getIcons().get(icon.replace(".png", ""))));
+                BufferedImage bi = ImageIO.read(bais);
+                bais.close();
+                ping.setFavicon(Favicon.create(bi));
+            }
             event.setResponse(ping);
-
-
 
 
         }

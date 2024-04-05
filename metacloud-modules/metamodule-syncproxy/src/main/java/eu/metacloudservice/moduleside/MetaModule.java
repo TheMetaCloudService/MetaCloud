@@ -1,16 +1,28 @@
 package eu.metacloudservice.moduleside;
 
+import com.google.common.primitives.Bytes;
 import eu.metacloudservice.config.*;
 import eu.metacloudservice.Driver;
+import eu.metacloudservice.config.migration.MigrationConfiguration;
 import eu.metacloudservice.configuration.ConfigDriver;
+import eu.metacloudservice.configuration.dummys.restapi.GeneralConfig;
+import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
 import eu.metacloudservice.module.extention.IModule;
+import eu.metacloudservice.moduleside.converter.IconConverter;
 import eu.metacloudservice.moduleside.events.SyncEvents;
+import eu.metacloudservice.terminal.animation.AnimationDriver;
+import eu.metacloudservice.terminal.enums.Type;
 import eu.metacloudservice.timebaser.TimerBase;
 import eu.metacloudservice.timebaser.utils.TimeUtil;
 import eu.metacloudservice.webserver.entry.RouteEntry;
+import lombok.SneakyThrows;
 
-import java.io.File;
+import java.io.*;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
 import java.util.TimerTask;
 
 public class MetaModule implements IModule {
@@ -39,7 +51,7 @@ public class MetaModule implements IModule {
     private static void create(){
 
             if (!new File("./modules/syncproxy/config.json").exists()) {
-                new File("./modules/syncproxy/").mkdirs();
+                new File("./modules/syncproxy/icons/").mkdirs();
                 Configuration configuration = new Configuration();
                 ArrayList<DesignConfig> configs = new ArrayList<>();
                 Driver.getInstance().getGroupDriver().getAll().stream().filter(group -> group.getGroupType().equalsIgnoreCase("PROXY")).forEach(group -> {
@@ -129,14 +141,62 @@ public class MetaModule implements IModule {
                     config.setMaintenancen(maintenance);
                     config.setTablist(tablist);
                     config.setDefaults(defaults);
+                    config.setServerIcon(new ServerIcon("maintenance.png", "default.png")); configs.add(config);
+                    loader();
+                });
+
+
+                configuration.setConfiguration(configs);
+                Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/syncproxy/configuration", new ConfigDriver().convert(configuration)));
+                Driver.getInstance().getWebServer().updateRoute("/module/syncproxy/configuration", new ConfigDriver().convert(configuration));
+
+                HashMap<String, String> icons = new HashMap<>();
+                getIcons().forEach(s -> {
+                    try {
+                        icons.put(s, new IconConverter().convertToBase64("./modules/syncproxy/icons/" + s + ".png"));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/syncproxy/icons", new ConfigDriver().convert( new IconBase(icons))));
+
+
+                new ConfigDriver("./modules/syncproxy/config.json").save(configuration);
+                set();
+                update();
+            }else if (new File("./local/server-icon.png").exists()){
+                new File("./local/server-icon.png").deleteOnExit();
+                MigrationConfiguration migrationConfiguration = (MigrationConfiguration) new ConfigDriver("./modules/syncproxy/config.json").read(MigrationConfiguration.class);
+                Configuration configuration = new Configuration();
+                ArrayList<DesignConfig> configs = new ArrayList<>();
+                migrationConfiguration.getConfiguration().forEach(designConfig -> {
+                    DesignConfig config = new DesignConfig();
+                    config.setTablist(designConfig.getTablist());
+                    config.setDefaults(designConfig.getDefaults());
+                    config.setMaintenancen(designConfig.getMaintenancen());
+                    config.setTargetGroup(designConfig.getTargetGroup());
+                    config.setServerIcon(new ServerIcon("maintenance.png", "default.png"));
                     configs.add(config);
                 });
                 configuration.setConfiguration(configs);
                 Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/syncproxy/configuration", new ConfigDriver().convert(configuration)));
                 Driver.getInstance().getWebServer().updateRoute("/module/syncproxy/configuration", new ConfigDriver().convert(configuration));
+
+                new File("./modules/syncproxy/icons/").mkdirs();
+                new File("./modules/syncproxy/config.json").delete();
                 new ConfigDriver("./modules/syncproxy/config.json").save(configuration);
-                set();
-                update();
+                loader();
+
+                HashMap<String, String> icons = new HashMap<>();
+                getIcons().forEach(s -> {
+                    try {
+                        icons.put(s, new IconConverter().convertToBase64("./modules/syncproxy/icons/" + s + ".png"));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/syncproxy/icons", new ConfigDriver().convert( new IconBase(icons))));
+
             }
 
         new TimerBase().scheduleAsync(new TimerTask() {
@@ -153,6 +213,16 @@ public class MetaModule implements IModule {
         if (Driver.getInstance().getWebServer().getRoute("/module/syncproxy/configuration") != null) return;
         Configuration config = (Configuration) new ConfigDriver("./modules/syncproxy/config.json").read(Configuration.class);
         Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/syncproxy/configuration", new ConfigDriver().convert(config)));
+        HashMap<String, String> icons = new HashMap<>();
+        getIcons().forEach(s -> {
+            try {
+                icons.put(s, new IconConverter().convertToBase64("./modules/syncproxy/icons/" + s + ".png"));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/syncproxy/icons", new ConfigDriver().convert( new IconBase(icons))));
+
     }
 
     public static void update(){
@@ -167,5 +237,77 @@ public class MetaModule implements IModule {
             update();
         }
 
+        HashMap<String, String> icons = new HashMap<>();
+        getIcons().forEach(s -> {
+            try {
+                icons.put(s, new IconConverter().convertToBase64("./modules/syncproxy/icons/" + s + ".png"));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        Driver.getInstance().getWebServer().updateRoute("/module/syncproxy/icons", new ConfigDriver().convert(new IconBase(icons)));
+
+
+    }
+
+
+    @SneakyThrows
+    private static void loader(){
+        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=general").openStream()) {
+            final StringBuilder builder = new StringBuilder();
+            BufferedReader bufferedReader;
+
+            bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+            int counter;
+            while ((counter = bufferedReader.read()) != -1) {
+                builder.append((char) counter);
+            }
+            final String rawJson = builder.toString();
+            GeneralConfig updateConfig = (GeneralConfig) new ConfigDriver().convert(rawJson, GeneralConfig.class);
+
+            try (BufferedInputStream in = new BufferedInputStream(new URL(updateConfig.getLogo()).openStream());
+                 FileOutputStream fileOutputStream = new FileOutputStream("./modules/syncproxy/icons/default.png")) {
+                byte[] dataBuffer = new byte[1024];
+
+                int bytesRead;
+
+                while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+                    fileOutputStream.write(dataBuffer, 0, bytesRead);
+                }
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+            try (BufferedInputStream in = new BufferedInputStream(new URL("https://metacloudservice.eu/download/general/maintenance.png").openStream());
+                 FileOutputStream fileOutputStream = new FileOutputStream("./modules/syncproxy/icons/maintenance.png")) {
+                byte[] dataBuffer = new byte[1024];
+
+                int bytesRead;
+
+                while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+                    fileOutputStream.write(dataBuffer, 0, bytesRead);
+                }
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+        }
+    }
+
+    private  static ArrayList<String> getIcons() {
+        File file = new File("./modules/syncproxy/icons/");
+        File[] files = file.listFiles();
+        ArrayList<String> modules = new ArrayList<>();
+        for (int i = 0; i != Objects.requireNonNull(files).length; i++) {
+            String FirstFilter = files[i].getName();
+            if (FirstFilter.contains(".png")) {
+                String group = FirstFilter.split(".png")[0];
+                modules.add(group);
+            }
+
+        }
+        return modules;
     }
 }

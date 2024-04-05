@@ -7,6 +7,7 @@ import eu.metacloudservice.bungee.listener.MotdListener;
 import eu.metacloudservice.bungee.listener.TabListListener;
 import eu.metacloudservice.config.Configuration;
 import eu.metacloudservice.config.DesignConfig;
+import eu.metacloudservice.config.IconBase;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.groups.dummy.Group;
@@ -30,6 +31,8 @@ public class BungeeBootstrap extends Plugin {
     public Integer motdCount;
     public DesignConfig configuration;
     public Configuration conf;
+
+    public IconBase iconBase;
 
     public  Group group;
     public Integer tabCount;
@@ -76,10 +79,12 @@ public class BungeeBootstrap extends Plugin {
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(() -> {
             conf = (Configuration) new ConfigDriver().convert(getRestDriver().get("/module/syncproxy/configuration"), Configuration.class);
+            iconBase = (IconBase) new ConfigDriver().convert(getRestDriver().get("/module/syncproxy/icons"), IconBase.class);
             conf.getConfiguration().stream()
                     .filter(designConfig -> designConfig.getTargetGroup().equalsIgnoreCase(liveService.getGroup()))
                     .findFirst()
                     .ifPresent(config -> {
+
                         configuration = config;
                         group = CloudAPI.getInstance().getGroupPool().getGroup(getLiveService().getGroup());
                         tabCount = tabCount >= configuration.getTablist().size() - 1 ? 0 : tabCount + 1;

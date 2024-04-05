@@ -9,10 +9,7 @@
 package eu.metacloudservice.moduleside.events;
 
 import eu.metacloudservice.Driver;
-import eu.metacloudservice.config.Configuration;
-import eu.metacloudservice.config.DesignConfig;
-import eu.metacloudservice.config.Motd;
-import eu.metacloudservice.config.Tablist;
+import eu.metacloudservice.config.*;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.events.EventProcess;
 import eu.metacloudservice.events.entrys.ICloudListener;
@@ -21,6 +18,7 @@ import eu.metacloudservice.events.entrys.Priority;
 import eu.metacloudservice.events.entrys.Subscribe;
 import eu.metacloudservice.events.listeners.group.CloudGroupCreateEvent;
 import eu.metacloudservice.events.listeners.group.CloudGroupDeleteEvent;
+import eu.metacloudservice.events.listeners.services.CloudProxyPreparedEvent;
 import eu.metacloudservice.moduleside.MetaModule;
 
 import java.util.ArrayList;
@@ -117,6 +115,8 @@ public class SyncEvents implements ICloudListener {
             config.setMaintenancen(maintenance);
             config.setTablist(tablist);
             config.setDefaults(defaults);
+            config.setServerIcon(new ServerIcon("maintenance.png", "default.png"));
+
 
             configuration.getConfiguration().add(config);
             MetaModule.update();
@@ -131,5 +131,14 @@ public class SyncEvents implements ICloudListener {
         configuration.getConfiguration().removeIf(designConfig -> designConfig.getTargetGroup().equals(event.getGroupname()));
         MetaModule.update();
     }
+
+
+    @Subscribe(priority = Priority.HIGHEST, async = true)
+    public void handle(CloudProxyPreparedEvent event){
+        if (event.getNode().equalsIgnoreCase("InternalNode")){
+
+        }
+    }
+
 
 }

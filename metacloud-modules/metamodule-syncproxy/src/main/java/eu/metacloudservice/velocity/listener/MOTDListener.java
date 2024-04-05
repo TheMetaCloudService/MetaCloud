@@ -5,17 +5,22 @@ import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.util.Favicon;
 import eu.metacloudservice.CloudAPI;
-import eu.metacloudservice.Driver;
+import eu.metacloudservice.bungee.BungeeBootstrap;
 import eu.metacloudservice.config.Motd;
+import eu.metacloudservice.moduleside.converter.IconConverter;
 import eu.metacloudservice.velocity.VeloCityBootstrap;
 import net.kyori.adventure.text.Component;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.UUID;
 
 public class MOTDListener {
 
     @Subscribe
-    public void handel(ProxyPingEvent event){
+    public void handel(ProxyPingEvent event) throws IOException {
         ServerPing.Builder ping = event.getPing().asBuilder();
         if (VeloCityBootstrap.getInstance().configuration == null){
             return;
@@ -26,6 +31,7 @@ public class MOTDListener {
             CloudAPI cloudAPI = CloudAPI.getInstance();
             int motdIndex = bungeeBootstrap.motdCount;
             Motd motd = bungeeBootstrap.group.isMaintenance() ? bungeeBootstrap.configuration.getMaintenancen().get(motdIndex) : bungeeBootstrap.configuration.getDefaults().get(motdIndex);
+            String icon =  bungeeBootstrap.group.isMaintenance() ? bungeeBootstrap.configuration.getServerIcon().getMaintenanceIcon() : bungeeBootstrap.configuration.getServerIcon().getDefaultIcon();
 
             String protocol = motd.getProtocol() != null && !motd.getProtocol().isEmpty() ?
            motd.getProtocol()
@@ -83,6 +89,14 @@ public class MOTDListener {
 
             if (protocol != null) {
                 ping.version(new ServerPing.Version(1, protocol));
+            }
+
+
+            if (bungeeBootstrap.iconBase.getIcons().containsKey(icon.replace(".png", ""))){
+                ByteArrayInputStream bais = new ByteArrayInputStream(new IconConverter().convertToByte(bungeeBootstrap.iconBase.getIcons().get(icon.replace(".png", ""))));
+                BufferedImage bi = ImageIO.read(bais);
+                bais.close();
+                ping.favicon(Favicon.create(bi));
             }
 
             event.setPing(ping.build());
