@@ -44,7 +44,7 @@ unzip metacloud-latest.zip
 ```
  + give the **start.sh** permission and start them
 ```bash
-chmod +u start.sh
+chmod u+x start.sh
 ./start.sh
 ```
     
@@ -58,8 +58,9 @@ chmod +u start.sh
 - Group System with Templats and **autoinstall** form Server software
 - Greate **Event mangement** with a lot of greate events
 - Powerful **API** with **async** & **sync** support based on **real-time results**, but easy to Learn
-- Powerful **REST-API** with **put** & **get** function
-- **CPU-Overload protaction** with **Queuesystem** and more 
-- Modular system with **comprehensive modules** like (*Syncproxy, Notify, Cloudflare, Hub, NPC, Sign & Permission *)
+- Powerful **REST-API** with some funktions
+- **CPU-Overload protaction** with **Queuesystem** and more
+- **Service-Crash detection** to check if an Service ist crashed 
+- Modular system with **comprehensive modules** like (*Syncproxy, Notify, Cloudflare, Hub, Discord, NPC, Sign & Permission*)
 - Great scalability, thanks to the **multi-proxy** and **multi-root** function
 - **Multiversion** support for bungeecord's (*Bungeecod, Waterfall, Velocity*) and Spigot's (*Spigot, Paperspigot, Foliaspigot, Bukkit, Purpurspigot*)
