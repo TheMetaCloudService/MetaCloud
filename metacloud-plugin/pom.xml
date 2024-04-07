@@ -49,7 +49,7 @@
         <dependency>
             <groupId>eu.metacloudservice</groupId>
             <artifactId>metacloud-api</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 

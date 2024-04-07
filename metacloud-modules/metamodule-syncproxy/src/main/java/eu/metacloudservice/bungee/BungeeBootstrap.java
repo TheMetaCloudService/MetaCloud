@@ -58,7 +58,6 @@ public class BungeeBootstrap extends Plugin {
 
     @Override
     public void onDisable() {
-
     }
 
 
