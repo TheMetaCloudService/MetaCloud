@@ -79,11 +79,6 @@ public class CloudNode implements IRunAble {
             Driver.getInstance().getTerminalDriver().log(Type.NETWORK, Driver.getInstance().getLanguageDriver().getLang().getMessage("connection-key-not-exists"));
             System.exit(0);
         }
-        if (!new File("./local/server-icon.png").exists()){
-            Driver.getInstance().getTerminalDriver().log(Type.INFO,Driver.getInstance().getLanguageDriver().getLang().getMessage("try-to-download-server-icon"));
-            Driver.getInstance().getMessageStorage().packetLoader.loadLogo();
-            new AnimationDriver().play();
-        }
         if (!new File("./local/GLOBAL/EVERY/plugins/metacloud-api.jar").exists()){
             Driver.getInstance().getTerminalDriver().log(Type.INFO,Driver.getInstance().getLanguageDriver().getLang().getMessage("try-to-download-cloudapi"));
             Driver.getInstance().getMessageStorage().packetLoader.loadAPI();

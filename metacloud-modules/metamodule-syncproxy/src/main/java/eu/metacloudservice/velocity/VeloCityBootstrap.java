@@ -19,6 +19,8 @@ import eu.metacloudservice.velocity.listener.CloudEventHandler;
 import eu.metacloudservice.velocity.listener.MOTDListener;
 import eu.metacloudservice.velocity.listener.TablistListener;
 import eu.metacloudservice.webserver.RestDriver;
+import lombok.Getter;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -42,6 +44,7 @@ public class VeloCityBootstrap {
 
     @Inject
     public VeloCityBootstrap(ProxyServer proxyServer) {
+        instance = this;
         this.proxyServer = proxyServer;
     }
 
@@ -51,7 +54,7 @@ public class VeloCityBootstrap {
         new Driver();
         tabCount = 0;
         motdCount = 0;
-        instance = this;
+
 
         liveService = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         group = CloudAPI.getInstance().getGroupPool().getGroup(getLiveService().getGroup());

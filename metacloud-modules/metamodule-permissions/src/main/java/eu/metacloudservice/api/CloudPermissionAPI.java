@@ -126,7 +126,6 @@ public class CloudPermissionAPI {
             updatePlayer(pp);
             return true;
         }
-
     }
 
     public boolean addGroupToPlayer(@NotNull String player, @NotNull IncludedAble group){

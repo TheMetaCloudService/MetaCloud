@@ -10,6 +10,7 @@ import eu.metacloudservice.config.Motd;
 import eu.metacloudservice.moduleside.converter.IconConverter;
 import eu.metacloudservice.velocity.VeloCityBootstrap;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -78,11 +79,11 @@ public class MOTDListener {
 
             int cloudPlayersplayers = cloudAPI.getPlayerPool().getPlayers().size();
             int max = cloudAPI.getGroupPool().getGroup(cloudAPI.getCurrentService().getGroup()).getMaxPlayers();
+
             ping.description(Component.text(description))
                     .maximumPlayers(max)
                     .onlinePlayers(cloudPlayersplayers)
                     .build();
-
             if (players != null) {
                 ping.clearSamplePlayers().samplePlayers(samplePlayers);
             }

@@ -70,7 +70,7 @@ public class TabListListener implements Listener {
             } else {
                     Tablist tab = BungeeBootstrap.getInstance().configuration.getTablist().get(BungeeBootstrap.getInstance().tabCount);
                     String[] config = readConfigs(tab, player);
-                    player.setTabHeader(TextComponent.fromLegacyText(config[0]), TextComponent.fromLegacyText(config[1]));
+                player.setTabHeader(TextComponent.fromLegacyText(config[0]), TextComponent.fromLegacyText(config[1]));
 
             }
         }

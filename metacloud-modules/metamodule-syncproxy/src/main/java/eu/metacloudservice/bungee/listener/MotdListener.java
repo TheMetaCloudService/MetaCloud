@@ -4,6 +4,8 @@ import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.bungee.BungeeBootstrap;
 import eu.metacloudservice.config.Motd;
 import eu.metacloudservice.moduleside.converter.IconConverter;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.Favicon;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.event.ProxyPingEvent;
@@ -83,7 +85,9 @@ public class MotdListener  implements Listener {
                     .replace("%max_players%", "" + bungeeBootstrap.group.getMaxPlayers());
 
             String description = firstLine + "\n" + secondLine;
+
             ServerPing.Protocol serverProtocol = new ServerPing.Protocol(protocolString, ping.getVersion().getProtocol() - 1);
+
 
             ping.setDescription(description);
             ping.setVersion(serverProtocol);

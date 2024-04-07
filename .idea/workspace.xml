@@ -6,32 +6,22 @@
   <component name="ChangeListManager">
     <list default="true" id="9c64d84d-69de-4a92-8ef4-8136674adb0d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/bootstrap/velocity/VelocityBootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/bootstrap/velocity/VelocityBootstrap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/resources/bungee.yml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/resources/bungee.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/resources/plugin.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-driver/src/main/java/eu/metacloudservice/storage/MessageStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-driver/src/main/java/eu/metacloudservice/storage/MessageStorage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-cloudflare/src/main/resources/module.properties" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-cloudflare/src/main/resources/module.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-discord/src/main/resources/module.properties" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-discord/src/main/resources/module.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-hub/src/main/java/eu/metacloudservice/velocity/VelocityBootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-hub/src/main/java/eu/metacloudservice/velocity/VelocityBootstrap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-hub/src/main/resources/module.properties" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-hub/src/main/resources/module.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-hub/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-hub/src/main/resources/plugin.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-notify/src/main/java/eu/metacloudservice/velocity/VelocityBootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-notify/src/main/java/eu/metacloudservice/velocity/VelocityBootstrap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-notify/src/main/resources/module.properties" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-notify/src/main/resources/module.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-notify/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-notify/src/main/resources/plugin.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-npc/src/main/resources/module.properties" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-npc/src/main/resources/module.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-npc/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-npc/src/main/resources/plugin.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-permissions/src/main/java/eu/metacloudservice/velo/VeloBoostrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-permissions/src/main/java/eu/metacloudservice/velo/VeloBoostrap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-permissions/src/main/resources/bungee.yml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-permissions/src/main/resources/bungee.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-permissions/src/main/resources/module.properties" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-permissions/src/main/resources/module.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-permissions/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-permissions/src/main/resources/plugin.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-signs/src/main/resources/module.properties" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-signs/src/main/resources/module.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-signs/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-signs/src/main/resources/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-driver/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-driver/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-driver/src/main/java/eu/metacloudservice/storage/ModuleLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-driver/src/main/java/eu/metacloudservice/storage/ModuleLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-launcher/src/main/java/eu/metacloudservice/CloudBoot.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-launcher/src/main/java/eu/metacloudservice/CloudBoot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-permissions/src/main/java/eu/metacloudservice/api/CloudPermissionAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-permissions/src/main/java/eu/metacloudservice/api/CloudPermissionAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/src/main/java/eu/metacloudservice/bungee/BungeeBootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/src/main/java/eu/metacloudservice/bungee/BungeeBootstrap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/src/main/java/eu/metacloudservice/bungee/listener/MotdListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/src/main/java/eu/metacloudservice/bungee/listener/MotdListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/src/main/java/eu/metacloudservice/bungee/listener/TabListListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/src/main/java/eu/metacloudservice/bungee/listener/TabListListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/src/main/java/eu/metacloudservice/velocity/VeloCityBootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/src/main/java/eu/metacloudservice/velocity/VeloCityBootstrap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/src/main/resources/module.properties" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/src/main/resources/module.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/src/main/resources/plugin.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-plugin/src/main/java/eu/metacloudservice/velocity/VelocityBootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-plugin/src/main/java/eu/metacloudservice/velocity/VelocityBootstrap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-plugin/src/main/resources/bungee.yml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-plugin/src/main/resources/bungee.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-plugin/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-plugin/src/main/resources/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/src/main/java/eu/metacloudservice/velocity/listener/MOTDListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/src/main/java/eu/metacloudservice/velocity/listener/MOTDListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/src/main/java/eu/metacloudservice/velocity/listener/TablistListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/src/main/java/eu/metacloudservice/velocity/listener/TablistListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-networking/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-networking/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-plugin/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-plugin/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-runnable/metacloud-manager/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-runnable/metacloud-manager/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-runnable/metacloud-node/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-runnable/metacloud-node/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-runnable/metacloud-node/src/main/java/eu/metacloudservice/node/CloudNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-runnable/metacloud-node/src/main/java/eu/metacloudservice/node/CloudNode.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,21 +64,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "D:/work/metacloud-project/MetaCloud/metacloud-api/src/main/java/eu/metacloudservice/async/pool",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/work/metacloud-project/MetaCloud/metacloud-api/src/main/java/eu/metacloudservice/async/pool&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="eu.metacloudservice.networking" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\work\metacloud-project\MetaCloud\metacloud-api\src\main\java\eu\metacloudservice\async\pool" />
       <recent name="D:\work\metacloud-project\MetaCloud\metacloud-modules\metamodule-discord\src\main\resources" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="eu.metacloudservice.config.migration" />
+      <recent name="eu.metacloudservice.config" />
     </key>
   </component>
   <component name="RunManager">

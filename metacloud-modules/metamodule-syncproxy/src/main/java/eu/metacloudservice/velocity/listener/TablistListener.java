@@ -11,6 +11,7 @@ import eu.metacloudservice.Driver;
 import eu.metacloudservice.config.Tablist;
 import eu.metacloudservice.velocity.VeloCityBootstrap;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -57,7 +58,6 @@ public class TablistListener {
                 try {
                     Tablist tab = VeloCityBootstrap.getInstance().configuration.getTablist().get(VeloCityBootstrap.getInstance().tabCount);
                     String[] config = readConfigs(tab, player);
-
                     player.getTabList().setHeaderAndFooter(Component.text(config[0]), Component.text(config[1]));
 
                 } catch (Exception ignored) {
