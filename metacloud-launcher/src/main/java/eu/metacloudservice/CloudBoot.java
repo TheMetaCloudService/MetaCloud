@@ -190,6 +190,8 @@ public class CloudBoot {
             new File("./modules/").mkdirs();
 
             new ModuleLoader().downloadAllModules();
+        }else {
+            new ModuleLoader().downloadAllModulesNeededModules();
         }
 
         if (new File("./service.json").exists()){
