@@ -34,8 +34,8 @@ public class MetaModule implements IModule {
             permission.add(new PermissionAble("*", true, "LIFETIME"));
             includedAbles.add(new IncludedAble("member", "LIFETIME"));
 
-            groups.add(new PermissionGroup("admin", false, 0,"§cAdmin §8| §7", "", permission, includedAbles));
-            groups.add(new PermissionGroup("member", true, 99,"§eMember §8| §7", "", new ArrayList<>(), new ArrayList<>()));
+            groups.add(new PermissionGroup("admin", false, 0,"§cAdmin §8| §7", "","", "", permission, includedAbles));
+            groups.add(new PermissionGroup("member", true, 99,"§eMember §8| §7", "", "", "", new ArrayList<>(), new ArrayList<>()));
 
             Configuration config = new Configuration(groups,  new ArrayList<>());
             new ConfigDriver("./modules/permissions/config.json").save(config);

@@ -23,6 +23,8 @@ public class PermissionGroup {
     private int tagPower;
     private String prefix;
     private String suffix;
+    private String display;
+    private String scoreboard;
     private ArrayList<PermissionAble> permissions;
     private ArrayList<IncludedAble> included;
 

@@ -62,7 +62,7 @@ public class AsyncPlayerPool {
 
 
     public boolean playerIsNotNull(@NonNull UUID uniqueId){
-        return connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.uniqueId().replace("-", "").equals(uniqueId.toString().replace("-", "")));
+        return connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.uniqueId().equals(uniqueId));
     }
 
     public boolean playerIsNotNull(@NonNull String username){
@@ -70,7 +70,7 @@ public class AsyncPlayerPool {
     }
 
     public void registerPlayer(@NonNull AsyncCloudPlayer asyncCloudPlayer){
-        if (connectedPlayers.stream().noneMatch(cloudPlayer1 -> cloudPlayer1.uniqueId().replace("-", "").equals(asyncCloudPlayer.uniqueId().replace("-", "")))){
+        if (connectedPlayers.stream().noneMatch(cloudPlayer1 -> cloudPlayer1.uniqueId().equals(asyncCloudPlayer.uniqueId()))){
             connectedPlayers.add(asyncCloudPlayer);
         }
     }

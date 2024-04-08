@@ -27,10 +27,10 @@ public class HandlePacketInPlayerConnect implements NettyAdaptor {
             if (!CloudManager.shutdown){
                 String service = ((PacketInPlayerConnect) packet).getProxy();
                 PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/genernal"), PlayerGeneral.class);
-                general.getCloudplayers().removeIf(s -> s.equalsIgnoreCase(UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName())));
-                general.getCloudplayers().add(UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()));
+                general.getCloudplayers().removeIf(s -> s.equalsIgnoreCase(UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()).toString()));
+                general.getCloudplayers().add(UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()).toString());
                 Driver.getInstance().getWebServer().updateRoute("/cloudplayer/genernal", new ConfigDriver().convert(general));
-                CloudPlayerRestCache cache = new CloudPlayerRestCache(((PacketInPlayerConnect) packet).getName(), UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()));
+                CloudPlayerRestCache cache = new CloudPlayerRestCache(((PacketInPlayerConnect) packet).getName(), UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()).toString());
                 cache.handleConnect(service);
                 cache.setCloudplayerservice("");
                 Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudplayer/" + UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()), (new RestDriver()).convert(cache)));
@@ -41,24 +41,25 @@ public class HandlePacketInPlayerConnect implements NettyAdaptor {
 
                 if (CloudManager.config.isShowConnectingPlayers()){
                     Driver.getInstance().getTerminalDriver().log(Type.NETWORK, Driver.getInstance().getLanguageDriver().getLang().getMessage("network-player-connect").replace("%player%", ((PacketInPlayerConnect) packet).getName())
-                            .replace("%uuid%", Objects.requireNonNull(UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()))).replace("%proxy%", ((PacketInPlayerConnect) packet).getProxy()));
+                            .replace("%uuid%", Objects.requireNonNull(UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()).toString())).replace("%proxy%", ((PacketInPlayerConnect) packet).getProxy()));
 
                 }
                 CloudManager.serviceDriver.getService(service).handelCloudPlayerConnection(true);
 
-                if (Driver.getInstance().getOfflinePlayerCacheDriver().readConfig().getPlayerCaches().stream().anyMatch(cp -> cp.getUniqueID().equalsIgnoreCase(UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName())))){
+                if (Driver.getInstance().getOfflinePlayerCacheDriver().readConfig().getPlayerCaches().stream().anyMatch(cp -> cp.getUniqueId().equals(UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName())))){
                     OfflinePlayerCacheConfiguration config = Driver.getInstance().getOfflinePlayerCacheDriver().readConfig();
-                    OfflinePlayerCache offlinePlayerCache = config.getPlayerCaches().stream().filter(cache1 -> cache1.getUniqueID().equalsIgnoreCase(UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()))).findFirst().orElse(null);
+                    OfflinePlayerCache offlinePlayerCache = config.getPlayerCaches().stream().filter(cache1 -> cache1.getUniqueId().equals(UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()))).findFirst().orElse(null);
                     assert offlinePlayerCache != null;
                     offlinePlayerCache.setLastConnected("NOW");
+                    offlinePlayerCache.setConnectionCount(offlinePlayerCache.getConnectionCount() + 1);
                     offlinePlayerCache.setUsername(((PacketInPlayerConnect) packet).getName());
                     offlinePlayerCache.setLastProxy(((PacketInPlayerConnect) packet).getProxy());
-                    config.getPlayerCaches().removeIf(c -> c.getUniqueID().equalsIgnoreCase(UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName())));
+                    config.getPlayerCaches().removeIf(c -> c.getUniqueId().equals(UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName())));
                     config.getPlayerCaches().add(offlinePlayerCache);
                     Driver.getInstance().getOfflinePlayerCacheDriver().saveConfig(config);
                 }else {
                     OfflinePlayerCacheConfiguration config = Driver.getInstance().getOfflinePlayerCacheDriver().readConfig();
-                    OfflinePlayerCache cache1 = new OfflinePlayerCache(((PacketInPlayerConnect) packet).getName(), UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()), String.valueOf(System.currentTimeMillis()),  "NOW", ((PacketInPlayerConnect) packet).getProxy(), "");
+                    OfflinePlayerCache cache1 = new OfflinePlayerCache(((PacketInPlayerConnect) packet).getName(), UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()), String.valueOf(System.currentTimeMillis()),  "NOW", ((PacketInPlayerConnect) packet).getProxy(), "",0, 0);
 
                     config.getPlayerCaches().add(cache1);
                     Driver.getInstance().getOfflinePlayerCacheDriver().saveConfig(config);

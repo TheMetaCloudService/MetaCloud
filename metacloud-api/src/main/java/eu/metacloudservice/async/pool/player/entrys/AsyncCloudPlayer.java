@@ -19,18 +19,19 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Comparator;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 
-public record AsyncCloudPlayer(String username, String uniqueId) {
+public record AsyncCloudPlayer(String username, UUID uniqueId) {
 
-    public AsyncCloudPlayer(@NonNull String username, @NonNull String uniqueId) {
+    public AsyncCloudPlayer(@NonNull String username, @NonNull UUID uniqueId) {
         this.username = username;
         this.uniqueId = uniqueId;
     }
 
-    public String getUniqueId(){
+    public UUID getUniqueId(){
         return this.uniqueId;
     }
     public String getUsername(){

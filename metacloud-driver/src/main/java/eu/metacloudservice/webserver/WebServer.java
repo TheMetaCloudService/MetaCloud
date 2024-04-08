@@ -100,9 +100,6 @@ public class WebServer {
     }
 
 
-
-
-
     public void addRoute(RouteEntry entry){
         ROUTES.add(entry);
     }

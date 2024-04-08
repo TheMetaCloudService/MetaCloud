@@ -161,7 +161,7 @@ public class CloudAPI {
                         getPlayerPool().registerPlayer(new CloudPlayer(s, Objects.requireNonNull(UUIDDriver.getUUID(s))));
                     }
                 });
-                getPlayerPool().getPlayers().stream().filter(cloudPlayer -> general.getCloudplayers().stream().noneMatch(s -> s.equalsIgnoreCase(cloudPlayer.getUniqueId()))).toList().forEach(cloudPlayer -> {
+                getPlayerPool().getPlayers().stream().filter(cloudPlayer -> general.getCloudplayers().stream().noneMatch(s -> s.equalsIgnoreCase(cloudPlayer.getUniqueId().toString()))).toList().forEach(cloudPlayer -> {
                     getPlayerPool().unregisterPlayer(cloudPlayer.getUniqueId());
                     getAsyncPlayerPool().unregisterPlayer(cloudPlayer.getUniqueId());
                 });

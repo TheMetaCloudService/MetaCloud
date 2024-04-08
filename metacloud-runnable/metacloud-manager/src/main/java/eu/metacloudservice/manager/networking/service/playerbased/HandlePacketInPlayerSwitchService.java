@@ -29,7 +29,7 @@ public class HandlePacketInPlayerSwitchService implements NettyAdaptor {
 
                 if (CloudManager.config.isShowConnectingPlayers()){
                     Driver.getInstance().getTerminalDriver().log(Type.NETWORK, Driver.getInstance().getLanguageDriver().getLang().getMessage("network-player-switch-server").replace("%player%", ((PacketInPlayerSwitchService) packet).getName())
-                            .replace("%uuid%", Objects.requireNonNull(UUIDDriver.getUUID(((PacketInPlayerSwitchService) packet).getName()))).replace("%service%", ((PacketInPlayerSwitchService) packet).getServer()));
+                            .replace("%uuid%", Objects.requireNonNull(Objects.requireNonNull(UUIDDriver.getUUID(((PacketInPlayerSwitchService) packet).getName())).toString())).replace("%service%", ((PacketInPlayerSwitchService) packet).getServer()));
                 }
 
                 if (!restCech.getCloudplayerservice().equalsIgnoreCase("") && restCech.getCloudplayerservice() != null){
@@ -49,11 +49,12 @@ public class HandlePacketInPlayerSwitchService implements NettyAdaptor {
                 Driver.getInstance().getWebServer().updateRoute("/cloudplayer/" + UUIDDriver.getUUID(((PacketInPlayerSwitchService) packet).getName()), (new RestDriver()).convert(restCech));
 
 
-                if (Driver.getInstance().getOfflinePlayerCacheDriver().readConfig().getPlayerCaches().stream().anyMatch(cp -> cp.getUniqueID().equalsIgnoreCase(UUIDDriver.getUUID(((PacketInPlayerSwitchService) packet).getName())))){
+                if (Driver.getInstance().getOfflinePlayerCacheDriver().readConfig().getPlayerCaches().stream().anyMatch(cp -> cp.getUniqueId().equals(UUIDDriver.getUUID(((PacketInPlayerSwitchService) packet).getName())))){
                     OfflinePlayerCacheConfiguration config = Driver.getInstance().getOfflinePlayerCacheDriver().readConfig();
-                    OfflinePlayerCache offlinePlayerCache = config.getPlayerCaches().stream().filter(cache1 -> cache1.getUniqueID().equalsIgnoreCase(UUIDDriver.getUUID(((PacketInPlayerSwitchService) packet).getName()))).findFirst().get();
+                    OfflinePlayerCache offlinePlayerCache = config.getPlayerCaches().stream().filter(cache1 -> cache1.getUniqueId().equals(UUIDDriver.getUUID(((PacketInPlayerSwitchService) packet).getName()))).findFirst().get();
                     offlinePlayerCache.setLastService(((PacketInPlayerSwitchService) packet).getServer());
-                    config.getPlayerCaches().removeIf(c -> c.getUniqueID().equalsIgnoreCase(UUIDDriver.getUUID(((PacketInPlayerSwitchService) packet).getName())));
+                    offlinePlayerCache.setServerSwitches(offlinePlayerCache.getServerSwitches() + 1);
+                    config.getPlayerCaches().removeIf(c -> c.getUniqueId().equals(UUIDDriver.getUUID(((PacketInPlayerSwitchService) packet).getName())));
                     config.getPlayerCaches().add(offlinePlayerCache);
                     Driver.getInstance().getOfflinePlayerCacheDriver().saveConfig(config);
                 }

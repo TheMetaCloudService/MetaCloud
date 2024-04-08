@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 
 @Getter
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 @AllArgsConstructor
 public class PermissionPlayer {
 
-    private String uuid;
+    private UUID uuid;
     private ArrayList<IncludedAble> groups = new ArrayList<>();
     private ArrayList<PermissionAble> permissions = new ArrayList<>();
 

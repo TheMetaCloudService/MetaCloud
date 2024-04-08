@@ -49,7 +49,7 @@ public class PermissionCommand extends PluginCommand {
         String PREFIX = messages.getMessages().get("prefix").replace("&", "§");
         if (args.length >= 2 && args[0].equalsIgnoreCase("user")) {
             String username = args[1];
-            if (CloudPermissionAPI.getInstance().getPlayers().stream().anyMatch(player -> player.getUuid().equalsIgnoreCase(UUIDDriver.getUUID(username)) )){
+            if (CloudPermissionAPI.getInstance().getPlayers().stream().anyMatch(player -> player.getUuid().equals(UUIDDriver.getUUID(username)) )){
                 PermissionPlayer pp = CloudPermissionAPI.getInstance().getPlayer(username);
                 if (args.length == 3 && args[2].equalsIgnoreCase("info")) {
                     // Implementiere Logik für "/permission user [user] info"#
@@ -251,7 +251,7 @@ public class PermissionCommand extends PluginCommand {
                   } else if (args.length == 3 && args[2].equalsIgnoreCase("create")) {
                     // Implementiere Logik für "/permission group [group] create"
                     if (!CloudPermissionAPI.getInstance().isGroupExists(groupName)){
-                        CloudPermissionAPI.getInstance().createGroup(new PermissionGroup(groupName, false, 99,"§b" +groupName + " §8| §7" ,"",new ArrayList<>(), new ArrayList<>()));
+                        CloudPermissionAPI.getInstance().createGroup(new PermissionGroup(groupName, false, 99,"§b" +groupName + " §8| §7" ,"", "", "",new ArrayList<>(), new ArrayList<>()));
                         if (veloPlayer != null)
                             veloPlayer.sendMessage(Component.text(PREFIX +  "The group '§f" + groupName + "§7' has been successfully created."));
                         else

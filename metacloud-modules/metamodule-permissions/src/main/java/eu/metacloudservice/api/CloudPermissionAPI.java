@@ -14,10 +14,7 @@ import eu.metacloudservice.timebaser.TimerBase;
 import eu.metacloudservice.timebaser.utils.TimeUtil;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.TimerTask;
+import java.util.*;
 
 public class CloudPermissionAPI {
     private static CloudPermissionAPI instance;
@@ -64,11 +61,11 @@ public class CloudPermissionAPI {
     }
 
     public PermissionPlayer getPlayer(@NotNull String username){
-        return getPlayers().stream().filter(permissionPlayer -> permissionPlayer.getUuid().equalsIgnoreCase(UUIDDriver.getUUID(username))).findFirst().orElse(null);
+        return getPlayers().stream().filter(permissionPlayer -> permissionPlayer.getUuid().equals(UUIDDriver.getUUID(username))).findFirst().orElse(null);
     }
 
-    public PermissionPlayer getPlayerByUUID(@NotNull String uuid){
-        return getPlayers().stream().filter(permissionPlayer -> permissionPlayer.getUuid().equalsIgnoreCase(uuid)).findFirst().orElse(null);
+    public PermissionPlayer getPlayer(@NotNull UUID uuid){
+        return getPlayers().stream().filter(permissionPlayer -> permissionPlayer.getUuid().equals(uuid)).findFirst().orElse(null);
     }
 
     public ArrayList<PermissionAble> getPermissionsFromPlayer(@NotNull String username){
@@ -80,13 +77,13 @@ public class CloudPermissionAPI {
 
     public ArrayList<PermissionAble> getPermissionsFormPlayerByUUID(@NotNull String uuid){
         ArrayList<PermissionAble> permissionAbles = new ArrayList<>();
-        getPlayerByUUID(uuid).getGroups().forEach(includedAble -> permissionAbles.addAll(getPermissionsFormGroup(includedAble.getGroup())));
-        permissionAbles.addAll(getPlayerByUUID(uuid).getPermissions());
+        getPlayer(uuid).getGroups().forEach(includedAble -> permissionAbles.addAll(getPermissionsFormGroup(includedAble.getGroup())));
+        permissionAbles.addAll(getPlayer(uuid).getPermissions());
         return permissionAbles;
     }
 
     public void setGroupToPlayer(String  uuid, String group, String time){
-       PermissionPlayer player = getPlayerByUUID(uuid);
+       PermissionPlayer player = getPlayer(uuid);
         if (isGroupExists(group)){
             player.getGroups().clear();
             player.getGroups().add(new IncludedAble(group, time));
@@ -97,9 +94,9 @@ public class CloudPermissionAPI {
     public boolean updatePlayer(@NotNull PermissionPlayer player){
         Configuration configuration = getConfig();
         if (configuration == null)return false;
-        else if (configuration.getPlayers().stream().noneMatch(player1 -> player1.getUuid().equalsIgnoreCase(player.getUuid()))) return false;
+        else if (configuration.getPlayers().stream().noneMatch(player1 -> player1.getUuid().equals(player.getUuid()))) return false;
         else {
-            configuration.getPlayers().removeIf(player1 -> player1.getUuid().equalsIgnoreCase(player.getUuid()));
+            configuration.getPlayers().removeIf(player1 -> player1.getUuid().equals(player.getUuid()));
             configuration.getPlayers().add(player);
             updateConfig(configuration);
             return true;

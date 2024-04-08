@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Comparator;
 import java.util.Random;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 public class CloudPlayer {
@@ -28,9 +29,9 @@ public class CloudPlayer {
     private final String username;
     
     @Getter
-    private final String uniqueId;
+    private final UUID uniqueId;
 
-    public CloudPlayer(@NonNull String username,@NonNull String uniqueId) {
+    public CloudPlayer(@NonNull String username,@NonNull UUID uniqueId) {
         this.username = username;
         this.uniqueId = uniqueId;
     }
