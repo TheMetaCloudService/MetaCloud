@@ -4,15 +4,19 @@ package eu.metacloudservice.async.pool.offlineplayer.entrys;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.UUID;
+
 @Getter
 @AllArgsConstructor
 public class AsyncOfflinePlayer {
 
     private String username;
-    private String uniqueID;
+    private UUID uniqueId;
     private String firstConnected;
     private String lastConnected;
     private String lastProxy;
     private String lastService;
+    private int connectionCount;
+    private int serverSwitches;
 
 }

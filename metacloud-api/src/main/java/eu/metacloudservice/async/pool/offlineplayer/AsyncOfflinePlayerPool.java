@@ -22,7 +22,7 @@ public class AsyncOfflinePlayerPool{
 
         OfflinePlayerCacheConfiguration configuration = (OfflinePlayerCacheConfiguration) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/offlinecache"), OfflinePlayerCacheConfiguration.class);
         configuration.getPlayerCaches().forEach(cache -> {
-            players.add(new AsyncOfflinePlayer(cache.getUsername(), cache.getUniqueID(), cache.getFirstConnected(), cache.getLastConnected(),cache.getLastProxy(),cache.getLastService()));
+            players.add(new AsyncOfflinePlayer(cache.getUsername(), cache.getUniqueId(), cache.getFirstConnected(), cache.getLastConnected(),cache.getLastProxy(),cache.getLastService(), cache.getConnectionCount(), cache.getServerSwitches()));
         });
         return players;
         });
@@ -42,7 +42,7 @@ public class AsyncOfflinePlayerPool{
     public CompletableFuture<AsyncOfflinePlayer> getAsyncOfflinePlayer(UUID uniqueID){
       return   CompletableFuture.supplyAsync(()-> {
           try {
-              return getAllAsyncOfflinePlayers().get().parallelStream().filter(AsyncOfflinePlayer -> AsyncOfflinePlayer.getUniqueID().equalsIgnoreCase(uniqueID.toString())).findFirst().orElse(null);
+              return getAllAsyncOfflinePlayers().get().parallelStream().filter(AsyncOfflinePlayer -> AsyncOfflinePlayer.getUniqueId().equals(uniqueID)).findFirst().orElse(null);
           } catch (InterruptedException | ExecutionException e) {
               throw new RuntimeException(e);
           }

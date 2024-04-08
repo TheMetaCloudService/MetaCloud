@@ -27,7 +27,7 @@ public class PlayerPool {
     }
 
     public CloudPlayer getPlayer(@NonNull UUID uniqueId){
-        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUniqueId().replace("-", "").equals(uniqueId.toString().replace("-", ""))).findFirst().orElse(null);
+        return connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString().replace("-", ""))).findFirst().orElse(null);
     }
 
     public List<CloudPlayer> getPlayersFromService(@NonNull String service){
@@ -67,7 +67,7 @@ public class PlayerPool {
     }
 
     public void registerPlayer(@NonNull CloudPlayer cloudPlayer){
-        if (connectedPlayers.stream().noneMatch(cloudPlayer1 -> cloudPlayer1.getUniqueId().replace("-", "").equals(cloudPlayer.getUniqueId().replace("-", "")))){
+        if (connectedPlayers.stream().noneMatch(cloudPlayer1 -> cloudPlayer1.getUniqueId().equals(cloudPlayer.getUniqueId()))){
             connectedPlayers.add(cloudPlayer);
         }
     }

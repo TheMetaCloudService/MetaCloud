@@ -20,7 +20,7 @@ public class OfflinePlayerPool{
 
         OfflinePlayerCacheConfiguration configuration = (OfflinePlayerCacheConfiguration) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/offlinecache"), OfflinePlayerCacheConfiguration.class);
         configuration.getPlayerCaches().forEach(cache -> {
-            players.add(new OfflinePlayer(cache.getUsername(), cache.getUniqueID(), cache.getFirstConnected(), cache.getLastConnected(),cache.getLastProxy(),cache.getLastService()));
+            players.add(new OfflinePlayer(cache.getUsername(), cache.getUniqueId(), cache.getFirstConnected(), cache.getLastConnected(),cache.getLastProxy(),cache.getLastService(), cache.getConnectionCount(), cache.getServerSwitches()));
         });
         return players;
     }
@@ -30,7 +30,7 @@ public class OfflinePlayerPool{
     }
 
     public OfflinePlayer getOfflinePlayer(UUID uniqueID){
-      return   getAllOfflinePlayers().stream().filter(offlinePlayer -> offlinePlayer.getUniqueID().equalsIgnoreCase(uniqueID.toString())).findFirst().orElse(null);
+      return   getAllOfflinePlayers().stream().filter(offlinePlayer -> offlinePlayer.getUniqueId().equals(uniqueID.toString())).findFirst().orElse(null);
     }
 
     public List<OfflinePlayer> getOfflinePlayerFromProxy(String proxy){
