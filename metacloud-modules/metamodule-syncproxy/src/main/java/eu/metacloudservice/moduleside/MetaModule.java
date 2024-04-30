@@ -74,6 +74,7 @@ public class MetaModule implements IModule {
                     maintenancePlayerInfo.add("  Developed by §8▷ §b§lRauchigesEtwas");
                     maintenancePlayerInfo.add("");
                     maintenanceLayout.setPlayerinfos(maintenancePlayerInfo);
+                    maintenanceLayout.setIcon("maintenance.png");
 
                     Motd maintenanceLayout02 = new Motd();
 
@@ -89,6 +90,7 @@ public class MetaModule implements IModule {
                     maintenancePlayerInfo02.add("  Developed by §8▷ §b§lRauchigesEtwas");
                     maintenancePlayerInfo02.add("");
                     maintenanceLayout02.setPlayerinfos(maintenancePlayerInfo02);
+                    maintenanceLayout02.setIcon("maintenance.png");
 
                     maintenance.add(maintenanceLayout);
                     maintenance.add(maintenanceLayout02);
@@ -107,6 +109,7 @@ public class MetaModule implements IModule {
                     defaultsPlayerInfo.add("  Developed by §8▷ §b§lRauchigesEtwas");
                     defaultsPlayerInfo.add("");
                     defaultsLayout.setPlayerinfos(defaultsPlayerInfo);
+                    defaultsLayout.setIcon("default.png");
                     Motd defaultsLayout02 = new Motd();
 
                     ArrayList<String> defaultsPlayerInfo02 = new ArrayList<>();
@@ -120,6 +123,7 @@ public class MetaModule implements IModule {
                     defaultsPlayerInfo02.add("  Developed by §8▷ §b§lRauchigesEtwas");
                     defaultsPlayerInfo02.add("");
                     defaultsLayout02.setPlayerinfos(defaultsPlayerInfo02);
+                    defaultsLayout02.setIcon("default.png");
 
                     defaults.add(defaultsLayout);
                     defaults.add(defaultsLayout02);
@@ -141,7 +145,6 @@ public class MetaModule implements IModule {
                     config.setMaintenancen(maintenance);
                     config.setTablist(tablist);
                     config.setDefaults(defaults);
-                    config.setServerIcon(new ServerIcon("maintenance.png", "default.png")); configs.add(config);
                     loader();
                 });
 
@@ -164,7 +167,7 @@ public class MetaModule implements IModule {
                 new ConfigDriver("./modules/syncproxy/config.json").save(configuration);
                 set();
                 update();
-            }else if (new File("./local/server-icon.png").exists()){
+            }else if (!new ConfigDriver("./modules/syncproxy/config.json").canBeRead(Configuration.class)){
                 new File("./local/server-icon.png").deleteOnExit();
                 MigrationConfiguration migrationConfiguration = (MigrationConfiguration) new ConfigDriver("./modules/syncproxy/config.json").read(MigrationConfiguration.class);
                 Configuration configuration = new Configuration();
@@ -172,10 +175,13 @@ public class MetaModule implements IModule {
                 migrationConfiguration.getConfiguration().forEach(designConfig -> {
                     DesignConfig config = new DesignConfig();
                     config.setTablist(designConfig.getTablist());
-                    config.setDefaults(designConfig.getDefaults());
-                    config.setMaintenancen(designConfig.getMaintenancen());
+                    ArrayList<Motd> defaults = new ArrayList<>();
+                    ArrayList<Motd> maintenance = new ArrayList<>();
+                    designConfig.getDefaults().forEach(mm -> defaults.add(new Motd(mm.getProtocol(),mm.getFirstline(), mm.getSecondline(),mm.getPlayerinfos(), "default.png")));
+                    designConfig.getMaintenancen().forEach(mm -> maintenance.add(new Motd(mm.getProtocol(),mm.getFirstline(),mm.getSecondline(),mm.getPlayerinfos(), "maintenance.png")));
+                    config.setDefaults(defaults);
+                    config.setMaintenancen(maintenance);
                     config.setTargetGroup(designConfig.getTargetGroup());
-                    config.setServerIcon(new ServerIcon("maintenance.png", "default.png"));
                     configs.add(config);
                 });
                 configuration.setConfiguration(configs);

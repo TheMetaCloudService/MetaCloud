@@ -10,6 +10,7 @@ import eu.metacloudservice.moduleside.config.Configuration;
 import eu.metacloudservice.moduleside.config.IncludedAble;
 import eu.metacloudservice.moduleside.config.PermissionAble;
 import eu.metacloudservice.moduleside.config.PermissionGroup;
+import eu.metacloudservice.moduleside.config.migrate.MigrationConfiguration;
 import eu.metacloudservice.moduleside.events.CloudEvents;
 import eu.metacloudservice.webserver.entry.RouteEntry;
 
@@ -39,6 +40,13 @@ public class MetaModule implements IModule {
 
             Configuration config = new Configuration(groups,  new ArrayList<>());
             new ConfigDriver("./modules/permissions/config.json").save(config);
+        }else if (!new ConfigDriver("./modules/permissions/config.json").canBeRead(Configuration.class)){
+            ArrayList<PermissionGroup> groups = new ArrayList<>();
+            MigrationConfiguration mc = (MigrationConfiguration) new ConfigDriver("./modules/permissions/config.json").read(MigrationConfiguration.class);
+            mc.getGroups().forEach(mp -> groups.add(new PermissionGroup(mp.getGroup(), mp.getIsDefault(), mp.getTagPower(), mp.getPrefix(), mp.getSuffix(), "", "", mp.getPermissions(), mp.getIncluded())));
+            Configuration configuration = new Configuration(groups, mc.getPlayers());
+            new File("./modules/permissions/config.json").deleteOnExit();
+            new ConfigDriver("./modules/permissions/config.json").save(configuration);
         }
 
 

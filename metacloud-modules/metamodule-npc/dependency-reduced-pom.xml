@@ -56,10 +56,6 @@
       <scope>provided</scope>
       <exclusions>
         <exclusion>
-          <artifactId>zip4j</artifactId>
-          <groupId>net.lingala.zip4j</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>lombok</artifactId>
           <groupId>org.projectlombok</groupId>
         </exclusion>

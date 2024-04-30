@@ -35,8 +35,9 @@ public class MotdListener  implements Listener {
             BungeeBootstrap bungeeBootstrap = BungeeBootstrap.getInstance();
             CloudAPI cloudAPI = CloudAPI.getInstance();
             int motdIndex = bungeeBootstrap.motdCount;
-            String icon =  bungeeBootstrap.group.isMaintenance() ? bungeeBootstrap.configuration.getServerIcon().getMaintenanceIcon() : bungeeBootstrap.configuration.getServerIcon().getDefaultIcon();
+
             Motd motd = bungeeBootstrap.group.isMaintenance() ? bungeeBootstrap.configuration.getMaintenancen().get(motdIndex) : bungeeBootstrap.configuration.getDefaults().get(motdIndex);
+            String icon = motd.getIcon();
             double memory = CloudAPI.getInstance().getUsedMemory();
             double maxMemory = CloudAPI.getInstance().getUsedMemory();
 

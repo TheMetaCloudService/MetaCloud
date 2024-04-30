@@ -16,7 +16,7 @@ import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.networking.packet.packets.in.service.playerbased.PacketInPlayerConnect;
 import eu.metacloudservice.networking.packet.packets.in.service.playerbased.PacketInPlayerDisconnect;
 import eu.metacloudservice.networking.packet.packets.in.service.playerbased.PacketInPlayerSwitchService;
-import eu.metacloudservice.pool.service.entrys.CloudService;
+import eu.metacloudservice.service.entrys.CloudService;
 import eu.metacloudservice.velocity.VelocityBootstrap;
 import net.kyori.adventure.text.Component;
 

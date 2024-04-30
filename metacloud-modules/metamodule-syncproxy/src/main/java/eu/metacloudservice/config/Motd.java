@@ -1,44 +1,20 @@
 package eu.metacloudservice.config;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import java.util.ArrayList;
 
+@Getter
+@Setter
+@AllArgsConstructor
 public class Motd {
 
     private String protocol;
     private String firstline;
     private String secondline;
     private ArrayList<String> playerinfos;
+    private String icon;
 
-
-    public String getProtocol() {
-        return protocol;
-    }
-
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
-    }
-
-    public String getFirstline() {
-        return firstline;
-    }
-
-    public void setFirstline(String firstline) {
-        this.firstline = firstline;
-    }
-
-    public String getSecondline() {
-        return secondline;
-    }
-
-    public void setSecondline(String secondline) {
-        this.secondline = secondline;
-    }
-
-    public ArrayList<String> getPlayerinfos() {
-        return playerinfos;
-    }
-
-    public void setPlayerinfos(ArrayList<String> playerinfos) {
-        this.playerinfos = playerinfos;
-    }
+    public Motd() {}
 }

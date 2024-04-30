@@ -5,16 +5,13 @@
 package eu.metacloudservice.bukkit.events;
 
 import dev.sergiferry.playernpc.api.NPC;
-import dev.sergiferry.playernpc.api.NPCLib;
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.api.ItemBuilder;
 import eu.metacloudservice.api.ServicePing;
 import eu.metacloudservice.bukkit.NPCBootstrap;
 import eu.metacloudservice.bukkit.cache.InventoryCache;
-import eu.metacloudservice.config.enums.ClickAction;
 import eu.metacloudservice.config.impli.NPCConfig;
-import eu.metacloudservice.config.impli.NPCLocation;
-import eu.metacloudservice.pool.service.entrys.CloudService;
+import eu.metacloudservice.service.entrys.CloudService;
 import eu.metacloudservice.process.ServiceState;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -23,13 +20,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Events implements Listener {
 

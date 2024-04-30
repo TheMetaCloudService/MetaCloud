@@ -32,7 +32,7 @@ public class MOTDListener {
             CloudAPI cloudAPI = CloudAPI.getInstance();
             int motdIndex = bungeeBootstrap.motdCount;
             Motd motd = bungeeBootstrap.group.isMaintenance() ? bungeeBootstrap.configuration.getMaintenancen().get(motdIndex) : bungeeBootstrap.configuration.getDefaults().get(motdIndex);
-            String icon =  bungeeBootstrap.group.isMaintenance() ? bungeeBootstrap.configuration.getServerIcon().getMaintenanceIcon() : bungeeBootstrap.configuration.getServerIcon().getDefaultIcon();
+            String icon = motd.getIcon();
 
             String protocol = motd.getProtocol() != null && !motd.getProtocol().isEmpty() ?
            motd.getProtocol()

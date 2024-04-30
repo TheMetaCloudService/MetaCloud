@@ -3,7 +3,7 @@ package eu.metacloudservice.serverside.bukkit.entry;
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.api.ServicePing;
 import eu.metacloudservice.config.SignLayout;
-import eu.metacloudservice.pool.service.entrys.CloudService;
+import eu.metacloudservice.service.entrys.CloudService;
 import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.serverside.bukkit.SignBootstrap;
 import org.bukkit.*;

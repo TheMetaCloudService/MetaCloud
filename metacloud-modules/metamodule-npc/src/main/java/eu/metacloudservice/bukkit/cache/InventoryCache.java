@@ -4,7 +4,7 @@
 
 package eu.metacloudservice.bukkit.cache;
 
-import eu.metacloudservice.pool.service.entrys.CloudService;
+import eu.metacloudservice.service.entrys.CloudService;
 
 import java.util.HashMap;
 import java.util.UUID;

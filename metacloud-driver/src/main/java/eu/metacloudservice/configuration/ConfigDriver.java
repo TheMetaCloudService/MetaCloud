@@ -1,6 +1,9 @@
 package eu.metacloudservice.configuration;
 
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,19 +18,21 @@ public class ConfigDriver {
 
     protected static final Gson GSON = (new GsonBuilder()).serializeNulls().setPrettyPrinting().disableHtmlEscaping().create();
     private String location;
+    private ObjectMapper mapper;
 
     public ConfigDriver(String location) {
         this.location = location;
+        this.mapper = new ObjectMapper();
     }
 
     public ConfigDriver() {
+        this.location = "";
+        this.mapper = new ObjectMapper();
     }
 
     @SneakyThrows
     public IConfigAdapter read(Class<? extends IConfigAdapter> tClass){
-
         try (InputStream inputStream = new FileInputStream(this.location)) {
-            ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             return mapper.readValue(inputStream, tClass);
         } catch (IOException e) {
@@ -39,11 +44,21 @@ public class ConfigDriver {
         return new File(this.location).exists();
     }
 
+
+
+    public boolean canBeRead(Class<? extends IConfigAdapter> tClass){
+        try {
+            Object obj = this.mapper.readValue(new File(this.location), tClass);
+            return true;
+        } catch (Exception exception){
+            return false;
+        }
+    }
+
     @SneakyThrows
     public IConfigAdapter convert(String json, Class<? extends IConfigAdapter> tClass){
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return objectMapper.readValue(json, tClass);
+            return mapper.readValue(json, tClass);
         } catch (IOException e) {
             e.printStackTrace();
             throw e;

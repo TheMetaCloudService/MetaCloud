@@ -1,11 +1,11 @@
 package eu.metacloudservice.networking;
 
 import eu.metacloudservice.CloudAPI;
-import eu.metacloudservice.async.pool.service.entrys.AsyncCloudService;
+import eu.metacloudservice.service.async.entrys.AsyncCloudService;
 import eu.metacloudservice.events.listeners.services.CloudProxyConnectedEvent;
 import eu.metacloudservice.events.listeners.services.CloudServiceConnectedEvent;
 import eu.metacloudservice.networking.packet.packets.out.service.PacketOutServiceConnected;
-import eu.metacloudservice.pool.service.entrys.CloudService;
+import eu.metacloudservice.service.entrys.CloudService;
 import io.netty.channel.Channel;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;

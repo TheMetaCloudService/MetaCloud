@@ -43,7 +43,7 @@ public class PlayersCommand extends CommandAdapter {
         }else {
             if (args.length == 1){
                 PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/genernal"), PlayerGeneral.class);
-                if (general.getCloudplayers().stream().anyMatch(s -> s.equalsIgnoreCase(UUIDDriver.getUUID(args[0])))){
+                if (general.getCloudplayers().stream().anyMatch(s -> s.equalsIgnoreCase(Objects.requireNonNull(UUIDDriver.getUUID(args[0])).toString()))){
                     CloudPlayerRestCache player = (CloudPlayerRestCache)(new RestDriver()).convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/" + UUIDDriver.getUUID(args[0])), CloudPlayerRestCache.class);
                     Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "name: " + player.getCloudplayername());
                     Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "uuid: " + player.getCloudplayeruuid());
@@ -75,7 +75,7 @@ public class PlayersCommand extends CommandAdapter {
                     }
                 }else if (args[1].equalsIgnoreCase("sendMessage")){
                     PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/genernal"), PlayerGeneral.class);
-                    if (general.getCloudplayers().stream().anyMatch(s -> s.equalsIgnoreCase(UUIDDriver.getUUID(args[0])))){
+                    if (general.getCloudplayers().stream().anyMatch(s -> s.equalsIgnoreCase(Objects.requireNonNull(UUIDDriver.getUUID(args[0])).toString()))){
                         if (args.length >= 3) {
                             CloudPlayerRestCache player = (CloudPlayerRestCache)(new RestDriver()).convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/" + UUIDDriver.getUUID(args[0])), CloudPlayerRestCache.class);
                             String message = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
@@ -92,7 +92,7 @@ public class PlayersCommand extends CommandAdapter {
                     }
                 }else if (args[1].equalsIgnoreCase("connect")){
                     PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/genernal"), PlayerGeneral.class);
-                    if (general.getCloudplayers().stream().anyMatch(s -> s.equalsIgnoreCase(UUIDDriver.getUUID(args[0])))){
+                    if (general.getCloudplayers().stream().anyMatch(s -> s.equalsIgnoreCase(Objects.requireNonNull(UUIDDriver.getUUID(args[0])).toString()))){
                         if (args.length == 3) {
                             CloudPlayerRestCache player = (CloudPlayerRestCache)(new RestDriver()).convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/" + UUIDDriver.getUUID(args[0])), CloudPlayerRestCache.class);
 
@@ -109,7 +109,7 @@ public class PlayersCommand extends CommandAdapter {
 
                 }else if (args[1].equalsIgnoreCase("op")) {
                     PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/genernal"), PlayerGeneral.class);
-                    if (general.getCloudplayers().stream().anyMatch(s -> s.equalsIgnoreCase(UUIDDriver.getUUID(args[0])))){
+                    if (general.getCloudplayers().stream().anyMatch(s -> s.equalsIgnoreCase(Objects.requireNonNull(UUIDDriver.getUUID(args[0])).toString()))){
                         if (args.length == 2) {
                             CloudPlayerRestCache player = (CloudPlayerRestCache)(new RestDriver()).convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/" + UUIDDriver.getUUID(args[0])), CloudPlayerRestCache.class);
                             CloudManager.serviceDriver.getService(player.getCloudplayerservice()).handelExecute("op " + player.getCloudplayername());
@@ -125,7 +125,7 @@ public class PlayersCommand extends CommandAdapter {
                 }else if (args[1].equalsIgnoreCase("deop")) {
 
                     PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/genernal"), PlayerGeneral.class);
-                    if (general.getCloudplayers().stream().anyMatch(s -> s.equalsIgnoreCase(UUIDDriver.getUUID(args[0])))){
+                    if (general.getCloudplayers().stream().anyMatch(s -> s.equalsIgnoreCase(Objects.requireNonNull(UUIDDriver.getUUID(args[0])).toString()))){
                         if (args.length == 2) {
                             CloudPlayerRestCache player = (CloudPlayerRestCache)(new RestDriver()).convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/" + UUIDDriver.getUUID(args[0])), CloudPlayerRestCache.class);
                             CloudManager.serviceDriver.getService(player.getCloudplayerservice()).handelExecute("deop " + player.getCloudplayername());
@@ -150,7 +150,7 @@ public class PlayersCommand extends CommandAdapter {
         if (args.length == 0){
             returns.add("list");
             PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(Driver.getInstance().getWebServer().getRoute("/cloudplayer/genernal"), PlayerGeneral.class);
-            general.getCloudplayers().forEach(s -> returns.add(UUIDDriver.getUsername(s)));
+            general.getCloudplayers().forEach(s -> returns.add(UUIDDriver.getUsername(UUID.fromString(s))));
         }else if (args.length == 1){
             if (!args[0].equalsIgnoreCase("list")){
                 returns.add("kick");

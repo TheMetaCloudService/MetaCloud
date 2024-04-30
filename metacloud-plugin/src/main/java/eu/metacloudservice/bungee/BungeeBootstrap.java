@@ -9,7 +9,7 @@ import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.networking.NettyDriver;
-import eu.metacloudservice.pool.service.entrys.CloudService;
+import eu.metacloudservice.service.entrys.CloudService;
 import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.subcommands.*;
 import eu.metacloudservice.timebaser.TimerBase;
@@ -111,7 +111,7 @@ public class BungeeBootstrap extends Plugin {
         services.forEach( service -> priority.add(service.getGroup().getPriority()));
         priority.sort(Collections.reverseOrder());
         int priorty = priority.get(0);
-        List<CloudService> lobbys = services.stream().filter(service -> service.getGroup().getPriority() == priorty).collect(Collectors.toList());
+        List<CloudService> lobbys = services.stream().filter(service -> service.getGroup().getPriority() == priorty).toList();
         if (lobbys.size() == 0){
             return null;
         }

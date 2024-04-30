@@ -13,12 +13,10 @@ import eu.metacloudservice.events.listeners.player.CloudPlayerConnectedEvent;
 import eu.metacloudservice.events.listeners.player.CloudPlayerSwitchEvent;
 import eu.metacloudservice.events.listeners.restapi.CloudRestAPIPutEvent;
 import eu.metacloudservice.moduleside.config.*;
-import eu.metacloudservice.pool.player.entrys.CloudPlayer;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class CloudEvents implements ICloudListener {
@@ -36,7 +34,7 @@ public class CloudEvents implements ICloudListener {
 
         Configuration config = (Configuration) new ConfigDriver("./modules/permissions/config.json").read(Configuration.class);
 
-        if (config.getPlayers().stream().noneMatch(permissionPlayer -> permissionPlayer.getUuid().equalsIgnoreCase(event.getUniqueId()))){
+        if (config.getPlayers().stream().noneMatch(permissionPlayer -> permissionPlayer.getUuid().equals(event.getUniqueId()))){
 
 
             ArrayList<IncludedAble> ables = new ArrayList<>();
@@ -72,7 +70,7 @@ public class CloudEvents implements ICloudListener {
                 }
             }).toList();
 
-            updateGroup.add( new PermissionGroup(permissionGroup.getGroup(), permissionGroup.getIsDefault(), permissionGroup.getTagPower(), permissionGroup.getPrefix(), permissionGroup.getSuffix(), permissionAbles, includedAbles));
+            updateGroup.add( new PermissionGroup(permissionGroup.getGroup(), permissionGroup.getIsDefault(), permissionGroup.getTagPower(), permissionGroup.getPrefix(), permissionGroup.getSuffix(), permissionGroup.getDisplay(), permissionGroup.getScoreboard(), permissionAbles, includedAbles));
         });
 
         config.getGroups().clear();
@@ -88,8 +86,8 @@ public class CloudEvents implements ICloudListener {
     @Subscribe(priority = Priority.HIGHEST)
     public void handelConnect(CloudPlayerSwitchEvent event){
         Configuration config = (Configuration) new ConfigDriver("./modules/permissions/config.json").read(Configuration.class);
-        if (config.getPlayers().stream().anyMatch(permissionPlayer -> permissionPlayer.getUuid().equalsIgnoreCase(event.getUniqueId()))){
-            PermissionPlayer player = config.getPlayers().stream().filter(permissionPlayer -> permissionPlayer.getUuid().equalsIgnoreCase(event.getUniqueId())).findFirst().orElse(null);
+        if (config.getPlayers().stream().anyMatch(permissionPlayer -> permissionPlayer.getUuid().equals(event.getUniqueId()))){
+            PermissionPlayer player = config.getPlayers().stream().filter(permissionPlayer -> permissionPlayer.getUuid().equals(event.getUniqueId())).findFirst().orElse(null);
             if (player == null) return;
             ArrayList<IncludedAble> newGroup = (ArrayList<IncludedAble>) player.getGroups().stream().filter(includedAble -> {
                 if (includedAble.getTime().equalsIgnoreCase("LIFETIME")){
@@ -117,7 +115,7 @@ public class CloudEvents implements ICloudListener {
                 config.getGroups().stream().filter(PermissionGroup::getIsDefault).toList().forEach(permissionGroup -> newGroup.add(new IncludedAble(permissionGroup.getGroup(), "LIFETIME")));
             }
 
-            config.getPlayers().removeIf(permissionPlayer -> permissionPlayer.getUuid().equalsIgnoreCase(event.getUniqueId()));
+            config.getPlayers().removeIf(permissionPlayer -> permissionPlayer.getUuid().equals(event.getUniqueId()));
             config.getPlayers().add(new PermissionPlayer(event.getUniqueId(), newGroup, newAble));
             new ConfigDriver("./modules/permissions/config.json").save(config);
             Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(new ConfigDriver("./modules/permissions/config.json").read(Configuration.class)));
@@ -149,7 +147,7 @@ public class CloudEvents implements ICloudListener {
                 }
             }).toList();
 
-            updateGroup.add( new PermissionGroup(permissionGroup.getGroup(), permissionGroup.getIsDefault(), permissionGroup.getTagPower(), permissionGroup.getPrefix(), permissionGroup.getSuffix(), permissionAbles, includedAbles));
+            updateGroup.add( new PermissionGroup(permissionGroup.getGroup(), permissionGroup.getIsDefault(), permissionGroup.getTagPower(), permissionGroup.getPrefix(), permissionGroup.getSuffix(), permissionGroup.getDisplay(), permissionGroup.getScoreboard(), permissionAbles, includedAbles));
         });
 
         config.getGroups().clear();

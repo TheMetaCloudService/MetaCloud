@@ -39,7 +39,7 @@ public class PermissionCommand extends CommandAdapter {
         Configuration configuration = (Configuration) new ConfigDriver("./modules/permissions/config.json").read(Configuration.class);
         if (args.length >= 2 && args[0].equalsIgnoreCase("user")) {
             String username = args[1];
-            if (CloudPermissionAPI.getInstance().getPlayers().stream().anyMatch(player -> player.getUuid().equalsIgnoreCase(UUIDDriver.getUUID(username)) )){
+            if (CloudPermissionAPI.getInstance().getPlayers().stream().anyMatch(player -> player.getUuid().equals(UUIDDriver.getUUID(username)) )){
                 PermissionPlayer pp = CloudPermissionAPI.getInstance().getPlayer(username);
                 if (args.length == 3 && args[2].equalsIgnoreCase("info")) {
                     // Implementiere Logik für "/permission user [user] info"#
@@ -65,7 +65,7 @@ public class PermissionCommand extends CommandAdapter {
                         }
 
                         pp.getPermissions().add(new PermissionAble(permission, value, time));
-                        configuration.getPlayers().removeIf(permissionPlayer -> permissionPlayer.getUuid().equalsIgnoreCase(UUIDDriver.getUUID(username)));
+                        configuration.getPlayers().removeIf(permissionPlayer -> permissionPlayer.getUuid().equals(UUIDDriver.getUUID(username)));
                         configuration.getPlayers().add(pp);
                         new ConfigDriver("./modules/permissions/config.json").save(configuration);
                         Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
@@ -81,7 +81,7 @@ public class PermissionCommand extends CommandAdapter {
                     // Implementiere Logik für "/permission user [user] perm remove [permission]"
                     if (pp.getPermissions().stream().anyMatch(permissionAble -> permissionAble.getPermission().equalsIgnoreCase(permission))){
                         pp.getPermissions().removeIf(permissionAble -> permissionAble.getPermission().equalsIgnoreCase(permission));
-                        configuration.getPlayers().removeIf(permissionPlayer -> permissionPlayer.getUuid().equalsIgnoreCase(UUIDDriver.getUUID(username)));
+                        configuration.getPlayers().removeIf(permissionPlayer -> permissionPlayer.getUuid().equals(UUIDDriver.getUUID(username)));
                         configuration.getPlayers().add(pp);
                         new ConfigDriver("./modules/permissions/config.json").save(configuration);
                         Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
@@ -112,7 +112,7 @@ public class PermissionCommand extends CommandAdapter {
                         }
                         pp.getGroups().clear();
                         pp.getGroups().add(new IncludedAble(group, time));
-                        configuration.getPlayers().removeIf(permissionPlayer -> permissionPlayer.getUuid().equalsIgnoreCase(UUIDDriver.getUUID(username)));
+                        configuration.getPlayers().removeIf(permissionPlayer -> permissionPlayer.getUuid().equals(UUIDDriver.getUUID(username)));
                         configuration.getPlayers().add(pp);
                         new ConfigDriver("./modules/permissions/config.json").save(configuration);
                         Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
@@ -139,7 +139,7 @@ public class PermissionCommand extends CommandAdapter {
                         }
 
                         pp.getGroups().add(new IncludedAble(group, time));
-                        configuration.getPlayers().removeIf(permissionPlayer -> permissionPlayer.getUuid().equalsIgnoreCase(UUIDDriver.getUUID(username)));
+                        configuration.getPlayers().removeIf(permissionPlayer -> permissionPlayer.getUuid().equals(UUIDDriver.getUUID(username)));
                         configuration.getPlayers().add(pp);
                         new ConfigDriver("./modules/permissions/config.json").save(configuration);
                         Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
@@ -168,7 +168,7 @@ public class PermissionCommand extends CommandAdapter {
                             groups.addAll(CloudPermissionAPI.getInstance().getGroups().stream().filter(PermissionGroup::getIsDefault).map(PermissionGroup::getGroup).toList());
                             groups.forEach(permissionGroup -> pp.getGroups().add(new IncludedAble(permissionGroup, "LIFETIME")));
                         }
-                        configuration.getPlayers().removeIf(permissionPlayer -> permissionPlayer.getUuid().equalsIgnoreCase(UUIDDriver.getUUID(username)));
+                        configuration.getPlayers().removeIf(permissionPlayer -> permissionPlayer.getUuid().equals(UUIDDriver.getUUID(username)));
                         configuration.getPlayers().add(pp);
                         new ConfigDriver("./modules/permissions/config.json").save(configuration);
                         Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
@@ -231,7 +231,7 @@ public class PermissionCommand extends CommandAdapter {
                 } else if (args.length == 3 && args[2].equalsIgnoreCase("create")) {
                     // Implementiere Logik für "/permission group [group] create"
                     if (!CloudPermissionAPI.getInstance().isGroupExists(groupName)){
-                        configuration.getGroups().add(new PermissionGroup(args[1], false, 99,"&b" +groupName + " &8| &7" ,"",new ArrayList<>(), new ArrayList<>()));
+                        configuration.getGroups().add(new PermissionGroup(args[1], false, 99,"&b" +groupName + " &8| &7" ,"", "", "",new ArrayList<>(), new ArrayList<>()));
                         new ConfigDriver("./modules/permissions/config.json").save(configuration);
                         Driver.getInstance().getWebServer().updateRoute("/module/permission/configuration", new ConfigDriver().convert(configuration));
                         Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-permission-group-create" )

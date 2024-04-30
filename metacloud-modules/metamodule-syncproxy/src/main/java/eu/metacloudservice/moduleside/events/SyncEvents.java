@@ -49,6 +49,7 @@ public class SyncEvents implements ICloudListener {
             maintenancePlayerInfo.add("  Developed by §8▷ §b§lRauchigesEtwas");
             maintenancePlayerInfo.add("");
             maintenanceLayout.setPlayerinfos(maintenancePlayerInfo);
+            maintenanceLayout.setIcon("maintenance.png");
 
             Motd maintenanceLayout02 = new Motd();
 
@@ -64,6 +65,7 @@ public class SyncEvents implements ICloudListener {
             maintenancePlayerInfo02.add("  Developed by §8▷ §b§lRauchigesEtwas");
             maintenancePlayerInfo02.add("");
             maintenanceLayout02.setPlayerinfos(maintenancePlayerInfo02);
+            maintenanceLayout02.setIcon("maintenance.png");
 
             maintenance.add(maintenanceLayout02);
 
@@ -81,6 +83,7 @@ public class SyncEvents implements ICloudListener {
             defaultsPlayerInfo.add("  Developed by §8▷ §b§lRauchigesEtwas");
             defaultsPlayerInfo.add("");
             defaultsLayout.setPlayerinfos(defaultsPlayerInfo);
+            defaultsLayout.setIcon("default.png");
             Motd defaultsLayout02 = new Motd();
 
             ArrayList<String> defaultsPlayerInfo02 = new ArrayList<>();
@@ -94,6 +97,7 @@ public class SyncEvents implements ICloudListener {
             defaultsPlayerInfo02.add("  Developed by §8▷ §b§lRauchigesEtwas");
             defaultsPlayerInfo02.add("");
             defaultsLayout02.setPlayerinfos(defaultsPlayerInfo02);
+            defaultsLayout02.setIcon("default.png");
 
             defaults.add(defaultsLayout);
             defaults.add(defaultsLayout02);
@@ -115,7 +119,6 @@ public class SyncEvents implements ICloudListener {
             config.setMaintenancen(maintenance);
             config.setTablist(tablist);
             config.setDefaults(defaults);
-            config.setServerIcon(new ServerIcon("maintenance.png", "default.png"));
 
 
             configuration.getConfiguration().add(config);

@@ -1,13 +1,13 @@
 package eu.metacloudservice.networking;
 
 import eu.metacloudservice.CloudAPI;
-import eu.metacloudservice.async.pool.player.entrys.AsyncCloudPlayer;
+import eu.metacloudservice.player.async.entrys.AsyncCloudPlayer;
 import eu.metacloudservice.events.listeners.player.CloudPlayerConnectedEvent;
 import eu.metacloudservice.events.listeners.player.CloudPlayerSwitchEvent;
 import eu.metacloudservice.networking.packet.NettyAdaptor;
 import eu.metacloudservice.networking.packet.Packet;
 import eu.metacloudservice.networking.packet.packets.out.service.playerbased.PacketOutPlayerSwitchService;
-import eu.metacloudservice.pool.player.entrys.CloudPlayer;
+import eu.metacloudservice.player.entrys.CloudPlayer;
 import eu.metacloudservice.storage.UUIDDriver;
 import io.netty.channel.Channel;
 

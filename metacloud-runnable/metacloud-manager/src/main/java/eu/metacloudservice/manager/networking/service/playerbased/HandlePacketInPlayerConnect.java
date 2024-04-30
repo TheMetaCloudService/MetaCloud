@@ -20,6 +20,8 @@ import eu.metacloudservice.webserver.entry.RouteEntry;
 import io.netty.channel.Channel;
 
 import java.util.Objects;
+import java.util.UUID;
+
 public class HandlePacketInPlayerConnect implements NettyAdaptor {
     @Override
     public void handle(Channel channel, Packet packet) {
@@ -51,6 +53,7 @@ public class HandlePacketInPlayerConnect implements NettyAdaptor {
                     OfflinePlayerCache offlinePlayerCache = config.getPlayerCaches().stream().filter(cache1 -> cache1.getUniqueId().equals(UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()))).findFirst().orElse(null);
                     assert offlinePlayerCache != null;
                     offlinePlayerCache.setLastConnected("NOW");
+                    offlinePlayerCache.setUniqueId(UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()));
                     offlinePlayerCache.setConnectionCount(offlinePlayerCache.getConnectionCount() + 1);
                     offlinePlayerCache.setUsername(((PacketInPlayerConnect) packet).getName());
                     offlinePlayerCache.setLastProxy(((PacketInPlayerConnect) packet).getProxy());

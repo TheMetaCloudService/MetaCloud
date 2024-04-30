@@ -1,6 +1,5 @@
 package eu.metacloudservice.config.migration;
 
-import eu.metacloudservice.config.Motd;
 import eu.metacloudservice.config.Tablist;
 
 import java.util.ArrayList;
@@ -11,8 +10,8 @@ public class MigrationDesignConfig {
     private String targetGroup;
     private boolean motdEnabled;
     private boolean tabEnabled;
-    private ArrayList<Motd> maintenancen;
-    private ArrayList<Motd> defaults;
+    private ArrayList<MigrationMotd> maintenancen;
+    private ArrayList<MigrationMotd> defaults;
     private ArrayList<Tablist> tablist;
 
     public MigrationDesignConfig() {
@@ -44,18 +43,18 @@ public class MigrationDesignConfig {
         this.tabEnabled = tabEnabled;
     }
 
-    public ArrayList<Motd> getMaintenancen() {
+    public ArrayList<MigrationMotd> getMaintenancen() {
         return maintenancen;
     }
-    public void setMaintenancen(ArrayList<Motd> maintenancen) {
+    public void setMaintenancen(ArrayList<MigrationMotd> maintenancen) {
         this.maintenancen = maintenancen;
     }
 
-    public ArrayList<Motd> getDefaults() {
+    public ArrayList<MigrationMotd> getDefaults() {
         return defaults;
     }
 
-    public void setDefaults(ArrayList<Motd> defaults) {
+    public void setDefaults(ArrayList<MigrationMotd> defaults) {
         this.defaults = defaults;
     }
 
