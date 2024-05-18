@@ -122,9 +122,8 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
     }
 
     public void sendToAllAsynchronous(final Packet packet){
-        new Thread(() -> {
+         new Thread(() -> {
             this.CHANNELS.forEach((s, channel) -> channel.writeAndFlush(packet));
-            Thread.currentThread().stop();
         }).start();
     }
     public void sendPacketSynchronized(final String channel, final Packet packet){
@@ -134,7 +133,7 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
     public void sendPacketAsynchronous(final String channel, final Packet packet){
         new Thread(() -> {
             this.CHANNELS.get(channel).writeAndFlush(packet);
-            Thread.currentThread().stop();
+
         }).start();
     }
 
@@ -147,7 +146,7 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
         new Thread(() -> {
             for (Packet packet : packets)
                 this.CHANNELS.get(channel).writeAndFlush(packet);
-            Thread.currentThread().stop();
+
         }).start();
     }
 
