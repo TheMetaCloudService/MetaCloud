@@ -148,7 +148,6 @@ public class CloudManager implements IRunAble {
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new HelpCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new GroupCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new ClearCommand());
-        Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new PasteCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new StopCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new ServiceCommand());
         Driver.getInstance().getTerminalDriver().getCommandDriver().registerCommand(new NodeCommand());
