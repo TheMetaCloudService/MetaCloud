@@ -14,21 +14,18 @@ import eu.metacloudservice.config.IconBase;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.groups.dummy.Group;
-import eu.metacloudservice.moduleside.converter.IconConverter;
+import eu.metacloudservice.moduleside.translate.Translator;
 import eu.metacloudservice.velocity.listener.CloudEventHandler;
 import eu.metacloudservice.velocity.listener.MOTDListener;
 import eu.metacloudservice.velocity.listener.TablistListener;
 import eu.metacloudservice.webserver.RestDriver;
-import lombok.Getter;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-@Plugin(id = "syncproxy", name = "metacloud-syncproxy", version = "1.0.9-RELEASE", authors = "RauchigesEtwas",dependencies = {@Dependency(id = "metacloudapi"), @Dependency(id = "metacloudplugin")})
+@Plugin(id = "syncproxy", name = "metacloud-syncproxy", version = "1.1.0-RELEASE", authors = "RauchigesEtwas",dependencies = {@Dependency(id = "metacloudapi"), @Dependency(id = "metacloudplugin", optional = true)})
 public class VeloCityBootstrap {
 
     private static VeloCityBootstrap instance;
@@ -41,6 +38,10 @@ public class VeloCityBootstrap {
     public Group group;
     public IconBase iconBase;
     public Integer tabCount;
+
+    public Translator translator;
+
+    public MiniMessage message;
 
     @Inject
     public VeloCityBootstrap(ProxyServer proxyServer) {
@@ -55,13 +56,14 @@ public class VeloCityBootstrap {
         tabCount = 0;
         motdCount = 0;
 
-
         liveService = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
-        group = CloudAPI.getInstance().getGroupPool().getGroup(getLiveService().getGroup());
         restDriver = new RestDriver(liveService.getManagerAddress(), liveService.getRestPort());
-        CloudAPI.getInstance().getEventDriver().registerListener(new CloudEventHandler());
         proxyServer.getEventManager().register(instance, new MOTDListener());
         proxyServer.getEventManager().register(instance, new TablistListener(proxyServer));
+        this.message = MiniMessage.miniMessage();
+        this.translator = new Translator();
+        CloudAPI.getInstance().getEventDriver().registerListener(new CloudEventHandler());
+
         updater();
     }
 
@@ -102,7 +104,9 @@ public class VeloCityBootstrap {
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(() -> {
             iconBase = (IconBase) new ConfigDriver().convert(getRestDriver().get("/module/syncproxy/icons"), IconBase.class);
+            if (iconBase == null) return;
             conf = (Configuration) new ConfigDriver().convert(getRestDriver().get("/module/syncproxy/configuration"), Configuration.class);
+            if (conf == null) return;
             conf.getConfiguration().stream()
                     .filter(designConfig -> designConfig.getTargetGroup().equalsIgnoreCase(liveService.getGroup()))
                     .findFirst()

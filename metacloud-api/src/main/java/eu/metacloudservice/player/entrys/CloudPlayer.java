@@ -23,17 +23,20 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class CloudPlayer {
+public record CloudPlayer(String username, UUID uniqueId) {
 
-    @Getter
-    private final String username;
-    
-    @Getter
-    private final UUID uniqueId;
+
 
     public CloudPlayer(@NonNull String username,@NonNull UUID uniqueId) {
         this.username = username;
         this.uniqueId = uniqueId;
+    }
+
+    public UUID getUniqueId(){
+        return this.uniqueId;
+    }
+    public String getUsername(){
+        return this.username;
     }
 
     public void performMore(Consumer<CloudPlayer> cloudPlayerConsumer) {

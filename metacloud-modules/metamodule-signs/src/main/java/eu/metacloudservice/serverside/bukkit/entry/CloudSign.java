@@ -12,6 +12,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.block.data.type.WallSign;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import static eu.metacloudservice.serverside.bukkit.SignBootstrap.signsAPI;
 
@@ -32,9 +33,10 @@ public class CloudSign {
             if (signsAPI.getConfig().configurations.stream().filter(signConfig -> signConfig.getTargetGroup().equalsIgnoreCase(group)).findFirst().orElse(null) == null){
                 return;
             }else if (!service.isEmpty()){
+                if (CloudAPI.getInstance() == null) service = "";
                 if (CloudAPI.getInstance().getGroupPool().getGroup(group).isMaintenance()) service = "";
-                else if (!CloudAPI.getInstance().getServicePool().serviceNotNull(service)) service = "";
-                else if (signsAPI.getConfig().configurations.stream().filter(signConfig -> signConfig.getTargetGroup().equalsIgnoreCase(group)).findFirst().orElse(null).isHideFull() && CloudAPI.getInstance().getServicePool().getService(service).getPlayercount() >= CloudAPI.getInstance().getGroupPool().getGroup(group).getMaxPlayers() ) service = "";
+                else if (CloudAPI.getInstance().getServicePool() == null ||!CloudAPI.getInstance().getServicePool().serviceNotNull(service)) service = "";
+                else if (Objects.requireNonNull(signsAPI.getConfig().configurations.stream().filter(signConfig -> signConfig.getTargetGroup().equalsIgnoreCase(group)).findFirst().orElse(null)).isHideFull() && CloudAPI.getInstance().getServicePool().getService(service) != null &&CloudAPI.getInstance().getServicePool().getService(service).getPlayercount() >= CloudAPI.getInstance().getGroupPool().getGroup(group).getMaxPlayers() ) service = "";
                 else if (CloudAPI.getInstance().getServicePool().getService(service).getState() != ServiceState.LOBBY) service = "";
             }
 
@@ -59,18 +61,20 @@ public class CloudSign {
         if (!service.isEmpty()) {
         try {
             CloudService cloudService = CloudAPI.getInstance().getServicePool().getService(service);
+
             ServicePing ping = new ServicePing();
             try {
                 ping.pingServer(cloudService.getAddress(), cloudService.getPort(), 300);
             } catch (IOException ignored) {
             }
 
+
             lines[0] = lines[0]
                     .replace("%service_name%", this.service)
                     .replace("%service_id%", CloudAPI.getInstance().getServicePool().getService(this.service).getID())
                     .replace("%service_state%", cloudService.getState().toString())
                     .replace("%service_node%", CloudAPI.getInstance().getServicePool().getService(this.service).getGroup().getStorage().getRunningNode())
-                    .replace("%online_players%", String.valueOf(cloudService.getPlayercount()))
+                    .replace("%online_players%", String.valueOf(cloudService.getPlayercount()) == null ? "0" : String.valueOf(cloudService.getPlayercount()))
                     .replace("%service_motd%", ping.getMotd())
                     .replace("%max_players%", String.valueOf(cloudService.getGroup().getMaxPlayers()));
             lines[1] = lines[1]
@@ -78,7 +82,7 @@ public class CloudSign {
                     .replace("%service_id%", CloudAPI.getInstance().getServicePool().getService(this.service).getID())
                     .replace("%service_state%", cloudService.getState().toString())
                     .replace("%service_node%", CloudAPI.getInstance().getServicePool().getService(this.service).getGroup().getStorage().getRunningNode())
-                    .replace("%online_players%", String.valueOf(cloudService.getPlayercount()))
+                    .replace("%online_players%", String.valueOf(cloudService.getPlayercount()) == null ? "0" : String.valueOf(cloudService.getPlayercount()))
                     .replace("%service_motd%", ping.getMotd())
                     .replace("%max_players%", String.valueOf(cloudService.getGroup().getMaxPlayers()));
             lines[2] = lines[2]
@@ -86,7 +90,7 @@ public class CloudSign {
                     .replace("%service_id%", CloudAPI.getInstance().getServicePool().getService(this.service).getID())
                     .replace("%service_state%", cloudService.getState().toString())
                     .replace("%service_node%", CloudAPI.getInstance().getServicePool().getService(this.service).getGroup().getStorage().getRunningNode())
-                    .replace("%online_players%", String.valueOf(cloudService.getPlayercount()))
+                    .replace("%online_players%", String.valueOf(cloudService.getPlayercount()) == null ? "0" : String.valueOf(cloudService.getPlayercount()))
                     .replace("%service_motd%", ping.getMotd())
                     .replace("%max_players%", String.valueOf(cloudService.getGroup().getMaxPlayers()));
             lines[3] = lines[3]
@@ -94,7 +98,7 @@ public class CloudSign {
                     .replace("%service_id%", CloudAPI.getInstance().getServicePool().getService(this.service).getID())
                     .replace("%service_node%", CloudAPI.getInstance().getServicePool().getService(this.service).getGroup().getStorage().getRunningNode())
                     .replace("%service_state%", cloudService.getState().toString())
-                    .replace("%online_players%", String.valueOf(cloudService.getPlayercount()))
+                    .replace("%online_players%", String.valueOf(cloudService.getPlayercount()) == null ? "0" : String.valueOf(cloudService.getPlayercount()))
                     .replace("%service_motd%", ping.getMotd())
                     .replace("%max_players%", String.valueOf(cloudService.getGroup().getMaxPlayers()));
         }catch (Exception e){

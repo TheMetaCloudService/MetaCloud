@@ -69,10 +69,6 @@
       <scope>provided</scope>
       <exclusions>
         <exclusion>
-          <artifactId>lombok</artifactId>
-          <groupId>org.projectlombok</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>jline</artifactId>
           <groupId>org.jline</groupId>
         </exclusion>

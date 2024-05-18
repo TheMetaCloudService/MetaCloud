@@ -58,8 +58,10 @@ public class TablistListener {
                 try {
                     Tablist tab = VeloCityBootstrap.getInstance().configuration.getTablist().get(VeloCityBootstrap.getInstance().tabCount);
                     String[] config = readConfigs(tab, player);
-                    player.getTabList().setHeaderAndFooter(Component.text(config[0]), Component.text(config[1]));
 
+                    player.getTabList().setHeaderAndFooter(
+                            VeloCityBootstrap.getInstance().message.deserialize(VeloCityBootstrap.getInstance().translator.translate(config[0])),
+                            VeloCityBootstrap.getInstance().message.deserialize(VeloCityBootstrap.getInstance().translator.translate(config[1])));
                 } catch (Exception ignored) {
                 }
             }

@@ -52,12 +52,12 @@ import java.lang.management.ManagementFactory;
 import java.util.List;
 import java.util.Objects;
 import java.util.TimerTask;
-
 @Getter
 public class CloudAPI {
 
     @Getter
     private static CloudAPI instance;
+
     private final LiveService service;
     private final PlayerPool playerPool;
     private final OfflinePlayerPool offlinePlayerPool;
@@ -66,7 +66,6 @@ public class CloudAPI {
     private final ServicePool servicePool;
     private final RestDriver restDriver;
     private final EventDriver eventDriver;
-
     private final AsyncPlayerPool asyncPlayerPool;
     private final AsyncServicePool asyncServicePool;
     private final AsyncGroupPool asyncGroupPool;
@@ -76,6 +75,13 @@ public class CloudAPI {
         new Driver();
         service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         new NettyDriver();
+
+
+        restDriver = new RestDriver(service.getManagerAddress(), service.getRestPort());
+        NettyDriver.getInstance().nettyClient = new NettyClient();
+        NettyDriver.getInstance().nettyClient.bind(service.getManagerAddress(), service.getNetworkPort()).connect();
+
+        registerHandlers();
         this.offlinePlayerPool = new OfflinePlayerPool();
         this.asyncOfflinePlayerPool = new AsyncOfflinePlayerPool();
         this.playerPool = new PlayerPool();
@@ -84,13 +90,6 @@ public class CloudAPI {
         this.asyncGroupPool = new AsyncGroupPool();
         this.asyncServicePool = new AsyncServicePool();
         this.asyncPlayerPool = new AsyncPlayerPool();
-
-        restDriver = new RestDriver(service.getManagerAddress(), service.getRestPort());
-        NettyDriver.getInstance().nettyClient = new NettyClient();
-        NettyDriver.getInstance().nettyClient.bind(service.getManagerAddress(), service.getNetworkPort()).connect();
-
-        registerHandlers();
-
         this.eventDriver = new EventDriver();
 
         Group group = (Group) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/" + service.getGroup()), Group.class);
@@ -254,5 +253,6 @@ public class CloudAPI {
                 .registerHandler(new PacketOutAPIPlayerDispactchCommand().getPacketUUID(), new HandlePacketOutAPIPlayerDispactchCommand(), PacketOutAPIPlayerDispactchCommand.class)
                 .registerHandler(new PacketOutAPIPlayerTab().getPacketUUID(), new HandlePacketOutAPIPlayerTab(), PacketOutAPIPlayerTab.class);
     }
+
 
 }

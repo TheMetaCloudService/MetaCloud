@@ -55,7 +55,7 @@
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-platform-bungeecord</artifactId>
-            <version>4.3.0</version>
+            <version>4.3.2</version>
         </dependency>
         <dependency>
             <groupId>eu.metacloudservice</groupId>
@@ -77,14 +77,13 @@
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-text-minimessage</artifactId>
-            <version>4.14.0</version>
+            <version>4.17.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>net.kyori</groupId>
-            <artifactId>adventure-text-minimessage</artifactId>
-            <version>4.14.0</version>
-            <scope>compile</scope>
+            <artifactId>adventure-text-serializer-legacy</artifactId>
+            <version>4.17.0</version>
         </dependency>
     </dependencies>
 

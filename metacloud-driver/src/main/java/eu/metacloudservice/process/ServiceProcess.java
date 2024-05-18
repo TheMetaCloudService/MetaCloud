@@ -607,7 +607,7 @@ public final class ServiceProcess implements IServiceProcess {
             process.destroy();
             process.destroyForcibly().destroy();
         }
-        Thread.sleep(200);
+        Thread.sleep(500);
 
         if (new File("./service.json").exists()){
             ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
@@ -635,6 +635,7 @@ public final class ServiceProcess implements IServiceProcess {
             }
         }
 
+
         try {
             if (!group.isRunStatic()){
                 FileUtils.deleteDirectory(new File("./live/" +group.getGroup() + "/" + service + "/"));
@@ -645,12 +646,13 @@ public final class ServiceProcess implements IServiceProcess {
                     file.delete();
                 }
             }else {
+
                 new File("./local/templates/" + group.getGroup() + "/" +  service +"/").delete();
                 new File("./local/templates/" + group.getGroup() + "/" +  service +"/").mkdirs();
                 FileUtils.copyDirectory(new File("./live/" +group.getGroup()+"/" + service + "/"), new File("./local/templates/" + group.getGroup() + "/" +  service +"/"));
-                Thread.sleep(200);
+                Thread.sleep(500);
                 FileUtils.deleteDirectory(new File("./live/" +group.getGroup()+"/" + service + "/"));
-
+                Thread.sleep(200);
                 File file = new File("./live/"+ group.getGroup() + "/");
                 if (Objects.requireNonNull(file.list()).length == 0) {
                     file.delete();

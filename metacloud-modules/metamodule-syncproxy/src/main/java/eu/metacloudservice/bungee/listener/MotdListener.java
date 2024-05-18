@@ -4,6 +4,7 @@ import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.bungee.BungeeBootstrap;
 import eu.metacloudservice.config.Motd;
 import eu.metacloudservice.moduleside.converter.IconConverter;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.Favicon;
@@ -90,7 +91,7 @@ public class MotdListener  implements Listener {
             ServerPing.Protocol serverProtocol = new ServerPing.Protocol(protocolString, ping.getVersion().getProtocol() - 1);
 
 
-            ping.setDescription(description);
+            ping.setDescriptionComponent(BungeeComponentSerializer.get().serialize(MiniMessage.miniMessage().deserialize(BungeeBootstrap.getInstance().translator.translate(description)))[0]);
             ping.setVersion(serverProtocol);
             ping.setPlayers(players);
 

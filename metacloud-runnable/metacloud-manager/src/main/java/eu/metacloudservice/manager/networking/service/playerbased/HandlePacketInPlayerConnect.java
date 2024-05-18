@@ -62,7 +62,7 @@ public class HandlePacketInPlayerConnect implements NettyAdaptor {
                     Driver.getInstance().getOfflinePlayerCacheDriver().saveConfig(config);
                 }else {
                     OfflinePlayerCacheConfiguration config = Driver.getInstance().getOfflinePlayerCacheDriver().readConfig();
-                    OfflinePlayerCache cache1 = new OfflinePlayerCache(((PacketInPlayerConnect) packet).getName(), UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()), String.valueOf(System.currentTimeMillis()),  "NOW", ((PacketInPlayerConnect) packet).getProxy(), "",0, 0);
+                    OfflinePlayerCache cache1 = new OfflinePlayerCache(((PacketInPlayerConnect) packet).getName(), UUIDDriver.getUUID(((PacketInPlayerConnect) packet).getName()), String.valueOf(System.currentTimeMillis()),  "NOW", ((PacketInPlayerConnect) packet).getProxy(), "",1, 0);
 
                     config.getPlayerCaches().add(cache1);
                     Driver.getInstance().getOfflinePlayerCacheDriver().saveConfig(config);

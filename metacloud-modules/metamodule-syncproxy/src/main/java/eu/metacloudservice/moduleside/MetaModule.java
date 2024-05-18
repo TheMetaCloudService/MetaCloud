@@ -64,8 +64,8 @@ public class MetaModule implements IModule {
                     Motd maintenanceLayout = new Motd();
                     ArrayList<String> maintenancePlayerInfo = new ArrayList<>();
                     maintenanceLayout.setProtocol("§8▷ §c§lMaintenance");
-                    maintenanceLayout.setFirstline("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor the §7Future §8• §f§l1.16-1.20.✘");
-                    maintenanceLayout.setSecondline("§8➥ ✎ §7We are in §f§lMAINTENANCE §8| §8◣ §b§l%proxy_name% §8◥");
+                    maintenanceLayout.setFirstline("        <gradient:#1868d9:#0a3c82><bold>MetaCloud</gradient> <dark_gray>▷ <gray>Ready <white>for the <gray>Future");
+                    maintenanceLayout.setSecondline("<dark_gray>➥ ✎ <gray>We are current in <white><bold>MAINTENANCE <dark_gray>| <gradient:#1868d9:#0a3c82><bold>%proxy_name%</gradient>");
 
                     maintenancePlayerInfo.add("");
                     maintenancePlayerInfo.add("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor the §7Future");
@@ -80,8 +80,8 @@ public class MetaModule implements IModule {
 
                     ArrayList<String> maintenancePlayerInfo02 = new ArrayList<>();
                     maintenanceLayout02.setProtocol("§8▷ §c§lMaintenance");
-                    maintenanceLayout02.setFirstline("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor the §7Future §8• §f§l1.16-1.20.✘");
-                    maintenanceLayout02.setSecondline("§8➥ ✂ §7Download this §fCloudsystem §7on §b§lSPIGOT§3§lMC");
+                    maintenanceLayout02.setFirstline("        <gradient:#1868d9:#0a3c82><bold>MetaCloud</gradient> <dark_gray>▷ <gray>Ready <white>for the <gray>Future");
+                    maintenanceLayout02.setSecondline("<dark_gray>➥ ✂ <gray>Download this <white>Cloudsystem <gray>on <gradient:#1868d9:#0a3c82><bold>SPIGOTMC</gradient>");
 
                     maintenancePlayerInfo02.add("");
                     maintenancePlayerInfo02.add("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor the §7Future");
@@ -99,9 +99,9 @@ public class MetaModule implements IModule {
 
                     Motd defaultsLayout = new Motd();
                     ArrayList<String> defaultsPlayerInfo = new ArrayList<>();
-                    defaultsLayout.setProtocol("§8▷ §b§l%online_players%§8/§b§l%max_players%");
-                    defaultsLayout.setFirstline("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor the §7Future §8• §f§l1.16-1.20.✘");
-                    defaultsLayout.setSecondline("§8➥ ✂ §7Download this §fCloudsystem §7on §b§lSPIGOT§3§lMC");
+                    defaultsLayout.setProtocol("§8▷ §9§l%online_players%§8/§9§l%max_players%");
+                    defaultsLayout.setFirstline("        <gradient:#1868d9:#0a3c82><bold>MetaCloud</gradient> <dark_gray>▷ <gray>Ready <white>for the <gray>Future");
+                    defaultsLayout.setSecondline("<dark_gray>➥ ✂ <gray>Download this <white>Cloudsystem <gray>on <gradient:#1868d9:#0a3c82><bold>SPIGOTMC</gradient>");
                     defaultsPlayerInfo.add("");
                     defaultsPlayerInfo.add("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor the §7Future");
                     defaultsPlayerInfo.add("");
@@ -113,9 +113,9 @@ public class MetaModule implements IModule {
                     Motd defaultsLayout02 = new Motd();
 
                     ArrayList<String> defaultsPlayerInfo02 = new ArrayList<>();
-                    defaultsLayout02.setProtocol("§8▷ §b§l%online_players%§8/§b§l%max_players%");
-                    defaultsLayout02.setFirstline("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor the §7Future §8• §f§l1.16-1.20.✘");
-                    defaultsLayout02.setSecondline("§8➥ ✎ §7The network now §f§lONLINE §8| §8◣ §b§l%proxy_name% §8◥");
+                    defaultsLayout02.setProtocol("§8▷ §9§l%online_players%§8/§9§l%max_players%");
+                    defaultsLayout02.setFirstline("        <gradient:#1868d9:#0a3c82>§lMetaCloud</gradient> §8▷ §7Ready §ffor the §7Future");
+                    defaultsLayout02.setSecondline("<dark_gray>➥ ✎ <gray>The network are now <white><bold>ONLINE <dark_gray>| <gradient:#1868d9:#0a3c82><bold>%proxy_name%</gradient>");
                     defaultsPlayerInfo02.add("");
                     defaultsPlayerInfo02.add("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor the §7Futuree");
                     defaultsPlayerInfo02.add("");
@@ -131,20 +131,21 @@ public class MetaModule implements IModule {
                     ArrayList<Tablist> tablist = new ArrayList<>();
 
                     Tablist tablayout01 = new Tablist();
-                    tablayout01.setHeader("\n      §8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor the §7Future §8• §b§l%online_players% §7/ §3§l%max_players% §8◄      \n   §8► §7Your current server §8▷ §b§l%service_name% §8◄   \n");
+                    tablayout01.setHeader("\n      <dark_gray>► <gradient:#1868d9:#0a3c82><bold>MetaCloud</gradient> <dark_gray>▷ <gray>Ready <white>for the <gray>Future <dark_gray>• <gradient:#1868d9:#0a3c82><bold>%online_players%</gradient> <gray>/ <gradient:#1868d9:#0a3c82><bold>%max_players%</gradient> <dark_gray>◄      \n   <dark_gray>► <gray>Your current server <dark_gray>▷ <gradient:#1868d9:#0a3c82><bold>%service_name%<gradient> <dark_gray>◄   \n");
 
-                    tablayout01.setFooter("\n        §8► §7Discord §8▷ §b§ldiscord.gg/§3§l4kKEcaP9WC §8◄       \n§8► §7Developer §8▷ §b§lReauchiges§3§lEtwas §8◄\n");
+                    tablayout01.setFooter("\n        <dark_gray>► <gray>Discord <dark_gray>▷ <gradient:#1868d9:#0a3c82><bold>discord.gg/4kKEcaP9WC</gradient> <dark_gray>◄       \n<dark_gray>► <gray>Developer <dark_gray>▷ <gradient:#1868d9:#0a3c82><bold>ReauchigesEtwas</gradient> <dark_gray>◄\n");
 
                     tablist.add(tablayout01);
 
                     Tablist tablayout02 = new Tablist();
-                    tablayout02.setHeader("\n      §8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor the §7Future §8• §b§l%online_players% §7/ §3§l%max_players% §8◄      \n   §8► §7Your current proxy §8▷ §b§l%proxy_name% §8◄   \n");
-                    tablayout02.setFooter("\n        §8► §7Discord §8▷ §b§ldiscord.gg/§3§l4kKEcaP9WC §8◄       \n§8► §7Website §8▷ §b§lmetacloud§3§lservice.eu §8◄\n");
+                    tablayout02.setHeader("\n      <dark_gray>► <gradient:#1868d9:#0a3c82><bold>MetaCloud</gradient> <dark_gray>▷ <gray>Ready <white>for the <gray>Future <dark_gray>• <gradient:#1868d9:#0a3c82><bold>%online_players%</gradient> <gray>/ <gradient:#1868d9:#0a3c82><bold>%max_players%</gradient> <dark_gray>◄      \n   <dark_gray>► <gray>Your current server <dark_gray>▷ <gradient:#1868d9:#0a3c82><bold>%service_name%<gradient> <dark_gray>◄   \n");
+                    tablayout02.setFooter("\n        <dark_gray>► <gray>Discord <dark_gray>▷ <gradient:#1868d9:#0a3c82><bold>discord.gg/4kKEcaP9WC</gradient> <dark_gray>◄       \n<dark_gray>► <gray>Website <dark_gray>▷ <gradient:#1868d9:#0a3c82><bold>metacloudservice.eu</gradient> <dark_gray>◄\n");
 
                     tablist.add(tablayout02);
                     config.setMaintenancen(maintenance);
                     config.setTablist(tablist);
                     config.setDefaults(defaults);
+                    configs.add(config);
                     loader();
                 });
 
@@ -165,8 +166,13 @@ public class MetaModule implements IModule {
 
 
                 new ConfigDriver("./modules/syncproxy/config.json").save(configuration);
-                set();
-                update();
+                new TimerBase().scheduleAsync(new TimerTask() {
+                    @Override
+                    public void run() {
+                        set();
+                        update();
+                    }
+                }, 5, TimeUtil.SECONDS);
             }else if (!new ConfigDriver("./modules/syncproxy/config.json").canBeRead(Configuration.class)){
                 new File("./local/server-icon.png").deleteOnExit();
                 MigrationConfiguration migrationConfiguration = (MigrationConfiguration) new ConfigDriver("./modules/syncproxy/config.json").read(MigrationConfiguration.class);
@@ -203,6 +209,14 @@ public class MetaModule implements IModule {
                 });
                 Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/syncproxy/icons", new ConfigDriver().convert( new IconBase(icons))));
 
+
+                new TimerBase().scheduleAsync(new TimerTask() {
+                    @Override
+                    public void run() {
+                        set();
+                        update();
+                    }
+                }, 5, TimeUtil.SECONDS);
             }
 
         new TimerBase().scheduleAsync(new TimerTask() {
@@ -259,7 +273,7 @@ public class MetaModule implements IModule {
 
     @SneakyThrows
     private static void loader(){
-        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=general").openStream()) {
+        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=global").openStream()) {
             final StringBuilder builder = new StringBuilder();
             BufferedReader bufferedReader;
 
@@ -271,7 +285,7 @@ public class MetaModule implements IModule {
             final String rawJson = builder.toString();
             GeneralConfig updateConfig = (GeneralConfig) new ConfigDriver().convert(rawJson, GeneralConfig.class);
 
-            try (BufferedInputStream in = new BufferedInputStream(new URL(updateConfig.getLogo()).openStream());
+            try (BufferedInputStream in = new BufferedInputStream(new URL(updateConfig.getConfig().get("cloud-default-icon")).openStream());
                  FileOutputStream fileOutputStream = new FileOutputStream("./modules/syncproxy/icons/default.png")) {
                 byte[] dataBuffer = new byte[1024];
 
@@ -285,7 +299,7 @@ public class MetaModule implements IModule {
                 ex.printStackTrace();
             }
 
-            try (BufferedInputStream in = new BufferedInputStream(new URL("https://metacloudservice.eu/download/general/maintenance.png").openStream());
+            try (BufferedInputStream in = new BufferedInputStream(new URL(updateConfig.getConfig().get("cloud-maintenance-icon")).openStream());
                  FileOutputStream fileOutputStream = new FileOutputStream("./modules/syncproxy/icons/maintenance.png")) {
                 byte[] dataBuffer = new byte[1024];
 

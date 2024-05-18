@@ -17,10 +17,6 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class UUIDDriver {
-
-
-    private static final String ADD_UUID_HYPHENS_REGEX = "([a-f0-9]{8})([a-f0-9]{4})(4[a-f0-9]{3})([89aAbB][a-f0-9]{3})([a-f0-9]{12})";
-
     private static ArrayList<UUIDStorage> uuids;
     public static UUID getUUID(String name) {
         if (uuids == null){

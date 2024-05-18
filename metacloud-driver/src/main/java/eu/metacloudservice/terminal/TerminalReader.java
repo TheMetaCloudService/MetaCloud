@@ -45,16 +45,14 @@ public final class TerminalReader extends Thread {
                     consoleDriver.log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-is-not-found"));
 
                 }
-            } catch (UserInterruptException ignored) {
-                System.exit(0);
+            } catch (UserInterruptException | NoSuchMethodError ignored) {
+                consoleDriver.log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-is-not-work"));
             }catch (EndOfFileException end){
                 if (consoleDriver.getSetupDriver().getSetup() != null){
                     consoleDriver.leaveSetup();
                 }else {
                     commandDriver.executeCommand("stop");
                 }
-            }catch (NoSuchMethodError ignored){
-                consoleDriver.log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-is-not-work"));
             }
         }
     }

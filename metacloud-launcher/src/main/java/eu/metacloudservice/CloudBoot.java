@@ -48,8 +48,6 @@ public class CloudBoot {
             }
         }
 
-
-
         Driver.getInstance().setLanguageDriver(new LanguageDriver());
         Driver.getInstance().getMessageStorage().eventDriver = new EventDriver();
         Driver.getInstance().setTerminalDriver(new TerminalDriver());
@@ -150,7 +148,7 @@ public class CloudBoot {
 
         if (!new File("./dependency/runnable-manager.jar").exists() && !new File("./dependency/runnable-node.jar").exists()) {
             if (new File("./service.json").exists()){
-                try (BufferedInputStream in = new BufferedInputStream(new URL("https://metacloudservice.eu/download/general/runnable-manager.jar").openStream());
+                try (BufferedInputStream in = new BufferedInputStream(new URL(Driver.getInstance().getMessageStorage().getGeneralConfigFromWeb().getConfig().get("cloud-manager")).openStream());
                      FileOutputStream fileOutputStream = new FileOutputStream("./dependency/runnable-manager.jar")) {
                     byte[] dataBuffer = new byte[1024];
 
@@ -166,7 +164,7 @@ public class CloudBoot {
             }
 
             if (!new File("./service.json").exists()){
-                try (BufferedInputStream in = new BufferedInputStream(new URL("https://metacloudservice.eu/download/general/runnable-node.jar").openStream());
+                try (BufferedInputStream in = new BufferedInputStream(new URL(Driver.getInstance().getMessageStorage().getGeneralConfigFromWeb().getConfig().get("cloud-node")).openStream());
                      FileOutputStream fileOutputStream = new FileOutputStream("./dependency/runnable-node.jar")) {
                     byte[] dataBuffer = new byte[1024];
 
@@ -185,13 +183,16 @@ public class CloudBoot {
 
         if (autoUpdate){
             new AutoUpdater();
+            if (new File("./modules/").exists()){
+                new File("./modules/").mkdirs();
+
+                new ModuleLoader().downloadAllModules();
+            }
         }
         if (!new File("./modules/").exists()){
             new File("./modules/").mkdirs();
 
             new ModuleLoader().downloadAllModules();
-        }else {
-            new ModuleLoader().downloadAllModulesNeededModules();
         }
 
         if (new File("./service.json").exists()){

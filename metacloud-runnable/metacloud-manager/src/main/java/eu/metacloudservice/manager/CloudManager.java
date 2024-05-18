@@ -112,7 +112,6 @@ public class CloudManager implements IRunAble {
             new ConfigDriver("./connection.key").save(key);
         }
         Driver.getInstance().getMessageStorage().canUseMemory = config.getCanUsedMemory() -250;
-        System.setProperty("log4j.configurationFile", "log4j2.properties");
         initNetty(config);
         restDriver = new RestDriver(config.getManagerAddress(), config.getRestApiCommunication());
         initRestService();

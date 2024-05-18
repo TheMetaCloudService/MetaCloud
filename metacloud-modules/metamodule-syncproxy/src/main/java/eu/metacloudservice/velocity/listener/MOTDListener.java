@@ -80,7 +80,7 @@ public class MOTDListener {
             int cloudPlayersplayers = cloudAPI.getPlayerPool().getPlayers().size();
             int max = cloudAPI.getGroupPool().getGroup(cloudAPI.getCurrentService().getGroup()).getMaxPlayers();
 
-            ping.description(Component.text(description))
+            ping.description(VeloCityBootstrap.getInstance().message.deserialize(VeloCityBootstrap.getInstance().translator.translate(description)))
                     .maximumPlayers(max)
                     .onlinePlayers(cloudPlayersplayers)
                     .build();
@@ -91,7 +91,6 @@ public class MOTDListener {
             if (protocol != null) {
                 ping.version(new ServerPing.Version(1, protocol));
             }
-
 
             if (bungeeBootstrap.iconBase.getIcons().containsKey(icon.replace(".png", ""))){
                 ByteArrayInputStream bais = new ByteArrayInputStream(new IconConverter().convertToByte(bungeeBootstrap.iconBase.getIcons().get(icon.replace(".png", ""))));
@@ -104,4 +103,6 @@ public class MOTDListener {
 
     }
     }
+
+
 }

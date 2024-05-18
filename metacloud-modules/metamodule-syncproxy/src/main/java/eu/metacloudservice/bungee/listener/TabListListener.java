@@ -6,6 +6,7 @@ import eu.metacloudservice.bungee.BungeeBootstrap;
 import eu.metacloudservice.config.Tablist;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
@@ -70,8 +71,8 @@ public class TabListListener implements Listener {
             } else {
                     Tablist tab = BungeeBootstrap.getInstance().configuration.getTablist().get(BungeeBootstrap.getInstance().tabCount);
                     String[] config = readConfigs(tab, player);
-                player.setTabHeader(TextComponent.fromLegacyText(config[0]), TextComponent.fromLegacyText(config[1]));
-
+                    BungeeBootstrap.getInstance().bungeeAudiences.player(player).sendPlayerListHeaderAndFooter(
+                            MiniMessage.miniMessage().deserialize(BungeeBootstrap.getInstance().translator.translate(config[0])), MiniMessage.miniMessage().deserialize(BungeeBootstrap.getInstance().translator.translate(config[1])));
             }
         }
     }

@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 
 public class MessageStorage {
-    public final String version = "1.0.9-RELEASE";
+    public final String version = "1.1.0-RELEASE";
     public String language;
     public Integer canUseMemory = 0;
     public PacketLoader packetLoader;
@@ -83,9 +83,29 @@ public class MessageStorage {
 
 
     @SneakyThrows
+    public GeneralConfig getGeneralConfigFromWeb() {
+
+        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=global").openStream()) {
+            final StringBuilder builder = new StringBuilder();
+            BufferedReader bufferedReader;
+
+            bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+            int counter;
+            while ((counter = bufferedReader.read()) != -1) {
+                builder.append((char) counter);
+            }
+            final String rawJson = builder.toString();
+            return  (GeneralConfig) new ConfigDriver().convert(rawJson, GeneralConfig.class);
+        }catch (Exception e){
+            return null;
+        }
+
+    }
+
+    @SneakyThrows
     public boolean checkAvailableUpdate() {
 
-        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=general").openStream()) {
+        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=global").openStream()) {
             final StringBuilder builder = new StringBuilder();
             BufferedReader bufferedReader;
 
@@ -96,21 +116,21 @@ public class MessageStorage {
             }
             final String rawJson = builder.toString();
             GeneralConfig updateConfig = (GeneralConfig) new ConfigDriver().convert(rawJson, GeneralConfig.class);
-            if (!updateConfig.getLatestReleasedVersion().equalsIgnoreCase(version)) {
+            if (!updateConfig.getConfig().get("current-version").equalsIgnoreCase(version)) {
                 return true;
+            }else {
+                return false;
             }
         }catch (Exception e){
             return false;
         }
 
-
-        return false;
     }
 
     @SneakyThrows
     public String  getNewVersionName() {
 
-        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=general").openStream()) {
+        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=global").openStream()) {
             final StringBuilder builder = new StringBuilder();
             BufferedReader bufferedReader;
 
@@ -121,8 +141,8 @@ public class MessageStorage {
             }
             final String rawJson = builder.toString();
             GeneralConfig updateConfig = (GeneralConfig) new ConfigDriver().convert(rawJson, GeneralConfig.class);
-            if (!updateConfig.getLatestReleasedVersion().equalsIgnoreCase(version)) {
-                return updateConfig.getLatestReleasedVersion();
+            if (!updateConfig.getConfig().get("current-version").equalsIgnoreCase(version)) {
+                return updateConfig.getConfig().get("current-version");
             }
         }
         return "";

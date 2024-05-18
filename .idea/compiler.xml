@@ -18,13 +18,13 @@
         <module name="metamodule-hub" />
         <module name="metamodule-syncproxy" />
         <module name="metacloud-launcher" />
-        <module name="metamodule-npc" />
         <module name="metamodule-cloudflare" />
         <module name="metacloud-manager" />
         <module name="metamodule-permission" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="metamodule-npc" target="16" />
       <module name="untitled" target="17" />
     </bytecodeTargetLevel>
   </component>

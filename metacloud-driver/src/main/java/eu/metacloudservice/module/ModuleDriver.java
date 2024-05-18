@@ -22,16 +22,20 @@ public class ModuleDriver {
     }
 
     public void load() {
-        ArrayList<String> modules = getModules();
+        try {
+            ArrayList<String> modules = getModules();
 
-        if (modules.isEmpty()) {
-            Driver.getInstance().getTerminalDriver().log(Type.MODULE, Driver.getInstance().getLanguageDriver().getLang().getMessage("module-folder-is-empty"));
+            if (modules.isEmpty()) {
+                Driver.getInstance().getTerminalDriver().log(Type.MODULE, Driver.getInstance().getLanguageDriver().getLang().getMessage("module-folder-is-empty"));
+            }
+            modules.forEach(s -> {
+                ModuleLoader loader = new ModuleLoader(s);
+                loader.load();
+                loadedModules.add(loader);
+            });
+        }catch (Exception e){
+
         }
-        modules.forEach(s -> {
-            ModuleLoader loader = new ModuleLoader(s);
-            loader.load();
-            loadedModules.add(loader);
-        });
     }
 
     public void unload() {

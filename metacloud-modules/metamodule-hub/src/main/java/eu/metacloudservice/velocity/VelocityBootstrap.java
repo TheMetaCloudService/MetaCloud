@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Plugin(id = "metacloudhub", name = "metacloud-hub", version = "1.0.9-RELEASE", authors = "RauchigesEtwas", dependencies = {@Dependency(id = "metacloudapi"), @Dependency(id = "metacloudplugin")})
+@Plugin(id = "metacloudhub", name = "metacloud-hub", version = "1.1.0-RELEASE", authors = "RauchigesEtwas", dependencies = {@Dependency(id = "metacloudapi"), @Dependency(id = "metacloudplugin")})
 public class VelocityBootstrap {
 
 
@@ -43,8 +43,6 @@ public class VelocityBootstrap {
     @Subscribe
     public void handelInject(ProxyInitializeEvent event){
         new Driver();
-        LiveService service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
-
     }
     public static CloudService getLobby(Player player){
         if (CloudAPI.getInstance().getServicePool().getServices().stream().filter(service -> service.getGroup().getGroupType().equalsIgnoreCase("LOBBY")).collect(Collectors.toList()).isEmpty()){

@@ -14,42 +14,11 @@ import java.util.List;
 public final class PacketLoader {
     public PacketLoader() {}
 
-    @SneakyThrows
-    public void loadLogo(){
-
-        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=general").openStream()) {
-            final StringBuilder builder = new StringBuilder();
-            BufferedReader bufferedReader;
-
-            bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-            int counter;
-            while ((counter = bufferedReader.read()) != -1) {
-                builder.append((char) counter);
-            }
-            final String rawJson = builder.toString();
-            GeneralConfig updateConfig = (GeneralConfig) new ConfigDriver().convert(rawJson, GeneralConfig.class);
-
-            try (BufferedInputStream in = new BufferedInputStream(new URL(updateConfig.getLogo()).openStream());
-                 FileOutputStream fileOutputStream = new FileOutputStream("./local/server-icon.png")) {
-                byte[] dataBuffer = new byte[1024];
-
-                int bytesRead;
-
-                while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
-                    fileOutputStream.write(dataBuffer, 0, bytesRead);
-                }
-
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
-        }
-    }
 
     @SneakyThrows
     public void loadAPI(){
 
-        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=general").openStream()) {
+        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=global").openStream()) {
             final StringBuilder builder = new StringBuilder();
             BufferedReader bufferedReader;
 
@@ -61,7 +30,7 @@ public final class PacketLoader {
             final String rawJson = builder.toString();
             GeneralConfig updateConfig = (GeneralConfig) new ConfigDriver().convert(rawJson, GeneralConfig.class);
 
-            try (BufferedInputStream in = new BufferedInputStream(new URL(updateConfig.getApi()).openStream());
+            try (BufferedInputStream in = new BufferedInputStream(new URL(updateConfig.getConfig().get("cloud-api")).openStream());
                  FileOutputStream fileOutputStream = new FileOutputStream("./local/GLOBAL/EVERY/plugins/metacloud-api.jar")) {
                 byte[] dataBuffer = new byte[1024];
 
@@ -81,7 +50,7 @@ public final class PacketLoader {
     @SneakyThrows
     public void loadPlugin(){
 
-        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=general").openStream()) {
+        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=global").openStream()) {
             final StringBuilder builder = new StringBuilder();
             BufferedReader bufferedReader;
 
@@ -93,7 +62,7 @@ public final class PacketLoader {
             final String rawJson = builder.toString();
             GeneralConfig updateConfig = (GeneralConfig) new ConfigDriver().convert(rawJson, GeneralConfig.class);
 
-            try (BufferedInputStream in = new BufferedInputStream(new URL(updateConfig.getPlugin()).openStream());
+            try (BufferedInputStream in = new BufferedInputStream(new URL(updateConfig.getConfig().get("cloud-plugin")).openStream());
                  FileOutputStream fileOutputStream = new FileOutputStream("./local/GLOBAL/EVERY/plugins/metacloud-plugin.jar")) {
                 byte[] dataBuffer = new byte[1024];
 
@@ -113,7 +82,7 @@ public final class PacketLoader {
     @SneakyThrows
     public void loadModules(){
 
-        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=nodules").openStream()) {
+        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=modules").openStream()) {
             final StringBuilder builder = new StringBuilder();
             BufferedReader bufferedReader;
 
