@@ -8,6 +8,7 @@ import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.networking.packet.packets.in.service.playerbased.PacketInPlayerConnect;
 import eu.metacloudservice.networking.packet.packets.in.service.playerbased.PacketInPlayerDisconnect;
 import eu.metacloudservice.networking.packet.packets.in.service.playerbased.PacketInPlayerSwitchService;
+import eu.metacloudservice.service.entrys.CloudService;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.event.*;
@@ -88,15 +89,24 @@ public class CloudConnectListener implements Listener {
     @EventHandler(priority = - 127)
     public void handle(final ServerKickEvent event) {
         if (this.connected.contains(event.getPlayer().getUniqueId())) {
-            target  = ProxyServer.getInstance().getServerInfo(BungeeBootstrap.getInstance().getLobby(event.getPlayer(), event.getKickedFrom().getName()).getName());
-            if (target != null) {
-                event.setCancelServer(target);
-                event.setCancelled(true);
-            } else {
+            CloudService service = BungeeBootstrap.getInstance().getLobby(event.getPlayer(), event.getKickedFrom().getName());
+
+            if (service == null){
                 event.setCancelled(false);
                 event.setCancelServer(null);
                 event.getPlayer().disconnect(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback").replace("&", "§"));
+            }else {
+                target  = ProxyServer.getInstance().getServerInfo(service.getName());
+                if (target != null) {
+                    event.setCancelServer(target);
+                    event.setCancelled(true);
+                } else {
+                    event.setCancelled(false);
+                    event.setCancelServer(null);
+                    event.getPlayer().disconnect(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback").replace("&", "§"));
+                }
             }
+
         }
     }
 
