@@ -1,6 +1,7 @@
 package eu.metacloudservice;
 
 import eu.metacloudservice.group.async.AsyncGroupPool;
+import eu.metacloudservice.networking.packet.packets.out.service.events.*;
 import eu.metacloudservice.offlineplayer.async.AsyncOfflinePlayerPool;
 import eu.metacloudservice.player.async.AsyncPlayerPool;
 import eu.metacloudservice.player.async.entrys.AsyncCloudPlayer;
@@ -21,8 +22,6 @@ import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketI
 import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInDispatchMainCommand;
 import eu.metacloudservice.networking.packet.packets.in.service.command.PacketInCommandWhitelist;
 import eu.metacloudservice.networking.packet.packets.out.service.*;
-import eu.metacloudservice.networking.packet.packets.out.service.events.PacketOutCloudProxyCouldNotStartEvent;
-import eu.metacloudservice.networking.packet.packets.out.service.events.PacketOutCloudServiceCouldNotStartEvent;
 import eu.metacloudservice.networking.packet.packets.out.service.group.PacketOutGroupCreate;
 import eu.metacloudservice.networking.packet.packets.out.service.group.PacketOutGroupDelete;
 import eu.metacloudservice.networking.packet.packets.out.service.group.PacketOutGroupEdit;
@@ -221,10 +220,15 @@ public class CloudAPI {
                 .registerHandler(new PacketOutGroupCreate().getPacketUUID(), new HandlePacketOutGroupCreate(), PacketOutGroupCreate.class)
                 .registerHandler(new PacketOutGroupDelete().getPacketUUID(), new HandlePacketOutGroupDelete(), PacketOutGroupDelete.class)
                 .registerHandler(new PacketOutGroupEdit().getPacketUUID(), new HandlePacketOutGroupEdit(), PacketOutGroupEdit.class)
-                .registerHandler(new PacketOutResAPItReload().getPacketUUID(), new HandlePacketOutResAPItReload(), PacketOutResAPItReload.class)
+
+                .registerHandler(new PacketOutCloudRestAPIReloadEvent().getPacketUUID(), new HandlePacketOutCloudRestAPIReloadEvent(), PacketOutCloudRestAPIReloadEvent.class)
+                .registerHandler(new PacketOutCloudRestAPICreateEvent().getPacketUUID(), new HandlePacketOutCloudRestAPICreateEvent(), PacketOutCloudRestAPICreateEvent.class)
+                .registerHandler(new PacketOutCloudRestAPIUpdateEvent().getPacketUUID(), new HandlePacketOutCloudRestAPIUpdateEvent(), PacketOutCloudRestAPIUpdateEvent.class)
+                .registerHandler(new PacketOutCloudRestAPIDeleteEvent().getPacketUUID(), new HandlePacketOutCloudRestAPIDeleteEvent(), PacketOutCloudRestAPIDeleteEvent.class)
+
+
                 .registerHandler(new PacketOutCloudServiceChangeState().getPacketUUID(), new HandlePacketOutCloudServiceChangeState(), PacketOutCloudServiceChangeState.class)
-                .registerHandler(new PacketOutCloudProxyChangeState().getPacketUUID(), new HandlePacketOutCloudProxyChangeState(), PacketOutCloudProxyChangeState.class)
-                .registerHandler(new PacketOutRestAPIPut().getPacketUUID(), new HandlePacketOutRestAPIPut(), PacketOutRestAPIPut.class);
+                .registerHandler(new PacketOutCloudProxyChangeState().getPacketUUID(), new HandlePacketOutCloudProxyChangeState(), PacketOutCloudProxyChangeState.class);
     }
 
     private void registerVelocityHandlers() {

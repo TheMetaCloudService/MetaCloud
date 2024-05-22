@@ -1,6 +1,11 @@
 package eu.metacloudservice.webserver.handel;
 
 import eu.metacloudservice.Driver;
+import eu.metacloudservice.events.listeners.restapi.CloudRestAPICreateEvent;
+import eu.metacloudservice.events.listeners.restapi.CloudRestAPIDeleteEvent;
+import eu.metacloudservice.networking.NettyDriver;
+import eu.metacloudservice.networking.packet.packets.out.service.events.PacketOutCloudRestAPICreateEvent;
+import eu.metacloudservice.networking.packet.packets.out.service.events.PacketOutCloudRestAPIDeleteEvent;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
@@ -26,6 +31,8 @@ public class RequestDELETE {
                     ctx.writeAndFlush(response);
                 } else if (!path.isEmpty()) {
                     Driver.getInstance().getWebServer().removeRoute(path);
+                    Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudRestAPIDeleteEvent(path));
+                    NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutCloudRestAPIDeleteEvent(path));
                     FullHttpResponse response = createResponse(HttpResponseStatus.OK, "{\"reason\":\"data received\"}");
                     ctx.writeAndFlush(response);
                 } else {

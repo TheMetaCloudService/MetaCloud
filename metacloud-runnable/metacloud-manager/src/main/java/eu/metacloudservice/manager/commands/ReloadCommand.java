@@ -8,7 +8,7 @@ import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.events.listeners.restapi.CloudRestAPIReloadEvent;
 import eu.metacloudservice.manager.CloudManager;
 import eu.metacloudservice.networking.NettyDriver;
-import eu.metacloudservice.networking.packet.packets.out.service.PacketOutResAPItReload;
+import eu.metacloudservice.networking.packet.packets.out.service.events.PacketOutCloudRestAPIReloadEvent;
 import eu.metacloudservice.terminal.commands.CommandAdapter;
 import eu.metacloudservice.terminal.commands.CommandInfo;
 import eu.metacloudservice.terminal.enums.Type;
@@ -31,7 +31,7 @@ public class ReloadCommand extends CommandAdapter {
             sendHelp();
         }else if (args[0].equalsIgnoreCase("all")){
             Driver.getInstance().getModuleDriver().reload();
-            NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutResAPItReload());
+            NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutCloudRestAPIReloadEvent());
             Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudRestAPIReloadEvent());
             Messages msg = (Messages) new ConfigDriver("./local/messages.json").read(Messages.class);
             WhiteList whitelistConfig = new WhiteList();
@@ -59,7 +59,7 @@ public class ReloadCommand extends CommandAdapter {
             Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-reload-successful"));
 
         }else if (args[0].equalsIgnoreCase("config")){
-            NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutResAPItReload());
+            NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutCloudRestAPIReloadEvent());
             Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudRestAPIReloadEvent());
             Messages msg = (Messages) new ConfigDriver("./local/messages.json").read(Messages.class);
             WhiteList whitelistConfig = new WhiteList();
@@ -88,7 +88,8 @@ public class ReloadCommand extends CommandAdapter {
 
         }else if (args[0].equalsIgnoreCase("modules")){
             Driver.getInstance().getModuleDriver().reload();
-            NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutResAPItReload());
+            NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutCloudRestAPIReloadEvent());
+            Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudRestAPIReloadEvent());
             Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-reload-successful"));
         }
         else {

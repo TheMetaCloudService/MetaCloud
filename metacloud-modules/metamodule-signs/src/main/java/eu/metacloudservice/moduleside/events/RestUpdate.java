@@ -11,7 +11,6 @@ import eu.metacloudservice.events.listeners.group.CloudGroupDeleteEvent;
 import eu.metacloudservice.events.listeners.restapi.CloudRestAPIUpdateEvent;
 import eu.metacloudservice.moduleside.MetaModule;
 import eu.metacloudservice.networking.NettyDriver;
-import eu.metacloudservice.networking.packet.packets.out.service.PacketOutResAPItReload;
 
 import java.util.ArrayList;
 

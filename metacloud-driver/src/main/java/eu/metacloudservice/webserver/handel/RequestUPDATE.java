@@ -6,6 +6,9 @@ package eu.metacloudservice.webserver.handel;
 
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.events.listeners.restapi.CloudRestAPIUpdateEvent;
+import eu.metacloudservice.networking.NettyDriver;
+import eu.metacloudservice.networking.packet.packets.out.service.events.PacketOutCloudRestAPICreateEvent;
+import eu.metacloudservice.networking.packet.packets.out.service.events.PacketOutCloudRestAPIUpdateEvent;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -32,6 +35,7 @@ public class RequestUPDATE {
                     String payload = content.toString(CharsetUtil.UTF_8);
                     Driver.getInstance().getWebServer().updateRoute(path, payload);
                     Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudRestAPIUpdateEvent(path, payload));
+                    NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutCloudRestAPIUpdateEvent(path, payload));
                     FullHttpResponse response = createResponse(HttpResponseStatus.OK, "{\"reason\":\"data received\"}");
                     ctx.writeAndFlush(response);
                 }else {
