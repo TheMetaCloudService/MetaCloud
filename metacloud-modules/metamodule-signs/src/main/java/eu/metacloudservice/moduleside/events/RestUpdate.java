@@ -8,7 +8,7 @@ import eu.metacloudservice.events.entrys.Priority;
 import eu.metacloudservice.events.entrys.Subscribe;
 import eu.metacloudservice.events.listeners.group.CloudGroupCreateEvent;
 import eu.metacloudservice.events.listeners.group.CloudGroupDeleteEvent;
-import eu.metacloudservice.events.listeners.restapi.CloudRestAPIPutEvent;
+import eu.metacloudservice.events.listeners.restapi.CloudRestAPIUpdateEvent;
 import eu.metacloudservice.moduleside.MetaModule;
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.packet.packets.out.service.PacketOutResAPItReload;
@@ -19,7 +19,7 @@ public class RestUpdate implements ICloudListener {
 
 
     @Subscribe(priority = Priority.HIGHEST)
-    public void handle(CloudRestAPIPutEvent event){
+    public void handle(CloudRestAPIUpdateEvent event){
         if (event.getPath().equals("/module/signs/locations")){
             new ConfigDriver("./modules/signs/locations.json").save(new ConfigDriver().convert(event.getContent(), Locations.class));
         }
