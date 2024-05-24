@@ -14,6 +14,7 @@ import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.subcommands.*;
 import eu.metacloudservice.timebaser.TimerBase;
 import eu.metacloudservice.timebaser.utils.TimeUtil;
+import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -25,10 +26,12 @@ public class BungeeBootstrap extends Plugin {
 
 
     private static BungeeBootstrap instance;
+    public BungeeAudiences audiences;
     @Override
     public void onEnable() {
         instance = this;
         new Driver();
+        audiences = BungeeAudiences.builder(instance).build();
         new PluginDriver();
                 LiveService service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         CloudAPI.getInstance().setState(ServiceState.LOBBY, service.getService());

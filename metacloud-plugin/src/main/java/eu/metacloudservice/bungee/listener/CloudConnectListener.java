@@ -1,6 +1,7 @@
 package eu.metacloudservice.bungee.listener;
 
 import eu.metacloudservice.CloudAPI;
+import eu.metacloudservice.api.translate.Translator;
 import eu.metacloudservice.bungee.BungeeBootstrap;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
@@ -9,6 +10,8 @@ import eu.metacloudservice.networking.packet.packets.in.service.playerbased.Pack
 import eu.metacloudservice.networking.packet.packets.in.service.playerbased.PacketInPlayerDisconnect;
 import eu.metacloudservice.networking.packet.packets.in.service.playerbased.PacketInPlayerSwitchService;
 import eu.metacloudservice.service.entrys.CloudService;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.event.*;
@@ -55,18 +58,18 @@ public class CloudConnectListener implements Listener {
 
              if(ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()) != null && !ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()).hasPermission("metacloud.bypass.connection.maintenance")
                     && !CloudAPI.getInstance().getWhitelist().contains(ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()).getName())){
-                 event.getPlayer().disconnect(CloudAPI.getInstance().getMessages().getMessages().get("kickNetworkIsMaintenance").replace("&", "§"));
-
+                event.getPlayer().disconnect(BungeeComponentSerializer.get().serialize(MiniMessage.miniMessage().deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNetworkIsMaintenance"))))[0]);
              }
         }else {
             if (CloudAPI.getInstance().getPlayerPool().getPlayers().size() >= group.getMaxPlayers()
                     && !ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()).hasPermission("metacloud.bypass.connection.full")
                     && !CloudAPI.getInstance().getWhitelist().contains(ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()).getName())){
-                event.getPlayer().disconnect(CloudAPI.getInstance().getMessages().getMessages().get("kickNetworkIsFull").replace("&", "§"));
+                 event.getPlayer().disconnect(BungeeComponentSerializer.get().serialize(MiniMessage.miniMessage().deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNetworkIsFull"))))[0]);
 
             }else if (ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()) != null
                     && BungeeBootstrap.getInstance().getLobby( ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId())) == null){
-                event.getPlayer().disconnect(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback").replace("&", "§"));
+                event.getPlayer().disconnect(BungeeComponentSerializer.get().serialize(MiniMessage.miniMessage().deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback"))))[0]);
+
             }
         }
     }
@@ -94,7 +97,7 @@ public class CloudConnectListener implements Listener {
             if (service == null){
                 event.setCancelled(false);
                 event.setCancelServer(null);
-                event.getPlayer().disconnect(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback").replace("&", "§"));
+                event.getPlayer().disconnect(BungeeComponentSerializer.get().serialize(MiniMessage.miniMessage().deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback"))))[0]);
             }else {
                 target  = ProxyServer.getInstance().getServerInfo(service.getName());
                 if (target != null) {
@@ -103,7 +106,8 @@ public class CloudConnectListener implements Listener {
                 } else {
                     event.setCancelled(false);
                     event.setCancelServer(null);
-                    event.getPlayer().disconnect(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback").replace("&", "§"));
+                    event.getPlayer().disconnect(BungeeComponentSerializer.get().serialize(MiniMessage.miniMessage().deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback"))))[0]);
+
                 }
             }
 

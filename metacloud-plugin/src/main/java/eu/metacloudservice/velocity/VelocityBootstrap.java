@@ -24,6 +24,7 @@ import eu.metacloudservice.velocity.command.CloudCommand;
 import eu.metacloudservice.velocity.listeners.CloudConnectListener;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.slf4j.Logger;
 
 import java.util.*;
@@ -33,11 +34,13 @@ public class VelocityBootstrap {
 
     public static ProxyServer proxyServer;
     private final Logger logger;
+    public static MiniMessage message;
 
     @Inject
     public VelocityBootstrap(ProxyServer proxyServer, Logger logger) {
         VelocityBootstrap.proxyServer = proxyServer;
         this.logger = logger;
+        message = MiniMessage.builder().build();
 
 
     }

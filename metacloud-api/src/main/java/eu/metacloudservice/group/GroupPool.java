@@ -48,7 +48,6 @@ public class GroupPool {
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInDeleteGroup(group));
     }
 
-
     public void stopGroup(String group){
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInStopGroup(group));
     }
