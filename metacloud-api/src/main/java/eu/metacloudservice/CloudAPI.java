@@ -51,6 +51,8 @@ import java.lang.management.ManagementFactory;
 import java.util.List;
 import java.util.Objects;
 import java.util.TimerTask;
+import java.util.concurrent.CompletableFuture;
+
 @Getter
 public class CloudAPI {
 
@@ -149,6 +151,13 @@ public class CloudAPI {
 
     public LiveService getCurrentService(){
         return service;
+    }
+
+    public CloudService getThisService(){
+        return getServicePool().getService(getCurrentService().getService());
+    }
+    public CompletableFuture<CloudService> getThisServiceAsync(){
+        return CompletableFuture.supplyAsync(this::getThisService);
     }
 
     public List<String> getWhitelist(){

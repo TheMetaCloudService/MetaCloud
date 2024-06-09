@@ -16,10 +16,10 @@ import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
-import java.util.LinkedList;
-import java.util.Objects;
-import java.util.Random;
-import java.util.TimerTask;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 @Getter
 public final class ServiceProcess implements IServiceProcess {
@@ -129,6 +129,7 @@ public final class ServiceProcess implements IServiceProcess {
             }).start();
         }
     }
+
     @Override
     public void handelLaunch() {
 
@@ -140,6 +141,37 @@ public final class ServiceProcess implements IServiceProcess {
             Driver.getInstance().getTemplateDriver().create(group.getStorage().getTemplate(), group.getGroupType().equalsIgnoreCase("PROXY"), group.isRunStatic());
         }
         new File("./live/" + group.getGroup() + "/" + service + "/plugins/").mkdirs();
+
+
+        if (!useCustomTemplate){
+            if (group.isRunStatic()){
+                if (!new File("./local/templates/" + group.getGroup() + "/default/").exists()){
+                    new File("./local/templates/" + group.getGroup() + "/default/").mkdirs();
+                    Path defaultPath = Paths.get("./local/templates/" + group.getGroup() + "/default/");
+                    Path groupPath = Paths.get("./local/templates/" + group.getGroup() + "/");
+                    moveFiles(groupPath, defaultPath);
+                }
+            }else {
+                if (!new File("./local/templates/" + group.getGroup() + "/").exists()){
+
+                    File file = new File("./local/templates/" + group.getGroup() + "/");
+                    File[] files = file.listFiles();
+                    ArrayList<String> modules = new ArrayList<>();
+                    for (int i = 0; i != Objects.requireNonNull(files).length; i++) {
+                        String FirstFilter = files[i].getName();
+                        if (!FirstFilter.contains("default")) {
+                            files[i].delete();
+                        }
+
+                    }
+
+                    Path defaultPath = Paths.get("./local/templates/" + group.getGroup() + "/default/");
+                    Path groupPath = Paths.get("./local/templates/" + group.getGroup() + "/");
+                    moveFiles(defaultPath, groupPath);
+                    new File("./local/templates/" + group.getGroup() + "/default/").delete();
+                }
+            }
+        }
 
 
         if (useCustomTemplate){
@@ -671,5 +703,17 @@ public final class ServiceProcess implements IServiceProcess {
         this.customTemplate = customTemplate;
     }
 
+    @SneakyThrows
+    private void moveFiles(Path sourcePath, Path targetPath) {
+        if (Files.exists(sourcePath)) {
+            Files.list(sourcePath).forEach(source -> {
+                try {
+                    Files.move(source, targetPath.resolve(source.getFileName()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+    }
 
 }

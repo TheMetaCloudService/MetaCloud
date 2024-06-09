@@ -1,17 +1,12 @@
 package eu.metacloudservice.moduleside;
 
-import com.google.common.primitives.Bytes;
-import eu.metacloudservice.config.*;
 import eu.metacloudservice.Driver;
-import eu.metacloudservice.config.migration.MigrationConfiguration;
+import eu.metacloudservice.config.*;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.restapi.GeneralConfig;
-import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
 import eu.metacloudservice.module.extention.IModule;
 import eu.metacloudservice.moduleside.converter.IconConverter;
 import eu.metacloudservice.moduleside.events.SyncEvents;
-import eu.metacloudservice.terminal.animation.AnimationDriver;
-import eu.metacloudservice.terminal.enums.Type;
 import eu.metacloudservice.timebaser.TimerBase;
 import eu.metacloudservice.timebaser.utils.TimeUtil;
 import eu.metacloudservice.webserver.entry.RouteEntry;
@@ -162,54 +157,10 @@ public class MetaModule implements IModule {
                         throw new RuntimeException(e);
                     }
                 });
-                Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/syncproxy/icons", new ConfigDriver().convert( new IconBase(icons))));
+                Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/syncproxy/icons", new ConfigDriver().convert(new IconBase(icons))));
 
 
                 new ConfigDriver("./modules/syncproxy/config.json").save(configuration);
-                new TimerBase().scheduleAsync(new TimerTask() {
-                    @Override
-                    public void run() {
-                        set();
-                        update();
-                    }
-                }, 5, TimeUtil.SECONDS);
-            }else if (!new ConfigDriver("./modules/syncproxy/config.json").canBeRead(Configuration.class)){
-                new File("./local/server-icon.png").deleteOnExit();
-                MigrationConfiguration migrationConfiguration = (MigrationConfiguration) new ConfigDriver("./modules/syncproxy/config.json").read(MigrationConfiguration.class);
-                Configuration configuration = new Configuration();
-                ArrayList<DesignConfig> configs = new ArrayList<>();
-                migrationConfiguration.getConfiguration().forEach(designConfig -> {
-                    DesignConfig config = new DesignConfig();
-                    config.setTablist(designConfig.getTablist());
-                    ArrayList<Motd> defaults = new ArrayList<>();
-                    ArrayList<Motd> maintenance = new ArrayList<>();
-                    designConfig.getDefaults().forEach(mm -> defaults.add(new Motd(mm.getProtocol(),mm.getFirstline(), mm.getSecondline(),mm.getPlayerinfos(), "default.png")));
-                    designConfig.getMaintenancen().forEach(mm -> maintenance.add(new Motd(mm.getProtocol(),mm.getFirstline(),mm.getSecondline(),mm.getPlayerinfos(), "maintenance.png")));
-                    config.setDefaults(defaults);
-                    config.setMaintenancen(maintenance);
-                    config.setTargetGroup(designConfig.getTargetGroup());
-                    configs.add(config);
-                });
-                configuration.setConfiguration(configs);
-                Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/syncproxy/configuration", new ConfigDriver().convert(configuration)));
-                Driver.getInstance().getWebServer().updateRoute("/module/syncproxy/configuration", new ConfigDriver().convert(configuration));
-
-                new File("./modules/syncproxy/icons/").mkdirs();
-                new File("./modules/syncproxy/config.json").delete();
-                new ConfigDriver("./modules/syncproxy/config.json").save(configuration);
-                loader();
-
-                HashMap<String, String> icons = new HashMap<>();
-                getIcons().forEach(s -> {
-                    try {
-                        icons.put(s, new IconConverter().convertToBase64("./modules/syncproxy/icons/" + s + ".png"));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-                Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/syncproxy/icons", new ConfigDriver().convert( new IconBase(icons))));
-
-
                 new TimerBase().scheduleAsync(new TimerTask() {
                     @Override
                     public void run() {

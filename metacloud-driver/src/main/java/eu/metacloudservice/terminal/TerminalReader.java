@@ -53,6 +53,9 @@ public final class TerminalReader extends Thread {
                 }else {
                     commandDriver.executeCommand("stop");
                 }
+            }catch (UnsupportedOperationException e){
+                interrupt();
+                System.exit(0);
             }
         }
     }

@@ -11,7 +11,7 @@ import eu.metacloudservice.events.entrys.Priority;
 import eu.metacloudservice.events.entrys.Subscribe;
 import eu.metacloudservice.events.listeners.player.CloudPlayerConnectedEvent;
 import eu.metacloudservice.events.listeners.player.CloudPlayerSwitchEvent;
-import eu.metacloudservice.events.listeners.restapi.CloudRestAPIPutEvent;
+import eu.metacloudservice.events.listeners.restapi.CloudRestAPIUpdateEvent;
 import eu.metacloudservice.moduleside.config.*;
 
 import java.time.LocalDateTime;
@@ -23,7 +23,7 @@ public class CloudEvents implements ICloudListener {
 
 
     @Subscribe(priority =  Priority.HIGHEST)
-    public void handle(CloudRestAPIPutEvent event){
+    public void handle(CloudRestAPIUpdateEvent event){
         if (event.getPath().equalsIgnoreCase("/module/permission/configuration")){
             new ConfigDriver("./modules/permissions/config.json").save(new ConfigDriver().convert(event.getContent(), Configuration.class));
         }

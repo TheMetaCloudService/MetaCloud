@@ -350,9 +350,9 @@ public class ServiceCommand extends PluginCommand {
             if (args.length == 2){
                 String service = args[1];
                 if (CloudAPI.getInstance().getServicePool().serviceNotNull(service)){
-                    try {
-                        CloudAPI.getInstance().getAsyncServicePool().getService(service).get().sync();
-                    } catch (InterruptedException | ExecutionException e) {throw new RuntimeException(e);}
+
+                    CloudAPI.getInstance().getServicePool().getService(service).sync();
+
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX +"The service '§f"+service+"§7' was successfully copied"));
                     else

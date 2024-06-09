@@ -21,6 +21,7 @@ import eu.metacloudservice.subcommands.*;
 import eu.metacloudservice.timebaser.TimerBase;
 import eu.metacloudservice.timebaser.utils.TimeUtil;
 import eu.metacloudservice.velocity.command.CloudCommand;
+import eu.metacloudservice.velocity.command.EndCommand;
 import eu.metacloudservice.velocity.listeners.CloudConnectListener;
 
 import net.kyori.adventure.text.Component;
@@ -52,7 +53,7 @@ public class VelocityBootstrap {
         LiveService service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         CloudAPI.getInstance().setState(ServiceState.LOBBY, service.getService());
         proxyServer.getCommandManager().register("cloud", new CloudCommand(), "metacloud", "mc");
-        PluginDriver.getInstance().register(new ExitCommand());
+        proxyServer.getCommandManager().register("end", new EndCommand());
         PluginDriver.getInstance().register(new VersionCommand());
         PluginDriver.getInstance().register(new ReloadCommand());
         PluginDriver.getInstance().register(new ServiceCommand());
@@ -87,7 +88,14 @@ public class VelocityBootstrap {
         }else {
             List<CloudService> cloudServices = CloudAPI.getInstance().getServicePool().getServices().stream()
                     .filter(service -> service.getGroup().getGroupType().equalsIgnoreCase("LOBBY"))
-                    .filter(service -> !service.getGroup().isMaintenance())
+                    .filter(service -> {
+
+                        if (!service.getGroup().isMaintenance()){
+                            return true;
+                        }else if (player.hasPermission("metacloud.bypass.connection.maintenance") || CloudAPI.getInstance().getWhitelist().contains(player.getUsername())){
+                            return true;
+                        }else return false;
+                    })
                     .filter(service -> service.getState() == ServiceState.LOBBY).toList()
                     .stream().filter(service -> {
                         if (service.getGroup().getPermission().equalsIgnoreCase("")) {
@@ -114,7 +122,14 @@ public class VelocityBootstrap {
         }
         List<CloudService> services = CloudAPI.getInstance().getServicePool().getServices().stream()
                 .filter(service -> service.getGroup().getGroupType().equals("LOBBY"))
-                .filter(service -> !service.getGroup().isMaintenance())
+                .filter(service -> {
+
+                    if (!service.getGroup().isMaintenance()){
+                        return true;
+                    }else if (player.hasPermission("metacloud.bypass.connection.maintenance") || CloudAPI.getInstance().getWhitelist().contains(player.getUsername())){
+                        return true;
+                    }else return false;
+                })
                 .filter(service -> !service.getName().equals(kicked))
                 .filter(service -> service.getState() == ServiceState.LOBBY)
                 .filter(service -> service.getGroup().getPermission().equals("") || player.hasPermission(service.getGroup().getPermission())).toList();

@@ -43,7 +43,7 @@ public class AsyncCloudService {
     }
 
     public void sync(){
-        CloudAPI.getInstance().dispatchCommand("service sync " + name);
+        CloudAPI.getInstance().dispatchCommand("service copy " + name);
     }
 
     public void shutdown(){

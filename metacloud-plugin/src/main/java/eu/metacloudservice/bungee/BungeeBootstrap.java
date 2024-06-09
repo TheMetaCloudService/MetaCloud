@@ -4,6 +4,7 @@ import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.api.PluginDriver;
 import eu.metacloudservice.bungee.command.CloudCommand;
+import eu.metacloudservice.bungee.command.EndCommand;
 import eu.metacloudservice.bungee.listener.CloudConnectListener;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.message.Messages;
@@ -39,7 +40,7 @@ public class BungeeBootstrap extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CloudCommand("cloud"));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CloudCommand("metacloud"));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CloudCommand("mc"));
-        PluginDriver.getInstance().register(new ExitCommand());
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new EndCommand("end"));
         PluginDriver.getInstance().register(new VersionCommand());
         PluginDriver.getInstance().register(new ReloadCommand());
         PluginDriver.getInstance().register(new ServiceCommand());
@@ -75,7 +76,14 @@ public class BungeeBootstrap extends Plugin {
         }else {
             List<CloudService> cloudServices = CloudAPI.getInstance().getServicePool().getServices().stream()
                     .filter(service -> service.getGroup().getGroupType().equalsIgnoreCase("LOBBY"))
-                    .filter(service -> !service.getGroup().isMaintenance())
+                    .filter(service -> {
+
+                        if (!service.getGroup().isMaintenance()){
+                            return true;
+                        }else if (player.hasPermission("metacloud.bypass.connection.maintenance") || CloudAPI.getInstance().getWhitelist().contains(player.getName())){
+                            return true;
+                        }else return false;
+                    })
                     .filter(service -> service.getState() == ServiceState.LOBBY).toList()
                     .stream().filter(service -> {
                         if (service.getGroup().getPermission().equalsIgnoreCase("")) {
@@ -102,7 +110,14 @@ public class BungeeBootstrap extends Plugin {
         }
         List<CloudService> services = CloudAPI.getInstance().getServicePool().getServices().stream()
                 .filter(service -> service.getGroup().getGroupType().equals("LOBBY"))
-                .filter(service -> !service.getGroup().isMaintenance())
+                .filter(service -> {
+
+                    if (!service.getGroup().isMaintenance()){
+                        return true;
+                    }else if (player.hasPermission("metacloud.bypass.connection.maintenance") || CloudAPI.getInstance().getWhitelist().contains(player.getName())){
+                        return true;
+                    }else return false;
+                })
                 .filter(service -> !service.getName().equals(kicked))
                 .filter(service -> service.getState() == ServiceState.LOBBY)
                 .filter(service -> service.getGroup().getPermission().equals("") || player.hasPermission(service.getGroup().getPermission())).toList();

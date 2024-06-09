@@ -11,6 +11,7 @@ import eu.metacloudservice.events.listeners.group.CloudGroupDeleteEvent;
 import eu.metacloudservice.events.listeners.restapi.CloudRestAPIUpdateEvent;
 import eu.metacloudservice.moduleside.MetaModule;
 import eu.metacloudservice.networking.NettyDriver;
+import eu.metacloudservice.networking.packet.packets.out.service.events.PacketOutCloudRestAPIReloadEvent;
 
 import java.util.ArrayList;
 
@@ -81,7 +82,7 @@ public class RestUpdate implements ICloudListener {
             MetaModule.update();
             new ConfigDriver("./modules/signs/config.json").save(configuration);
 
-            NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutResAPItReload());
+            NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutCloudRestAPIReloadEvent());
         }
     }
 
@@ -92,7 +93,7 @@ public class RestUpdate implements ICloudListener {
         configuration.configurations.removeIf(signConfig -> signConfig.getTargetGroup().equalsIgnoreCase(event.getGroupname()));
         MetaModule.update();
         new ConfigDriver("./modules/signs/config.json").save(configuration);
-        NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutResAPItReload());
+        NettyDriver.getInstance().nettyServer.sendToAllAsynchronous(new PacketOutCloudRestAPIReloadEvent());
     }
 
 }

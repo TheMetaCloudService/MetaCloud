@@ -21,7 +21,7 @@ import java.util.List;
 public class ShutdownCommand extends PluginCommand {
     @Override
     public void performCommand(PluginCommand command, ProxiedPlayer proxiedPlayer, Player veloPlayer, org.bukkit.entity.Player bukkitPlayer, String[] args) {
-        CloudAPI.getInstance().getServicePool().getService(CloudAPI.getInstance().getCurrentService().getService()).shutdown();
+        CloudAPI.getInstance().getThisService().shutdown();
     }
 
     @Override

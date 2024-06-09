@@ -84,8 +84,8 @@ public class GroupCommand extends CommandAdapter {
                     if (group.equals("--all")) {
                         Driver.getInstance().getGroupDriver().getAll().forEach(group1 -> {
                             group1.setMaintenance(args[2].equalsIgnoreCase("true"));
-                            Driver.getInstance().getGroupDriver().update(group, group1);
-                            Driver.getInstance().getWebServer().updateRoute("/cloudgroup/" + group, new ConfigDriver().convert(group1));
+                            Driver.getInstance().getGroupDriver().update(group1.getGroup(), group1);
+                            Driver.getInstance().getWebServer().updateRoute("/cloudgroup/" + group1.getGroup(), new ConfigDriver().convert(group1));
                         });
                         Driver.getInstance().getTerminalDriver().log(Type.COMMAND, Driver.getInstance().getLanguageDriver().getLang().getMessage("command-group-change-maintenance"));
 

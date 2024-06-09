@@ -49,27 +49,38 @@ public class CloudConnectListener implements Listener {
 
         if (CloudAPI.getInstance().getPlayerPool().getPlayers().stream().anyMatch(cloudPlayer -> cloudPlayer.getUsername().equalsIgnoreCase(event.getPlayer().getName()))){
             event.getPlayer().disconnect(CloudAPI.getInstance().getMessages().getMessages().get("kickAlreadyOnNetwork").replace("&", "§"));
-        }
-
-        this.connected.add(event.getPlayer().getUniqueId());
-        CloudAPI.getInstance().sendPacketAsynchronous(new PacketInPlayerConnect(event.getPlayer().getName(), service.getService()));
-
-        if (group.isMaintenance()){
-
-             if(ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()) != null && !ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()).hasPermission("metacloud.bypass.connection.maintenance")
-                    && !CloudAPI.getInstance().getWhitelist().contains(ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()).getName())){
-                event.getPlayer().disconnect(BungeeComponentSerializer.get().serialize(MiniMessage.miniMessage().deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNetworkIsMaintenance"))))[0]);
-             }
         }else {
-            if (CloudAPI.getInstance().getPlayerPool().getPlayers().size() >= group.getMaxPlayers()
-                    && !ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()).hasPermission("metacloud.bypass.connection.full")
-                    && !CloudAPI.getInstance().getWhitelist().contains(ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()).getName())){
-                 event.getPlayer().disconnect(BungeeComponentSerializer.get().serialize(MiniMessage.miniMessage().deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNetworkIsFull"))))[0]);
+            this.connected.add(event.getPlayer().getUniqueId());
+            CloudAPI.getInstance().sendPacketAsynchronous(new PacketInPlayerConnect(event.getPlayer().getName(), service.getService()));
 
-            }else if (ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()) != null
-                    && BungeeBootstrap.getInstance().getLobby( ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId())) == null){
-                event.getPlayer().disconnect(BungeeComponentSerializer.get().serialize(MiniMessage.miniMessage().deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback"))))[0]);
+            if (group.isMaintenance()){
 
+                if(ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()) != null && !ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()).hasPermission("metacloud.bypass.connection.maintenance")
+                        && !CloudAPI.getInstance().getWhitelist().contains(ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()).getName())){
+                    event.getPlayer().disconnect(BungeeComponentSerializer.get().serialize(MiniMessage.miniMessage().deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNetworkIsMaintenance"))))[0]);
+                }else {
+                    if (CloudAPI.getInstance().getPlayerPool().getPlayers().size() >= group.getMaxPlayers()
+                            && !ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()).hasPermission("metacloud.bypass.connection.full")
+                            && !CloudAPI.getInstance().getWhitelist().contains(ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()).getName())){
+                        event.getPlayer().disconnect(BungeeComponentSerializer.get().serialize(MiniMessage.miniMessage().deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNetworkIsFull"))))[0]);
+
+                    }else if (ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()) != null
+                            && BungeeBootstrap.getInstance().getLobby( ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId())) == null){
+                        event.getPlayer().disconnect(BungeeComponentSerializer.get().serialize(MiniMessage.miniMessage().deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback"))))[0]);
+
+                    }
+                }
+            }else {
+                if (CloudAPI.getInstance().getPlayerPool().getPlayers().size() >= group.getMaxPlayers()
+                        && !ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()).hasPermission("metacloud.bypass.connection.full")
+                        && !CloudAPI.getInstance().getWhitelist().contains(ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()).getName())){
+                    event.getPlayer().disconnect(BungeeComponentSerializer.get().serialize(MiniMessage.miniMessage().deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNetworkIsFull"))))[0]);
+
+                }else if (ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()) != null
+                        && BungeeBootstrap.getInstance().getLobby( ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId())) == null){
+                    event.getPlayer().disconnect(BungeeComponentSerializer.get().serialize(MiniMessage.miniMessage().deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback"))))[0]);
+
+                }
             }
         }
     }

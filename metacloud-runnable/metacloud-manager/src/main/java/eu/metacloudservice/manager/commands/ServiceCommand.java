@@ -117,7 +117,7 @@ public class ServiceCommand extends CommandAdapter {
                             "Service uuid: §f" + taskedService.getEntry().getUUID());
                     Driver.getInstance().getTerminalDriver().log(Type.COMMAND,
                             "Service Node: §f" + taskedService.getEntry().getNode());
-                    Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "Service Gruppe: §f" + taskedService.getEntry().getGroupName(),
+                    Driver.getInstance().getTerminalDriver().log(Type.COMMAND, 
                             "Service group: §f" + taskedService.getEntry().getGroupName());
                     Driver.getInstance().getTerminalDriver().log(Type.COMMAND,
                             "Service Port: §f" + taskedService.getEntry().getUsedPort());

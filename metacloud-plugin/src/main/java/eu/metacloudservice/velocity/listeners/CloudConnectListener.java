@@ -2,6 +2,7 @@ package eu.metacloudservice.velocity.listeners;
 
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.command.CommandExecuteEvent;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
 import com.velocitypowered.api.event.player.KickedFromServerEvent;
@@ -60,27 +61,41 @@ public class CloudConnectListener {
 
         if (CloudAPI.getInstance().getPlayerPool().getPlayers().stream().anyMatch(cloudPlayer -> cloudPlayer.getUsername().equalsIgnoreCase(event.getPlayer().getUsername()))){
             event.getPlayer().disconnect(VelocityBootstrap.message.deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickAlreadyOnNetwork"))));
-        }
-        this.connected.add(event.getPlayer().getUniqueId());
-        CloudAPI.getInstance().sendPacketSynchronized(new PacketInPlayerConnect(event.getPlayer().getUsername(), service.getService()));
-
-        if (group.isMaintenance()) {
-            if (!server.getPlayer(event.getPlayer().getUniqueId()).get().hasPermission("metacloud.connection.maintenance")
-                    && !CloudAPI.getInstance().getWhitelist().contains(server.getPlayer(event.getPlayer().getUniqueId()).get().getUsername())){
-                event.getPlayer().disconnect(VelocityBootstrap.message.deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNetworkIsMaintenance"))));
-            }
         }else {
-            if (CloudAPI.getInstance().getPlayerPool().getPlayers().size() >= group.getMaxPlayers()
-                    && !server.getPlayer(event.getPlayer().getUniqueId()).get().hasPermission("metacloud.connection.full")
-                    && !CloudAPI.getInstance().getWhitelist().contains(server.getPlayer(event.getPlayer().getUniqueId()).get().getUsername())){
-                event.getPlayer().disconnect(VelocityBootstrap.message.deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNetworkIsFull"))));
+            this.connected.add(event.getPlayer().getUniqueId());
+            CloudAPI.getInstance().sendPacketSynchronized(new PacketInPlayerConnect(event.getPlayer().getUsername(), service.getService()));
+
+            if (group.isMaintenance()) {
+                if (!server.getPlayer(event.getPlayer().getUniqueId()).get().hasPermission("metacloud.connection.maintenance")
+                        && !CloudAPI.getInstance().getWhitelist().contains(server.getPlayer(event.getPlayer().getUniqueId()).get().getUsername())){
+                    event.getPlayer().disconnect(VelocityBootstrap.message.deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNetworkIsMaintenance"))));
+                }else {
+                    if (CloudAPI.getInstance().getPlayerPool().getPlayers().size() >= group.getMaxPlayers()
+                            && !server.getPlayer(event.getPlayer().getUniqueId()).get().hasPermission("metacloud.connection.full")
+                            && !CloudAPI.getInstance().getWhitelist().contains(server.getPlayer(event.getPlayer().getUniqueId()).get().getUsername())){
+                        event.getPlayer().disconnect(VelocityBootstrap.message.deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNetworkIsFull"))));
 
 
-            }else if (server.getPlayer(event.getPlayer().getUniqueId()).isPresent()
-                    && VelocityBootstrap.getLobby( server.getPlayer(event.getPlayer().getUniqueId()).get()) == null){
+                    }else if (server.getPlayer(event.getPlayer().getUniqueId()).isPresent()
+                            && VelocityBootstrap.getLobby( server.getPlayer(event.getPlayer().getUniqueId()).get()) == null){
 
-                event.getPlayer().disconnect(VelocityBootstrap.message.deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback"))));
+                        event.getPlayer().disconnect(VelocityBootstrap.message.deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback"))));
 
+                    }
+                }
+            }else {
+                if (CloudAPI.getInstance().getPlayerPool().getPlayers().size() >= group.getMaxPlayers()
+                        && !server.getPlayer(event.getPlayer().getUniqueId()).get().hasPermission("metacloud.connection.full")
+                        && !CloudAPI.getInstance().getWhitelist().contains(server.getPlayer(event.getPlayer().getUniqueId()).get().getUsername())){
+                    event.getPlayer().disconnect(VelocityBootstrap.message.deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNetworkIsFull"))));
+
+
+                }else if (server.getPlayer(event.getPlayer().getUniqueId()).isPresent()
+                        && VelocityBootstrap.getLobby( server.getPlayer(event.getPlayer().getUniqueId()).get()) == null){
+
+                    event.getPlayer().disconnect(VelocityBootstrap.message.deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback"))));
+
+                }
             }
         }
     }
@@ -109,6 +124,9 @@ public class CloudConnectListener {
             }
         }
     }
+
+
+
 
 
 }

@@ -3,6 +3,7 @@ package eu.metacloudservice.bukkit;
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.api.PluginDriver;
+import eu.metacloudservice.bukkit.command.StopCommand;
 import eu.metacloudservice.bukkit.command.impli.InformationCommand;
 import eu.metacloudservice.bukkit.command.ServiceCommand;
 import eu.metacloudservice.bukkit.command.impli.ShutdownCommand;
@@ -32,6 +33,7 @@ public class BukkitBootstrap extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ReloadBlocker(), this);
         Bukkit.getPluginManager().registerEvents(new ServiceConnectListener(), this);
         getCommand("service").setExecutor(new ServiceCommand());
+        getCommand("stop").setExecutor(new StopCommand());
         PluginDriver.getInstance().register(new InformationCommand());
         PluginDriver.getInstance().register(new ShutdownCommand());
         new TimerBase().schedule(new TimerTask() {

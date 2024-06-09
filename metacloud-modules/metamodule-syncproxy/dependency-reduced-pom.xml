@@ -59,6 +59,10 @@
           <artifactId>spigot-api</artifactId>
           <groupId>org.spigotmc</groupId>
         </exclusion>
+        <exclusion>
+          <artifactId>adventure-platform-bungeecord</artifactId>
+          <groupId>net.kyori</groupId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
@@ -108,6 +112,10 @@
         <exclusion>
           <artifactId>toml4j</artifactId>
           <groupId>com.moandjiezana.toml</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>adventure-text-serializer-gson</artifactId>
+          <groupId>net.kyori</groupId>
         </exclusion>
         <exclusion>
           <artifactId>adventure-text-serializer-plain</artifactId>
