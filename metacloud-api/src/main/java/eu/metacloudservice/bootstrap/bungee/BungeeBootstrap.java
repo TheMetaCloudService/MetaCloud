@@ -19,9 +19,9 @@ public class BungeeBootstrap extends Plugin {
     public void onLoad() {
         new CloudAPI();
         CloudAPIEnvironment environment = new CloudAPIEnvironment();
+        environment.handleNettyConnection();
         environment.registerHandlers();
         environment.registerBungeeHandlers();
-        environment.handleNettyConnection();
         environment.handelNettyUpdate();
     }
 

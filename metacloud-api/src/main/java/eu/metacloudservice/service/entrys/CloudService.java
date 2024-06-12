@@ -87,22 +87,22 @@ public class CloudService {
         return CloudAPI.getInstance().getAsyncPlayerPool().getPlayersFromService(this.name).get().size();
     }
 
-    public ServiceState getState(){
+
+    private LiveServices getLiveService(){
         LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
         LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
-        return services.getState();
+        return services;
+    }
+    public ServiceState getState(){
+        return getLiveService().getState();
     }
 
     public String getAddress(){
-        LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
-        LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
-        return services.getHost();
+         return getLiveService().getHost();
     }
 
     public Integer getPort(){
-        LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
-        LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
-        return services.getPort();
+       return getLiveService().getPort();
     }
 
     public List<CloudPlayer> getPlayers(){

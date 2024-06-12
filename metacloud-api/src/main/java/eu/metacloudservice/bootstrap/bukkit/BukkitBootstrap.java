@@ -15,8 +15,8 @@ public class BukkitBootstrap extends JavaPlugin {
     public void onLoad() {
         new CloudAPI();
         CloudAPIEnvironment environment = new CloudAPIEnvironment();
-        environment.registerHandlers();
         environment.handleNettyConnection();
+        environment.registerHandlers();
         environment.handelNettyUpdate();
 
     }

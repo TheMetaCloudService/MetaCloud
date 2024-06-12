@@ -48,7 +48,7 @@ public class CloudAPI {
 
     public CloudAPI() {
         instance = this;
-        CompletableFuture.runAsync(this::initializeCoreComponents);
+        initializeCoreComponents();
         CompletableFuture.runAsync(this::initializeLazyComponents);
     }
 

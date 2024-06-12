@@ -23,11 +23,11 @@ public class AsyncPlayerPool {
     }
 
     public CompletableFuture<AsyncCloudPlayer> getPlayer(@NonNull String username){
-        return CompletableFuture.supplyAsync(() ->connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.username().equals(username)).findFirst().orElse(null));
+        return CompletableFuture.supplyAsync(() ->connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUniqueId().equals(username)).findFirst().orElse(null));
     }
 
     public CompletableFuture<AsyncCloudPlayer> getPlayer(@NonNull UUID uniqueId){
-        return CompletableFuture.supplyAsync( () -> connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.uniqueId().equals(uniqueId.toString().replace("-", ""))).findFirst().orElse(null));
+        return CompletableFuture.supplyAsync( () -> connectedPlayers.stream().filter(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString().replace("-", ""))).findFirst().orElse(null));
     }
 
     public CompletableFuture<List<AsyncCloudPlayer>> getPlayersFromService(@NonNull String service){
@@ -62,25 +62,25 @@ public class AsyncPlayerPool {
 
 
     public boolean playerIsNotNull(@NonNull UUID uniqueId){
-        return connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.uniqueId().equals(uniqueId));
+        return connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId));
     }
 
     public boolean playerIsNotNull(@NonNull String username){
-        return connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.username().equals(username));
+        return connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.getUsername().equals(username));
     }
 
     public void registerPlayer(@NonNull AsyncCloudPlayer asyncCloudPlayer){
-        if (connectedPlayers.stream().noneMatch(cloudPlayer1 -> cloudPlayer1.uniqueId().equals(asyncCloudPlayer.uniqueId()))){
+        if (connectedPlayers.stream().noneMatch(cloudPlayer1 -> cloudPlayer1.getUniqueId().equals(asyncCloudPlayer.getUniqueId()))){
             connectedPlayers.add(asyncCloudPlayer);
         }
     }
 
     public void unregisterPlayer(@NonNull String username){
-        connectedPlayers.removeIf(cloudPlayer -> cloudPlayer.username().equalsIgnoreCase(username));
+        connectedPlayers.removeIf(cloudPlayer -> cloudPlayer.getUsername().equalsIgnoreCase(username));
     }
     public boolean unregisterPlayer(@NonNull UUID uniqueId){
-        if (connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.uniqueId().equals(uniqueId.toString().replace("-", "")))){
-            connectedPlayers.removeIf(cloudPlayer -> cloudPlayer.uniqueId().equals(uniqueId.toString().replace("-", "")));
+        if (connectedPlayers.stream().anyMatch(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString().replace("-", "")))){
+            connectedPlayers.removeIf(cloudPlayer -> cloudPlayer.getUniqueId().equals(uniqueId.toString().replace("-", "")));
             return true;
         }else {
             return false;

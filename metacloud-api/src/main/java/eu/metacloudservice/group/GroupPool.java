@@ -11,6 +11,7 @@ import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketI
 import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInDeleteGroup;
 import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInStopGroup;
 import eu.metacloudservice.webserver.dummys.GroupList;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -18,18 +19,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@NoArgsConstructor
 public class GroupPool {
 
-    public GroupPool() {}
+
+    private GroupList getGroupList(){
+        return (GroupList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/general"), GroupList.class);
+
+    }
 
     public ArrayDeque<String> getGroupsByName(){
-        GroupList cech = (GroupList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/general"), GroupList.class);
-        return cech.getGroups();
+        return getGroupList().getGroups();
     }
     public ArrayList<Group> getGroups(){
         ArrayList<Group> groups = new ArrayList<>();
-        GroupList cech = (GroupList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/general"), GroupList.class);
-        cech.getGroups().forEach(s -> {
+        getGroupList().getGroups().forEach(s -> {
             Group g = (Group) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/" + s), Group.class);
             groups.add(g);
         });

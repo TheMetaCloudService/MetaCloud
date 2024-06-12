@@ -24,14 +24,15 @@ import eu.metacloudservice.timebaser.utils.TimeUtil;
 import eu.metacloudservice.webserver.dummys.PlayerGeneral;
 import eu.metacloudservice.webserver.dummys.liveservice.LiveServiceList;
 import eu.metacloudservice.webserver.dummys.liveservice.LiveServices;
+import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 import java.util.TimerTask;
+import java.util.UUID;
 
+
+@NoArgsConstructor
 public class CloudAPIEnvironment {
-
-
-    public CloudAPIEnvironment() {}
 
     public void handleNettyConnection(){
         new NettyDriver();
@@ -41,16 +42,15 @@ public class CloudAPIEnvironment {
         PlayerGeneral players = (PlayerGeneral) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/genernal"), PlayerGeneral.class);
         players.getCloudplayers().forEach(s -> {
             if (!CloudAPI.getInstance().getPlayerPool().playerIsNotNull(s)){
-                CloudAPI.getInstance().getAsyncPlayerPool().registerPlayer(new AsyncCloudPlayer(s, Objects.requireNonNull(UUIDDriver.getUUID(s))));
-                CloudAPI.getInstance().getPlayerPool().registerPlayer(new CloudPlayer(s, Objects.requireNonNull(UUIDDriver.getUUID(s))));
+                CloudAPI.getInstance().getAsyncPlayerPool().registerPlayer(new AsyncCloudPlayer(s, UUIDDriver.getUUID(s)));
+                CloudAPI.getInstance().getPlayerPool().registerPlayer(new CloudPlayer(s, UUIDDriver.getUUID(s)));
             }
         });
     }
 
     public void handelNettyUpdate(){
         NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInServiceConnect(CloudAPI.getInstance().getService().getService()));
-
-        new TimerBase().schedule(new TimerTask() {
+        new TimerBase().scheduleAsync(new TimerTask() {
             @Override
             public void run() {
                 CloudService service = CloudAPI.getInstance().getServicePool().getService(CloudAPI.getInstance().getCurrentService().getService());
@@ -58,8 +58,8 @@ public class CloudAPIEnvironment {
                 PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/genernal"), PlayerGeneral.class);
                 general.getCloudplayers().forEach(s -> {
                     if (!CloudAPI.getInstance().getPlayerPool().playerIsNotNull(s)){
-                        CloudAPI.getInstance().getAsyncPlayerPool().registerPlayer(new AsyncCloudPlayer(s, Objects.requireNonNull(UUIDDriver.getUUID(s))));
-                        CloudAPI.getInstance().getPlayerPool().registerPlayer(new CloudPlayer(s, Objects.requireNonNull(UUIDDriver.getUUID(s))));
+                        CloudAPI.getInstance().getAsyncPlayerPool().registerPlayer(new AsyncCloudPlayer(s, UUIDDriver.getUUID(s)));
+                        CloudAPI.getInstance().getPlayerPool().registerPlayer(new CloudPlayer(s, UUIDDriver.getUUID(s)));
                     }
                 });
                 CloudAPI.getInstance().getPlayerPool().getPlayers().stream().filter(cloudPlayer -> general.getCloudplayers().stream().noneMatch(s -> s.equalsIgnoreCase(cloudPlayer.getUniqueId().toString()))).toList().forEach(cloudPlayer -> {
@@ -81,9 +81,6 @@ public class CloudAPIEnvironment {
         }, 30, 30, TimeUtil.SECONDS);
     }
 
-
-
-
     public void  registerHandlers(){
         NettyDriver.getInstance().getPacketDriver()
                 .registerHandler(new PacketOutCloudServiceCouldNotStartEvent().getPacketUUID(), new HandlePacketOutCloudServiceCouldNotStartEvent(), PacketOutCloudServiceCouldNotStartEvent.class)
@@ -98,13 +95,10 @@ public class CloudAPIEnvironment {
                 .registerHandler(new PacketOutGroupCreate().getPacketUUID(), new HandlePacketOutGroupCreate(), PacketOutGroupCreate.class)
                 .registerHandler(new PacketOutGroupDelete().getPacketUUID(), new HandlePacketOutGroupDelete(), PacketOutGroupDelete.class)
                 .registerHandler(new PacketOutGroupEdit().getPacketUUID(), new HandlePacketOutGroupEdit(), PacketOutGroupEdit.class)
-
                 .registerHandler(new PacketOutCloudRestAPIReloadEvent().getPacketUUID(), new HandlePacketOutCloudRestAPIReloadEvent(), PacketOutCloudRestAPIReloadEvent.class)
                 .registerHandler(new PacketOutCloudRestAPICreateEvent().getPacketUUID(), new HandlePacketOutCloudRestAPICreateEvent(), PacketOutCloudRestAPICreateEvent.class)
                 .registerHandler(new PacketOutCloudRestAPIUpdateEvent().getPacketUUID(), new HandlePacketOutCloudRestAPIUpdateEvent(), PacketOutCloudRestAPIUpdateEvent.class)
                 .registerHandler(new PacketOutCloudRestAPIDeleteEvent().getPacketUUID(), new HandlePacketOutCloudRestAPIDeleteEvent(), PacketOutCloudRestAPIDeleteEvent.class)
-
-
                 .registerHandler(new PacketOutCloudServiceChangeState().getPacketUUID(), new HandlePacketOutCloudServiceChangeState(), PacketOutCloudServiceChangeState.class)
                 .registerHandler(new PacketOutCloudProxyChangeState().getPacketUUID(), new HandlePacketOutCloudProxyChangeState(), PacketOutCloudProxyChangeState.class);
     }

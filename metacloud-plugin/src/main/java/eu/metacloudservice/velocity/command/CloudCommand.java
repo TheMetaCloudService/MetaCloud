@@ -22,13 +22,12 @@ public class CloudCommand implements SimpleCommand {
     public void execute(Invocation invocation) {
        String[] args = invocation.arguments();
         if (invocation.source() instanceof  Player player){
-            Messages messages = CloudAPI.getInstance().getMessages();
             if (player.hasPermission("metacloud.command.use")){
                 if (args.length == 0){
                     sendHelp(player);
                 }else {
                     if (PluginDriver.getInstance().getCommand(args[0]) != null){
-                        String[] refreshedArguments =  Arrays.copyOfRange(args, 1, args.length);
+                        String[] refreshedArguments = Arrays.copyOfRange(args, 1, args.length);
                         PluginDriver.getInstance().getCommand(args[0]).performCommand(PluginDriver.getInstance().getCommand(args[0]),
                                 null, player, null, refreshedArguments);
                     }else {

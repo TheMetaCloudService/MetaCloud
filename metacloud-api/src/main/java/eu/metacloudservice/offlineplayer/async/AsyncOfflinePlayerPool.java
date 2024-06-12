@@ -4,6 +4,7 @@ import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.offlineplayer.async.entrys.AsyncOfflinePlayer;
 import eu.metacloudservice.cloudplayer.offlineplayer.ceched.OfflinePlayerCacheConfiguration;
 import eu.metacloudservice.configuration.ConfigDriver;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +12,8 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+@NoArgsConstructor
 public class AsyncOfflinePlayerPool{
-
-
-    public AsyncOfflinePlayerPool() {}
 
     public CompletableFuture<ArrayList<AsyncOfflinePlayer>> getAllAsyncOfflinePlayers(){
         CompletableFuture.supplyAsync(()-> {

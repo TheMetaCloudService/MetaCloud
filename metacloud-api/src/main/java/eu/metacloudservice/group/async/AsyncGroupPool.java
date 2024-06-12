@@ -15,6 +15,7 @@ import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketI
 import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInDeleteGroup;
 import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInStopGroup;
 import eu.metacloudservice.webserver.dummys.GroupList;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -24,9 +25,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+@NoArgsConstructor
 public class AsyncGroupPool {
 
-    public AsyncGroupPool() {}
 
     public CompletableFuture<ArrayDeque<String>> getGroupsByName(){
         GroupList cech = (GroupList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/general"), GroupList.class);

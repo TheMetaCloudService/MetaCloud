@@ -10,6 +10,8 @@ import eu.metacloudservice.cloudplayer.codec.title.Title;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.networking.packet.packets.in.service.playerbased.apibased.*;
 import eu.metacloudservice.process.ServiceState;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NonNull;
 import net.kyori.adventure.text.Component;
 import org.json.JSONObject;
@@ -23,37 +25,34 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 
-public record AsyncCloudPlayer(String username, UUID uniqueId) {
+@AllArgsConstructor
+@Getter
+public class AsyncCloudPlayer {
 
-    public AsyncCloudPlayer(@NonNull String username, @NonNull UUID uniqueId) {
-        this.username = username;
-        this.uniqueId = uniqueId;
+    private final String username;
+    private final UUID uniqueId;
+
+
+    private CloudPlayerRestCache geCache(){
+        return (CloudPlayerRestCache) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/" + getUniqueId()), CloudPlayerRestCache.class);
     }
 
-    public UUID getUniqueId(){
-        return this.uniqueId;
-    }
-    public String getUsername(){
-        return this.username;
-    }
     public void performMore(Consumer<AsyncCloudPlayer> cloudPlayerConsumer) {
         cloudPlayerConsumer.accept(this);
     }
 
     public AsyncCloudService getProxyServer() {
-        CloudPlayerRestCache cech = (CloudPlayerRestCache) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/" + uniqueId()), CloudPlayerRestCache.class);
         try {
-            return CloudAPI.getInstance().getAsyncServicePool().getService(cech.getCloudplayerproxy()).get();
+            return CloudAPI.getInstance().getAsyncServicePool().getService(geCache().getCloudplayerproxy()).get();
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
     }
 
     public AsyncCloudService getServer() {
-        CloudPlayerRestCache cech = (CloudPlayerRestCache) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/" + uniqueId()), CloudPlayerRestCache.class);
 
         try {
-            return CloudAPI.getInstance().getAsyncServicePool().getService(cech.getCloudplayerservice()).get();
+            return CloudAPI.getInstance().getAsyncServicePool().getService(geCache().getCloudplayerservice()).get();
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -90,8 +89,7 @@ public record AsyncCloudPlayer(String username, UUID uniqueId) {
     }
 
     public long getCurrentPlayTime() {
-        CloudPlayerRestCache cech = (CloudPlayerRestCache) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/" + uniqueId()), CloudPlayerRestCache.class);
-        return cech.getCloudplayerconnect();
+         return geCache().getCloudplayerconnect();
     }
 
     public void disconnect(@NonNull String message) {

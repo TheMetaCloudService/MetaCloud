@@ -25,9 +25,9 @@ public class VelocityBootstrap {
         new CloudAPI();
         VelocityBootstrap.proxyServer = proxyServer;
         CloudAPIEnvironment environment = new CloudAPIEnvironment();
+        environment.handleNettyConnection();
         environment.registerHandlers();
         environment.registerVelocityHandlers();
-        environment.handleNettyConnection();
         environment.handelNettyUpdate();
     }
 
