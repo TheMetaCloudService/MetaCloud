@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CloudCommand extends Command implements TabExecutor {
+
     public CloudCommand(String name) {
         super(name);
     }
@@ -23,32 +24,33 @@ public class CloudCommand extends Command implements TabExecutor {
     @SneakyThrows
     @Override
     public void execute(CommandSender commandSender, String[] args) {
-        if (commandSender instanceof ProxiedPlayer) {
-            ProxiedPlayer player = (ProxiedPlayer) commandSender;
-            Messages messages = CloudAPI.getInstance().getMessages();
-            String PREFIX = messages.getMessages().get("prefix").replace("&", "§");
-            if (player.hasPermission("metacloud.command.use") || player.hasPermission("metacloud.command.*")){
-                if (args.length == 0){
-                    sendHelp(player);
-                }else {
-                    if (PluginDriver.getInstance().getCommand(args[0]) != null) {
-                        String[] refreshedArguments = Arrays.copyOfRange(args, 1, args.length);
-                        PluginDriver.getInstance().getCommand(args[0]).performCommand(PluginDriver.getInstance().getCommand(args[0]), player, null, null, refreshedArguments);
-                    }else {
-                        sendHelp(player);
-                    }
-                }
-            }else {
-                player.sendMessage("§8▷ §7The network uses §bMetacloud§8 [§a"+Driver.getInstance().getMessageStorage().version+"§8]");
-                player.sendMessage("§8▷ §fhttps://metacloudservice.eu/");
-            }
+        if (!(commandSender instanceof ProxiedPlayer player)) {
+            return;
         }
+
+        if (!(player.hasPermission("metacloud.command.use") || player.hasPermission("metacloud.command.*"))) {
+            player.sendMessage("§8▷ §7The network uses §bMetacloud§8 [§a" + Driver.getInstance().getMessageStorage().version + "§8]");
+            player.sendMessage("§8▷ §fhttps://metacloudservice.eu/");
+            return;
+        }
+
+        if (args.length == 0) {
+            this.sendHelp(player);
+            return;
+        }
+
+        if (PluginDriver.getInstance().getCommand(args[0]) != null) {
+            final String[] refreshedArguments = Arrays.copyOfRange(args, 1, args.length);
+            PluginDriver.getInstance().getCommand(args[0]).performCommand(PluginDriver.getInstance().getCommand(args[0]), player, null, null, refreshedArguments);
+            return;
+        }
+        this.sendHelp(player);
     }
 
 
-    public void sendHelp(ProxiedPlayer player){
-        Messages messages = CloudAPI.getInstance().getMessages();
-        String PREFIX = messages.getMessages().get("prefix").replace("&", "§");
+    public void sendHelp(ProxiedPlayer player) {
+        final Messages messages = CloudAPI.getInstance().getMessages();
+        final String PREFIX = messages.getMessages().get("prefix").replace("&", "§");
         PluginDriver.getInstance().getCommands().forEach(proxyCommand -> {
             player.sendMessage(PREFIX + proxyCommand.getDescription());
         });
