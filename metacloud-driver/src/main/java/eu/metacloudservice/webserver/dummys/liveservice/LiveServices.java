@@ -3,10 +3,13 @@ package eu.metacloudservice.webserver.dummys.liveservice;
 import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
 import eu.metacloudservice.process.ServiceState;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-@Getter @Setter
+@Getter
+@Setter
+@NoArgsConstructor
 public class LiveServices implements IConfigAdapter {
 
     private String name;
@@ -18,8 +21,5 @@ public class LiveServices implements IConfigAdapter {
     private int port;
     private ServiceState state;
     private long lastReaction;
-
-    public LiveServices() {}
-
 
 }

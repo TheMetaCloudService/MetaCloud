@@ -2,6 +2,7 @@ package eu.metacloudservice.service.entrys;
 
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.configuration.ConfigDriver;
+import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInChangeState;
 import eu.metacloudservice.networking.packet.packets.in.service.cloudapi.PacketInDispatchCommand;
@@ -9,74 +10,68 @@ import eu.metacloudservice.player.entrys.CloudPlayer;
 import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.webserver.dummys.liveservice.LiveServiceList;
 import eu.metacloudservice.webserver.dummys.liveservice.LiveServices;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 
 import java.util.List;
 import java.util.function.Consumer;
 
+@AllArgsConstructor
+@Getter
 public class CloudService {
 
     private final String name;
     private final String group;
 
-    public CloudService(String name, String group) {
-        this.name = name;
-        this.group = group;
-    }
-
     public void performMore(Consumer<CloudService> cloudServiceConsumer) {
         cloudServiceConsumer.accept(this);
     }
 
-
-    public String getName() {
-        return name;
-    }
-
-    public void setState(@NonNull ServiceState state){
+    public void setState(@NonNull ServiceState state) {
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInChangeState(this.name, state.toString()));
     }
 
-    public String getID(){
+    public String getID() {
         LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
 
         return name.replace(group, "").replace(list.getCloudServiceSplitter(), "");
     }
 
-    public void sync(){
+    public void sync() {
         CloudAPI.getInstance().dispatchCommand("service copy " + name);
     }
 
-    public Group getGroup(){
-    return (Group) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/" + group), Group.class);
+    public Group getGroup() {
+        return (Group) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudgroup/" + group), Group.class);
     }
 
-    public void dispatchCommand(@NonNull String command){
+    public void dispatchCommand(@NonNull String command) {
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInDispatchCommand(this.name, command));
     }
 
-    public void shutdown(){
+    public void shutdown() {
         CloudAPI.getInstance().getServicePool().stopService(name);
     }
 
-    public boolean isTypeProxy(){
+    public boolean isTypeProxy() {
         return getGroup().getGroupType().equalsIgnoreCase("PROXY");
     }
 
-    public boolean isTypeLobby(){
+    public boolean isTypeLobby() {
         return getGroup().getGroupType().equalsIgnoreCase("LOBBY");
     }
 
-    public boolean isTypeGame(){
+    public boolean isTypeGame() {
         return getGroup().getGroupType().equalsIgnoreCase("GAME");
     }
 
-    public boolean isStatic(){
+    public boolean isStatic() {
         return getGroup().isRunStatic();
     }
 
-    public void connect(String playername){
+    public void connect(String playername) {
         CloudAPI.getInstance().getPlayerPool().getPlayer(playername).connect(this);
     }
 
@@ -87,34 +82,35 @@ public class CloudService {
         return CloudAPI.getInstance().getAsyncPlayerPool().getPlayersFromService(this.name).get().size();
     }
 
-    public ServiceState getState(){
-        LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
-        LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
-        return services.getState();
+    private LiveServices getLiveService() {
+        final LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
+        final LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
+        return services;
     }
 
-    public String getAddress(){
-        LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
-        LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
-        return services.getHost();
+
+    public ServiceState getState() {
+       return this.getLiveService().getState();
     }
 
-    public Integer getPort(){
-        LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
-        LiveServices services = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
-        return services.getPort();
+    public String getAddress() {
+        return this.getLiveService().getHost();
     }
 
-    public List<CloudPlayer> getPlayers(){
-        if (getGroup().getGroupType().equalsIgnoreCase("PROXY")){
+    public Integer getPort() {
+        return this.getLiveService().getPort();
+    }
+
+    public List<CloudPlayer> getPlayers() {
+        if (getGroup().getGroupType().equalsIgnoreCase("PROXY")) {
             return CloudAPI.getInstance().getPlayerPool().getPlayersFromProxy(name);
-        }else {
+        } else {
             return CloudAPI.getInstance().getPlayerPool().getPlayersFromService(name);
         }
     }
 
-    public String toString(){
-        return "name='"+name+"', group='"+group+"', state='"+getState()+"', address='"+getAddress()+"', port='"+getPort()+"', playerCount='"+getPlayercount()+"'";
+    public String toString() {
+        return "name='" + name + "', group='" + group + "', state='" + getState() + "', address='" + getAddress() + "', port='" + getPort() + "', playerCount='" + getPlayercount() + "'";
     }
 
 }
