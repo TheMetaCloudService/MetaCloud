@@ -19,6 +19,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 @Getter
@@ -149,20 +150,30 @@ public final class ServiceProcess implements IServiceProcess {
                     new File("./local/templates/" + group.getGroup() + "/default/").mkdirs();
                     Path defaultPath = Paths.get("./local/templates/" + group.getGroup() + "/default/");
                     Path groupPath = Paths.get("./local/templates/" + group.getGroup() + "/");
-                    moveFiles(groupPath, defaultPath);
+                    try {
+                        Files.list(groupPath).forEach(source -> {
+                            try {
+                                if (!source.getFileName().toString().equalsIgnoreCase("default")) {
+                                    Files.move(source, defaultPath.resolve(source.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }else {
-                if (!new File("./local/templates/" + group.getGroup() + "/").exists()){
+                if (new File("./local/templates/" + group.getGroup() + "/default/").exists()){
 
                     File file = new File("./local/templates/" + group.getGroup() + "/");
                     File[] files = file.listFiles();
                     ArrayList<String> modules = new ArrayList<>();
-                    for (int i = 0; i != Objects.requireNonNull(files).length; i++) {
-                        String FirstFilter = files[i].getName();
-                        if (!FirstFilter.contains("default")) {
-                            files[i].delete();
+                    for (File f : Objects.requireNonNull(files)) {
+                        if (!f.getName().equalsIgnoreCase("default") && f.isDirectory()) {
+                            deleteDirectoryRecursively(f);
                         }
-
                     }
 
                     Path defaultPath = Paths.get("./local/templates/" + group.getGroup() + "/default/");
@@ -412,6 +423,7 @@ public final class ServiceProcess implements IServiceProcess {
                     group.getStorage().getStartArguments()
             };
                 File configFile = new File(System.getProperty("user.dir") + "/live/" + group.getGroup()+ "/" +service + "/", "server.properties");
+               if(!configFile.exists()){
                 try {
                     final FileWriter fileWriter = new FileWriter(configFile);
                     fileWriter.write(Driver.getInstance().getMessageStorage().getSpigotProperty(port));
@@ -421,6 +433,8 @@ public final class ServiceProcess implements IServiceProcess {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+               }
+
 
                 if (!new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service +"/bukkit.yml").exists()){
                     File configFile2 = new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/", "bukkit.yml");
@@ -714,6 +728,20 @@ public final class ServiceProcess implements IServiceProcess {
                 }
             });
         }
+    }
+
+    private static void deleteDirectoryRecursively(File dir) {
+        File[] allContents = dir.listFiles();
+        if (allContents != null) {
+            for (File file : allContents) {
+                if (file.isDirectory()) {
+                    deleteDirectoryRecursively(file);
+                } else {
+                    file.delete();
+                }
+            }
+        }
+        dir.delete();
     }
 
 }

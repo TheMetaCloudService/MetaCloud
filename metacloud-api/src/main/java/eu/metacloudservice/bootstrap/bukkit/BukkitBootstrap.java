@@ -1,6 +1,7 @@
 package eu.metacloudservice.bootstrap.bukkit;
 
 import eu.metacloudservice.CloudAPI;
+import eu.metacloudservice.CloudAPIEnvironment;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.networking.NettyDriver;
@@ -12,7 +13,11 @@ public class BukkitBootstrap extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        new CloudAPI(false);
+        new CloudAPI();
+        CloudAPIEnvironment environment = new CloudAPIEnvironment();
+        environment.registerHandlers();
+        environment.handleNettyConnection();
+        environment.handelNettyUpdate();
 
     }
 

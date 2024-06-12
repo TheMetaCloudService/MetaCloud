@@ -7,6 +7,7 @@ import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
 import eu.metacloudservice.CloudAPI;
+import eu.metacloudservice.CloudAPIEnvironment;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.networking.NettyDriver;
@@ -21,8 +22,13 @@ public class VelocityBootstrap {
     public static ProxyServer proxyServer;
     @Inject(optional = false)
     public VelocityBootstrap(ProxyServer proxyServer, Logger logger) {
+        new CloudAPI();
         VelocityBootstrap.proxyServer = proxyServer;
-        new CloudAPI(true);
+        CloudAPIEnvironment environment = new CloudAPIEnvironment();
+        environment.registerHandlers();
+        environment.registerVelocityHandlers();
+        environment.handleNettyConnection();
+        environment.handelNettyUpdate();
     }
 
     @Subscribe
