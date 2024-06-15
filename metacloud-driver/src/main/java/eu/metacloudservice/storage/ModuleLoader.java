@@ -4,8 +4,10 @@
 
 package eu.metacloudservice.storage;
 
+import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.restapi.ModuleConfig;
+import eu.metacloudservice.terminal.enums.Type;
 import lombok.SneakyThrows;
 
 import java.io.*;
@@ -18,7 +20,7 @@ public class ModuleLoader {
     public ModuleLoader() {}
 
     @SneakyThrows
-    private ModuleConfig getModules(){
+    public ModuleConfig getModules(){
         try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=modules").openStream()) {
             final StringBuilder builder = new StringBuilder();
             BufferedReader bufferedReader;
@@ -43,6 +45,12 @@ public class ModuleLoader {
 
         getModules().getModules().forEach((module, url) -> {
             if (module.equalsIgnoreCase(name)){
+                //whynotmax - 15/06/2024 - added module deactivation
+                if (!new File("./modules/metacloud-" + name.toLowerCase() + ".jar").exists()){
+                    Driver.getInstance().getTerminalDriver().log(Type.INFO, "The module " + name + " is not loaded because it was not found. Please use the 'modules' command to download it or download it manually.");
+                    return;
+                }
+                //whynotmax - 15/06/2024 - added module deactivation
                 new File("./modules/metacloud-" + name.toLowerCase() + ".jar").deleteOnExit();
                 try (BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
                      FileOutputStream fileOutputStream = new FileOutputStream("./modules/metacloud-" + name.toLowerCase() + ".jar")) {

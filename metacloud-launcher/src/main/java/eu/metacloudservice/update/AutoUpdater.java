@@ -61,7 +61,11 @@ public class AutoUpdater {
             new File("./Launcher.jar").renameTo(new File("./OLD.jar"));
             new File("./UPDATE.jar").renameTo(new File("./Launcher.jar"));
             if (new File("./modules/").exists()){
-                new ModuleLoader().updateAllModules();
+                //whynotmax - 15/06/2024 - added module deactivation
+                ModuleLoader moduleLoader = new ModuleLoader();
+                moduleLoader.getModules().getModules().forEach((module, url) -> {
+                    moduleLoader.updateModule(module);
+                });
             }
             Driver.getInstance().getTerminalDriver().log(Type.INFO, Driver.getInstance().getLanguageDriver().getLang().getMessage("update-is-finished"));
             new File("./local/storage/messages.storage").deleteOnExit();
