@@ -6,6 +6,9 @@ import eu.metacloudservice.terminal.enums.Type;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -104,5 +107,40 @@ public class ModuleDriver {
         }
 
         return availableModules;
+    }
+
+    public void downloadModule(String moduleName) {
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://metacloudservice.eu/download/modules/" + moduleName + ".jar"))
+                .build();
+
+        try {
+            HttpResponse<InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
+            File moduleFile = new File("./modules/" + moduleName + ".jar");
+
+            if (moduleFile.exists()) {
+                Driver.getInstance().getTerminalDriver().log(Type.MODULE, Driver.getInstance().getLanguageDriver().getLang().getMessage("module-already-exists"));
+                return;
+            }
+
+            moduleFile.createNewFile();
+            moduleFile.setWritable(true);
+            moduleFile.setReadable(true);
+
+            Driver.getInstance().getTerminalDriver().log(Type.MODULE, Driver.getInstance().getLanguageDriver().getLang().getMessage("module-downloading"));
+
+            try (InputStream in = response.body(); OutputStream out = new FileOutputStream(moduleFile)) {
+                byte[] buffer = new byte[1024];
+                int lengthRead;
+                while ((lengthRead = in.read(buffer)) > 0) {
+                    out.write(buffer, 0, lengthRead);
+                }
+            }
+
+            Driver.getInstance().getTerminalDriver().log(Type.MODULE, Driver.getInstance().getLanguageDriver().getLang().getMessage("module-downloaded"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

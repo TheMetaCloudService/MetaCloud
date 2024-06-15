@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class ModulesCommand extends CommandAdapter {
     @Override
     public void performCommand(CommandAdapter command, String[] args) {
+        Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "This command is currently only available in english. German translation will be added soon.");
         if (args.length == 0) {
             Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "Currently loaded modules:");
             Driver.getInstance().getModuleDriver().getLoadedModules().forEach((module) -> {
@@ -22,7 +23,14 @@ public class ModulesCommand extends CommandAdapter {
             Driver.getInstance().getModuleDriver().getAvailableModuleNames().forEach((module) -> {
                 Driver.getInstance().getTerminalDriver().log(Type.COMMAND, module);
             });
-
+            Driver.getInstance().getTerminalDriver().log(Type.COMMAND, " ");
+            Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "Use 'modules download <module>' to download a module.");
+            return;
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("download")) {
+            Driver.getInstance().getModuleDriver().downloadModule(args[1]);
+            return;
+        } else {
+            Driver.getInstance().getTerminalDriver().log(Type.COMMAND, "Invalid arguments. Use 'modules' to list all modules.");
         }
     }
 
