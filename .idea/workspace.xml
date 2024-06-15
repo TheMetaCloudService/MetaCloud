@@ -4,28 +4,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9c64d84d-69de-4a92-8ef4-8136674adb0d" name="Changes" comment="">
+    <list default="true" id="9c64d84d-69de-4a92-8ef4-8136674adb0d" name="Changes" comment="Added module deactivation in AutoUpdater and ModuleLoader">
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/metacloud-runnable/metacloud-manager/src/main/java/eu/metacloudservice/manager/commands/ModulesCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/CloudAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/CloudAPI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/CloudAPIEnvironment.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/CloudAPIEnvironment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/bootstrap/bukkit/BukkitBootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/bootstrap/bukkit/BukkitBootstrap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/bootstrap/bungee/BungeeBootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/bootstrap/bungee/BungeeBootstrap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/bootstrap/velocity/VelocityBootstrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/bootstrap/velocity/VelocityBootstrap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/group/GroupPool.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/group/GroupPool.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/group/async/AsyncGroupPool.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/group/async/AsyncGroupPool.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/node/async/entrys/AsyncCloudNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/node/async/entrys/AsyncCloudNode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/node/entrys/CloudNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/node/entrys/CloudNode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/offlineplayer/OfflinePlayerPool.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/offlineplayer/OfflinePlayerPool.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/offlineplayer/async/AsyncOfflinePlayerPool.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/offlineplayer/async/AsyncOfflinePlayerPool.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/player/PlayerPool.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/player/PlayerPool.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/player/async/AsyncPlayerPool.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/player/async/AsyncPlayerPool.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/player/async/entrys/AsyncCloudPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/player/async/entrys/AsyncCloudPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/player/entrys/CloudPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/player/entrys/CloudPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/service/async/entrys/AsyncCloudService.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/service/async/entrys/AsyncCloudService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/service/entrys/CloudService.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/src/main/java/eu/metacloudservice/service/entrys/CloudService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-permissions/src/main/java/eu/metacloudservice/moduleside/commands/PermissionCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-permissions/src/main/java/eu/metacloudservice/moduleside/commands/PermissionCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-permissions/src/main/java/eu/metacloudservice/subcommand/PermissionCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-permissions/src/main/java/eu/metacloudservice/subcommand/PermissionCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metacloud-plugin/src/main/java/eu/metacloudservice/velocity/command/CloudCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-plugin/src/main/java/eu/metacloudservice/velocity/command/CloudCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-api/metacloud-api.iml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-api/metacloud-api.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-driver/metacloud-driver.iml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-driver/metacloud-driver.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-driver/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-driver/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-driver/src/main/java/eu/metacloudservice/module/ModuleDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-driver/src/main/java/eu/metacloudservice/module/ModuleDriver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-launcher/metacloud-launcher.iml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-launcher/metacloud-launcher.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-modules/metacloud-modules.iml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metacloud-modules.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-discord/metamodule-discord.iml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-discord/metamodule-discord.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-notify/metamodule-notify.iml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-notify/metamodule-notify.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-notify/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-notify/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-permissions/metamodule-permission.iml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-permissions/metamodule-permission.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-signs/metamodule-signs.iml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-signs/metamodule-signs.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/metamodule-syncproxy.iml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-modules/metamodule-syncproxy/metamodule-syncproxy.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-networking/metacloud-networking.iml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-networking/metacloud-networking.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-plugin/metacloud-plugin.iml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-plugin/metacloud-plugin.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-runnable/metacloud-manager/metacloud-manager.iml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-runnable/metacloud-manager/metacloud-manager.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metacloud-runnable/metacloud-node/metacloud-node.iml" beforeDir="false" afterPath="$PROJECT_DIR$/metacloud-runnable/metacloud-node/metacloud-node.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,22 +45,30 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "whynotmax"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/TheMetaCloudService/MetaCloud",
+    "accountId": "9ff48a6d-26de-4556-9be5-5df559979a07"
+  }
+}]]></component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/metacloud-runnable/metacloud-manager/src/main/java/eu/metacloudservice/manager/commands/PlayersCommand.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="useMavenConfig" value="true" />
-      </MavenGeneralSettings>
-    </option>
-  </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
   </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 1
+}]]></component>
   <component name="ProjectId" id="2e5dnzJo8reK9UlragPTFXrEnXm" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -71,17 +77,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/work/metacloud-project/MetaCloud/metacloud-plugin/src/main/java/eu/metacloudservice/api&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Maven.metamodule-notify [validate].executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/work/metacloud-project/MetaCloud/metacloud-plugin/src/main/java/eu/metacloudservice/api",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="eu.metacloudservice.networking" />
@@ -128,6 +138,15 @@
       <option name="presentableId" value="Default" />
       <updated>1711198547766</updated>
     </task>
+    <task id="LOCAL-00001" summary="Added module deactivation in AutoUpdater and ModuleLoader">
+      <option name="closed" value="true" />
+      <created>1718487523194</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1718487523194</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -140,5 +159,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added module deactivation in AutoUpdater and ModuleLoader" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added module deactivation in AutoUpdater and ModuleLoader" />
   </component>
 </project>

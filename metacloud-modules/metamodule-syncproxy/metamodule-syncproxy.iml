@@ -9,6 +9,7 @@
           <platformType>BUNGEECORD</platformType>
           <platformType>VELOCITY</platformType>
         </autoDetectTypes>
+        <projectReimportVersion>1</projectReimportVersion>
       </configuration>
     </facet>
   </component>
