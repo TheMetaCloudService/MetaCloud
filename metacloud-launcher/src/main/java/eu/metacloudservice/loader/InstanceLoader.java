@@ -4,10 +4,6 @@
 
 package eu.metacloudservice.loader;
 
-import eu.metacloudservice.Driver;
-import eu.metacloudservice.module.config.ModuleConfiguration;
-import eu.metacloudservice.terminal.enums.Type;
-
 import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
@@ -32,7 +28,7 @@ public class InstanceLoader {
                     try (InputStreamReader reader = new InputStreamReader(jarFile.getInputStream(entry), StandardCharsets.UTF_8)) {
                         this.properties = new Properties();
                         this.properties.load(reader);
-                        Class classEntry = Class.forName(this.properties.getProperty("main"), true, loader);
+                        final Class<?> classEntry = Class.forName(this.properties.getProperty("main"), true, loader);
                         Method method = classEntry.getDeclaredMethod("run");
                         Object instance = classEntry.newInstance();
                         method.invoke(instance);

@@ -16,7 +16,7 @@ import eu.metacloudservice.networking.packet.packets.in.service.PacketInServiceD
 import net.kyori.adventure.text.Component;
 import org.slf4j.Logger;
 
-@Plugin(id = "metacloudapi", name = "metacloud-api", version = "1.1.0-RELEASE", authors = "RauchigesEtwas")
+@Plugin(id = "metacloudapi", name = "metacloud-api", version = "1.1.1-RELEASE", authors = "RauchigesEtwas", description = "This is the api of the cloudsystem")
 public class VelocityBootstrap {
 
     public static ProxyServer proxyServer;
@@ -24,15 +24,17 @@ public class VelocityBootstrap {
     public VelocityBootstrap(ProxyServer proxyServer, Logger logger) {
         new CloudAPI();
         VelocityBootstrap.proxyServer = proxyServer;
-        CloudAPIEnvironment environment = new CloudAPIEnvironment();
+
+    }
+
+    @Subscribe
+    public void onProxyInject(ProxyInitializeEvent event){
+        final CloudAPIEnvironment environment = new CloudAPIEnvironment();
         environment.handleNettyConnection();
         environment.registerHandlers();
         environment.registerVelocityHandlers();
         environment.handelNettyUpdate();
     }
-
-    @Subscribe
-    public void onProxyInject(ProxyInitializeEvent event){}
 
     @Subscribe
     public void onDisable(ProxyShutdownEvent event){

@@ -23,7 +23,6 @@ public class PermissionAble {
     private String permission;
     private Boolean able;
     private String time;
-    private List<String> reversed;
 
 
     public PermissionAble(){}

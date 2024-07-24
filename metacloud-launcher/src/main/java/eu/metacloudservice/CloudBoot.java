@@ -183,11 +183,6 @@ public class CloudBoot {
 
         if (autoUpdate){
             new AutoUpdater();
-            if (new File("./modules/").exists()){
-                new File("./modules/").mkdirs();
-
-                new ModuleLoader().downloadAllModules();
-            }
         }
         if (!new File("./modules/").exists()){
             new File("./modules/").mkdirs();

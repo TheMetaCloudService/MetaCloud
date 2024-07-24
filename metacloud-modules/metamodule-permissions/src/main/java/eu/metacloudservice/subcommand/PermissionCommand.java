@@ -80,7 +80,7 @@ public class PermissionCommand extends PluginCommand {
                             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
                             time = calculatedDateTime.format(dateTimeFormatter);
                         }
-                        pp.getPermissions().add(new PermissionAble(permission, value, time, new ArrayList<>()));
+                        pp.getPermissions().add(new PermissionAble(permission, value, time));
                         CloudPermissionAPI.getInstance().updatePlayer(pp);
                         if (veloPlayer != null)
                             veloPlayer.sendMessage(Component.text(PREFIX + "The player '§f"+username+"§7' has successfully received the permission '§f"+permission+"§7@§f"+time+"§7' ."));
@@ -314,7 +314,7 @@ public class PermissionCommand extends PluginCommand {
                     }
                     if (pg.getPermissions().stream().noneMatch(permissionAble -> permissionAble.getPermission().equalsIgnoreCase(permission))){
 
-                        pg.getPermissions().add(new PermissionAble(permission, value, time, new ArrayList<>()));
+                        pg.getPermissions().add(new PermissionAble(permission, value, time));
                         CloudPermissionAPI.getInstance().updateGroup(pg);
 
                         if (veloPlayer != null)

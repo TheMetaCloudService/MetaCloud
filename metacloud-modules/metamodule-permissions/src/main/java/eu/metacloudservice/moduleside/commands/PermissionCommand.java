@@ -64,7 +64,7 @@ public class PermissionCommand extends CommandAdapter {
                             time = calculatedDateTime.format(dateTimeFormatter);
                         }
 
-                        pp.getPermissions().add(new PermissionAble(permission, value, time, new ArrayList<>()));
+                        pp.getPermissions().add(new PermissionAble(permission, value, time));
                         configuration.getPlayers().removeIf(permissionPlayer -> permissionPlayer.getUuid().equals(UUIDDriver.getUUID(username)));
                         configuration.getPlayers().add(pp);
                         new ConfigDriver("./modules/permissions/config.json").save(configuration);
@@ -302,7 +302,7 @@ public class PermissionCommand extends CommandAdapter {
                         time = calculatedDateTime.format(dateTimeFormatter);
                     }
                     if (pg.getPermissions().stream().noneMatch(permissionAble -> permissionAble.getPermission().equalsIgnoreCase(permission))){
-                        pg.getPermissions().add(new PermissionAble(permission, value, time, new ArrayList<>()));
+                        pg.getPermissions().add(new PermissionAble(permission, value, time));
                         configuration.getGroups().removeIf(permissionGroup -> permissionGroup.getGroup().equalsIgnoreCase(groupName));
                         configuration.getGroups().add(pg);
                         new ConfigDriver("./modules/permissions/config.json").save(configuration);

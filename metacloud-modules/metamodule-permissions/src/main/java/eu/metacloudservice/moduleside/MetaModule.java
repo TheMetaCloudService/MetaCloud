@@ -31,7 +31,7 @@ public class MetaModule implements IModule {
             ArrayList<PermissionAble> permission = new ArrayList<>();
             ArrayList<IncludedAble> includedAbles = new ArrayList<>();
 
-            permission.add(new PermissionAble("*", true, "LIFETIME", new ArrayList<>()));
+            permission.add(new PermissionAble("*", true, "LIFETIME"));
             includedAbles.add(new IncludedAble("member", "LIFETIME"));
 
             groups.add(new PermissionGroup("admin", false, 0,"§cAdmin §8| §7", "","", "", permission, includedAbles));

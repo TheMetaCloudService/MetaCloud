@@ -25,7 +25,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-@Plugin(id = "syncproxy", name = "metacloud-syncproxy", version = "1.1.0-RELEASE", authors = "RauchigesEtwas",dependencies = {@Dependency(id = "metacloudapi"), @Dependency(id = "metacloudplugin", optional = true)})
+@Plugin(id = "syncproxy", name = "metacloud-syncproxy", version = "1.1.1-RELEASE", authors = "RauchigesEtwas",dependencies = {@Dependency(id = "metacloudapi"), @Dependency(id = "metacloudplugin", optional = true)})
 public class VeloCityBootstrap {
 
     private static VeloCityBootstrap instance;

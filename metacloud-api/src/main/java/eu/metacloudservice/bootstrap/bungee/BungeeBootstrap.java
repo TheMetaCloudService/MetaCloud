@@ -6,28 +6,31 @@ import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.packet.packets.in.service.PacketInServiceDisconnect;
+import lombok.Getter;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 
+@Getter
 public class BungeeBootstrap extends Plugin {
 
+    @Getter
     private static BungeeBootstrap instance;
     private BungeeAudiences audiences;
 
     @Override
     public void onLoad() {
         new CloudAPI();
-        CloudAPIEnvironment environment = new CloudAPIEnvironment();
-        environment.handleNettyConnection();
-        environment.registerHandlers();
-        environment.registerBungeeHandlers();
-        environment.handelNettyUpdate();
     }
 
     @Override
     public void onEnable() {
         instance = this;
+       final CloudAPIEnvironment environment = new CloudAPIEnvironment();
+        environment.handleNettyConnection();
+        environment.registerHandlers();
+        environment.registerBungeeHandlers();
+        environment.handelNettyUpdate();
         this.audiences =  BungeeAudiences.builder(BungeeBootstrap.getInstance()).build();
 
     }
@@ -39,14 +42,8 @@ public class BungeeBootstrap extends Plugin {
         });
         LiveService service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInServiceDisconnect(service.getService()));
+
     }
 
-    public BungeeAudiences getAudiences() {
-        return audiences;
-    }
-
-    public static BungeeBootstrap getInstance() {
-        return instance;
-    }
 
 }

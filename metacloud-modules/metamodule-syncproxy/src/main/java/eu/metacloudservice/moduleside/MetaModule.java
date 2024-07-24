@@ -112,7 +112,7 @@ public class MetaModule implements IModule {
                     defaultsLayout02.setFirstline("        <gradient:#1868d9:#0a3c82>§lMetaCloud</gradient> §8▷ §7Ready §ffor the §7Future");
                     defaultsLayout02.setSecondline("<dark_gray>➥ ✎ <gray>The network are now <white><bold>ONLINE <dark_gray>| <gradient:#1868d9:#0a3c82><bold>%proxy_name%</gradient>");
                     defaultsPlayerInfo02.add("");
-                    defaultsPlayerInfo02.add("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor the §7Futuree");
+                    defaultsPlayerInfo02.add("§8► §b§lMeta§3§lCloud §8▷ §7Ready §ffor the §7Future");
                     defaultsPlayerInfo02.add("");
                     defaultsPlayerInfo02.add("  Our Discord §8▷ §b§l4kKEcaP9WC");
                     defaultsPlayerInfo02.add("  Developed by §8▷ §b§lRauchigesEtwas");
@@ -128,7 +128,7 @@ public class MetaModule implements IModule {
                     Tablist tablayout01 = new Tablist();
                     tablayout01.setHeader("\n      <dark_gray>► <gradient:#1868d9:#0a3c82><bold>MetaCloud</gradient> <dark_gray>▷ <gray>Ready <white>for the <gray>Future <dark_gray>• <gradient:#1868d9:#0a3c82><bold>%online_players%</gradient> <gray>/ <gradient:#1868d9:#0a3c82><bold>%max_players%</gradient> <dark_gray>◄      \n   <dark_gray>► <gray>Your current server <dark_gray>▷ <gradient:#1868d9:#0a3c82><bold>%service_name%<gradient> <dark_gray>◄   \n");
 
-                    tablayout01.setFooter("\n        <dark_gray>► <gray>Discord <dark_gray>▷ <gradient:#1868d9:#0a3c82><bold>discord.gg/4kKEcaP9WC</gradient> <dark_gray>◄       \n<dark_gray>► <gray>Developer <dark_gray>▷ <gradient:#1868d9:#0a3c82><bold>ReauchigesEtwas</gradient> <dark_gray>◄\n");
+                    tablayout01.setFooter("\n        <dark_gray>► <gray>Discord <dark_gray>▷ <gradient:#1868d9:#0a3c82><bold>discord.gg/4kKEcaP9WC</gradient> <dark_gray>◄       \n<dark_gray>► <gray>Developer <dark_gray>▷ <gradient:#1868d9:#0a3c82><bold>RauchigesEtwas</gradient> <dark_gray>◄\n");
 
                     tablist.add(tablayout01);
 

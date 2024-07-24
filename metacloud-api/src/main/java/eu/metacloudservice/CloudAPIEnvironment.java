@@ -39,7 +39,7 @@ public class CloudAPIEnvironment {
         NettyDriver.getInstance().nettyClient = new NettyClient();
         NettyDriver.getInstance().nettyClient.bind(CloudAPI.getInstance().getService().getManagerAddress(), CloudAPI.getInstance().getService().getNetworkPort()).connect();
 
-        PlayerGeneral players = (PlayerGeneral) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/genernal"), PlayerGeneral.class);
+        final PlayerGeneral players = (PlayerGeneral) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/genernal"), PlayerGeneral.class);
         players.getCloudplayers().forEach(s -> {
             if (!CloudAPI.getInstance().getPlayerPool().playerIsNotNull(s)){
                 CloudAPI.getInstance().getAsyncPlayerPool().registerPlayer(new AsyncCloudPlayer(s, UUIDDriver.getUUID(s)));
@@ -53,9 +53,9 @@ public class CloudAPIEnvironment {
         new TimerBase().scheduleAsync(new TimerTask() {
             @Override
             public void run() {
-                CloudService service = CloudAPI.getInstance().getServicePool().getService(CloudAPI.getInstance().getCurrentService().getService());
-                LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
-                PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/genernal"), PlayerGeneral.class);
+                final CloudService service = CloudAPI.getInstance().getServicePool().getService(CloudAPI.getInstance().getCurrentService().getService());
+                final LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
+                final PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/genernal"), PlayerGeneral.class);
                 general.getCloudplayers().forEach(s -> {
                     if (!CloudAPI.getInstance().getPlayerPool().playerIsNotNull(s)){
                         CloudAPI.getInstance().getAsyncPlayerPool().registerPlayer(new AsyncCloudPlayer(s, UUIDDriver.getUUID(s)));
@@ -73,7 +73,7 @@ public class CloudAPIEnvironment {
                 if (!NettyDriver.getInstance().nettyClient.getChannel().isOpen()){
                     System.exit(0);
                 }
-                LiveServices liveServices = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + service.getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
+               final LiveServices liveServices = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + service.getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
                 liveServices.setLastReaction(System.currentTimeMillis());
                 CloudAPI.getInstance().getRestDriver().update("/cloudservice/" + service.getName().replace(list.getCloudServiceSplitter(), "~"), new ConfigDriver().convert(liveServices));
 

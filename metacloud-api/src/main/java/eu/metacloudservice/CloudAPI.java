@@ -25,6 +25,7 @@ import eu.metacloudservice.webserver.dummys.WhiteList;
 import lombok.Getter;
 import lombok.NonNull;
 
+import javax.management.InstanceAlreadyExistsException;
 import java.lang.management.ManagementFactory;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -47,7 +48,14 @@ public class CloudAPI {
     private AsyncGroupPool asyncGroupPool;
 
     public CloudAPI() {
-        instance = this;
+        if (instance == null)
+            instance = this;
+        else
+            try {
+                throw new InstanceAlreadyExistsException();
+            } catch (InstanceAlreadyExistsException e) {
+                throw new RuntimeException(e);
+            }
         initializeCoreComponents();
         CompletableFuture.runAsync(this::initializeLazyComponents);
     }
@@ -102,12 +110,13 @@ public class CloudAPI {
     }
 
     public CompletableFuture<CloudService> getThisServiceAsync(){
+        initializeLazyComponents();
         return CompletableFuture.supplyAsync(this::getThisService);
     }
 
     public List<String> getWhitelist(){
         initializeLazyComponents();
-        WhiteList cech = (WhiteList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/default/whitelist"), WhiteList.class);
+       final WhiteList cech = (WhiteList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/default/whitelist"), WhiteList.class);
         return cech.getWhitelist();
     }
 
@@ -150,18 +159,22 @@ public class CloudAPI {
     }
 
     public double getUsedMemory(){
+        initializeLazyComponents();
         return (double) ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1048576;
     }
 
     public double getMaxMemory(){
+        initializeLazyComponents();
         return (double) ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getMax() / 1048576;
     }
 
     public void sendPacketSynchronized(Packet packet){
+        initializeLazyComponents();
         NettyDriver.getInstance().nettyClient.sendPacketSynchronized(packet);
     }
 
     public void sendPacketAsynchronous(Packet packet){
+        initializeLazyComponents();
         NettyDriver.getInstance().nettyClient.sendPacketsAsynchronous(packet);
     }
 }

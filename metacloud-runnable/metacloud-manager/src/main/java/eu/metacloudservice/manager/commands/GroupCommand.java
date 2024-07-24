@@ -251,10 +251,10 @@ public class GroupCommand extends CommandAdapter {
         if (args.length == 0){
             commands.add("create");
             commands.add("list");
-            Driver.getInstance().getGroupDriver().getAll().forEach(group -> commands.add(group.getGroup()));
             commands.add("--all");
+            Driver.getInstance().getGroupDriver().getAll().forEach(group -> commands.add(group.getGroup()));
         }
-        if (args.length == 1 && !args[0].equalsIgnoreCase("create") && !args[0].equalsIgnoreCase("list")){
+        if (args.length == 1 && !args[0].equalsIgnoreCase("create") && !args[0].equalsIgnoreCase("list") && !args[0].equalsIgnoreCase("--all") ){
             commands.add("delete");
             commands.add("info");
             commands.add("setmaintenance");
@@ -266,6 +266,8 @@ public class GroupCommand extends CommandAdapter {
             commands.add("setstartnewpercen");
             commands.add("setpermission");
             commands.add("setmaxamount");
+        } if (args.length == 1 && !args[0].equalsIgnoreCase("create") && !args[0].equalsIgnoreCase("list")&& args[0].equalsIgnoreCase("--all")) {
+            commands.add("setmaintenance");
         }
         if (args.length == 2){
             if (args[1].equalsIgnoreCase("setmaintenance") && !args[0].equalsIgnoreCase("create") && !args[0].equalsIgnoreCase("list")) {

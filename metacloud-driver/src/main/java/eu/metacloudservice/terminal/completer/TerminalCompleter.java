@@ -34,17 +34,13 @@ public final class TerminalCompleter  implements Completer {
 
         if (Driver.getInstance().getMessageStorage().openServiceScreen){
             final var result = new LinkedList<String>();
-            result.add("leave");
+            if (input.isEmpty()) result.add("leave");
             suggestions = result;
             suggestions.stream().map(Candidate::new).forEach(list::add);
         }else if (Driver.getInstance().getTerminalDriver().isInSetup()){
-            final var result = new LinkedList<String>();
-            var arguments = input.split(" ");
-            final var consoleInput = Driver.getInstance().getTerminalDriver().getInputs().peek();
-            result.addAll(Driver.getInstance().getTerminalDriver().getSetupDriver().getSetup().tabComplete() != null
-                    ? Driver.getInstance().getTerminalDriver().getSetupDriver().getSetup().tabComplete() : new ArrayList<>());
 
-            suggestions = result;
+            suggestions = new LinkedList<String>(Driver.getInstance().getTerminalDriver().getSetupDriver().getSetup().tabComplete() != null
+                    ? Driver.getInstance().getTerminalDriver().getSetupDriver().getSetup().tabComplete() : new ArrayList<>());
             suggestions.stream().map(Candidate::new).forEach(list::add);
 
         }else {
@@ -57,7 +53,7 @@ public final class TerminalCompleter  implements Completer {
                 });
                 suggestions = result;
                 suggestions.stream().map(Candidate::new).forEach(list::add);
-            }else if (!canBeFinde(input)){
+            }else if (!canBeFind(input)){
                 final var result = new LinkedList<String>();
                 Driver.getInstance().getTerminalDriver().getCommandDriver().getCommands().forEach(command -> {
                     result.add(command.getCommand());
@@ -114,8 +110,8 @@ public final class TerminalCompleter  implements Completer {
                             result.addAll(command1.getAliases());
                         });
                     }else{
-                        if (command.tabComplete(consoleInput, arguments) != null){
-                            result.addAll(command.tabComplete(consoleInput, Driver.getInstance().getMessageStorage().dropFirstString(arguments)));
+                        if (command.tabComplete(null, arguments) != null){
+                            result.addAll(command.tabComplete(null, Driver.getInstance().getMessageStorage().dropFirstString(arguments)));
                             suggestions = result;
                         }
                     }
@@ -132,7 +128,7 @@ public final class TerminalCompleter  implements Completer {
 
 
 
-    private boolean canBeFinde(String line){
+    private boolean canBeFind(String line){
         ArrayList<String> commandsAndAliases = new ArrayList<>();
         exists = false;
 

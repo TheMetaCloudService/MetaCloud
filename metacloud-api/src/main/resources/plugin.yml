@@ -1,8 +1,8 @@
 main: eu.metacloudservice.bootstrap.bukkit.BukkitBootstrap
 name: metacloud-api
-version: 1.1.0-RELEASE
+version: 1.1.1-RELEASE
 author: RauchigesEtwas
 load: STARTUP
 
-description: THis is the api of the cloudsystem
+description: This is the api of the cloudsystem
 website: https://metacloudservice.eu
