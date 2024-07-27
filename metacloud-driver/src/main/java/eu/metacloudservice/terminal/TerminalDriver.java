@@ -227,6 +227,7 @@ public final class TerminalDriver {
         this.redraw();
     }
 
+    @SneakyThrows
     public void log(String service, String messages){
 
         this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
@@ -241,6 +242,7 @@ public final class TerminalDriver {
         this.lineReader.callWidget(LineReader.REDISPLAY);
     }
 
+    @SneakyThrows
     public void log(Type type, String... messages){
 
         this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
@@ -261,6 +263,7 @@ public final class TerminalDriver {
         this.lineReader.callWidget(LineReader.REDISPLAY);
     }
 
+    @SneakyThrows
     public void log(Type type, String message){
         /*
          * @FUNCTION: Log output in console

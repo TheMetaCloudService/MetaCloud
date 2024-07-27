@@ -5,18 +5,18 @@ import lombok.Getter;
 public class Teleport {
 
     @Getter
-    private String player;
+    private final String player;
 
     @Getter
-    private int posX;
+    private final int posX;
 
     @Getter
-    private int posY;
+    private final int posY;
 
     @Getter
-    private int posZ;
+    private final int posZ;
 
-    public Teleport(String player, int posX, int posY, int posZ) {
+    public Teleport(final String player, final int posX, final int posY, final int posZ) {
         this.player = player;
         this.posX = posX;
         this.posY = posY;

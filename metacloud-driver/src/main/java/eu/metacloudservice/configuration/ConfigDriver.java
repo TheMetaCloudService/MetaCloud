@@ -1,13 +1,11 @@
 package eu.metacloudservice.configuration;
 
-import com.fasterxml.jackson.core.exc.StreamReadException;
-import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 
 import java.io.*;
@@ -17,10 +15,10 @@ import java.util.concurrent.CompletableFuture;
 public class ConfigDriver {
 
     protected static final Gson GSON = (new GsonBuilder()).serializeNulls().setPrettyPrinting().disableHtmlEscaping().create();
-    private String location;
-    private ObjectMapper mapper;
+    private final String location;
+    private final ObjectMapper mapper;
 
-    public ConfigDriver(String location) {
+    public ConfigDriver(@NonNull final String location) {
         this.location = location;
         this.mapper = new ObjectMapper();
     }
@@ -31,8 +29,8 @@ public class ConfigDriver {
     }
 
     @SneakyThrows
-    public IConfigAdapter read(Class<? extends IConfigAdapter> tClass){
-        try (InputStream inputStream = new FileInputStream(this.location)) {
+    public IConfigAdapter read(@NonNull final Class<? extends IConfigAdapter> tClass){
+        try (final InputStream inputStream = new FileInputStream(this.location)) {
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             return mapper.readValue(inputStream, tClass);
         } catch (IOException e) {
@@ -48,15 +46,15 @@ public class ConfigDriver {
 
     public boolean canBeRead(Class<? extends IConfigAdapter> tClass){
         try {
-            Object obj = this.mapper.readValue(new File(this.location), tClass);
-            return true;
+            final Object obj = this.mapper.readValue(new File(this.location), tClass);
+            return obj != null;
         } catch (Exception exception){
             return false;
         }
     }
 
     @SneakyThrows
-    public IConfigAdapter convert(String json, Class<? extends IConfigAdapter> tClass){
+    public IConfigAdapter convert(@NonNull final String json, @NonNull final Class<? extends IConfigAdapter> tClass){
         try {
             return mapper.readValue(json, tClass);
         } catch (IOException e) {
@@ -65,14 +63,15 @@ public class ConfigDriver {
         }
     }
 
-    public String convert(IConfigAdapter IConfigAdapter){
+    public String convert(@NonNull final IConfigAdapter IConfigAdapter){
         return GSON.toJson(IConfigAdapter);
     }
 
-    public void save(IConfigAdapter IConfigAdapter){
+    @SneakyThrows
+    public void save(@NonNull final IConfigAdapter IConfigAdapter){
         CompletableFuture.runAsync(() -> {
             try {
-                File file = new File(this.location);
+                final File file = new File(this.location);
 
                 if (!file.exists()) {
                     file.createNewFile();
@@ -82,7 +81,8 @@ public class ConfigDriver {
                     GSON.toJson(IConfigAdapter, writer);
                     writer.flush(); // Manuell Puffer leeren, um sicherzustellen, dass Daten geschrieben werden
                 }
-            } catch (IOException ignored) {}
+            }catch (Exception ignored){}
+
         });
 
     }

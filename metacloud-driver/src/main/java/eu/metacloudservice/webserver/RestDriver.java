@@ -31,7 +31,7 @@ public class RestDriver {
 
     @SneakyThrows
     public IRest convert(String json, Class<? extends IRest> tClass){
-        ObjectMapper objectMapper = new ObjectMapper();
+        final ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.readValue(json, tClass);
         } catch (IOException e) {
@@ -49,12 +49,12 @@ public class RestDriver {
 
         String result = null;
         try {
-            ConfigDriver configDriver = new ConfigDriver("./connection.key");
-            AuthenticatorKey authConfig = (AuthenticatorKey) configDriver.read(AuthenticatorKey.class);
-            String authCheckKey = Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey());
-            String urlString = String.format("http://%s:%d/%s%s", ip, port, authCheckKey, route);
-            URL url = new URL(urlString);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+           final ConfigDriver configDriver = new ConfigDriver("./connection.key");
+            final AuthenticatorKey authConfig = (AuthenticatorKey) configDriver.read(AuthenticatorKey.class);
+            final String authCheckKey = Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey());
+            final String urlString = String.format("http://%s:%d/%s%s", ip, port, authCheckKey, route);
+            final URL url = new URL(urlString);
+            final HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
             con.setRequestMethod("PUT");
             con.setDoOutput(true);
@@ -62,18 +62,18 @@ public class RestDriver {
             con.setReadTimeout(5000);    // Set read timeout to 5 seconds
             con.connect();
 
-            try (OutputStream os = con.getOutputStream()) {
+            try (final OutputStream os = con.getOutputStream()) {
                 os.write(GSON.toJson(content).getBytes());
                 os.flush();
             }
 
-            int statusCode = con.getResponseCode();
+            final int statusCode = con.getResponseCode();
             if (statusCode == HttpURLConnection.HTTP_OK) {
-                try (InputStream inputStream = con.getInputStream();
-                     InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                     BufferedReader in = new BufferedReader(inputStreamReader)) {
+                try (final InputStream inputStream = con.getInputStream();
+                     final InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                     final BufferedReader in = new BufferedReader(inputStreamReader)) {
 
-                    StringBuilder response = new StringBuilder();
+                    final StringBuilder response = new StringBuilder();
                     String inputLine;
                     while ((inputLine = in.readLine()) != null) {
                         response.append(inputLine);
@@ -96,12 +96,12 @@ public class RestDriver {
 
         String result = null;
         try {
-            ConfigDriver configDriver = new ConfigDriver("./connection.key");
-            AuthenticatorKey authConfig = (AuthenticatorKey) configDriver.read(AuthenticatorKey.class);
-            String authCheckKey = Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey());
-            String urlString = String.format("http://%s:%d/%s%s", ip, port, authCheckKey, route);
-            URL url = new URL(urlString);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            final ConfigDriver configDriver = new ConfigDriver("./connection.key");
+            final AuthenticatorKey authConfig = (AuthenticatorKey) configDriver.read(AuthenticatorKey.class);
+            final String authCheckKey = Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey());
+            final String urlString = String.format("http://%s:%d/%s%s", ip, port, authCheckKey, route);
+            final URL url = new URL(urlString);
+            final HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
             con.setRequestMethod("POST");
             con.setDoOutput(true);
@@ -109,18 +109,18 @@ public class RestDriver {
             con.setReadTimeout(5000);    // Set read timeout to 5 seconds
             con.connect();
 
-            try (OutputStream os = con.getOutputStream()) {
+            try (final OutputStream os = con.getOutputStream()) {
                 os.write(GSON.toJson(content).getBytes());
                 os.flush();
             }
 
-            int statusCode = con.getResponseCode();
+            final int statusCode = con.getResponseCode();
             if (statusCode == HttpURLConnection.HTTP_OK) {
-                try (InputStream inputStream = con.getInputStream();
-                     InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                     BufferedReader in = new BufferedReader(inputStreamReader)) {
+                try (final InputStream inputStream = con.getInputStream();
+                     final InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                     final BufferedReader in = new BufferedReader(inputStreamReader)) {
 
-                    StringBuilder response = new StringBuilder();
+                    final StringBuilder response = new StringBuilder();
                     String inputLine;
                     while ((inputLine = in.readLine()) != null) {
                         response.append(inputLine);
@@ -142,12 +142,12 @@ public class RestDriver {
 
         String result = null;
         try {
-            ConfigDriver configDriver = new ConfigDriver("./connection.key");
-            AuthenticatorKey authConfig = (AuthenticatorKey) configDriver.read(AuthenticatorKey.class);
-            String authCheckKey = Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey());
-            String urlString = String.format("http://%s:%d/%s%s", ip, port, authCheckKey, route);
-            URL url = new URL(urlString);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            final ConfigDriver configDriver = new ConfigDriver("./connection.key");
+            final AuthenticatorKey authConfig = (AuthenticatorKey) configDriver.read(AuthenticatorKey.class);
+            final String authCheckKey = Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey());
+            final String urlString = String.format("http://%s:%d/%s%s", ip, port, authCheckKey, route);
+            final URL url = new URL(urlString);
+            final HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
             con.setRequestMethod("POST");
             con.setDoOutput(true);
@@ -155,18 +155,18 @@ public class RestDriver {
             con.setReadTimeout(5000);    // Set read timeout to 5 seconds
             con.connect();
 
-            try (OutputStream os = con.getOutputStream()) {
+            try (final OutputStream os = con.getOutputStream()) {
                 os.write(content.getBytes());
                 os.flush();
             }
 
-            int statusCode = con.getResponseCode();
+            final int statusCode = con.getResponseCode();
             if (statusCode == HttpURLConnection.HTTP_OK) {
-                try (InputStream inputStream = con.getInputStream();
-                     InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                     BufferedReader in = new BufferedReader(inputStreamReader)) {
+                try (final InputStream inputStream = con.getInputStream();
+                     final InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                     final BufferedReader in = new BufferedReader(inputStreamReader)) {
 
-                    StringBuilder response = new StringBuilder();
+                    final StringBuilder response = new StringBuilder();
                     String inputLine;
                     while ((inputLine = in.readLine()) != null) {
                         response.append(inputLine);
@@ -187,12 +187,12 @@ public class RestDriver {
 
         String result = null;
         try {
-            ConfigDriver configDriver = new ConfigDriver("./connection.key");
-            AuthenticatorKey authConfig = (AuthenticatorKey) configDriver.read(AuthenticatorKey.class);
-            String authCheckKey = Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey());
-            String urlString = String.format("http://%s:%d/%s%s", ip, port, authCheckKey, route);
-            URL url = new URL(urlString);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            final ConfigDriver configDriver = new ConfigDriver("./connection.key");
+            final AuthenticatorKey authConfig = (AuthenticatorKey) configDriver.read(AuthenticatorKey.class);
+            final String authCheckKey = Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey());
+            final String urlString = String.format("http://%s:%d/%s%s", ip, port, authCheckKey, route);
+            final URL url = new URL(urlString);
+            final HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
             con.setRequestMethod("PUT");
             con.setDoOutput(true);
@@ -200,18 +200,18 @@ public class RestDriver {
             con.setReadTimeout(5000);    // Set read timeout to 5 seconds
             con.connect();
 
-            try (OutputStream os = con.getOutputStream()) {
+            try (final OutputStream os = con.getOutputStream()) {
                 os.write(content.getBytes());
                 os.flush();
             }
 
-            int statusCode = con.getResponseCode();
+            final int statusCode = con.getResponseCode();
             if (statusCode == HttpURLConnection.HTTP_OK) {
-                try (InputStream inputStream = con.getInputStream();
-                     InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                     BufferedReader in = new BufferedReader(inputStreamReader)) {
+                try (final InputStream inputStream = con.getInputStream();
+                     final InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                     final BufferedReader in = new BufferedReader(inputStreamReader)) {
 
-                    StringBuilder response = new StringBuilder();
+                    final StringBuilder response = new StringBuilder();
                     String inputLine;
                     while ((inputLine = in.readLine()) != null) {
                         response.append(inputLine);
@@ -235,9 +235,9 @@ public class RestDriver {
         BufferedReader in = null;
 
         try {
-            AuthenticatorKey authConfig = (AuthenticatorKey) new ConfigDriver("./connection.key").read(AuthenticatorKey.class);
-            String authCheckKey = Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey());
-            URL url = new URL("http://" + ip + ":" + port + "/" + authCheckKey + route);
+            final AuthenticatorKey authConfig = (AuthenticatorKey) new ConfigDriver("./connection.key").read(AuthenticatorKey.class);
+            final String authCheckKey = Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey());
+            final URL url = new URL("http://" + ip + ":" + port + "/" + authCheckKey + route);
             con = (HttpURLConnection) url.openConnection();
 
             con.setRequestMethod("GET");
@@ -246,13 +246,13 @@ public class RestDriver {
             con.setReadTimeout(5000);    // Set read timeout to 5 seconds
             con.connect();
 
-            int statusCode = con.getResponseCode();
+            final int statusCode = con.getResponseCode();
             if (statusCode == HttpURLConnection.HTTP_OK) {
                 inputStream = con.getInputStream();
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+                final InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
                 in = new BufferedReader(inputStreamReader);
 
-                StringBuilder response = new StringBuilder();
+                final StringBuilder response = new StringBuilder();
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {
                     response.append(inputLine);
@@ -296,9 +296,9 @@ public class RestDriver {
         BufferedReader in = null;
 
         try {
-            AuthenticatorKey authConfig = (AuthenticatorKey) new ConfigDriver("./connection.key").read(AuthenticatorKey.class);
-            String authCheckKey = Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey());
-            URL url = new URL("http://" + ip + ":" + port + "/" + authCheckKey + route);
+            final  AuthenticatorKey authConfig = (AuthenticatorKey) new ConfigDriver("./connection.key").read(AuthenticatorKey.class);
+            final String authCheckKey = Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey());
+            final URL url = new URL("http://" + ip + ":" + port + "/" + authCheckKey + route);
             con = (HttpURLConnection) url.openConnection();
 
             con.setRequestMethod("GET");
@@ -307,13 +307,13 @@ public class RestDriver {
             con.setReadTimeout(5000);    // Set read timeout to 5 seconds
             con.connect();
 
-            int statusCode = con.getResponseCode();
+            final int statusCode = con.getResponseCode();
             if (statusCode == HttpURLConnection.HTTP_OK) {
                 inputStream = con.getInputStream();
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+                final InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
                 in = new BufferedReader(inputStreamReader);
 
-                StringBuilder response = new StringBuilder();
+                final StringBuilder response = new StringBuilder();
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {
                     response.append(inputLine);
@@ -351,9 +351,9 @@ public class RestDriver {
         BufferedReader in = null;
 
         try {
-            AuthenticatorKey authConfig = (AuthenticatorKey) new ConfigDriver("./connection.key").read(AuthenticatorKey.class);
-            String authCheckKey = Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey());
-            URL url = new URL("http://" + ip + ":" + port + "/" + authCheckKey + route);
+            final  AuthenticatorKey authConfig = (AuthenticatorKey) new ConfigDriver("./connection.key").read(AuthenticatorKey.class);
+            final  String authCheckKey = Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey());
+            final  URL url = new URL("http://" + ip + ":" + port + "/" + authCheckKey + route);
             con = (HttpURLConnection) url.openConnection();
 
             con.setRequestMethod("DELETE");
@@ -362,13 +362,13 @@ public class RestDriver {
             con.setReadTimeout(5000);    // Set read timeout to 5 seconds
             con.connect();
 
-            int statusCode = con.getResponseCode();
+            final int statusCode = con.getResponseCode();
             if (statusCode == HttpURLConnection.HTTP_OK) {
                 inputStream = con.getInputStream();
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+                final InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
                 in = new BufferedReader(inputStreamReader);
 
-                StringBuilder response = new StringBuilder();
+                final StringBuilder response = new StringBuilder();
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {
                     response.append(inputLine);
@@ -407,7 +407,7 @@ public class RestDriver {
         BufferedReader in = null;
 
         try {
-            URL url = new URL(urls);
+            final URL url = new URL(urls);
             con = (HttpURLConnection) url.openConnection();
 
             con.setRequestMethod("GET");
@@ -416,13 +416,13 @@ public class RestDriver {
             con.setReadTimeout(5000);    // Set read timeout to 5 seconds
             con.connect();
 
-            int statusCode = con.getResponseCode();
+            final int statusCode = con.getResponseCode();
             if (statusCode == HttpURLConnection.HTTP_OK) {
                 inputStream = con.getInputStream();
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+                final InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
                 in = new BufferedReader(inputStreamReader);
 
-                StringBuilder response = new StringBuilder();
+                final  StringBuilder response = new StringBuilder();
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {
                     response.append(inputLine);

@@ -1,6 +1,7 @@
 package eu.metacloudservice.groups.dummy;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 public class GroupStorage {
@@ -22,7 +23,7 @@ public class GroupStorage {
     public GroupStorage() {
     }
 
-    public GroupStorage(String template, String runningNode, String javaEnvironment, String arguments) {
+    public GroupStorage(@NonNull final String template, @NonNull final String runningNode, @NonNull final String javaEnvironment, @NonNull final String arguments) {
         this.template = template;
         this.runningNode = runningNode;
         this.javaEnvironment = javaEnvironment;

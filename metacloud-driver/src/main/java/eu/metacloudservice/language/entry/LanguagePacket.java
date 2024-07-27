@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class LanguagePacket {
 
-    private HashMap<String, String> data;
+    private final HashMap<String, String> data;
 
     public LanguagePacket() {
         data = new HashMap<>();

@@ -6,6 +6,7 @@ package eu.metacloudservice.networking.packet.packets.out.service.playerbased.ap
 
 import eu.metacloudservice.networking.packet.NettyBuffer;
 import eu.metacloudservice.networking.packet.Packet;
+import org.jetbrains.annotations.NotNull;
 
 public class PacketOutAPIPlayerDispactchCommand extends Packet {
 
@@ -24,7 +25,7 @@ public class PacketOutAPIPlayerDispactchCommand extends Packet {
     }
 
     @Override
-    public void readPacket(NettyBuffer buffer) {
+    public void readPacket(@NotNull NettyBuffer buffer) {
 
         userName = buffer.readString();
         command = buffer.readString();
@@ -32,7 +33,7 @@ public class PacketOutAPIPlayerDispactchCommand extends Packet {
     }
 
     @Override
-    public void writePacket(NettyBuffer buffer) {
+    public void writePacket(@NotNull NettyBuffer buffer) {
         buffer.writeString(userName);
         buffer.writeString(command);
     }

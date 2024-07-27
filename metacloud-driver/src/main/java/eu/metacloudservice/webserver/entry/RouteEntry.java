@@ -4,6 +4,7 @@ import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.packet.packets.out.service.events.PacketOutCloudRestAPICreateEvent;
 import eu.metacloudservice.networking.packet.packets.out.service.events.PacketOutCloudRestAPIUpdateEvent;
 import eu.metacloudservice.webserver.interfaces.IRouteEntry;
+import lombok.NonNull;
 
 public class RouteEntry implements IRouteEntry {
 
@@ -14,7 +15,7 @@ public class RouteEntry implements IRouteEntry {
 
     public RouteEntry() {}
 
-    public RouteEntry(String route, String json_option) {
+    public RouteEntry(@NonNull final String route, @NonNull final String json_option) {
         this.route = route;
         this.json_option = json_option;
         NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutCloudRestAPICreateEvent(route, json_option));
@@ -27,7 +28,7 @@ public class RouteEntry implements IRouteEntry {
     }
 
     @Override
-    public void channelWrite(String option) {
+    public void channelWrite(@NonNull final String option) {
         this.json_option = option;
     }
 
@@ -37,7 +38,7 @@ public class RouteEntry implements IRouteEntry {
     }
 
     @Override
-    public void channelUpdate(String update) {
+    public void channelUpdate(@NonNull final String update) {
         this.json_option = update;
         NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutCloudRestAPIUpdateEvent(route, update));
     }

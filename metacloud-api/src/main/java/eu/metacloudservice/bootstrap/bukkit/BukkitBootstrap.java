@@ -25,13 +25,6 @@ public class BukkitBootstrap extends JavaPlugin {
     }
 
 
-
-    private void test(){
-        CloudPlayer cloudPlayer = CloudAPI.getInstance().getPlayerPool().getPlayer("USERNAME");
-
-        cloudPlayer.changeGameMode(GameMode.CREATIVE);
-    }
-
     @Override
     public void onEnable() {
         final CloudAPIEnvironment environment = new CloudAPIEnvironment();
@@ -43,7 +36,7 @@ public class BukkitBootstrap extends JavaPlugin {
     @Override
     public void onDisable() {
         Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer("cloudservice-shutdown"));
-        LiveService service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
+        final LiveService service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInServiceDisconnect(service.getService()));
     }
 }

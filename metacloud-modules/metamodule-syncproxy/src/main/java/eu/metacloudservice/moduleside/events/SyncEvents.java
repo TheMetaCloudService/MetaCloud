@@ -136,12 +136,7 @@ public class SyncEvents implements ICloudListener {
     }
 
 
-    @Subscribe(priority = Priority.HIGHEST, async = true)
-    public void handle(CloudProxyPreparedEvent event){
-        if (event.getNode().equalsIgnoreCase("InternalNode")){
 
-        }
-    }
 
 
 }

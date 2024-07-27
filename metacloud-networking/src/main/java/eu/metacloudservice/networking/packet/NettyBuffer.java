@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.netty.buffer.ByteBuf;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 
 import java.io.*;
@@ -14,14 +15,14 @@ import java.util.HashMap;
 public class NettyBuffer {
 
     private final ByteBuf byteBuf;
-    protected static final Gson GSON = (new GsonBuilder()).serializeNulls().setPrettyPrinting().disableHtmlEscaping().create();
+    protected final Gson GSON = (new GsonBuilder()).serializeNulls().setPrettyPrinting().disableHtmlEscaping().create();
 
-    public NettyBuffer(ByteBuf byteBuf) {
+    public NettyBuffer(final ByteBuf byteBuf) {
         this.byteBuf = byteBuf;
     }
 
-    public void writeString(String message) {
-        byte[] bytes = message.getBytes(StandardCharsets.UTF_8);
+    public void writeString(@NonNull final String message) {
+        final byte[] bytes = message.getBytes(StandardCharsets.UTF_8);
         byteBuf.ensureWritable(8 + bytes.length);
         try {
             byteBuf.writeLong(bytes.length);
@@ -35,11 +36,11 @@ public class NettyBuffer {
         if (byteBuf.readableBytes() < 8) {
             throw new IllegalStateException("Not enough data to read message length (byteBuf.readableBytes() < 8): " + byteBuf.readableBytes());
         }
-        long messageLength = byteBuf.readLong();
+        final long messageLength = byteBuf.readLong();
         if (byteBuf.readableBytes() < messageLength) {
             throw new IllegalStateException("Not enough data to read message length (byteBuf.readableBytes() < messageLength): " + byteBuf.readableBytes());
         }
-        byte[] bytes = new byte[(int) messageLength];
+       final byte[] bytes = new byte[(int) messageLength];
         byteBuf.readBytes(bytes);
         return new String(bytes, StandardCharsets.UTF_8);
     }
@@ -71,8 +72,8 @@ public class NettyBuffer {
 
     @SneakyThrows
     public Object readClass(Class<?> c){
-        String read = readString();
-        ObjectMapper objectMapper = new ObjectMapper();
+       final String read = readString();
+        final ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(read, c);
     }
 
@@ -105,27 +106,27 @@ public class NettyBuffer {
 
 
     @SneakyThrows
-    public void writeMap(HashMap map){
+    public void writeMap(@NonNull final HashMap map){
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final ObjectOutputStream oos = new ObjectOutputStream(baos);
         oos.writeObject(map);
-        byte[] bytes = baos.toByteArray();
+        final byte[] bytes = baos.toByteArray();
         byteBuf.writeBytes(bytes);
 
     }
 
     @SneakyThrows
     public HashMap readMap(){
-        byte[] bytes = new byte[byteBuf.readableBytes()];
+        final byte[] bytes = new byte[byteBuf.readableBytes()];
         byteBuf.readBytes(bytes);
 
-        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-        ObjectInputStream ois = new ObjectInputStream(bais);
+        final ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+        final ObjectInputStream ois = new ObjectInputStream(bais);
         return (HashMap) ois.readObject();
     }
 
-    public void writeList(ArrayList list){
+    public void writeList(@NonNull final ArrayList list){
         byteBuf.writeLong(list.size() * 2);
         list.forEach(o -> {
             if (o instanceof String){
@@ -148,7 +149,7 @@ public class NettyBuffer {
     }
 
     public ArrayList readList(){
-        ArrayList list = new ArrayList();
+       final ArrayList list = new ArrayList();
         int size = readInt();
         String lastType = "";
         Boolean typeGiven = false;

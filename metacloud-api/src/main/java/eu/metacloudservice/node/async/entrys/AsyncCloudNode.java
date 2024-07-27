@@ -17,8 +17,8 @@ import java.util.concurrent.CompletableFuture;
 @Getter
 public class AsyncCloudNode {
 
-    private String nodeName;
-    private String address;
+    private final String nodeName;
+    private final String address;
 
 
 

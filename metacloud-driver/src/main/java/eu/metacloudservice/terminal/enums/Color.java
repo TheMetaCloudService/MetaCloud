@@ -105,15 +105,6 @@ public enum Color {
         return ansiCode;
     }
 
-    /**
-     * Strip color string.
-     *
-     * @param input the input
-     * @return the string
-     */
-    public static String stripColor(String input) {
-        return input.replaceAll("\u001B\\[[;\\d]*m", "");
-    }
 
 
 }

@@ -26,7 +26,7 @@ public class BungeeBootstrap extends Plugin {
     @Override
     public void onEnable() {
         instance = this;
-       final CloudAPIEnvironment environment = new CloudAPIEnvironment();
+        final CloudAPIEnvironment environment = new CloudAPIEnvironment();
         environment.handleNettyConnection();
         environment.registerHandlers();
         environment.registerBungeeHandlers();
@@ -37,10 +37,8 @@ public class BungeeBootstrap extends Plugin {
 
     @Override
     public void onDisable() {
-        ProxyServer.getInstance().getPlayers().forEach(player -> {
-            player.disconnect("cloudservice-shutdown");
-        });
-        LiveService service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
+        ProxyServer.getInstance().getPlayers().forEach(player -> player.disconnect("cloudservice-shutdown"));
+        final LiveService service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInServiceDisconnect(service.getService()));
 
     }

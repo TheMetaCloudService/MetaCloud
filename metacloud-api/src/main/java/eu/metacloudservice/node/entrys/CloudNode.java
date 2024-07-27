@@ -16,8 +16,8 @@ import java.util.List;
 @AllArgsConstructor
 public class CloudNode {
 
-    private String nodeName;
-    private String address;
+    private final String nodeName;
+    private final String address;
 
 
     public List<CloudService> getService(){

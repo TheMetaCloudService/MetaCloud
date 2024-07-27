@@ -7,6 +7,7 @@ package eu.metacloudservice.networking.packet.packets.in.service.playerbased.api
 import eu.metacloudservice.networking.packet.NettyBuffer;
 import eu.metacloudservice.networking.packet.Packet;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 public class PacketInAPIPlayerTitle extends Packet {
     @Getter
@@ -37,7 +38,7 @@ public class PacketInAPIPlayerTitle extends Packet {
     }
 
     @Override
-    public void readPacket(NettyBuffer buffer) {
+    public void readPacket(@NotNull NettyBuffer buffer) {
         title = buffer.readString();
         subTitle = buffer.readString();
         fadeIn = buffer.readInt();
@@ -47,7 +48,7 @@ public class PacketInAPIPlayerTitle extends Packet {
     }
 
     @Override
-    public void writePacket(NettyBuffer buffer) {
+    public void writePacket(@NotNull NettyBuffer buffer) {
         buffer.writeString(title);
         buffer.writeString(subTitle);
         buffer.writeInt(fadeIn);

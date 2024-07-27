@@ -12,6 +12,7 @@ import io.netty.channel.*;
 import io.netty.channel.epoll.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import lombok.NonNull;
 
 import java.net.InetSocketAddress;
 
@@ -22,16 +23,16 @@ public class NettyClient extends ChannelInitializer<Channel> implements AutoClos
 
     private EventLoopGroup  BOSS;
 
-    public NettyClient bind(String host, int port) {
+    public NettyClient bind(final String host, final int port) {
         this.port = port;
         this.host = host;
         return this;
     }
 
     public void connect() {
-        boolean isEpoll = Epoll.isAvailable();
+       final boolean isEpoll = Epoll.isAvailable();
 
-        BOSS =   isEpoll ? new EpollEventLoopGroup() : new NioEventLoopGroup();
+        BOSS = isEpoll ? new EpollEventLoopGroup() : new NioEventLoopGroup();
         try {
             this.channel = new Bootstrap()
                     .group(BOSS)
@@ -71,31 +72,27 @@ public class NettyClient extends ChannelInitializer<Channel> implements AutoClos
 
     }
 
-    private boolean allowAddress(String address){
-        if (NettyDriver.getInstance().getWhitelist().contains(address)){
-            return true;
-        }else {
-            return false;
-        }
+    private boolean allowAddress(@NonNull final String address){
+        return NettyDriver.getInstance().getWhitelist().contains(address);
     }
 
-    public void sendPacketsSynchronized(final Packet... packets){
-        for (Packet packet : packets)
+    public void sendPacketsSynchronized(@NonNull final Packet... packets){
+        for (final Packet packet : packets)
             this.sendPacketSynchronized(packet);
 
     }
 
-    public void sendPacketsAsynchronous(final Packet... packets){
-        for (Packet packet : packets)
+    public void sendPacketsAsynchronous(@NonNull final Packet... packets){
+        for (final Packet packet : packets)
             this.sendPacketAsynchronous(packet);
 
     }
 
-    public void sendPacketSynchronized(Packet packet){
+    public void sendPacketSynchronized(@NonNull final Packet packet){
         channel.writeAndFlush(packet);
     }
 
-    public void sendPacketAsynchronous(Packet packet){
+    public void sendPacketAsynchronous(@NonNull final Packet packet){
         new Thread(() -> {
             channel.writeAndFlush(packet);
             Thread.currentThread().stop();

@@ -27,7 +27,7 @@ public final class TerminalReader extends Thread {
     public void run() {
         while (!this.isInterrupted()) {
             try {
-                String prompt = String.format("§bmetacloud§f@%s §7=> ", System.getProperty("user.name"));
+                final String prompt = String.format("§bmetacloud§f@%s §7=> ", System.getProperty("user.name"));
 
                 final var line = consoleDriver.getLineReader().readLine(consoleDriver.getColoredString(prompt));
                 if (line != null && !line.trim().isEmpty()) {

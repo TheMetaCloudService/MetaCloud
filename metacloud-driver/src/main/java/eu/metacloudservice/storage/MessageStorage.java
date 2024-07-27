@@ -5,6 +5,7 @@ import eu.metacloudservice.Driver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.restapi.GeneralConfig;
 import eu.metacloudservice.events.EventDriver;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 
 import java.io.BufferedReader;
@@ -43,7 +44,7 @@ public class MessageStorage {
 
     public int getCPULoad() {
 
-        OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
+       final OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
         if (osBean instanceof com.sun.management.OperatingSystemMXBean) {
             com.sun.management.OperatingSystemMXBean sunOsBean = (com.sun.management.OperatingSystemMXBean) osBean;
             double load = sunOsBean.getSystemCpuLoad();
@@ -75,8 +76,8 @@ public class MessageStorage {
     }
 
 
-    public String[] dropFirstString(String[] input){
-        String[] string = new String[input.length - 1];
+    public String[] dropFirstString(@NonNull final String[] input){
+        final String[] string = new String[input.length - 1];
         System.arraycopy(input, 1, string, 0, input.length - 1);
         return string;
     }
@@ -85,11 +86,9 @@ public class MessageStorage {
     @SneakyThrows
     public GeneralConfig getGeneralConfigFromWeb() {
 
-        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=global").openStream()) {
+        try (final InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=global").openStream()) {
             final StringBuilder builder = new StringBuilder();
-            BufferedReader bufferedReader;
-
-            bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
             int counter;
             while ((counter = bufferedReader.read()) != -1) {
                 builder.append((char) counter);
@@ -105,17 +104,15 @@ public class MessageStorage {
     @SneakyThrows
     public boolean checkAvailableUpdate() {
 
-        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=global").openStream()) {
+        try (final InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=global").openStream()) {
             final StringBuilder builder = new StringBuilder();
-            BufferedReader bufferedReader;
-
-            bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
             int counter;
             while ((counter = bufferedReader.read()) != -1) {
                 builder.append((char) counter);
             }
             final String rawJson = builder.toString();
-            GeneralConfig updateConfig = (GeneralConfig) new ConfigDriver().convert(rawJson, GeneralConfig.class);
+            final GeneralConfig updateConfig = (GeneralConfig) new ConfigDriver().convert(rawJson, GeneralConfig.class);
             if (!updateConfig.getConfig().get("current-version").equalsIgnoreCase(version)) {
                 return true;
             }else {
@@ -130,17 +127,15 @@ public class MessageStorage {
     @SneakyThrows
     public String  getNewVersionName() {
 
-        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=global").openStream()) {
+        try (final InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=global").openStream()) {
             final StringBuilder builder = new StringBuilder();
-            BufferedReader bufferedReader;
-
-            bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
             int counter;
             while ((counter = bufferedReader.read()) != -1) {
                 builder.append((char) counter);
             }
             final String rawJson = builder.toString();
-            GeneralConfig updateConfig = (GeneralConfig) new ConfigDriver().convert(rawJson, GeneralConfig.class);
+            final GeneralConfig updateConfig = (GeneralConfig) new ConfigDriver().convert(rawJson, GeneralConfig.class);
             if (!updateConfig.getConfig().get("current-version").equalsIgnoreCase(version)) {
                 return updateConfig.getConfig().get("current-version");
             }
@@ -148,19 +143,19 @@ public class MessageStorage {
         return "";
     }
     @SneakyThrows
-    public  String utf8ToUBase64(String utf8string){
+    public  String utf8ToUBase64(@NonNull final String utf8string){
         return BaseEncoding.base64().encode(utf8string.getBytes(StandardCharsets.UTF_8));
     }
 
-    public  String base64ToUTF8(String base64Sting){
+    public  String base64ToUTF8(@NonNull final String base64Sting){
         byte[] contentInBytes = BaseEncoding.base64().decode(base64Sting);
         return new String(contentInBytes, StandardCharsets.UTF_8);
     }
 
 
-    public String getVelocityToml(int port, int maxPlayers, boolean useProtocol){
+    public String getVelocityToml(final int port, final int maxPlayers, final boolean useProtocol){
 
-        String os = System.getProperty("os.name").toLowerCase();
+        final String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("nix") || os.contains("aix") || os.contains("nux")){
             return "# Config version. Do not change this\n" +
                     "config-version = \"2.6\"\n" +
@@ -490,11 +485,12 @@ public class MessageStorage {
                 "  url: jdbc:sqlite:{DIR}{NAME}.db\n";
     }
 
-    public String  getSoigotYML(boolean useVelo){
+    public String getSpigotYML(final boolean useVelo){
         if (useVelo){
             return "config-version: 8\n" +
                     "settings:\n" +
-                    "  debug: false\n" +
+                    "  debu" +
+                    "g: false\n" +
                     "  save-user-cache-on-stop-only: false\n" +
                     "  timeout-time: 60\n" +
                     "  restart-on-crash: false\n" +
@@ -738,7 +734,7 @@ public class MessageStorage {
         }
     }
 
-    public String getSpigotProperty(int Port){
+    public String getSpigotProperty(final int Port){
         return "#Minecraft server properties\n" +
                 "#Mon Jan 25 10:33:48 CET 2021\n" +
                 "spawn-protection=0\n" +
@@ -779,7 +775,7 @@ public class MessageStorage {
                 "enable-rcon=false\n" +
                 "motd=MetaCloudService\n";
     }
-    public String getBungeeCordConfiguration(int port, int players, boolean useProtocol){
+    public String getBungeeCordConfiguration(final int port, final int players, final boolean useProtocol){
         return "server_connect_timeout: 5000\n" +
                 "remote_ping_cache: -1\n" +
                 "forge_support: true\n" +

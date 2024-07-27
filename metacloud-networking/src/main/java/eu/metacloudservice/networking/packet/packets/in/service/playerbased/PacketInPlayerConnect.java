@@ -7,6 +7,7 @@ package eu.metacloudservice.networking.packet.packets.in.service.playerbased;
 import eu.metacloudservice.networking.packet.NettyBuffer;
 import eu.metacloudservice.networking.packet.Packet;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 public class PacketInPlayerConnect extends Packet {
 
@@ -26,12 +27,12 @@ public class PacketInPlayerConnect extends Packet {
         this.proxy = proxy;
     }
 
-    public void readPacket(NettyBuffer buffer) {
+    public void readPacket(@NotNull NettyBuffer buffer) {
         this.name = buffer.readString();
         this.proxy = buffer.readString();
     }
 
-    public void writePacket(NettyBuffer buffer) {
+    public void writePacket(@NotNull NettyBuffer buffer) {
         buffer.writeString(this.name);
         buffer.writeString(this.proxy);
     }

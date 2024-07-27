@@ -19,11 +19,9 @@ public class ModuleLoader {
 
     @SneakyThrows
     private ModuleConfig getModules(){
-        try (InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=modules").openStream()) {
+        try (final InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=modules").openStream()) {
             final StringBuilder builder = new StringBuilder();
-            BufferedReader bufferedReader;
-
-            bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
             int counter;
             while ((counter = bufferedReader.read()) != -1) {
                 builder.append((char) counter);

@@ -12,6 +12,7 @@ import eu.metacloudservice.Driver;
 import eu.metacloudservice.networking.NettyDriver;
 import eu.metacloudservice.networking.packet.packets.in.node.PacketInSendConsole;
 import eu.metacloudservice.terminal.enums.Type;
+import lombok.NonNull;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
@@ -20,7 +21,7 @@ public final class LoggerOutputStream extends ByteArrayOutputStream {
 
     private final Type logType;
 
-    public LoggerOutputStream(final Type logType) {
+    public LoggerOutputStream(@NonNull final  Type logType) {
         this.logType = logType;
     }
 

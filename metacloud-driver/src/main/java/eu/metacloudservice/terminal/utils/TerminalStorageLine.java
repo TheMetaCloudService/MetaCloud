@@ -8,17 +8,19 @@
 
 package eu.metacloudservice.terminal.utils;
 
+import lombok.NonNull;
+
 import java.util.List;
 import java.util.function.Consumer;
 
 
 public final class TerminalStorageLine {
 
-    public List<String> tabCompletes;
-    public Consumer<String> inputs;
+    public final List<String> tabCompletes;
+    public final Consumer<String> inputs;
 
 
-    public TerminalStorageLine(Consumer<String> inputs, List<String> tabCompletes) {
+    public TerminalStorageLine(@NonNull final Consumer<String> inputs, @NonNull final List<String> tabCompletes) {
         this.tabCompletes = tabCompletes;
         this.inputs = inputs;
     }

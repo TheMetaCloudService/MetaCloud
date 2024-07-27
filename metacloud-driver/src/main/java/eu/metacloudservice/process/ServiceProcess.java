@@ -36,8 +36,8 @@ public final class ServiceProcess implements IServiceProcess {
     private String customTemplate;
 
     private boolean useVelocity;
-    public boolean useConsole;
-    private   BufferedReader reader;
+    public  boolean useConsole;
+    private BufferedReader reader;
     public final LinkedList<String> consoleStorage;
 
 
@@ -51,8 +51,6 @@ public final class ServiceProcess implements IServiceProcess {
         useConsole = false;
         useCustomTemplate = false;
         customTemplate = "";
-
-
     }
 
     @SneakyThrows
@@ -453,7 +451,7 @@ public final class ServiceProcess implements IServiceProcess {
                 File configFile3 = new File(System.getProperty("user.dir") + "/live/" + group.getGroup()+ "/" +service + "/", "spigot.yml");
                 try {
                     final FileWriter fileWriter3 = new FileWriter(configFile3);
-                    fileWriter3.write(Driver.getInstance().getMessageStorage().getSoigotYML(useVelocity));
+                    fileWriter3.write(Driver.getInstance().getMessageStorage().getSpigotYML(useVelocity));
                     fileWriter3.flush();
                     fileWriter3.close();
 
@@ -625,7 +623,7 @@ public final class ServiceProcess implements IServiceProcess {
                 File configFile3 = new File(System.getProperty("user.dir") + "/live/" + group.getGroup() + "/" + service + "/", "spigot.yml");
                 try {
                     final FileWriter fileWriter3 = new FileWriter(configFile3);
-                    fileWriter3.write(Driver.getInstance().getMessageStorage().getSoigotYML(useVelocity));
+                    fileWriter3.write(Driver.getInstance().getMessageStorage().getSpigotYML(useVelocity));
                     fileWriter3.flush();
                     fileWriter3.close();
 

@@ -8,6 +8,7 @@ import eu.metacloudservice.networking.packet.NettyBuffer;
 import eu.metacloudservice.networking.packet.Packet;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.NotNull;
 
 
 public class PacketOutCloudPlayerComponent extends Packet {
@@ -29,13 +30,13 @@ public class PacketOutCloudPlayerComponent extends Packet {
     }
 
     @Override
-    public void readPacket(NettyBuffer buffer) {
+    public void readPacket(@NotNull NettyBuffer buffer) {
         component = (Component) buffer.readClass(Component.class);
         player = buffer.readString();
     }
 
     @Override
-    public void writePacket(NettyBuffer buffer) {
+    public void writePacket(@NotNull NettyBuffer buffer) {
         buffer.writeClass(component);
         buffer.writeString(player);
     }

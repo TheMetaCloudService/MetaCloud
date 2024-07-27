@@ -14,46 +14,47 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.*;
 import io.netty.util.CharsetUtil;
+import lombok.NonNull;
 
 public class RequestCREATE {
 
-    public void handle(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
-        String uri = request.uri();
+    public void handle(@NonNull final ChannelHandlerContext ctx, @NonNull final FullHttpRequest request) throws Exception {
+        final  String uri = request.uri();
         if (uri.contains("/")) {
             if (uri.contains("/setup/")){
                 return;
             }
-            String authenticatorKey = uri.split("/")[1];
+            final  String authenticatorKey = uri.split("/")[1];
             if (authenticatorKey.length() > 4 && Driver.getInstance().getWebServer().AUTH_KEY.equals(authenticatorKey)){
-                String path = uri.replace("/" + authenticatorKey, "");
+                final  String path = uri.replace("/" + authenticatorKey, "");
                 if (Driver.getInstance().getWebServer().getRoutes(path) != null){
-                    FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter a right path\"}");
+                    final FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter a right path\"}");
                     ctx.writeAndFlush(response);
                 } else if (!path.isEmpty()){
-                    ByteBuf content = request.content();
-                    String payload = content.toString(CharsetUtil.UTF_8);
+                    final ByteBuf content = request.content();
+                    final String payload = content.toString(CharsetUtil.UTF_8);
                     Driver.getInstance().getWebServer().addRoute(new RouteEntry(path, payload));
                     Driver.getInstance().getMessageStorage().eventDriver.executeEvent(new CloudRestAPICreateEvent(path, payload));
                     NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutCloudRestAPICreateEvent(path, payload));
                     FullHttpResponse response = createResponse(HttpResponseStatus.OK, "{\"reason\":\"data received\"}");
                     ctx.writeAndFlush(response);
                 }else {
-                    FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter a right path\"}");
+                    final FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter a right path\"}");
                     ctx.writeAndFlush(response);
                 }
 
             }else {
-                FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter the right auth-key\"}");
+                final FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter the right auth-key\"}");
                 ctx.writeAndFlush(response);
             }
         } else {
-            FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter the right auth-key\"}");
+            final FullHttpResponse response = createResponse(HttpResponseStatus.NOT_FOUND, "{\"reason\":\"please enter the right auth-key\"}");
             ctx.writeAndFlush(response);
         }
     }
 
-    private FullHttpResponse createResponse(HttpResponseStatus status, String content) {
-        FullHttpResponse response = new DefaultFullHttpResponse(
+    private FullHttpResponse createResponse(@NonNull final HttpResponseStatus status, @NonNull final String content) {
+        final FullHttpResponse response = new DefaultFullHttpResponse(
                 HttpVersion.HTTP_1_1,
                 status,
                 Unpooled.copiedBuffer(content, CharsetUtil.UTF_8));

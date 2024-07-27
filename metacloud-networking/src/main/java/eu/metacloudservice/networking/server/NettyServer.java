@@ -11,6 +11,7 @@ import io.netty.channel.*;
 import io.netty.channel.epoll.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 
 import java.net.InetSocketAddress;
@@ -20,11 +21,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class NettyServer extends ChannelInitializer<Channel> implements AutoCloseable{
     private int port;
     private final Map<String, Channel> CHANNELS = new ConcurrentHashMap<>();
-    EventLoopGroup WORKER;
-    EventLoopGroup BOSS;
+   private EventLoopGroup WORKER;
+    private EventLoopGroup BOSS;
 
     private ChannelFuture channelFuture;
-    public NettyServer bind(int port) {
+
+
+    public NettyServer bind(final int port) {
         this.port = port;
         return this;
     }
@@ -32,7 +35,7 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
     @SneakyThrows
     public void start() {
 
-        boolean isEpoll = Epoll.isAvailable();
+        final boolean isEpoll = Epoll.isAvailable();
         this.BOSS = isEpoll ? new EpollEventLoopGroup() : new NioEventLoopGroup();
         this.WORKER = isEpoll ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 
@@ -49,24 +52,22 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
                 .sync().channel().closeFuture();
     }
 
-    public void registerChannel(String receiver, Channel channel) {
+    public void registerChannel( @NonNull final String receiver, @NonNull final Channel channel) {
         if (!this.CHANNELS.containsKey(receiver))
             this.CHANNELS.put(receiver, channel);
     }
 
-    public boolean isChannelFound(String receiver){
+    public boolean isChannelFound( @NonNull final String receiver){
         return this.CHANNELS.containsKey(receiver);
     }
 
-    public void removeChannel(String receiver) {
-
-        if (this.CHANNELS.get(receiver) == null)
-            return;
-        else {
-            if (    this.CHANNELS.get(receiver).isActive())
+    public void removeChannel( @NonNull final String receiver) {
+        if (this.CHANNELS.get(receiver) != null) {
+            if (this.CHANNELS.get(receiver).isActive())
                 this.CHANNELS.get(receiver).close();
             this.CHANNELS.remove(receiver);
         }
+
     }
 
     public void close() {
@@ -96,53 +97,49 @@ public class NettyServer extends ChannelInitializer<Channel> implements AutoClos
         }
     }
 
-    private boolean allowAddress(String address){
-        if (NettyDriver.getInstance().getWhitelist().contains(address)){
-            return true;
-        }else {
-            return false;
-        }
+    private boolean allowAddress(@NonNull final String address){
+        return NettyDriver.getInstance().getWhitelist().contains(address);
     }
 
-    public void sendToAllSynchronized(final Packet... packets){
-        for (Packet packet : packets)
+    public void sendToAllSynchronized(@NonNull final Packet... packets){
+        for (final Packet packet : packets)
             this.sendToAllSynchronized(packet);
 
     }
 
-    public void sendToAllAsynchronous(final Packet... packets){
+    public void sendToAllAsynchronous(@NonNull final Packet... packets){
         for (Packet packet : packets)
             this.sendToAllAsynchronous(packet);
 
     }
 
 
-    public void sendToAllSynchronized(final Packet packet){
+    public void sendToAllSynchronized(@NonNull final Packet packet){
         this.CHANNELS.forEach((s, channel) -> channel.writeAndFlush(packet));
     }
 
-    public void sendToAllAsynchronous(final Packet packet){
+    public void sendToAllAsynchronous(@NonNull final Packet packet){
          new Thread(() -> {
             this.CHANNELS.forEach((s, channel) -> channel.writeAndFlush(packet));
         }).start();
     }
-    public void sendPacketSynchronized(final String channel, final Packet packet){
+    public void sendPacketSynchronized(@NonNull final String channel, @NonNull final Packet packet){
         this.CHANNELS.get(channel).writeAndFlush(packet);
     }
 
-    public void sendPacketAsynchronous(final String channel, final Packet packet){
+    public void sendPacketAsynchronous(@NonNull final String channel, @NonNull final Packet packet){
         new Thread(() -> {
             this.CHANNELS.get(channel).writeAndFlush(packet);
 
         }).start();
     }
 
-    public void sendPacketSynchronized(final String channel, final Packet... packets){
+    public void sendPacketSynchronized(@NonNull final String channel, @NonNull final Packet... packets){
         for (Packet packet : packets)
             this.CHANNELS.get(channel).writeAndFlush(packet);
     }
 
-    public void sendPacketAsynchronous(final String channel, final Packet... packets){
+    public void sendPacketAsynchronous(@NonNull final String channel, @NonNull final Packet... packets){
         new Thread(() -> {
             for (Packet packet : packets)
                 this.CHANNELS.get(channel).writeAndFlush(packet);

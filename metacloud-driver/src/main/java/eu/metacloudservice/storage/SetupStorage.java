@@ -6,7 +6,7 @@ public final class SetupStorage {
 
 
     public Integer step;
-    public HashMap<String, Object> storage;
+    public final HashMap<String, Object> storage;
 
     public SetupStorage() {
         storage = new HashMap<>();

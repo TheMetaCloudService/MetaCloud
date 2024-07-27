@@ -43,7 +43,7 @@ public class ServerConfig {
             return;
         }
 
-        List<String> b = bungeeConfig.getStringList("listeners.priorities");
+        final List<String> b = bungeeConfig.getStringList("listeners.priorities");
         b.add(serverInfo.getName());
         bungeeConfig.set("listeners.priorities", b);
 
@@ -57,7 +57,7 @@ public class ServerConfig {
         if (locked) {
             return;
         }
-        List<String> b = bungeeConfig.getStringList("listeners.priorities");
+        final List<String> b = bungeeConfig.getStringList("listeners.priorities");
         if (b.contains(lobby)){
             b.remove(lobby);
         }

@@ -2,6 +2,7 @@ package eu.metacloudservice.groups.dummy;
 
 import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 public class Group implements IConfigAdapter {
@@ -49,7 +50,7 @@ public class Group implements IConfigAdapter {
 
     public Group() {}
 
-    public Group(String group, String groupType, Integer usedMemory, boolean maintenance, boolean runStatic, Integer priority, String permission, Integer maxPlayers, Integer minimalOnline, Integer maximalOnline, Integer startNewPercent, Integer over100AtGroup, Integer over100AtNetwork, GroupStorage storage, int startPriority) {
+    public Group(@NonNull final String group, @NonNull final String groupType, @NonNull final Integer usedMemory, @NonNull final boolean maintenance, @NonNull final boolean runStatic, @NonNull final Integer priority, @NonNull final String permission, @NonNull final Integer maxPlayers, @NonNull final Integer minimalOnline, Integer maximalOnline, @NonNull final Integer startNewPercent, @NonNull final Integer over100AtGroup, @NonNull final Integer over100AtNetwork, @NonNull final GroupStorage storage, @NonNull final int startPriority) {
         this.group = group;
         this.groupType = groupType;
         this.usedMemory = usedMemory;

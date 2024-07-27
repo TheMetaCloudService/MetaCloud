@@ -27,18 +27,18 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class WebServer {
 
-    private ConcurrentLinkedDeque<RouteEntry> ROUTES;
-    public  String AUTH_KEY;
-    private  EventLoopGroup boosGroup;
-    private  EventLoopGroup workerGroup;
-    private  Thread current;
+    private final ConcurrentLinkedDeque<RouteEntry> ROUTES;
+    public final String AUTH_KEY;
+    private final EventLoopGroup boosGroup;
+    private final EventLoopGroup workerGroup;
+    private final Thread current;
 
     @SneakyThrows
     public WebServer() {
 
-        AuthenticatorKey authConfig = (AuthenticatorKey) new ConfigDriver("./connection.key").read(AuthenticatorKey.class);
+        final AuthenticatorKey authConfig = (AuthenticatorKey) new ConfigDriver("./connection.key").read(AuthenticatorKey.class);
         this.AUTH_KEY = Driver.getInstance().getMessageStorage().base64ToUTF8(authConfig.getKey());
-        ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
+        final ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
         this.ROUTES = new ConcurrentLinkedDeque<>();
 
          boosGroup = new NioEventLoopGroup(1);
@@ -70,9 +70,9 @@ public class WebServer {
                                     ch.pipeline().addLast(new RequestHandler());
                                 }
                             });
-                    ChannelFuture future = bootstrap.bind(config.getRestApiCommunication()).sync();
+                    final ChannelFuture future = bootstrap.bind(config.getRestApiCommunication()).sync();
 
-                    Channel channel = future.channel();
+                    final Channel channel = future.channel();
                     channel.closeFuture().sync();
                 }catch (Exception ignored){
                 }

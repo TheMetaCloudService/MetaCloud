@@ -1,6 +1,7 @@
 package eu.metacloudservice.networking.packet;
 
 import io.netty.channel.Channel;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,17 +16,17 @@ public class PacketDriver {
     @SneakyThrows
     public PacketDriver() {}
 
-    public void call(@NotNull Integer id, @NotNull Channel channel, @NotNull Packet packet) {
-        NettyAdaptor nettyAdaptor = adaptor.get(id);
+    public void call(@NonNull final Integer id, @NonNull final Channel channel, @NonNull final Packet packet) {
+        final NettyAdaptor nettyAdaptor = adaptor.get(id);
         if (nettyAdaptor != null) {
             nettyAdaptor.handle(channel, packet);
         }
     }
 
-    public PacketDriver registerHandler(Integer id, NettyAdaptor nettyAdaptor, Class<? extends Packet> pc) {
+    public PacketDriver registerHandler(@NonNull final Integer id ,@NonNull final NettyAdaptor nettyAdaptor, @NonNull final Class<? extends Packet> pc) {
         adaptor.putIfAbsent(id, nettyAdaptor);
         try {
-            Packet packetInstance = pc.getDeclaredConstructor().newInstance();
+           final Packet packetInstance = pc.getDeclaredConstructor().newInstance();
             packets.putIfAbsent(packetInstance.getPacketUUID(), pc);
         } catch (Exception e) {
             e.printStackTrace();
@@ -33,7 +34,7 @@ public class PacketDriver {
         return this;
     }
 
-    public Class<? extends Packet> getPacket(int id) {
+    public Class<? extends Packet> getPacket(final int id) {
         return packets.getOrDefault(id, null);
     }
 }

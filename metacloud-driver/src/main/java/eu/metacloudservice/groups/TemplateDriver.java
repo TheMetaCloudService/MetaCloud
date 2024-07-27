@@ -14,12 +14,15 @@ import java.util.ArrayList;
 
 public class TemplateDriver implements ITemplateDriver {
 
+    private final String TEMPLATES_DIR = "./local/templates/";
+    private final String DEFAULT_DIR = "/default/";
+
 
     @Override
     public void create(String template, boolean bungee, boolean isstatic) {
         if (isstatic){
-            if (!new File("./local/templates/"+ template+ "/default/").exists()){
-                new File("./local/templates/"+ template+ "/default/").mkdirs();
+            if (!new File(TEMPLATES_DIR+ template+ DEFAULT_DIR).exists()){
+                new File(TEMPLATES_DIR+ template+ DEFAULT_DIR).mkdirs();
                 if (new File("./service.json").exists()){
                     ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
                     if (bungee){
@@ -42,8 +45,8 @@ public class TemplateDriver implements ITemplateDriver {
                 }
             }
         }else {
-            if (!new File("./local/templates/"+ template+ "/").exists()){
-                new File("./local/templates/"+ template+ "/").mkdirs();
+            if (!new File(TEMPLATES_DIR+ template+ "/").exists()){
+                new File(TEMPLATES_DIR+ template+ "/").mkdirs();
                 if (new File("./service.json").exists()){
                     ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
                     if (bungee){
@@ -71,15 +74,15 @@ public class TemplateDriver implements ITemplateDriver {
     @SneakyThrows
     @Override
     public void copy(String template, String directory) {
-       if (new File("./local/templates/"+ template+ "/").exists()){
-           FileUtils.copyDirectory(new File("./local/templates/"+ template+ "/"), new File(directory));
+       if (new File(TEMPLATES_DIR+ template+ "/").exists()){
+           FileUtils.copyDirectory(new File(TEMPLATES_DIR+ template+ "/"), new File(directory));
        }
     }
 
     @Override
     public void delete(String template) {
-        if (new File("./local/templates/"+ template+"/").exists()){
-            new File("./local/templates/"+ template+"/").delete();
+        if (new File(TEMPLATES_DIR+ template+"/").exists()){
+            new File(TEMPLATES_DIR+ template+"/").delete();
         }
     }
 
@@ -113,13 +116,13 @@ public class TemplateDriver implements ITemplateDriver {
     }
 
     private boolean isInstalled(String template){
-        return  new File("./local/templates/" + template + "/server.jar").exists();
+        return  new File(TEMPLATES_DIR + template + "/server.jar").exists();
     }
 
     @Override
     public ArrayList<String> get() {
 
-        File file = new File("./local/templates/");
+        File file = new File(TEMPLATES_DIR);
         File[] files = file.listFiles();
         ArrayList<String> templates = new ArrayList<>();
         for (int i = 0; i != (files != null ? files.length : 0); i++) {

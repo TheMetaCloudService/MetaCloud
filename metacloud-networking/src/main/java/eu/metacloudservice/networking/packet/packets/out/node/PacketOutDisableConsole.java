@@ -6,6 +6,7 @@ package eu.metacloudservice.networking.packet.packets.out.node;
 
 import eu.metacloudservice.networking.packet.NettyBuffer;
 import eu.metacloudservice.networking.packet.Packet;
+import org.jetbrains.annotations.NotNull;
 
 public class PacketOutDisableConsole extends Packet {
 
@@ -22,12 +23,12 @@ public class PacketOutDisableConsole extends Packet {
     }
 
     @Override
-    public void readPacket(NettyBuffer buffer) {
+    public void readPacket(@NotNull NettyBuffer buffer) {
         service = buffer.readString();
     }
 
     @Override
-    public void writePacket(NettyBuffer buffer) {
+    public void writePacket(@NotNull NettyBuffer buffer) {
         buffer.writeString(service);
     }
 

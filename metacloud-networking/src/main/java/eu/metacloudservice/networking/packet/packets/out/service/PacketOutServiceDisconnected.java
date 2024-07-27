@@ -7,6 +7,7 @@ package eu.metacloudservice.networking.packet.packets.out.service;
 import eu.metacloudservice.networking.packet.NettyBuffer;
 import eu.metacloudservice.networking.packet.Packet;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 public class PacketOutServiceDisconnected extends Packet {
 
@@ -27,13 +28,13 @@ public class PacketOutServiceDisconnected extends Packet {
     }
 
     @Override
-    public void readPacket(NettyBuffer buffer) {
+    public void readPacket(@NotNull NettyBuffer buffer) {
         name = buffer.readString();
         isProxy = buffer.readBoolean();
     }
 
     @Override
-    public void writePacket(NettyBuffer buffer) {
+    public void writePacket(@NotNull NettyBuffer buffer) {
         buffer.writeString(name);
         buffer.writeBoolean(isProxy);
     }

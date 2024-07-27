@@ -18,13 +18,7 @@ public class EventProcess implements  Comparable<EventProcess>{
         this.method = method;
         this.annotation = annotation;
     }
-    public Subscribe getAnnotation() {
-        return annotation;
-    }
 
-    public Method getMethod() {
-        return method;
-    }
     public ICloudListener getListener() {
         return listener;
     }
@@ -39,7 +33,7 @@ public class EventProcess implements  Comparable<EventProcess>{
             }else {
                 try {
                     method.invoke(listener, event);
-                } catch (IllegalAccessException | InvocationTargetException ignored) {};
+                } catch (IllegalAccessException | InvocationTargetException ignored) {}
             }
     }
     @Override

@@ -6,6 +6,7 @@ package eu.metacloudservice.networking.packet.packets.out.service.group;
 
 import eu.metacloudservice.networking.packet.NettyBuffer;
 import eu.metacloudservice.networking.packet.Packet;
+import org.jetbrains.annotations.NotNull;
 
 public class PacketOutGroupCreate extends Packet {
 
@@ -24,12 +25,12 @@ public class PacketOutGroupCreate extends Packet {
     }
 
     @Override
-    public void readPacket(NettyBuffer buffer) {
+    public void readPacket(@NotNull NettyBuffer buffer) {
         group = buffer.readString();
     }
 
     @Override
-    public void writePacket(NettyBuffer buffer) {
+    public void writePacket(@NotNull NettyBuffer buffer) {
         buffer.writeString(group);
     }
 

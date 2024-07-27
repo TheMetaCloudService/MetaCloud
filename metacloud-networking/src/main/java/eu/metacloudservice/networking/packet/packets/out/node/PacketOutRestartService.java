@@ -7,6 +7,7 @@ package eu.metacloudservice.networking.packet.packets.out.node;
 import eu.metacloudservice.networking.packet.NettyBuffer;
 import eu.metacloudservice.networking.packet.Packet;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 public class PacketOutRestartService extends Packet {
 
@@ -23,12 +24,12 @@ public class PacketOutRestartService extends Packet {
     }
 
     @Override
-    public void readPacket(NettyBuffer buffer) {
+    public void readPacket(@NotNull NettyBuffer buffer) {
         this.service =buffer.readString();
     }
 
     @Override
-    public void writePacket(NettyBuffer buffer) {
+    public void writePacket(@NotNull NettyBuffer buffer) {
         buffer.writeString(this.service);
 
     }

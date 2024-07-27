@@ -4,15 +4,15 @@ import lombok.Getter;
 
 public class Title {
     @Getter
-    private String title;
+    private final  String title;
     @Getter
-    private String subtitle;
+    private final String subtitle;
     @Getter
-    private int fadeIn;
+    private final int fadeIn;
     @Getter
-    private int stay;
+    private final int stay;
     @Getter
-    private int fadeOut;
+    private final int fadeOut;
 
     public Title(String title, String subtitle, int fadeIn, int stay, int fadeOut) {
         this.title = title;

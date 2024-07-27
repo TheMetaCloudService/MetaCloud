@@ -16,8 +16,8 @@ public class RequestHandler  extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof FullHttpRequest){
-            FullHttpRequest request = (FullHttpRequest) msg;
-            HttpMethod method = request.method();
+            final FullHttpRequest request = (FullHttpRequest) msg;
+            final HttpMethod method = request.method();
 
             if (method != null) {
                 if (GET.equals(method)) {

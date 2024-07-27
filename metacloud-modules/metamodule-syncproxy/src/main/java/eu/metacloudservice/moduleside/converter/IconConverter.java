@@ -10,7 +10,7 @@ public class IconConverter {
 
     // Converts PNG image file to base64 string
     public String convertToBase64(String filePath) throws IOException {
-        FileInputStream fis = new FileInputStream(filePath);
+        final FileInputStream fis = new FileInputStream(filePath);
         byte[] imageData = new byte[(int) new File(filePath).length()];
         fis.read(imageData);
         fis.close();

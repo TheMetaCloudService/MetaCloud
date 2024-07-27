@@ -11,6 +11,7 @@ package eu.metacloudservice.networking.packet.packets.in.service.command;
 import eu.metacloudservice.networking.packet.NettyBuffer;
 import eu.metacloudservice.networking.packet.Packet;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 public class PacketInCommandMaintenance extends Packet {
     @Getter
@@ -30,13 +31,13 @@ public class PacketInCommandMaintenance extends Packet {
     }
 
     @Override
-    public void readPacket(NettyBuffer buffer) {
+    public void readPacket(@NotNull NettyBuffer buffer) {
         this.name = buffer.readString();
         this.removed = buffer.readBoolean();
     }
 
     @Override
-    public void writePacket(NettyBuffer buffer) {
+    public void writePacket(@NotNull NettyBuffer buffer) {
         buffer.writeString(this.name);
         buffer.writeBoolean(this.removed);
     }

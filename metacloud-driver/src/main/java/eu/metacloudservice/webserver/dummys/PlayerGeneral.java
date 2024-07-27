@@ -1,6 +1,8 @@
 package eu.metacloudservice.webserver.dummys;
 
 import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
+import lombok.NonNull;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
@@ -12,7 +14,7 @@ public class PlayerGeneral implements IConfigAdapter {
         return cloudplayers;
     }
 
-    public void setCloudplayers(ArrayList<String> cloudplayers) {
+    public void setCloudplayers(@NonNull final ArrayList<String> cloudplayers) {
         this.cloudplayers = cloudplayers;
     }
 }

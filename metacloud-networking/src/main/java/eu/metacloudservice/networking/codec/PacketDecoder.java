@@ -19,8 +19,8 @@ public class PacketDecoder extends ByteToMessageDecoder {
         if (in.readableBytes() < 4) {
             return;
         }
-        int packetUUID = in.readInt();
-        var packetClass = NettyDriver.getInstance().getPacketDriver().getPacket(packetUUID);
+        final int packetUUID = in.readInt();
+       final var packetClass = NettyDriver.getInstance().getPacketDriver().getPacket(packetUUID);
         if (packetClass != null) {
             try {
                 final var packet = packetClass.getDeclaredConstructor().newInstance();

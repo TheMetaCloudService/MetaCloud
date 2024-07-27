@@ -9,6 +9,7 @@
 package eu.metacloudservice.terminal.commands;
 
 import eu.metacloudservice.terminal.utils.TerminalStorageLine;
+import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,8 +30,8 @@ public abstract class CommandAdapter {
         this.permission = annotation.permission();
     }
 
-    public abstract void performCommand(CommandAdapter command, String[] args);
-    public abstract ArrayList<String> tabComplete(TerminalStorageLine consoleInput, String[] args);
+    public abstract void performCommand(@NonNull final CommandAdapter command, @NonNull final String[] args);
+    public abstract ArrayList<String> tabComplete(@NonNull final TerminalStorageLine consoleInput, @NonNull final String[] args);
     public String getCommand() {
         return command;
     }

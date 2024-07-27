@@ -10,13 +10,13 @@ import java.util.UUID;
 @AllArgsConstructor
 public class AsyncOfflinePlayer {
 
-    private String username;
-    private UUID uniqueId;
-    private String firstConnected;
-    private String lastConnected;
-    private String lastProxy;
-    private String lastService;
-    private int connectionCount;
-    private int serverSwitches;
+    private final String username;
+    private final UUID uniqueId;
+    private final String firstConnected;
+    private final String lastConnected;
+    private final String lastProxy;
+    private final String lastService;
+    private final int connectionCount;
+    private final int serverSwitches;
 
 }

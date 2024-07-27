@@ -1,7 +1,6 @@
 package eu.metacloudservice.timebaser;
 
 import eu.metacloudservice.timebaser.interfaces.ITimerBase;
-import eu.metacloudservice.timebaser.utils.RunType;
 import eu.metacloudservice.timebaser.utils.TimeUtil;
 
 import java.util.Timer;
@@ -10,83 +9,71 @@ import java.util.concurrent.CompletableFuture;
 
 public class TimerBase implements ITimerBase {
 
+    private  final long MILLISECONDS_PER_SECOND = 1000;
+    private  final long MILLISECONDS_PER_MINUTE = 60 * MILLISECONDS_PER_SECOND;
+    private  final long MILLISECONDS_PER_HOUR = 60 * MILLISECONDS_PER_MINUTE;
+
     private Timer timer;
 
-    public TimerBase() {}
-
     @Override
-    public void schedule(TimerTask runnable, Integer time, TimeUtil timeUtil){
-        Timer timer = new Timer();
-        if (timeUtil == TimeUtil.SECONDS){
-            timer.schedule(runnable, time*1000);
-        }
-        else if (timeUtil == TimeUtil.MINUTES){
-            timer.schedule(runnable, time*60*1000);
-        }
-        else if (timeUtil == TimeUtil.HOURS){
-            timer.schedule(runnable, time*60*60*1000);
-        }else if (timeUtil == TimeUtil.MILLISECONDS){
-            timer.schedule(runnable, time);
-        }
-    }
-
-    @Override
-    public void scheduleAsync(TimerTask runnable, Integer time, TimeUtil timeUtil) {
-        CompletableFuture.runAsync(() -> {
-            Timer timer = new Timer();
-            if (timeUtil == TimeUtil.SECONDS){
-                timer.schedule(runnable, time*1000);
-            }
-            else if (timeUtil == TimeUtil.MINUTES){
-                timer.schedule(runnable, time*60*1000);
-            }
-            else if (timeUtil == TimeUtil.HOURS){
-                timer.schedule(runnable, time*60*60*1000);
-            }else if (timeUtil == TimeUtil.MILLISECONDS){
-                timer.schedule(runnable, time);
-            }
-        });
-    }
-
-
-    @Override
-    public void schedule(TimerTask runnable, Integer time, Integer secondTime, TimeUtil timeUtil){
+    public void schedule(TimerTask runnable, long delay, TimeUtil timeUtil) {
+        long delayInMillis = convertTimeToMillis(delay, timeUtil);
         timer = new Timer();
-        if (timeUtil == TimeUtil.SECONDS){
-            timer.schedule(runnable, time*1000, secondTime*1000);
-        }else if (timeUtil == TimeUtil.MINUTES){
-            timer.schedule(runnable, time*60*1000, secondTime*60*1000);
-        }  else  if (timeUtil == TimeUtil.HOURS){
-            timer.schedule(runnable, time*60*60*1000, secondTime*60*60*1000);
-        }else if (timeUtil == TimeUtil.MILLISECONDS){
-            timer.schedule(runnable, time, secondTime);
-        }
+        timer.schedule(runnable, delayInMillis);
     }
 
     @Override
-    public void scheduleAsync(TimerTask runnable, Integer time, Integer secondTime, TimeUtil timeUtil) {
+    public void scheduleAsync(TimerTask runnable, long delay, TimeUtil timeUtil) {
         CompletableFuture.runAsync(() -> {
-            timer = new Timer();
-            if (timeUtil == TimeUtil.SECONDS){
-                timer.schedule(runnable, time*1000, secondTime*1000);
-            }else if (timeUtil == TimeUtil.MINUTES){
-                timer.schedule(runnable, time*60*1000, secondTime*60*1000);
-            }  else  if (timeUtil == TimeUtil.HOURS){
-                timer.schedule(runnable, time*60*60*1000, secondTime*60*60*1000);
-            }else if (timeUtil == TimeUtil.MILLISECONDS){
-                timer.schedule(runnable, time, secondTime);
-            }
+            long delayInMillis = convertTimeToMillis(delay, timeUtil);
+            Timer timer = new Timer();
+            timer.schedule(runnable, delayInMillis);
         });
     }
 
+    @Override
+    public void schedule(TimerTask runnable, long delay, long period, TimeUtil timeUtil) {
+        long delayInMillis = convertTimeToMillis(delay, timeUtil);
+        long periodInMillis = convertTimeToMillis(period, timeUtil);
+        timer = new Timer();
+        timer.schedule(runnable, delayInMillis, periodInMillis);
+    }
 
     @Override
-    public boolean isCanceled(){
+    public void scheduleAsync(TimerTask runnable, long delay, long period, TimeUtil timeUtil) {
+        CompletableFuture.runAsync(() -> {
+            long delayInMillis = convertTimeToMillis(delay, timeUtil);
+            long periodInMillis = convertTimeToMillis(period, timeUtil);
+            Timer timer = new Timer();
+            timer.schedule(runnable, delayInMillis, periodInMillis);
+        });
+    }
+
+    @Override
+    public boolean isCanceled() {
         return timer == null;
     }
+
     @Override
-    public void cancel(){
-        timer.cancel();
-        timer = null;
+    public void cancel() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+    }
+
+    private long convertTimeToMillis(long time, TimeUtil timeUtil) {
+        switch (timeUtil) {
+            case SECONDS:
+                return time * MILLISECONDS_PER_SECOND;
+            case MINUTES:
+                return time * MILLISECONDS_PER_MINUTE;
+            case HOURS:
+                return time * MILLISECONDS_PER_HOUR;
+            case MILLISECONDS:
+                return time;
+            default:
+                throw new IllegalArgumentException("Invalid time unit");
+        }
     }
 }

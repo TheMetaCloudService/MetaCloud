@@ -1,6 +1,7 @@
 package eu.metacloudservice.webserver.dummys;
 
 import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
+import lombok.NonNull;
 
 import java.util.ArrayDeque;
 
@@ -15,7 +16,7 @@ public class GroupList implements IConfigAdapter {
         return groups;
     }
 
-    public void setGroups(ArrayDeque<String> groups) {
+    public void setGroups(@NonNull final ArrayDeque<String> groups) {
         this.groups = groups;
     }
 }

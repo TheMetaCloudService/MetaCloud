@@ -3,15 +3,16 @@ package eu.metacloudservice.events;
 import eu.metacloudservice.events.entrys.ICloudListener;
 import eu.metacloudservice.events.entrys.IEventAdapter;
 import eu.metacloudservice.events.entrys.Subscribe;
+import lombok.NonNull;
 
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class EventDriver {
-    public static final int PRE = -1;
-    public static final int ALL = 0;
-    public static final int POST = 1;
+    public final int PRE = -1;
+    public final int ALL = 0;
+    public final int POST = 1;
 
     private final Map<Class<? extends IEventAdapter>, Collection<EventProcess>> bindings;
     private final Set<ICloudListener> registeredListeners;
@@ -21,13 +22,8 @@ public class EventDriver {
         this.registeredListeners = new HashSet<>();
     }
 
-    public List<EventProcess> getListenersFor(Class<? extends IEventAdapter> clazz) {
-        if (!this.bindings.containsKey(clazz))
-            return new ArrayList<>(); // No handlers so we return an empty list
-        return new ArrayList<>(this.bindings.get(clazz));
-    }
 
-    public <T extends IEventAdapter> T executeEvent(T event, int i) {
+    public <T extends IEventAdapter> T executeEvent(@NonNull final T event, final int i) {
         Collection<EventProcess> handlers = this.bindings.get(event.getClass());
         if (handlers == null) {
             return event;
@@ -42,27 +38,27 @@ public class EventDriver {
         return event;
 
     }
-    public <T extends IEventAdapter> T executeEvent(T event) {
+    public <T extends IEventAdapter> T executeEvent(@NonNull final T event) {
         return this.executeEvent(event, ALL);
     }
 
-    public void registerListener(final ICloudListener listener) {
+    public void registerListener(@NonNull final ICloudListener listener) {
         if (registeredListeners.contains(listener)) {
             return;
         }
 
-        Method[] methods = listener.getClass().getDeclaredMethods();
+        final Method[] methods = listener.getClass().getDeclaredMethods();
         this.registeredListeners.add(listener);
         for (final Method method : methods) {
             Subscribe annotation = method.getAnnotation(Subscribe.class);
             if (annotation == null)
                 continue;
 
-            Class<?>[] parameters = method.getParameterTypes();
+            final  Class<?>[] parameters = method.getParameterTypes();
             if (parameters.length != 1) // all listener methods should only have one parameter
                 continue;
 
-            Class<?> param = parameters[0];
+           final Class<?> param = parameters[0];
 
             if (!method.getReturnType().equals(void.class)) {
                 continue;
@@ -70,18 +66,18 @@ public class EventDriver {
 
             if (IEventAdapter.class.isAssignableFrom(param)) {
                 @SuppressWarnings("unchecked") // Java just doesn't understand that this actually is a safe cast because of the above if-statement
-                Class<? extends IEventAdapter> realParam = (Class<? extends IEventAdapter>) param;
+              final Class<? extends IEventAdapter> realParam = (Class<? extends IEventAdapter>) param;
 
                 if (!this.bindings.containsKey(realParam)) {
                     this.bindings.put(realParam, new TreeSet<>());
                 }
-                Collection<EventProcess> eventHandlersForEvent = this.bindings.get(realParam);
+                final Collection<EventProcess> eventHandlersForEvent = this.bindings.get(realParam);
                 eventHandlersForEvent.add(createEventHandler(listener, method, annotation));
             }
         }
     }
 
-    private EventProcess createEventHandler(final ICloudListener listener, final Method method, final Subscribe annotation) {
+    private EventProcess createEventHandler(@NonNull final ICloudListener listener, @NonNull final Method method, @NonNull final Subscribe annotation) {
         return new EventProcess(listener, method, annotation);
     }
 
@@ -90,16 +86,4 @@ public class EventDriver {
         this.registeredListeners.clear();
     }
 
-    public void removeListener(ICloudListener listener) {
-        for (Map.Entry<Class<? extends IEventAdapter>, Collection<EventProcess>> ee : bindings.entrySet()) {
-            ee.getValue().removeIf(curr -> curr.getListener() == listener);
-        }
-        this.registeredListeners.remove(listener);
-    }
-    public Map<Class<? extends IEventAdapter>, Collection<EventProcess>> getBindings() {
-        return new HashMap<>(bindings);
-    }
-    public Set<ICloudListener> getRegisteredListeners() {
-        return new HashSet<>(registeredListeners);
-    }
 }

@@ -15,6 +15,7 @@ package eu.metacloudservice.terminal.commands;
 
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.terminal.enums.Type;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 
 import java.util.ArrayList;
@@ -29,15 +30,15 @@ public final class CommandDriver {
     public List<CommandAdapter> getCommands() {
         return commands;
     }
-    public void registerCommand(CommandAdapter command){
+    public void registerCommand(@NonNull final CommandAdapter command){
         this.commands.add(command);
     }
 
     @SneakyThrows
-    public void executeCommand(String line){
+    public void executeCommand(@NonNull final String line){
 
-        CommandAdapter command = getCommand(line.split(" ")[0]);
-        String[] args = Driver.getInstance().getMessageStorage().dropFirstString(line.split(" "));
+        final CommandAdapter command = getCommand(line.split(" ")[0]);
+        final String[] args = Driver.getInstance().getMessageStorage().dropFirstString(line.split(" "));
         if(command != null){
             command.performCommand(command, args);
         }else {
@@ -45,8 +46,8 @@ public final class CommandDriver {
         }
     }
 
-    public CommandAdapter getCommand(String name){
-        for (CommandAdapter command : getCommands()){
+    public CommandAdapter getCommand(@NonNull final String name){
+        for (final CommandAdapter command : getCommands()){
             if(command.getCommand().equalsIgnoreCase(name)){
                 return command;
             }

@@ -2,6 +2,7 @@ package eu.metacloudservice.storage;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.json.JSONObject;
 
@@ -18,7 +19,7 @@ import java.util.UUID;
 
 public class UUIDDriver {
     private static ArrayList<UUIDStorage> uuids;
-    public static UUID getUUID(String name) {
+    public static UUID getUUID(@NonNull final String name) {
         if (uuids == null){
             uuids = new ArrayList<>();
         }
@@ -26,16 +27,16 @@ public class UUIDDriver {
             return uuids.stream().filter(uuidStorage -> uuidStorage.getUsername().equalsIgnoreCase(name)).findFirst().get().getUniqueID();
         }else {
             try {
-                URL url = new URL("https://playerdb.co/api/player/minecraft/" + name);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-                StringBuilder builder = new StringBuilder();
+                final URL url = new URL("https://playerdb.co/api/player/minecraft/" + name);
+                final BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+                final StringBuilder builder = new StringBuilder();
                 String line;
                 while ((line = reader.readLine()) != null) {
                     builder.append(line);
                 }
-                JSONObject json = new JSONObject(builder.toString());
+                final JSONObject json = new JSONObject(builder.toString());
 
-                UUID uuid = UUID.fromString(json.getJSONObject("data").getJSONObject("player").getString("id"));
+                final UUID uuid = UUID.fromString(json.getJSONObject("data").getJSONObject("player").getString("id"));
                 reader.close();
                 uuids.add(new UUIDStorage(name, uuid));
                 return uuid;
@@ -48,7 +49,7 @@ public class UUIDDriver {
     }
 
 
-    public static String getUsername(UUID uuid) {
+    public static String getUsername(@NonNull final UUID uuid) {
 
         if (uuids == null){
             uuids = new ArrayList<>();
@@ -59,16 +60,16 @@ public class UUIDDriver {
         }else {
 
             try {
-                URL url = new URL("https://playerdb.co/api/player/minecraft/" + uuid.toString());
-                BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-                StringBuilder builder = new StringBuilder();
+                final URL url = new URL("https://playerdb.co/api/player/minecraft/" + uuid.toString());
+                final  BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+                final StringBuilder builder = new StringBuilder();
                 String line;
                 while ((line = reader.readLine()) != null) {
                     builder.append(line);
                 }
-                JSONObject json = new JSONObject(builder.toString());
+                final JSONObject json = new JSONObject(builder.toString());
 
-                String name = json.getJSONObject("data").getJSONObject("player").getString("username");
+                final String name = json.getJSONObject("data").getJSONObject("player").getString("username");
                 reader.close();
                 uuids.add(new UUIDStorage(name, uuid));
                 return name;

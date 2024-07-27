@@ -23,7 +23,7 @@ public class ModuleDriver {
 
     public void load() {
         try {
-            ArrayList<String> modules = getModules();
+            final ArrayList<String> modules = getModules();
 
             if (modules.isEmpty()) {
                 Driver.getInstance().getTerminalDriver().log(Type.MODULE, Driver.getInstance().getLanguageDriver().getLang().getMessage("module-folder-is-empty"));
@@ -49,7 +49,7 @@ public class ModuleDriver {
         getModules().stream().filter(s -> {
             boolean notFound = true;
 
-            for (ModuleLoader loader : loadedModules) {
+            for ( final ModuleLoader loader : loadedModules) {
                 if (loader.getJarName().equalsIgnoreCase(s)) {
                     notFound = false;
                     break;
@@ -58,20 +58,20 @@ public class ModuleDriver {
 
             return notFound;
         }).forEach(s -> {
-            ModuleLoader loader = new ModuleLoader(s);
+            final  ModuleLoader loader = new ModuleLoader(s);
             loader.load();
             loadedModules.add(loader);
         });
     }
 
     private ArrayList<String> getModules() {
-        File file = new File("./modules/");
-        File[] files = file.listFiles();
-        ArrayList<String> modules = new ArrayList<>();
+        final File file = new File("./modules/");
+        final File[] files = file.listFiles();
+        final ArrayList<String> modules = new ArrayList<>();
         for (int i = 0; i != Objects.requireNonNull(files).length; i++) {
-            String FirstFilter = files[i].getName();
+            final String FirstFilter = files[i].getName();
             if (FirstFilter.contains(".jar")) {
-                String group = FirstFilter.split(".jar")[0];
+                final String group = FirstFilter.split(".jar")[0];
                 modules.add(group);
             }
 

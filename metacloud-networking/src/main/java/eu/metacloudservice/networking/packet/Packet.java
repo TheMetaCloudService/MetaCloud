@@ -13,7 +13,7 @@ public abstract class Packet {
         return packetUUID;
     }
 
-    public void setPacketUUID(@NotNull int packetUUID) {
+    public void setPacketUUID(final int packetUUID) {
         this.packetUUID = packetUUID;
     }
 

@@ -167,7 +167,7 @@ public class MetaModule implements IModule {
                         set();
                         update();
                     }
-                }, 5, TimeUtil.SECONDS);
+                }, 5L, TimeUtil.SECONDS);
             }
 
         new TimerBase().scheduleAsync(new TimerTask() {
@@ -176,7 +176,7 @@ public class MetaModule implements IModule {
                 set();
                 update();
             }
-        }, 5, TimeUtil.SECONDS);
+        }, 5L, TimeUtil.SECONDS);
 
     }
     

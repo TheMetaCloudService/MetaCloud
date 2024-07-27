@@ -9,7 +9,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
 public class PacketEncoder extends MessageToByteEncoder<Packet> {
     @Override
     protected void encode(ChannelHandlerContext ctx, Packet packet, ByteBuf out) {
-        NettyBuffer nettyBuffer = new NettyBuffer(out);
+        final NettyBuffer nettyBuffer = new NettyBuffer(out);
         int packetUUID = packet.getPacketUUID();
         out.writeInt(packetUUID);
         packet.writePacket(nettyBuffer);

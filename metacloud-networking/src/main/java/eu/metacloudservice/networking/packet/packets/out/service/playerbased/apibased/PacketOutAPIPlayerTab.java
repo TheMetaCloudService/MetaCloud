@@ -6,6 +6,7 @@ package eu.metacloudservice.networking.packet.packets.out.service.playerbased.ap
 
 import eu.metacloudservice.networking.packet.NettyBuffer;
 import eu.metacloudservice.networking.packet.Packet;
+import org.jetbrains.annotations.NotNull;
 
 public class PacketOutAPIPlayerTab extends Packet {
 
@@ -26,14 +27,14 @@ public class PacketOutAPIPlayerTab extends Packet {
     }
 
     @Override
-    public void readPacket(NettyBuffer buffer) {
+    public void readPacket(@NotNull NettyBuffer buffer) {
         username = buffer.readString();
         header = buffer.readString();
         footer = buffer.readString();
     }
 
     @Override
-    public void writePacket(NettyBuffer buffer) {
+    public void writePacket(@NotNull NettyBuffer buffer) {
         buffer.writeString(username);
         buffer.writeString(header);
         buffer.writeString(footer);

@@ -17,7 +17,7 @@ public class CloudEvents implements ICloudListener {
 
     @Subscribe(priority = Priority.HIGHEST)
     public void handle(CloudServiceConnectedEvent event){
-        ServerInfo info = ProxyServer.getInstance().constructServerInfo(event.getName(), new InetSocketAddress(event.getHost(), event.getPort()), "metacloud-service", false);
+        final ServerInfo info = ProxyServer.getInstance().constructServerInfo(event.getName(), new InetSocketAddress(event.getHost(), event.getPort()), "metacloud-service", false);
         new ServerDriver().addServer(info);
 
     }

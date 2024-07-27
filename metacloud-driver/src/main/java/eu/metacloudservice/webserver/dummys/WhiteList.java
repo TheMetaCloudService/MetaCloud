@@ -1,6 +1,7 @@
 package eu.metacloudservice.webserver.dummys;
 
 import eu.metacloudservice.configuration.interfaces.IConfigAdapter;
+import lombok.NonNull;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class WhiteList implements IConfigAdapter {
         return whitelist;
     }
 
-    public void setWhitelist(ArrayList<String> whitelist) {
+    public void setWhitelist(@NonNull final ArrayList<String> whitelist) {
         this.whitelist = whitelist;
     }
 }
