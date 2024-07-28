@@ -23,22 +23,23 @@ public class ServiceCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (sender instanceof  Player player){
-            if (player.hasPermission("metacloud.command.service") || player.hasPermission("metacloud.command.*")){
-                if (args.length == 0){
-                    sendHelp(player);
-                }else {
-                    if (PluginDriver.getInstance().getCommand(args[0]) != null){
-                        PluginCommand pluginCommand = PluginDriver.getInstance().getCommand(args[0]);
-                        String[] argsUpdate = Arrays.copyOfRange(args, 1, args.length);
-                        pluginCommand.performCommand(pluginCommand, null, null, player, argsUpdate);
-                    }else {
-                        sendHelp(player);
-                    }
-                }
+        if (!(sender instanceof  Player player)){
+            return false;
+        }if (!player.hasPermission("metacloud.command.service") && !player.hasPermission("metacloud.command.*")){
+            player.sendMessage("§8▷ §7The network uses §bMetacloud§8 [§a"+ Driver.getInstance().getMessageStorage().version+"§8]");
+            player.sendMessage("§8▷ §fhttps://metacloudservice.eu/");
+            return false;
+        }
+
+        if (args.length == 0){
+            sendHelp(player);
+        }else {
+            if (PluginDriver.getInstance().getCommand(args[0]) != null){
+                final PluginCommand pluginCommand = PluginDriver.getInstance().getCommand(args[0]);
+                final String[] argsUpdate = Arrays.copyOfRange(args, 1, args.length);
+                pluginCommand.performCommand(pluginCommand, null, null, player, argsUpdate);
             }else {
-                player.sendMessage("§8▷ §7The network uses §bMetacloud§8 [§a"+ Driver.getInstance().getMessageStorage().version+"§8]");
-                player.sendMessage("§8▷ §fhttps://metacloudservice.eu/");
+                sendHelp(player);
             }
         }
         return false;
@@ -54,7 +55,7 @@ public class ServiceCommand implements CommandExecutor, TabCompleter {
     @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-        List<String> suggestions = new ArrayList<>();
+        final List<String> suggestions = new ArrayList<>();
         if (args.length == 1){
             PluginDriver.getInstance().getCommands().forEach(pluginCommand -> {
                 suggestions.add(pluginCommand.getCommand());

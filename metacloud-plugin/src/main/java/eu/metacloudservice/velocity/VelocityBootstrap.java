@@ -40,6 +40,8 @@ public class VelocityBootstrap {
     @Inject
     public VelocityBootstrap(ProxyServer proxyServer, Logger logger) {
         VelocityBootstrap.proxyServer = proxyServer;
+        new Driver();
+        new PluginDriver();
         this.logger = logger;
         message = MiniMessage.builder().build();
 
@@ -48,8 +50,7 @@ public class VelocityBootstrap {
 
     @Subscribe
     public void handelInject(ProxyInitializeEvent event){
-        new Driver();
-        new PluginDriver();
+
         LiveService service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         CloudAPI.getInstance().setState(ServiceState.LOBBY, service.getService());
         proxyServer.getCommandManager().register("cloud", new CloudCommand(), "metacloud", "mc");

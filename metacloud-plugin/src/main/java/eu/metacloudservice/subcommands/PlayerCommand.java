@@ -19,7 +19,7 @@ import java.util.List;
 public class PlayerCommand extends PluginCommand {
     @Override
     public void performCommand(PluginCommand command, ProxiedPlayer proxiedPlayer, Player veloPlayer, org.bukkit.entity.Player bukkitPlayer, String[] args) {
-        String PREFIX = CloudAPI.getInstance().getMessages().getMessages().get("prefix").replace("&", "§");
+        final String PREFIX = CloudAPI.getInstance().getMessages().getMessages().get("prefix").replace("&", "§");
         if (args.length == 0){
             if (veloPlayer != null){
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud player list"));

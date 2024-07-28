@@ -209,7 +209,7 @@ public class GroupCommand extends PluginCommand {
 
     @Override
     public List<String> tabComplete(String[] args) {
-        List<String > suggestion =  new ArrayList<>();
+        final List<String > suggestion =  new ArrayList<>();
         if (args.length == 0){
             suggestion.add("list");
             suggestion.add("maintenance");

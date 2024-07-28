@@ -25,9 +25,9 @@ public class InformationCommand extends PluginCommand {
     @Override
     public void performCommand(PluginCommand command, ProxiedPlayer proxiedPlayer, Player veloPlayer, org.bukkit.entity.Player player, String[] args) {
         if (player != null && veloPlayer == null && proxiedPlayer == null){
-            String prefix = CloudAPI.getInstance().getMessages().getMessages().get("prefix");
-            CloudService cloudService = CloudAPI.getInstance().getServicePool().getService(CloudAPI.getInstance().getCurrentService().getService());
-            String maintenance = cloudService.getGroup().isMaintenance() ? "§amaintenance" : "§cmaintenance";
+            final String prefix = CloudAPI.getInstance().getMessages().getMessages().get("prefix");
+            final CloudService cloudService = CloudAPI.getInstance().getServicePool().getService(CloudAPI.getInstance().getCurrentService().getService());
+            final String maintenance = cloudService.getGroup().isMaintenance() ? "§amaintenance" : "§cmaintenance";
             player.sendMessage(prefix + "Name: §f" + cloudService.getName());
             player.sendMessage(prefix + "Group: §f" + cloudService.getGroup().getGroup() + " §r("+ maintenance +"§r)");
             player.sendMessage(prefix + "State: §f" + cloudService.getState());

@@ -28,13 +28,19 @@ public class BungeeBootstrap extends Plugin {
 
     private static BungeeBootstrap instance;
     public BungeeAudiences audiences;
+
+    @Override
+    public void onLoad() {
+
+        new Driver();
+        new PluginDriver();
+    }
+
     @Override
     public void onEnable() {
         instance = this;
-        new Driver();
         audiences = BungeeAudiences.builder(instance).build();
-        new PluginDriver();
-                LiveService service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
+        final LiveService service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         CloudAPI.getInstance().setState(ServiceState.LOBBY, service.getService());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new CloudConnectListener());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new CloudCommand("cloud"));
@@ -74,7 +80,7 @@ public class BungeeBootstrap extends Plugin {
         }else if (CloudAPI.getInstance().getServicePool().getServices().stream().noneMatch(service -> service.getGroup().getGroupType().equalsIgnoreCase("LOBBY")  && service.getState() == ServiceState.LOBBY)){
             return null;
         }else {
-            List<CloudService> cloudServices = CloudAPI.getInstance().getServicePool().getServices().stream()
+            final List<CloudService> cloudServices = CloudAPI.getInstance().getServicePool().getServices().stream()
                     .filter(service -> service.getGroup().getGroupType().equalsIgnoreCase("LOBBY"))
                     .filter(service -> {
 
@@ -93,12 +99,12 @@ public class BungeeBootstrap extends Plugin {
             if (cloudServices.isEmpty()){
                 return null;
             }
-            List<Integer> priority = new ArrayList<>();
+            final List<Integer> priority = new ArrayList<>();
             cloudServices.forEach( service -> priority.add(service.getGroup().getPriority()));
             priority.sort(Collections.reverseOrder());
-            int priorty = priority.get(0);
-            List<CloudService> lobbys = cloudServices.stream().filter(service -> service.getGroup().getPriority() == priorty).toList();
-            return  lobbys.get(new Random().nextInt(lobbys.size()));
+           final int priorty = priority.get(0);
+           final List<CloudService> lobbys = cloudServices.stream().filter(service -> service.getGroup().getPriority() == priorty).toList();
+           return  lobbys.get(new Random().nextInt(lobbys.size()));
         }
     }
 
@@ -108,7 +114,7 @@ public class BungeeBootstrap extends Plugin {
         }else if (CloudAPI.getInstance().getServicePool().getServices().stream().noneMatch(service -> service.getGroup().getGroupType().equals("LOBBY") && service.getState() == ServiceState.LOBBY)){
             return null;
         }
-        List<CloudService> services = CloudAPI.getInstance().getServicePool().getServices().stream()
+       final List<CloudService> services = CloudAPI.getInstance().getServicePool().getServices().stream()
                 .filter(service -> service.getGroup().getGroupType().equals("LOBBY"))
                 .filter(service -> {
 
@@ -125,14 +131,11 @@ public class BungeeBootstrap extends Plugin {
         if (services.isEmpty()){
             return null;
         }
-        List<Integer> priority = new ArrayList<>();
+        final List<Integer> priority = new ArrayList<>();
         services.forEach( service -> priority.add(service.getGroup().getPriority()));
         priority.sort(Collections.reverseOrder());
-        int priorty = priority.get(0);
-        List<CloudService> lobbys = services.stream().filter(service -> service.getGroup().getPriority() == priorty).toList();
-        if (lobbys.size() == 0){
-            return null;
-        }
-        return  lobbys.get(new Random().nextInt(lobbys.size()));
+        final  int priorty = priority.get(0);
+        final List<CloudService> lobbys = services.stream().filter(service -> service.getGroup().getPriority() == priorty).toList();
+        return  lobbys.size() == 0 ? null :  lobbys.get(new Random().nextInt(lobbys.size()));
     }
 }
