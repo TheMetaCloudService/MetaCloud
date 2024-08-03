@@ -8,6 +8,8 @@ import com.velocitypowered.api.proxy.Player;
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.api.PluginCommand;
 import eu.metacloudservice.api.PluginCommandInfo;
+import eu.metacloudservice.api.translate.Translator;
+import eu.metacloudservice.bungee.BungeeBootstrap;
 import eu.metacloudservice.configuration.dummys.message.Messages;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -24,7 +26,7 @@ public class ReloadCommand extends PluginCommand {
             if (proxiedPlayer == null){
                 veloPlayer.sendMessage(Component.text(getHelp()));
             }else {
-                proxiedPlayer.sendMessage(getHelp());
+                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(getHelp())));
             }
         }else {
             final Messages messages = CloudAPI.getInstance().getMessages();
@@ -33,28 +35,28 @@ public class ReloadCommand extends PluginCommand {
                 if (proxiedPlayer == null){
                     veloPlayer.sendMessage(Component.text(PREFIX + "the whole cloud was reloaded"));
                 }else {
-                    proxiedPlayer.sendMessage(PREFIX + "the whole cloud was reloaded");
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "the whole cloud was reloaded")));
                 }
                 CloudAPI.getInstance().dispatchCommand("reload all");
             }else if (args[0].equalsIgnoreCase("modules")){
                 if (proxiedPlayer == null){
                     veloPlayer.sendMessage(Component.text(PREFIX + "the modules was reloaded"));
                 }else {
-                    proxiedPlayer.sendMessage(PREFIX + "the modules was reloaded");
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "the modules was reloaded")));
                 }
                 CloudAPI.getInstance().dispatchCommand("reload modules");
             }else if (args[0].equalsIgnoreCase("config")){
                 if (proxiedPlayer == null){
                     veloPlayer.sendMessage(Component.text(PREFIX + "the config was reloaded"));
                 }else {
-                    proxiedPlayer.sendMessage(PREFIX + "the config was reloaded");
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "the config was reloaded")));
                 }
                 CloudAPI.getInstance().dispatchCommand("reload config");
             }else {
                 if (proxiedPlayer == null){
                     veloPlayer.sendMessage(Component.text(getHelp()));
                 }else {
-                    proxiedPlayer.sendMessage(getHelp());
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(getHelp())));
                 }
             }
         }

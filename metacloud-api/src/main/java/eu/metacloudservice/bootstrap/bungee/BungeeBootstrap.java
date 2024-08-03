@@ -16,7 +16,7 @@ public class BungeeBootstrap extends Plugin {
 
     @Getter
     private static BungeeBootstrap instance;
-    private BungeeAudiences audiences;
+    public BungeeAudiences audiences;
 
     @Override
     public void onLoad() {

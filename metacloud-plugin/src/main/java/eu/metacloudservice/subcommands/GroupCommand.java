@@ -8,6 +8,8 @@ import com.velocitypowered.api.proxy.Player;
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.api.PluginCommand;
 import eu.metacloudservice.api.PluginCommandInfo;
+import eu.metacloudservice.api.translate.Translator;
+import eu.metacloudservice.bungee.BungeeBootstrap;
 import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.networking.packet.packets.in.service.command.PacketInCommandMaintenance;
@@ -33,18 +35,18 @@ public class GroupCommand extends PluginCommand {
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud group mincount [group] [amount]"));
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud group dispatch [group] [command]"));
             } else {
-                proxiedPlayer.sendMessage(PREFIX + "/cloud group list");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud group maintenance ([group])");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud group maxplayers [group] [amount]");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud group mincount [group] [amount]");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud group dispatch [group] [command]");
+                BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group list")));
+                BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group maintenance ([group])")));
+                BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group maxplayers [group] [amount]")));
+                BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group mincount [group] [amount]")));
+                BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group dispatch [group] [command]")));
             }
         }else if (args[0].equalsIgnoreCase("list")){
             CloudAPI.getInstance().getGroupPool().getGroupsByName().forEach(s -> {
                 if (proxiedPlayer == null) {
                     veloPlayer.sendMessage(Component.text(PREFIX + s));
                 } else {
-                    proxiedPlayer.sendMessage(PREFIX + s);
+                    BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + s)));
                 }
             });
         }else if (args[0].equalsIgnoreCase("maintenance")){
@@ -55,13 +57,13 @@ public class GroupCommand extends PluginCommand {
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX +"The '§fnetwork§7' is no longer in maintenance"));
                     else
-                        proxiedPlayer.sendMessage(PREFIX + "The '§fnetwork§7' is no longer in maintenance");
+                        BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The '§fnetwork§7' is no longer in maintenance")));
                 } else {
                     CloudAPI.getInstance().sendPacketSynchronized(new PacketInCommandMaintenance( CloudAPI.getInstance().getCurrentService().getGroup(), true));
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX +"The '§fnetwork§7' is now in maintenance"));
                     else
-                        proxiedPlayer.sendMessage(PREFIX + "The '§fnetwork§7' is now in maintenance");
+                        BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The '§fnetwork§7' is now in maintenance")));
                 }
             }else {
                 String group = args[1];
@@ -72,20 +74,20 @@ public class GroupCommand extends PluginCommand {
                         if (veloPlayer != null)
                             veloPlayer.sendMessage(Component.text(PREFIX +  "The group '§f"+group+"§7' is no longer in maintenance"));
                         else
-                            proxiedPlayer.sendMessage(PREFIX +   "The group '§f"+group+"§7' is no longer in maintenance");
+                            BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +   "The group '§f"+group+"§7' is no longer in maintenance")));
                     } else {
 
                         CloudAPI.getInstance().sendPacketSynchronized(new PacketInCommandMaintenance( group, true));
                         if (veloPlayer != null)
                             veloPlayer.sendMessage(Component.text(PREFIX +  "The group '§f"+group+"§7' is now in maintenance"));
                         else
-                            proxiedPlayer.sendMessage(PREFIX +   "The group '§f"+group+"§7' is now in maintenance");
+                            BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +   "The group '§f"+group+"§7' is now in maintenance")));
                     }
                 }else {
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX + "The group you are looking for was not found, please check that it is spelled correctly."));
                     else
-                        proxiedPlayer.sendMessage(PREFIX +  "The group you are looking for was not found, please check that it is spelled correctly.");
+                        BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "The group you are looking for was not found, please check that it is spelled correctly.")));
                 }
             }
         }else if (args[0].equalsIgnoreCase("maxplayers")){
@@ -98,13 +100,13 @@ public class GroupCommand extends PluginCommand {
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX + "The player count have been adjusted to '§f"+amount+"§7' for the '§f"+group+"§7' group."));
                     else
-                        proxiedPlayer.sendMessage(PREFIX + "The player count have been adjusted to '§f"+amount+"§7' for the '§f"+group+"§7' group.");
+                        BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The player count have been adjusted to '§f"+amount+"§7' for the '§f"+group+"§7' group.")));
 
                 }else {
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX + "The group you are looking for was not found, please check that it is spelled correctly."));
                     else
-                        proxiedPlayer.sendMessage(PREFIX +  "The group you are looking for was not found, please check that it is spelled correctly.");
+                        BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "The group you are looking for was not found, please check that it is spelled correctly.")));
                 }
             }else {
                     if (proxiedPlayer == null) {
@@ -114,11 +116,11 @@ public class GroupCommand extends PluginCommand {
                         veloPlayer.sendMessage(Component.text(PREFIX + "/cloud group mincount [group] [amount]"));
                         veloPlayer.sendMessage(Component.text(PREFIX + "/cloud group dispatch [group] [command]"));
                     } else {
-                        proxiedPlayer.sendMessage(PREFIX + "/cloud group list");
-                        proxiedPlayer.sendMessage(PREFIX + "/cloud group maintenance ([group])");
-                        proxiedPlayer.sendMessage(PREFIX + "/cloud group maxplayers [group] [amount]");
-                        proxiedPlayer.sendMessage(PREFIX + "/cloud group mincount [group] [amount]");
-                        proxiedPlayer.sendMessage(PREFIX + "/cloud group dispatch [group] [command]");
+                        BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group list")));
+                        BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group maintenance ([group])")));
+                        BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group maxplayers [group] [amount]")));
+                        BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group mincount [group] [amount]")));
+                        BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group dispatch [group] [command]")));
                     }
             }
         }else if (args[0].equalsIgnoreCase("mincount")){
@@ -130,12 +132,12 @@ public class GroupCommand extends PluginCommand {
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX + "The minimum amount of the group '§f"+group+"§7' adjusted to '§f"+amount+"§7'"));
                     else
-                        proxiedPlayer.sendMessage(PREFIX + "The minimum amount of the group '§f"+group+"§7' adjusted to '§f"+amount+"§7'");
+                        BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The minimum amount of the group '§f"+group+"§7' adjusted to '§f"+amount+"§7'")));
                 }else {
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX + "The group you are looking for was not found, please check that it is spelled correctly."));
                     else
-                        proxiedPlayer.sendMessage(PREFIX +  "The group you are looking for was not found, please check that it is spelled correctly.");
+                        BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "The group you are looking for was not found, please check that it is spelled correctly.")));
                 }
             }else {
                 if (proxiedPlayer == null) {
@@ -145,11 +147,11 @@ public class GroupCommand extends PluginCommand {
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud group mincount [group] [amount]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud group dispatch [group] [command]"));
                 } else {
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud group list");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud group maintenance ([group])");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud group maxplayers [group] [amount]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud group mincount [group] [amount]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud group dispatch [group] [command]");
+                    BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group list")));
+                    BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group maintenance ([group])")));
+                    BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group maxplayers [group] [amount]")));
+                    BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group mincount [group] [amount]")));
+                    BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group dispatch [group] [command]")));
                 }
             }
         }else if (args[0].equalsIgnoreCase("dispatch")){
@@ -167,13 +169,13 @@ public class GroupCommand extends PluginCommand {
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX + "The command '§f"+msg.toString()+"§7' was sent to the group '§f"+service+"§7'"));
                     else
-                        proxiedPlayer.sendMessage(PREFIX +   "The command '§f"+msg.toString()+"§7' was sent to the group '§f"+service+"§7'");
+                        BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +   "The command '§f"+msg.toString()+"§7' was sent to the group '§f"+service+"§7'")));
                     CloudAPI.getInstance().getServicePool().getServicesByGroup(service).forEach(cloudService -> cloudService.dispatchCommand(msg.toString()));
                 }else {
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX + "The group you are looking for was not found, please check that it is spelled correctly."));
                     else
-                        proxiedPlayer.sendMessage(PREFIX +  "The group you are looking for was not found, please check that it is spelled correctly.");
+                        BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "The group you are looking for was not found, please check that it is spelled correctly.")));
                 }
             }else {
                 if (proxiedPlayer == null) {
@@ -183,11 +185,11 @@ public class GroupCommand extends PluginCommand {
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud group mincount [group] [amount]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud group dispatch [group] [command]"));
                 } else {
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud group list");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud group maintenance ([group])");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud group maxplayers [group] [amount]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud group mincount [group] [amount]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud group dispatch [group] [command]");
+                    BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group list")));
+                    BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group maintenance ([group])")));
+                    BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group maxplayers [group] [amount]")));
+                    BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group mincount [group] [amount]")));
+                    BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group dispatch [group] [command]")));
                 }
             }
         }else {
@@ -198,11 +200,11 @@ public class GroupCommand extends PluginCommand {
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud group mincount [group] [amount]"));
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud group dispatch [group] [command]"));
             } else {
-                proxiedPlayer.sendMessage(PREFIX + "/cloud group list");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud group maintenance ([group])");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud group maxplayers [group] [amount]");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud group mincount [group] [amount]");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud group dispatch [group] [command]");
+                BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group list")));
+                BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group maintenance ([group])")));
+                BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group maxplayers [group] [amount]")));
+                BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group mincount [group] [amount]")));
+                BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud group dispatch [group] [command]")));
             }
         }
     }

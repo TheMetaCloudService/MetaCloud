@@ -8,6 +8,8 @@ import com.velocitypowered.api.proxy.Player;
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.api.PluginCommand;
 import eu.metacloudservice.api.PluginCommandInfo;
+import eu.metacloudservice.api.translate.Translator;
+import eu.metacloudservice.bungee.BungeeBootstrap;
 import eu.metacloudservice.player.entrys.CloudPlayer;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -28,11 +30,11 @@ public class PlayerCommand extends PluginCommand {
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud player dispatch [player] [command]"));
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud player send [player] [service]"));
             }  else{
-                proxiedPlayer.sendMessage(PREFIX  + "/cloud player list" );
-                proxiedPlayer.sendMessage(  PREFIX + "/cloud player info [player]");
-                proxiedPlayer.sendMessage(PREFIX +  "/cloud player whitelist ([add/remove]) ([player])");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud player dispatch [player] [command]");
-                proxiedPlayer.sendMessage( PREFIX + "/cloud player send [player] [service]");
+                  BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX  + "/cloud player list" )));
+                  BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(  PREFIX + "/cloud player info [player]")));
+                  BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "/cloud player whitelist ([add/remove]) ([player])")));
+                  BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud player dispatch [player] [command]")));
+                  BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate( PREFIX + "/cloud player send [player] [service]")));
             }
         }else {
             if (args[0].equalsIgnoreCase("list")){
@@ -43,10 +45,10 @@ public class PlayerCommand extends PluginCommand {
                                 "/" + cloudPlayer.getProxyServer().getName() ));
                     });
                 } else {
-                    proxiedPlayer.sendMessage(PREFIX + "List of Players:");
+                      BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "List of Players:")));
                     CloudAPI.getInstance().getPlayerPool().getPlayers().forEach(cloudPlayer -> {
-                        proxiedPlayer.sendMessage(PREFIX + "§f" + cloudPlayer.getUsername() + " §8| §7service/proxy: §f" + cloudPlayer.getServer().getName() +
-                                "/" + cloudPlayer.getProxyServer().getName() );
+                          BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "§f" + cloudPlayer.getUsername() + " §8| §7service/proxy: §f" + cloudPlayer.getServer().getName() +
+                                "/" + cloudPlayer.getProxyServer().getName())) );
                     });
                 }
             }else   if (args[0].equalsIgnoreCase("whitelist")){
@@ -56,14 +58,14 @@ public class PlayerCommand extends PluginCommand {
                         if (veloPlayer != null)
                             veloPlayer.sendMessage(Component.text(PREFIX + "No players were found on the whitelist"));
                         else
-                            proxiedPlayer.sendMessage(PREFIX + "No players were found on the whitelist");
+                              BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "No players were found on the whitelist")));
                     }
 
                     list.forEach(s -> {
                         if (veloPlayer != null)
                             veloPlayer.sendMessage(Component.text(PREFIX +s));
                         else
-                            proxiedPlayer.sendMessage(PREFIX + s);
+                              BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + s)));
 
                     });
                 }else if (args.length == 3){
@@ -74,13 +76,13 @@ public class PlayerCommand extends PluginCommand {
                                 veloPlayer.sendMessage(Component.text(PREFIX +  "The player " +
                                         "'§f"+name+"§7' is now on the whitelist"));
                             else
-                                proxiedPlayer.sendMessage( PREFIX +  "The player '§f"+name+"§7' is now on the whitelist");
+                                  BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate( PREFIX +  "The player '§f"+name+"§7' is now on the whitelist")));
                             CloudAPI.getInstance().addWhiteList(name);
                         }else {
                             if (veloPlayer != null)
                                 veloPlayer.sendMessage(Component.text(PREFIX + "The player '§f"+name+"§7' is already whitelisted"));
                             else
-                                proxiedPlayer.sendMessage(PREFIX +  "The player '§f"+name+"§7' is already whitelisted");
+                                  BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "The player '§f"+name+"§7' is already whitelisted")));
                         }
                     }else if (args[1].equalsIgnoreCase("remove")){
                         if (list.contains(name)){
@@ -88,12 +90,12 @@ public class PlayerCommand extends PluginCommand {
                             if (veloPlayer != null)
                                 veloPlayer.sendMessage(Component.text(PREFIX + "The player '§f"+name+"§7' is now no longer on the whitelist"));
                             else
-                                proxiedPlayer.sendMessage(PREFIX + "The player '§f"+name+"§7' is now no longer on the whitelist");
+                                  BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The player '§f"+name+"§7' is now no longer on the whitelist")));
                         }else {
                             if (veloPlayer != null)
                                 veloPlayer.sendMessage(Component.text(PREFIX + "The player '§f"+name+"§7' is not whitelisted"));
                             else
-                                proxiedPlayer.sendMessage(PREFIX +  "The player '§f"+name+"§7' is not whitelisted");
+                                  BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "The player '§f"+name+"§7' is not whitelisted")));
                         }
                     }else {
                         if (veloPlayer != null){
@@ -103,11 +105,11 @@ public class PlayerCommand extends PluginCommand {
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud player dispatch [player] [command]"));
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud player send [player] [service]"));
                         }  else{
-                            proxiedPlayer.sendMessage(PREFIX +  PREFIX + "/cloud player list" );
-                            proxiedPlayer.sendMessage(  PREFIX + "/cloud player info [player]");
-                            proxiedPlayer.sendMessage(PREFIX +  "/cloud player whitelist ([add/remove]) ([player])");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud player dispatch [player] [command]");
-                            proxiedPlayer.sendMessage( PREFIX + "/cloud player send [player] [service]");
+                              BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(  PREFIX + "/cloud player list" )));
+                              BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(  PREFIX + "/cloud player info [player]")));
+                              BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "/cloud player whitelist ([add/remove]) ([player])")));
+                              BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud player dispatch [player] [command]")));
+                              BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate( PREFIX + "/cloud player send [player] [service]")));
                         }
                     }
                 }else {
@@ -118,11 +120,11 @@ public class PlayerCommand extends PluginCommand {
                         veloPlayer.sendMessage(Component.text(PREFIX + "/cloud player dispatch [player] [command]"));
                         veloPlayer.sendMessage(Component.text(PREFIX + "/cloud player send [player] [service]"));
                     }  else{
-                        proxiedPlayer.sendMessage(PREFIX +  PREFIX + "/cloud player list" );
-                        proxiedPlayer.sendMessage(  PREFIX + "/cloud player info [player]");
-                        proxiedPlayer.sendMessage(PREFIX +  "/cloud player whitelist ([add/remove]) ([player])");
-                        proxiedPlayer.sendMessage(PREFIX + "/cloud player dispatch [player] [command]");
-                        proxiedPlayer.sendMessage( PREFIX + "/cloud player send [player] [service]");
+                          BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(  PREFIX + "/cloud player list" )));
+                          BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(  PREFIX + "/cloud player info [player]")));
+                          BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "/cloud player whitelist ([add/remove]) ([player])")));
+                          BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud player dispatch [player] [command]")));
+                          BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate( PREFIX + "/cloud player send [player] [service]")));
                     }
                 }
             }else  if (args[0].equalsIgnoreCase("dispatch")){
@@ -136,13 +138,13 @@ public class PlayerCommand extends PluginCommand {
                         if (veloPlayer != null)
                             veloPlayer.sendMessage(Component.text(PREFIX + "The command '§f"+msg.toString()+"§7' was sent to the player '§f"+player+"§7'"));
                         else
-                            proxiedPlayer.sendMessage(PREFIX + "The command '§f"+msg.toString()+"§7' was sent to the player '§f"+player+"§7'");
+                              BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The command '§f"+msg.toString()+"§7' was sent to the player '§f"+player+"§7'")));
                         CloudAPI.getInstance().getPlayerPool().getPlayer(player).dispatchCommand(msg.toString());
                     }else {
                         if (veloPlayer != null)
                             veloPlayer.sendMessage(Component.text(PREFIX + "The player you are looking for was not found, please check that it is spelled correctly."));
                         else
-                            proxiedPlayer.sendMessage(PREFIX +  "The player you are looking for was not found, please check that it is spelled correctly.");
+                              BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "The player you are looking for was not found, please check that it is spelled correctly.")));
                     }
                 }else {
                     if (veloPlayer != null){
@@ -152,11 +154,11 @@ public class PlayerCommand extends PluginCommand {
                         veloPlayer.sendMessage(Component.text(PREFIX + "/cloud player dispatch [player] [command]"));
                         veloPlayer.sendMessage(Component.text(PREFIX + "/cloud player send [player] [service]"));
                     }  else{
-                        proxiedPlayer.sendMessage(PREFIX +  PREFIX + "/cloud player list" );
-                        proxiedPlayer.sendMessage(  PREFIX + "/cloud player info [player]");
-                        proxiedPlayer.sendMessage(PREFIX +  "/cloud player whitelist ([add/remove]) ([player])");
-                        proxiedPlayer.sendMessage(PREFIX + "/cloud player dispatch [player] [command]");
-                        proxiedPlayer.sendMessage( PREFIX + "/cloud player send [player] [service]");
+                          BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(  PREFIX + "/cloud player list" )));
+                          BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(  PREFIX + "/cloud player info [player]")));
+                          BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "/cloud player whitelist ([add/remove]) ([player])")));
+                          BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud player dispatch [player] [command]")));
+                          BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate( PREFIX + "/cloud player send [player] [service]")));
                     }
                 }
             }else  if (args[0].equalsIgnoreCase("send")){
@@ -168,19 +170,19 @@ public class PlayerCommand extends PluginCommand {
                             if (veloPlayer != null)
                                 veloPlayer.sendMessage(Component.text(PREFIX + "The player " + player + " has been successfully sent to the " + service + " service."));
                             else
-                                proxiedPlayer.sendMessage(PREFIX + "The player " + player + " has been successfully sent to the " + service + " service.");
+                                  BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The player " + player + " has been successfully sent to the " + service + " service.")));
                             CloudAPI.getInstance().getPlayerPool().getPlayer(player).connect(CloudAPI.getInstance().getServicePool().getService(service));
                         }else {
                             if (veloPlayer != null)
                                 veloPlayer.sendMessage(Component.text(PREFIX + "The service you are looking for was not found, please check that it is spelled correctly."));
                             else
-                                proxiedPlayer.sendMessage(PREFIX +  "The service you are looking for was not found, please check that it is spelled correctly.");
+                                  BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "The service you are looking for was not found, please check that it is spelled correctly.")));
                         }
                     }else {
                         if (veloPlayer != null)
                             veloPlayer.sendMessage(Component.text(PREFIX + "The player you are looking for was not found, please check that it is spelled correctly."));
                         else
-                            proxiedPlayer.sendMessage(PREFIX +  "The player you are looking for was not found, please check that it is spelled correctly.");
+                              BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "The player you are looking for was not found, please check that it is spelled correctly.")));
                     }
                 }else {
                     if (veloPlayer != null){
@@ -190,11 +192,11 @@ public class PlayerCommand extends PluginCommand {
                         veloPlayer.sendMessage(Component.text(PREFIX + "/cloud player dispatch [player] [command]"));
                         veloPlayer.sendMessage(Component.text(PREFIX + "/cloud player send [player] [service]"));
                     }  else{
-                        proxiedPlayer.sendMessage(PREFIX +  PREFIX + "/cloud player list" );
-                        proxiedPlayer.sendMessage(  PREFIX + "/cloud player info [player]");
-                        proxiedPlayer.sendMessage(PREFIX +  "/cloud player whitelist ([add/remove]) ([player])");
-                        proxiedPlayer.sendMessage(PREFIX + "/cloud player dispatch [player] [command]");
-                        proxiedPlayer.sendMessage( PREFIX + "/cloud player send [player] [service]");
+                          BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate( PREFIX + "/cloud player list" )));
+                          BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(  PREFIX + "/cloud player info [player]")));
+                          BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "/cloud player whitelist ([add/remove]) ([player])")));
+                          BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud player dispatch [player] [command]")));
+                          BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate( PREFIX + "/cloud player send [player] [service]")));
                     }
                 }
             }else  if (args[0].equalsIgnoreCase("info")){
@@ -210,18 +212,18 @@ public class PlayerCommand extends PluginCommand {
                         veloPlayer.sendMessage(Component.text(PREFIX + "time: §f" + cp.getCurrentPlayTime()));
                         veloPlayer.sendMessage(Component.text(PREFIX + "fallback?: §f" + cp.isConnectedOnFallback()));
                     }  else{
-                            proxiedPlayer.sendMessage(PREFIX +  PREFIX + "username: §f" + cp.getUsername());
-                            proxiedPlayer.sendMessage(  PREFIX + "uuid: §f" + cp.getUniqueId());
-                            proxiedPlayer.sendMessage(PREFIX + "service: §f" + cp.getServer().getName());
-                            proxiedPlayer.sendMessage(PREFIX + "proxy: §f" + cp.getProxyServer().getName());
-                            proxiedPlayer.sendMessage( PREFIX + "time: §f" + cp.getCurrentPlayTime());
-                            proxiedPlayer.sendMessage(PREFIX + "fallback?: §f" + cp.isConnectedOnFallback());
+                              BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(  PREFIX + "username: §f" + cp.getUsername())));
+                              BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(  PREFIX + "uuid: §f" + cp.getUniqueId())));
+                              BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "service: §f" + cp.getServer().getName())));
+                              BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "proxy: §f" + cp.getProxyServer().getName())));
+                              BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate( PREFIX + "time: §f" + cp.getCurrentPlayTime())));
+                              BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "fallback?: §f" + cp.isConnectedOnFallback())));
                         }
                     }else {
                         if (veloPlayer != null)
                             veloPlayer.sendMessage(Component.text(PREFIX + "The player you are looking for was not found, please check that it is spelled correctly."));
                         else
-                            proxiedPlayer.sendMessage(PREFIX +  "The player you are looking for was not found, please check that it is spelled correctly.");
+                              BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "The player you are looking for was not found, please check that it is spelled correctly.")));
                     }
                 }else {
                     if (veloPlayer != null){
@@ -231,11 +233,11 @@ public class PlayerCommand extends PluginCommand {
                         veloPlayer.sendMessage(Component.text(PREFIX + "/cloud player dispatch [player] [command]"));
                         veloPlayer.sendMessage(Component.text(PREFIX + "/cloud player send [player] [service]"));
                     }  else{
-                        proxiedPlayer.sendMessage(PREFIX +  PREFIX + "/cloud player list" );
-                        proxiedPlayer.sendMessage(  PREFIX + "/cloud player info [player]");
-                        proxiedPlayer.sendMessage(PREFIX +  "/cloud player whitelist ([add/remove]) ([player])");
-                        proxiedPlayer.sendMessage(PREFIX + "/cloud player dispatch [player] [command]");
-                        proxiedPlayer.sendMessage( PREFIX + "/cloud player send [player] [service]");
+                          BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate( PREFIX + "/cloud player list" )));
+                          BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(  PREFIX + "/cloud player info [player]")));
+                          BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "/cloud player whitelist ([add/remove]) ([player])")));
+                          BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud player dispatch [player] [command]")));
+                          BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate( PREFIX + "/cloud player send [player] [service]")));
                     }
                 }
             }else {
@@ -246,11 +248,11 @@ public class PlayerCommand extends PluginCommand {
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud player dispatch [player] [command]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud player send [player] [service]"));
                 }  else{
-                    proxiedPlayer.sendMessage(PREFIX +  PREFIX + "/cloud player list" );
-                    proxiedPlayer.sendMessage(  PREFIX + "/cloud player info [player]");
-                    proxiedPlayer.sendMessage(PREFIX +  "/cloud player whitelist ([add/remove]) ([player])");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud player dispatch [player] [command]");
-                    proxiedPlayer.sendMessage( PREFIX + "/cloud player send [player] [service]");
+                      BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate( PREFIX + "/cloud player list" )));
+                      BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(  PREFIX + "/cloud player info [player]")));
+                      BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "/cloud player whitelist ([add/remove]) ([player])")));
+                      BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud player dispatch [player] [command]")));
+                      BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate( PREFIX + "/cloud player send [player] [service]")));
                 }
             }
         }

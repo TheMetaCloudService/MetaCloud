@@ -12,6 +12,8 @@ import com.velocitypowered.api.proxy.Player;
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.api.PluginCommand;
 import eu.metacloudservice.api.PluginCommandInfo;
+import eu.metacloudservice.api.translate.Translator;
+import eu.metacloudservice.bungee.BungeeBootstrap;
 import eu.metacloudservice.configuration.dummys.message.Messages;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -37,14 +39,14 @@ public class ServiceCommand extends PluginCommand {
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service dispatch [service] [command]"));
             }else {
-                proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
+                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service list")));
+                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service run [group] ([amount])")));
+                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stop [service]")));
+                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service copy [service]")));
+                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stopgroup [group]")));
+                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restart [service]")));
+                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restartgroup [group]")));
+                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service dispatch [service] [command]")));
             }
 
         }else if (args[0].equalsIgnoreCase("list")){
@@ -55,10 +57,10 @@ public class ServiceCommand extends PluginCommand {
                             "§7 - PLAYERS §8⯮ §f" + service.getPlayers().size() +
                             "§7 ~ STATE §8⯮ §f" + service.getState()));
                 else
-                    proxiedPlayer.sendMessage(PREFIX + "§f" + service.getName() +
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "§f" + service.getName() +
                             " §7| GROUP §8⯮ §f" + service.getGroup().getGroup() +
                             "§7 - PLAYERS §8⯮ §f" + service.getPlayers().size() +
-                            "§7 ~ STATE §8⯮ §f" + service.getState());
+                            "§7 ~ STATE §8⯮ §f" + service.getState())));
 
             });
         }else if (args[0].equalsIgnoreCase("run")){
@@ -69,12 +71,12 @@ public class ServiceCommand extends PluginCommand {
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX + "services have been started from the group you have selected"));
                     else
-                        proxiedPlayer.sendMessage(PREFIX +  "services have been started from the group you have selected");
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "services have been started from the group you have selected")));
                 }else {
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX +"The group you are looking for was not found, please check that it is spelled correctly."));
                     else
-                        proxiedPlayer.sendMessage(PREFIX + "The group you are looking for was not found, please check that it is spelled correctly.");
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The group you are looking for was not found, please check that it is spelled correctly.")));
                 }
             }else  if (args.length == 3) {
                 String group = args[1];
@@ -85,12 +87,12 @@ public class ServiceCommand extends PluginCommand {
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX + "services have been started from the group you have selected"));
                     else
-                        proxiedPlayer.sendMessage(PREFIX +  "services have been started from the group you have selected");
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "services have been started from the group you have selected")));
                 }else {
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX +"The group you are looking for was not found, please check that it is spelled correctly."));
                     else
-                        proxiedPlayer.sendMessage(PREFIX + "The group you are looking for was not found, please check that it is spelled correctly.");
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The group you are looking for was not found, please check that it is spelled correctly.")));
                 }
             }else {
                 if (proxiedPlayer == null){
@@ -103,14 +105,14 @@ public class ServiceCommand extends PluginCommand {
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service dispatch [service] [command]"));
                 }else {
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service list")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service run [group] ([amount])")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stop [service]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service copy [service]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stopgroup [group]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restart [service]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restartgroup [group]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service dispatch [service] [command]")));
                 }
             }
         }else if (args[0].equalsIgnoreCase("stop")){
@@ -122,7 +124,7 @@ public class ServiceCommand extends PluginCommand {
                         if (veloPlayer != null)
                             veloPlayer.sendMessage(Component.text(PREFIX +"The '§f"+service+"§7' service is now stopped"));
                         else
-                            proxiedPlayer.sendMessage(PREFIX + "The '§f"+service+"§7' service is now stopped");
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The '§f"+service+"§7' service is now stopped")));
                     }else {
                         if (proxiedPlayer == null){
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service list"));
@@ -134,21 +136,21 @@ public class ServiceCommand extends PluginCommand {
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service dispatch [service] [command]"));
                         }else {
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service list")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service run [group] ([amount])")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stop [service]")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service copy [service]")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stopgroup [group]")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restart [service]")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restartgroup [group]")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service dispatch [service] [command]")));
                         }
                     }
                 }else {
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX +"The service you are looking for was not found, please check that it is spelled correctly."));
                     else
-                        proxiedPlayer.sendMessage(PREFIX + "The service you are looking for was not found, please check that it is spelled correctly.");
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The service you are looking for was not found, please check that it is spelled correctly.")));
                 }
             }else {
                 if (proxiedPlayer == null){
@@ -161,14 +163,14 @@ public class ServiceCommand extends PluginCommand {
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service dispatch [service] [command]"));
                 }else {
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service list")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service run [group] ([amount])")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stop [service]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service copy [service]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stopgroup [group]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restart [service]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restartgroup [group]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service dispatch [service] [command]")));
                 }
             }
         }else if (args[0].equalsIgnoreCase("stopgroup")){
@@ -180,7 +182,7 @@ public class ServiceCommand extends PluginCommand {
                         if (veloPlayer != null)
                             veloPlayer.sendMessage(Component.text(PREFIX +"The '§f"+group+"§7' group is now stopped"));
                         else
-                            proxiedPlayer.sendMessage(PREFIX + "The '§f"+group+"§7' group is now stopped");
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The '§f"+group+"§7' group is now stopped")));
                     }else {
                         if (proxiedPlayer == null){
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service list"));
@@ -192,21 +194,21 @@ public class ServiceCommand extends PluginCommand {
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service dispatch [service] [command]"));
                         }else {
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service list")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service run [group] ([amount])")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stop [service]")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service copy [service]")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stopgroup [group]")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restart [service]")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restartgroup [group]")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service dispatch [service] [command]")));
                         }
                     }
                 }else {
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX +"The group you are looking for was not found, please check that it is spelled correctly."));
                     else
-                        proxiedPlayer.sendMessage(PREFIX + "The group you are looking for was not found, please check that it is spelled correctly.");
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The group you are looking for was not found, please check that it is spelled correctly.")));
                 }
             }else {
                 if (proxiedPlayer == null){
@@ -219,14 +221,14 @@ public class ServiceCommand extends PluginCommand {
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service dispatch [service] [command]"));
                 }else {
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service list")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service run [group] ([amount])")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stop [service]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service copy [service]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stopgroup [group]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restart [service]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restartgroup [group]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service dispatch [service] [command]")));
                 }
             }
         }else if (args[0].equalsIgnoreCase("restart")){
@@ -238,7 +240,7 @@ public class ServiceCommand extends PluginCommand {
                         if (veloPlayer != null)
                             veloPlayer.sendMessage(Component.text(PREFIX +"The '§f"+service+"§7' service is now restarting"));
                         else
-                            proxiedPlayer.sendMessage(PREFIX + "The '§f"+service+"§7' service is now restarting");
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The '§f"+service+"§7' service is now restarting")));
                     }else {
                         if (proxiedPlayer == null){
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service list"));
@@ -250,14 +252,14 @@ public class ServiceCommand extends PluginCommand {
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
                             veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service dispatch [service] [command]"));
                         }else {
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
-                            proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service list")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service run [group] ([amount])")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stop [service]")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service copy [service]")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stopgroup [group]")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restart [service]")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restartgroup [group]")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service dispatch [service] [command]")));
                         }
 
                     }
@@ -265,7 +267,7 @@ public class ServiceCommand extends PluginCommand {
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX +"The service you are looking for was not found, please check that it is spelled correctly."));
                     else
-                        proxiedPlayer.sendMessage(PREFIX + "The service you are looking for was not found, please check that it is spelled correctly.");
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The service you are looking for was not found, please check that it is spelled correctly.")));
                 }
             }else {
                 if (proxiedPlayer == null){
@@ -278,14 +280,14 @@ public class ServiceCommand extends PluginCommand {
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service dispatch [service] [command]"));
                 }else {
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service list")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service run [group] ([amount])")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stop [service]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service copy [service]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stopgroup [group]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restart [service]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restartgroup [group]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service dispatch [service] [command]")));
                 }
             }
         }else if (args[0].equalsIgnoreCase("restartgroup")){
@@ -297,7 +299,7 @@ public class ServiceCommand extends PluginCommand {
                             if (veloPlayer != null)
                                 veloPlayer.sendMessage(Component.text(PREFIX +"The '§f"+group+"§7' group is now restarting"));
                             else
-                                proxiedPlayer.sendMessage(PREFIX + "The '§f"+group+"§7' group is now restarting");
+                                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The '§f"+group+"§7' group is now restarting")));
                         }else {
                             if (proxiedPlayer == null){
                                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service list"));
@@ -309,21 +311,21 @@ public class ServiceCommand extends PluginCommand {
                                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
                                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service dispatch [service] [command]"));
                             }else {
-                                proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
-                                proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
-                                proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                                proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
-                                proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
-                                proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
-                                proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
-                                proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
+                                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service list")));
+                                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service run [group] ([amount])")));
+                                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stop [service]")));
+                                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service copy [service]")));
+                                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stopgroup [group]")));
+                                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restart [service]")));
+                                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restartgroup [group]")));
+                                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service dispatch [service] [command]")));
                             }
                         }
                     }else {
                         if (veloPlayer != null)
                             veloPlayer.sendMessage(Component.text(PREFIX +"The group you are looking for was not found, please check that it is spelled correctly."));
                         else
-                            proxiedPlayer.sendMessage(PREFIX + "The group you are looking for was not found, please check that it is spelled correctly.");
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The group you are looking for was not found, please check that it is spelled correctly.")));
                     }
                 }else {
                     if (proxiedPlayer == null){
@@ -336,14 +338,14 @@ public class ServiceCommand extends PluginCommand {
                         veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
                         veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service dispatch [service] [command]"));
                     }else {
-                        proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
-                        proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
-                        proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                        proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
-                        proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
-                        proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
-                        proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
-                        proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service list")));
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service run [group] ([amount])")));
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stop [service]")));
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service copy [service]")));
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stopgroup [group]")));
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restart [service]")));
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restartgroup [group]")));
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service dispatch [service] [command]")));
                     }
                 }
         }else if (args[0].equalsIgnoreCase("copy")){
@@ -356,12 +358,12 @@ public class ServiceCommand extends PluginCommand {
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX +"The service '§f"+service+"§7' was successfully copied"));
                     else
-                        proxiedPlayer.sendMessage(PREFIX + "The service '§f"+service+"§7' was successfully copied");
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The service '§f"+service+"§7' was successfully copied")));
                 }else {
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX +"The service was not found and therefore cannot be copy"));
                     else
-                        proxiedPlayer.sendMessage(PREFIX + "The service was not found and therefore cannot be copy");
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The service was not found and therefore cannot be copy")));
                 }
             }else {
                 if (proxiedPlayer == null){
@@ -374,14 +376,14 @@ public class ServiceCommand extends PluginCommand {
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service dispatch [service] [command]"));
                 }else {
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service list")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service run [group] ([amount])")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stop [service]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service copy [service]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stopgroup [group]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restart [service]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restartgroup [group]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service dispatch [service] [command]")));
                 }
             }
         }else if (args[0].equalsIgnoreCase("dispatch")){
@@ -395,13 +397,13 @@ public class ServiceCommand extends PluginCommand {
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX +"The command '§f"+msg.toString()+"§7' was sent to the service '§f"+service+"§7'"));
                     else
-                        proxiedPlayer.sendMessage(PREFIX + "The command '§f"+msg.toString()+"§7' was sent to the service '§f"+service+"§7'");
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The command '§f"+msg.toString()+"§7' was sent to the service '§f"+service+"§7'")));
                     CloudAPI.getInstance().getServicePool().getService(service).dispatchCommand(msg.toString());
                 }else {
                     if (veloPlayer != null)
                         veloPlayer.sendMessage(Component.text(PREFIX +"The service you are looking for was not found, please check that it is spelled correctly."));
                     else
-                        proxiedPlayer.sendMessage(PREFIX + "The service you are looking for was not found, please check that it is spelled correctly.");
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The service you are looking for was not found, please check that it is spelled correctly.")));
                 }
 
             }else {
@@ -415,14 +417,14 @@ public class ServiceCommand extends PluginCommand {
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
                     veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service dispatch [service] [command]"));
                 }else {
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
-                    proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service list")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service run [group] ([amount])")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stop [service]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service copy [service]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stopgroup [group]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restart [service]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restartgroup [group]")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service dispatch [service] [command]")));
                 }
             }
         }else {
@@ -436,14 +438,14 @@ public class ServiceCommand extends PluginCommand {
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service restartgroup [group]"));
                 veloPlayer.sendMessage(Component.text(PREFIX + "/cloud service dispatch [service] [command]"));
             }else {
-                proxiedPlayer.sendMessage(PREFIX + "/cloud service list");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud service run [group] ([amount])");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud service stop [service]");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud service copy [service]");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud service stopgroup [group]");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud service restart [service]");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud service restartgroup [group]");
-                proxiedPlayer.sendMessage(PREFIX + "/cloud service dispatch [service] [command]");
+                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service list")));
+                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service run [group] ([amount])")));
+                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stop [service]")));
+                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service copy [service]")));
+                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service stopgroup [group]")));
+                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restart [service]")));
+                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service restartgroup [group]")));
+                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud service dispatch [service] [command]")));
             }
         }
     }
