@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
+import java.util.logging.Level;
 
 public class BukkitBootstrap extends JavaPlugin  implements Listener {
 
@@ -41,8 +42,8 @@ public class BukkitBootstrap extends JavaPlugin  implements Listener {
 
     private Class<?> reflectCraftClazz(String suffix) {
         try {
-            String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-            return Class.forName("org.bukkit.craftbukkit." + version + suffix);
+            // INFO: Seems like they removed the version from the package name? (https://forums.papermc.io/threads/important-dev-psa-future-removal-of-cb-package-relocation.1106/)
+            return Class.forName("org.bukkit.craftbukkit" + suffix);
         } catch (Exception ex) {
             ex.printStackTrace();
             try {
