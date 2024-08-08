@@ -10,3 +10,4 @@ website: https://metacloudservice.eu
 
 commands:
   service:
+  stop:
