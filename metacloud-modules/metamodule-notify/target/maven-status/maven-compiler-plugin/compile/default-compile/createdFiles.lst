@@ -1,0 +1,9 @@
+eu\metacloudservice\velocity\listener\CloudListener.class
+eu\metacloudservice\bungee\listener\CloudListener.class
+eu\metacloudservice\config\Configuration.class
+eu\metacloudservice\velocity\VelocityBootstrap.class
+eu\metacloudservice\moduleside\MetaModule.class
+eu\metacloudservice\bungee\BungeeBootstrap.class
+velocity-plugin.json
+eu\metacloudservice\api\Translator.class
+eu\metacloudservice\config\General.class

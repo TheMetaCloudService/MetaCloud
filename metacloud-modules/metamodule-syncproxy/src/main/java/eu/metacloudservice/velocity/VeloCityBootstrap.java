@@ -25,7 +25,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-@Plugin(id = "syncproxy", name = "metacloud-syncproxy", version = "1.1.1-RELEASE", authors = "RauchigesEtwas",dependencies = {@Dependency(id = "metacloudapi"), @Dependency(id = "metacloudplugin", optional = true)})
+@Plugin(id = "syncproxy", name = "metacloud-syncproxy", version = "1.1.3-RELEASE", authors = "RauchigesEtwas",dependencies = {@Dependency(id = "metacloudapi"), @Dependency(id = "metacloudplugin", optional = true)})
 public class VeloCityBootstrap {
 
     private static VeloCityBootstrap instance;
@@ -36,6 +36,7 @@ public class VeloCityBootstrap {
     public DesignConfig configuration;
     public  Configuration conf;
     public Group group;
+
     public IconBase iconBase;
     public Integer tabCount;
 
@@ -56,12 +57,13 @@ public class VeloCityBootstrap {
         tabCount = 0;
         motdCount = 0;
 
+        this.message = MiniMessage.miniMessage();
+        this.translator = new Translator();
+
         liveService = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         restDriver = new RestDriver(liveService.getManagerAddress(), liveService.getRestPort());
         proxyServer.getEventManager().register(instance, new MOTDListener());
         proxyServer.getEventManager().register(instance, new TablistListener(proxyServer));
-        this.message = MiniMessage.miniMessage();
-        this.translator = new Translator();
         CloudAPI.getInstance().getEventDriver().registerListener(new CloudEventHandler());
 
         updater();

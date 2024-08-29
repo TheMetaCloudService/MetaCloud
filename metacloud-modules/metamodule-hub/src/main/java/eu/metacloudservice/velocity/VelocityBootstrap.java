@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Plugin(id = "metacloudhub", name = "metacloud-hub", version = "1.1.1-RELEASE", authors = "RauchigesEtwas", dependencies = {@Dependency(id = "metacloudapi"), @Dependency(id = "metacloudplugin")})
+@Plugin(id = "metacloudhub", name = "metacloud-hub", version = "1.1.3-RELEASE", authors = "RauchigesEtwas", dependencies = {@Dependency(id = "metacloudapi"), @Dependency(id = "metacloudplugin")})
 public class VelocityBootstrap {
 
 

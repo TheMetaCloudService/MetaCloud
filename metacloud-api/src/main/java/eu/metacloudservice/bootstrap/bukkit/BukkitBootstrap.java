@@ -12,6 +12,7 @@ import eu.metacloudservice.player.entrys.CloudPlayer;
 import eu.metacloudservice.process.ServiceState;
 import eu.metacloudservice.service.async.entrys.AsyncCloudService;
 import eu.metacloudservice.service.entrys.CloudService;
+import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -33,9 +34,11 @@ public class BukkitBootstrap extends JavaPlugin {
         environment.handelNettyUpdate();
     }
 
+    @SneakyThrows
     @Override
     public void onDisable() {
         Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer("cloudservice-shutdown"));
+        Thread.sleep(1000);
         final LiveService service = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         NettyDriver.getInstance().nettyClient.sendPacketSynchronized(new PacketInServiceDisconnect(service.getService()));
     }

@@ -25,8 +25,13 @@ public class OfflinePlayerCacheDriver {
             ArrayList<OfflinePlayerCache> caches = new ArrayList<>();
             migration.getPlayerCaches().forEach(migrateOfflinePlayer -> caches.add(new OfflinePlayerCache(migrateOfflinePlayer.getUsername(),migrateOfflinePlayer.getUniqueId(), migrateOfflinePlayer.getFirstConnected(), migrateOfflinePlayer.getLastConnected(), migrateOfflinePlayer.getLastProxy(), migrateOfflinePlayer.getLastService(), 0, 0)));
 
+           OfflinePlayerCacheConfiguration configuration = new OfflinePlayerCacheConfiguration(caches);
+
             new File("./local/storage/cloudPlayer.storage").deleteOnExit();
-            this.configDriver.save(new OfflinePlayerCacheConfiguration(caches));
+            this.configDriver.save(configuration);
+            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/cloudplayer/offlinecache", this.configDriver.convert(configuration)));
+
+            return;
 
         }
 

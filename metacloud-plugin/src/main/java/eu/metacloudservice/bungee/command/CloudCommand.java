@@ -2,12 +2,11 @@ package eu.metacloudservice.bungee.command;
 
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
-import eu.metacloudservice.api.PluginDriver;
-import eu.metacloudservice.api.translate.Translator;
+import eu.metacloudservice.commands.translate.Translator;
 import eu.metacloudservice.bungee.BungeeBootstrap;
 import eu.metacloudservice.configuration.dummys.message.Messages;
 import lombok.SneakyThrows;
-import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -33,16 +32,16 @@ public class CloudCommand extends Command implements TabExecutor {
                 if (args.length == 0){
                     sendHelp(player);
                 }else {
-                    if (PluginDriver.getInstance().getCommand(args[0]) != null) {
+                    if (CloudAPI.getInstance().getPluginCommandDriver().getCommand(args[0]) != null) {
                         String[] refreshedArguments = Arrays.copyOfRange(args, 1, args.length);
-                        PluginDriver.getInstance().getCommand(args[0]).performCommand(PluginDriver.getInstance().getCommand(args[0]), player, null, null, refreshedArguments);
+                        CloudAPI.getInstance().getPluginCommandDriver().getCommand(args[0]).performCommand(CloudAPI.getInstance().getPluginCommandDriver().getCommand(args[0]), player, null, null, refreshedArguments);
                     }else {
                         sendHelp(player);
                     }
                 }
             }else {
-                BungeeBootstrap.getInstance().audiences.player(player).sendMessage(Component.text(new Translator().translate("§8▷ §7The network uses §bMetacloud§8 [§a"+Driver.getInstance().getMessageStorage().version+"§8]")));
-                BungeeBootstrap.getInstance().audiences.player(player).sendMessage(Component.text(new Translator().translate("§8▷ §fhttps://metacloudservice.eu/")));
+                BungeeBootstrap.getInstance().audiences.player(player).sendMessage(MiniMessage.miniMessage().deserialize(new Translator().translate("§8▷ §7The network uses §bMetacloud§8 [§a"+Driver.getInstance().getMessageStorage().version+"§8]")));
+                BungeeBootstrap.getInstance().audiences.player(player).sendMessage(MiniMessage.miniMessage().deserialize(new Translator().translate("§8▷ §fhttps://metacloudservice.eu/")));
 
             }
         }
@@ -52,7 +51,7 @@ public class CloudCommand extends Command implements TabExecutor {
     public void sendHelp(ProxiedPlayer player){
         Messages messages = CloudAPI.getInstance().getMessages();
         String PREFIX = messages.getMessages().get("prefix").replace("&", "§");
-        PluginDriver.getInstance().getCommands().forEach(proxyCommand -> {
+        CloudAPI.getInstance().getPluginCommandDriver().getCommands().forEach(proxyCommand -> {
             player.sendMessage(PREFIX + proxyCommand.getDescription());
         });
     }
@@ -61,16 +60,16 @@ public class CloudCommand extends Command implements TabExecutor {
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
         List<String> suggestions = new ArrayList<>();
         if (args.length == 1) {
-            PluginDriver.getInstance().getCommands().forEach(proxyCommand -> {
+            CloudAPI.getInstance().getPluginCommandDriver().getCommands().forEach(proxyCommand -> {
                 suggestions.add(proxyCommand.getCommand());
             });
         } else {
-            if (PluginDriver.getInstance().getCommand(args[0]) != null) {
+            if (CloudAPI.getInstance().getPluginCommandDriver().getCommand(args[0]) != null) {
                 if (args.length == 2) {
-                    suggestions.addAll(PluginDriver.getInstance().getCommand(args[0]).tabComplete(new String[]{}));
+                    suggestions.addAll(CloudAPI.getInstance().getPluginCommandDriver().getCommand(args[0]).tabComplete(new String[]{}));
                 } else {
                     String[] refreshedArguments = Arrays.copyOfRange(args, 1, args.length);
-                    suggestions.addAll(PluginDriver.getInstance().getCommand(args[0]).tabComplete(refreshedArguments));
+                    suggestions.addAll(CloudAPI.getInstance().getPluginCommandDriver().getCommand(args[0]).tabComplete(refreshedArguments));
                 }
             }
         }

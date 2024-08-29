@@ -4,10 +4,10 @@ import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
-import eu.metacloudservice.api.PluginDriver;
+import eu.metacloudservice.commands.translate.Translator;
 import eu.metacloudservice.configuration.dummys.message.Messages;
 import lombok.SneakyThrows;
-import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,17 +26,18 @@ public class CloudCommand implements SimpleCommand {
                 if (args.length == 0){
                     sendHelp(player);
                 }else {
-                    if (PluginDriver.getInstance().getCommand(args[0]) != null){
+                    if (CloudAPI.getInstance().getPluginCommandDriver().getCommand(args[0]) != null){
                         String[] refreshedArguments = Arrays.copyOfRange(args, 1, args.length);
-                        PluginDriver.getInstance().getCommand(args[0]).performCommand(PluginDriver.getInstance().getCommand(args[0]),
+                        CloudAPI.getInstance().getPluginCommandDriver().getCommand(args[0]).performCommand(CloudAPI.getInstance().getPluginCommandDriver().getCommand(args[0]),
                                 null, player, null, refreshedArguments);
                     }else {
                         sendHelp(player);
                     }
                 }
             }else {
-                player.sendMessage(Component.text("§8▷ §7The network uses §bMetacloud§8 [§a"+Driver.getInstance().getMessageStorage().version+"§8]"));
-                player.sendMessage(Component.text("§8▷ §fhttps://metacloudservice.eu/"));
+                final Translator translator = new Translator();
+                player.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate("§8▷ §7The network uses §bMetacloud§8 [§a"+Driver.getInstance().getMessageStorage().version+"§8]")));
+                player.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate("§8▷ §fhttps://metacloudservice.eu/")));
             }
         }
     }
@@ -44,8 +45,8 @@ public class CloudCommand implements SimpleCommand {
     public void sendHelp(Player player){
         Messages messages = CloudAPI.getInstance().getMessages();
         String PREFIX = messages.getMessages().get("prefix").replace("&", "§");
-        PluginDriver.getInstance().getCommands().forEach(proxyCommand -> {
-            player.sendMessage(Component.text(PREFIX + proxyCommand.getDescription()));
+        CloudAPI.getInstance().getPluginCommandDriver().getCommands().forEach(proxyCommand -> {
+            player.sendMessage(MiniMessage.miniMessage().deserialize(PREFIX + proxyCommand.getDescription()));
         });
     }
 
@@ -56,16 +57,16 @@ public class CloudCommand implements SimpleCommand {
         List<String> suggestions = new ArrayList<>();
 
         if (args.length == 1) {
-            PluginDriver.getInstance().getCommands().forEach(proxyCommand -> {
+            CloudAPI.getInstance().getPluginCommandDriver().getCommands().forEach(proxyCommand -> {
                 suggestions.add(proxyCommand.getCommand());
             });
         } else {
-            if (PluginDriver.getInstance().getCommand(args[0]) != null) {
+            if (CloudAPI.getInstance().getPluginCommandDriver().getCommand(args[0]) != null) {
                 if (args.length == 2){
-                    suggestions.addAll(PluginDriver.getInstance().getCommand(args[0]).tabComplete(new String[] {}));
+                    suggestions.addAll(CloudAPI.getInstance().getPluginCommandDriver().getCommand(args[0]).tabComplete(new String[] {}));
                 }else {
                     String[] refreshedArguments =  Arrays.copyOfRange(args, 1, args.length);
-                    suggestions.addAll(PluginDriver.getInstance().getCommand(args[0]).tabComplete(refreshedArguments));
+                    suggestions.addAll(CloudAPI.getInstance().getPluginCommandDriver().getCommand(args[0]).tabComplete(refreshedArguments));
                 }
             }
         }

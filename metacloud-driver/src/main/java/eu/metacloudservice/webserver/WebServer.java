@@ -16,8 +16,13 @@ import eu.metacloudservice.webserver.entry.RouteEntry;
 import eu.metacloudservice.webserver.handel.RequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
+import io.netty.channel.epoll.Epoll;
+import io.netty.channel.epoll.EpollEventLoopGroup;
+import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
@@ -41,17 +46,19 @@ public class WebServer {
         final ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
         this.ROUTES = new ConcurrentLinkedDeque<>();
 
-         boosGroup = new NioEventLoopGroup(1);
-         workerGroup = new NioEventLoopGroup();
+         boosGroup = Epoll.isAvailable() ? new EpollEventLoopGroup() :new NioEventLoopGroup();
+         workerGroup = Epoll.isAvailable() ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 
             current = new Thread(() -> {
                 try {
                     ServerBootstrap bootstrap = new ServerBootstrap()
                             .group(boosGroup, workerGroup)
-                            .channel(NioServerSocketChannel.class)
-                            .childHandler(new ChannelInitializer<>() {
+                            .channel(Epoll.isAvailable() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
+                            .childHandler(new ChannelInitializer<SocketChannel>() {
+
                                 @Override
-                                protected void initChannel(Channel ch) {
+                                protected void initChannel(SocketChannel ch) throws Exception {
+
                                     ch.pipeline().addLast(new ChannelHandler() {
                                         @Override
                                         public void handlerAdded(ChannelHandlerContext ctx) throws Exception {

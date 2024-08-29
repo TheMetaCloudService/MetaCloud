@@ -7,9 +7,9 @@ package eu.metacloudservice.subcommand;
 import com.velocitypowered.api.proxy.Player;
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.api.CloudPermissionAPI;
-import eu.metacloudservice.api.PluginCommand;
-import eu.metacloudservice.api.PluginCommandInfo;
-import eu.metacloudservice.api.translate.Translator;
+import eu.metacloudservice.commands.PluginCommand;
+import eu.metacloudservice.commands.PluginCommandInfo;
+import eu.metacloudservice.commands.translate.Translator;
 import eu.metacloudservice.bootstrap.bungee.BungeeBootstrap;
 import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.moduleside.config.IncludedAble;
@@ -18,12 +18,12 @@ import eu.metacloudservice.moduleside.config.PermissionGroup;
 import eu.metacloudservice.moduleside.config.PermissionPlayer;
 import eu.metacloudservice.storage.UUIDDriver;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.Boolean.parseBoolean;
@@ -47,31 +47,32 @@ public class PermissionCommand extends PluginCommand {
     }
 
     private void handleUser(ProxiedPlayer proxiedPlayer, Player veloPlayer, String[] args){
-        Messages messages = CloudAPI.getInstance().getMessages();
-        String PREFIX = messages.getMessages().get("prefix").replace("&", "§");
+        final Translator translator = new Translator();
+        final Messages messages = CloudAPI.getInstance().getMessages();
+        final String PREFIX = messages.getMessages().get("prefix").replace("&", "§");
         if (args.length >= 2 && args[0].equalsIgnoreCase("user")) {
-            String username = args[1];
+            final String username = args[1];
             if (CloudPermissionAPI.getInstance().getPlayers().stream().anyMatch(player -> player.getUuid().equals(UUIDDriver.getUUID(username)) )){
                 PermissionPlayer pp = CloudPermissionAPI.getInstance().getPlayer(username);
                 if (args.length == 3 && args[2].equalsIgnoreCase("info")) {
                     // Implementiere Logik für "/permission user [user] info"#
                     if (proxiedPlayer == null){
-                        veloPlayer.sendMessage(Component.text(PREFIX + "player: " + pp.getUuid()));
-                        veloPlayer.sendMessage(Component.text(PREFIX + "able groups: "));
-                        pp.getGroups().forEach(includedAble -> veloPlayer.sendMessage(Component.text(PREFIX + "- " + includedAble.getGroup() + " ~ " + includedAble.getTime())));
-                        veloPlayer.sendMessage(Component.text(PREFIX + "able permissions: "));
-                        pp.getPermissions().forEach(permissionAble -> veloPlayer.sendMessage(Component.text(PREFIX + "- " + permissionAble.getPermission() + " ~ " + permissionAble.getAble() + " ~ " + permissionAble.getTime())));
+                        veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "player: " + pp.getUuid())));
+                        veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "able groups: ")));
+                        pp.getGroups().forEach(includedAble -> veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "- " + includedAble.getGroup() + " ~ " + includedAble.getTime()))));
+                        veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "able permissions: ")));
+                        pp.getPermissions().forEach(permissionAble -> veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "- " + permissionAble.getPermission() + " ~ " + permissionAble.getAble() + " ~ " + permissionAble.getTime()))));
 
                     }else {
-                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "player: " + pp.getUuid())));
-                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "able groups: ")));
-                        pp.getGroups().forEach(includedAble ->  BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "- " + includedAble.getGroup() + " ~ " + includedAble.getTime()))));
-                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "able permissions: ")));
-                        pp.getPermissions().forEach(permissionAble ->  BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "- " + permissionAble.getPermission() + " ~ " + permissionAble.getAble() + " ~ " + permissionAble.getTime()))));
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "player: " + pp.getUuid())));
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "able groups: ")));
+                        pp.getGroups().forEach(includedAble ->  BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "- " + includedAble.getGroup() + " ~ " + includedAble.getTime()))));
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "able permissions: ")));
+                        pp.getPermissions().forEach(permissionAble ->  BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "- " + permissionAble.getPermission() + " ~ " + permissionAble.getAble() + " ~ " + permissionAble.getTime()))));
                     }
                 } else if (args.length >= 6 && args.length <= 8 && args[2].equalsIgnoreCase("perms") && args[3].equalsIgnoreCase("add")) {
-                    String permission = args[4];
-                    boolean value = !args[5].equalsIgnoreCase("true") && !args[5].equalsIgnoreCase("false") || Boolean.valueOf(args[5]);
+                   final String permission = args[4];
+                    final boolean value = !args[5].equalsIgnoreCase("true") && !args[5].equalsIgnoreCase("false") || Boolean.valueOf(args[5]);
                     String time = args.length == 7 ? args[6] : "LIFETIME";
                     // Implementiere Logik für "/permission user [user] perm add [permission] [true/false] [time]"
                     if (pp.getPermissions().stream().noneMatch(permissionAble -> permissionAble.getPermission().equalsIgnoreCase(permission))){
@@ -85,37 +86,37 @@ public class PermissionCommand extends PluginCommand {
                         pp.getPermissions().add(new PermissionAble(permission, value, time));
                         CloudPermissionAPI.getInstance().updatePlayer(pp);
                         if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX + "The player '§f"+username+"§7' has successfully received the permission '§f"+permission+"§7@§f"+time+"§7' ."));
+                            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The player '§f"+username+"§7' has successfully received the permission '§f"+permission+"§7@§f"+time+"§7' .")));
                         else
-                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The player '§f"+username+"§7' has successfully received the permission '§f"+permission+"§7@§f"+time+"§7' .")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The player '§f"+username+"§7' has successfully received the permission '§f"+permission+"§7@§f"+time+"§7' .")));
                     }else {
                         if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX + "The player '§f"+username+"§7' already has this permissions"));
+                            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The player '§f"+username+"§7' already has this permissions")));
                         else
-                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The player '§f"+username+"§7' already has this permissions")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The player '§f"+username+"§7' already has this permissions")));
                     }
                 } else if (args.length == 5 && args[2].equalsIgnoreCase("perms") && args[3].equalsIgnoreCase("remove")) {
-                    String permission = args[4];
+                    final String permission = args[4];
                     // Implementiere Logik für "/permission user [user] perm remove [permission]"
                     if (pp.getPermissions().stream().anyMatch(permissionAble -> permissionAble.getPermission().equalsIgnoreCase(permission))){
                         pp.getPermissions().removeIf(permissionAble -> permissionAble.getPermission().equalsIgnoreCase(permission));
                         CloudPermissionAPI.getInstance().updatePlayer(pp);
                         if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX + "The player '§f" + username + "§7' has now been deprived of the permission '§f" + permission + "§7'."));
+                            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The player '§f" + username + "§7' has now been deprived of the permission '§f" + permission + "§7'.")));
                         else
-                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The player '§f" + username + "§7' has now been deprived of the permission '§f" + permission + "§7'.")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The player '§f" + username + "§7' has now been deprived of the permission '§f" + permission + "§7'.")));
 
 
                     }else {
                         if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX + "The player '§f"+username+"§7' does not have this permission."));
+                            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The player '§f"+username+"§7' does not have this permission.")));
                         else
-                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "The player '§f"+username+"§7' does not have this permission.")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX +  "The player '§f"+username+"§7' does not have this permission.")));
                     }
 
                 } else if (args.length >= 5 && args.length < 7 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("add")) {
-                    String group = args[4];
-                    String time = args.length == 6 ? args[5] : "LIFETIME";
+                    final String group = args[4];
+                     String time = args.length == 6 ? args[5] : "LIFETIME";
                     // Implementiere Logik für "/permission user [user] group add [group] [time]"
                     if (pp.getGroups().stream().noneMatch(includedAble -> includedAble.getGroup().equalsIgnoreCase(group))){
                         if (!time.equalsIgnoreCase("LIFETIME")){
@@ -128,14 +129,14 @@ public class PermissionCommand extends PluginCommand {
                         pp.getGroups().add(new IncludedAble(group, time));
                         CloudPermissionAPI.getInstance().updatePlayer(pp);
                         if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX + "The player '§f"+username+"§7' has successfully received the group '§f"+group+"§7@§f§"+time+"§7'."));
+                            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The player '§f"+username+"§7' has successfully received the group '§f"+group+"§7@§f§"+time+"§7'.")));
                         else
-                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The player '§f"+username+"§7' has successfully received the group '§f"+group+"§7@§f§"+time+"§7'.")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The player '§f"+username+"§7' has successfully received the group '§f"+group+"§7@§f§"+time+"§7'.")));
                     }else {
                         if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX +  "The player '§f"+username +"§7' already has this group."));
+                            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX +  "The player '§f"+username +"§7' already has this group.")));
                         else
-                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The player '§f"+username +"§7' already has this group.")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The player '§f"+username +"§7' already has this group.")));
                     }
 
                 }else if (args.length == 5 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("remove")) {
@@ -149,18 +150,18 @@ public class PermissionCommand extends PluginCommand {
                             groups.forEach(permissionGroup -> pp.getGroups().add(new IncludedAble(permissionGroup, "LIFETIME")));               }
                         CloudPermissionAPI.getInstance().updatePlayer(pp);
                         if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX +"The group '§f"+group+"§7' has been successfully removed from the player '§f"+username+"§7'."));
+                            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX +"The group '§f"+group+"§7' has been successfully removed from the player '§f"+username+"§7'.")));
                         else
-                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +"The group '§f"+group+"§7' has been successfully removed from the player '§f"+username+"§7'.")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX +"The group '§f"+group+"§7' has been successfully removed from the player '§f"+username+"§7'.")));
                     }else {
                         if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX +   "The player '§f"+username+"§7' has not included the group '§f"+group+"§7' ."));
+                            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX +   "The player '§f"+username+"§7' has not included the group '§f"+group+"§7' .")));
                         else
-                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "The player '§f"+username+"§7' has not included the group '§f"+group+"§7' .")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX +  "The player '§f"+username+"§7' has not included the group '§f"+group+"§7' .")));
                     }
 
                 }else if (args.length >= 5 && args.length < 7 && args[2].equalsIgnoreCase("group") && args[3].equalsIgnoreCase("set")) {
-                    String group = args[4];
+                    final String group = args[4];
                     String time = (args.length == 6) ? args[5] : "LIFETIME";
                     if (pp.getGroups().stream().noneMatch(includedAble -> includedAble.getGroup().equalsIgnoreCase(group))) {
                         if (!time.equalsIgnoreCase("LIFETIME")) {
@@ -173,23 +174,23 @@ public class PermissionCommand extends PluginCommand {
                         pp.getGroups().add(new IncludedAble(group, time));
                         CloudPermissionAPI.getInstance().updatePlayer(pp);
                         if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX + "The player '§f"+username+"§7' has successfully received the group '§f"+group+"§7@§f§"+time+"§7'."));
+                            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The player '§f"+username+"§7' has successfully received the group '§f"+group+"§7@§f§"+time+"§7'.")));
                         else
-                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The player '§f"+username+"§7' has successfully received the group '§f"+group+"§7@§f§"+time+"§7'.")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The player '§f"+username+"§7' has successfully received the group '§f"+group+"§7@§f§"+time+"§7'.")));
 
                     } else if (veloPlayer != null) {
-                        veloPlayer.sendMessage((Component)Component.text(PREFIX + "The player '§f"+ username + "§7' already has this group."));
+                        veloPlayer.sendMessage((Component)MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The player '§f"+ username + "§7' already has this group.")));
                     } else {
-                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The player '§f"+username+"§7' already has this group.")));
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The player '§f"+username+"§7' already has this group.")));
                     }
                 }else {
                     sendMessage(proxiedPlayer, veloPlayer);
                 }
             }else {
                 if (veloPlayer != null)
-                    veloPlayer.sendMessage(Component.text(PREFIX + "The player you are looking for was not found, please check that it is spelled correctly."));
+                    veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The player you are looking for was not found, please check that it is spelled correctly.")));
                 else
-                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "The player you are looking for was not found, please check that it is spelled correctly.")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX +  "The player you are looking for was not found, please check that it is spelled correctly.")));
             }
         } else {
             sendMessage(proxiedPlayer, veloPlayer);
@@ -197,8 +198,9 @@ public class PermissionCommand extends PluginCommand {
     }
 
     private void handleGroup(ProxiedPlayer proxiedPlayer, Player veloPlayer, String[] args){
-        Messages messages = CloudAPI.getInstance().getMessages();
-        String PREFIX = messages.getMessages().get("prefix").replace("&", "§");
+        final Translator translator = new Translator();
+        final Messages messages = CloudAPI.getInstance().getMessages();
+        final String PREFIX = messages.getMessages().get("prefix").replace("&", "§");
         if (args.length >= 1 && args[0].equalsIgnoreCase("groups")) {
             // Implementiere Logik für "/permission groups"
             StringBuilder result = new StringBuilder();
@@ -212,15 +214,15 @@ public class PermissionCommand extends PluginCommand {
                 }
             }
             if (veloPlayer != null) {
-                veloPlayer.sendMessage(Component.text(PREFIX + "groups:"));
-                veloPlayer.sendMessage(Component.text(PREFIX + result.toString()));
+                veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "groups:")));
+                veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + result.toString())));
             }else{
-                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "groups:" )));
-                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  result.toString())));
+                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "groups:" )));
+                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX +  result.toString())));
 
             }
         } else if (args.length >= 2 && args[0].equalsIgnoreCase("group")) {
-            String groupName = args[1];
+          final   String groupName = args[1];
             if (CloudPermissionAPI.getInstance().isGroupExists(groupName) ||(args.length == 3 && args[2].equalsIgnoreCase("create"))){
 
                 PermissionGroup pg = CloudPermissionAPI.getInstance().getGroup(groupName);
@@ -228,26 +230,26 @@ public class PermissionCommand extends PluginCommand {
                     // Implementiere Logik für "/permission group [group] info"
 
                     if (proxiedPlayer == null){
-                        veloPlayer.sendMessage(Component.text(PREFIX + "Group name: "+ pg.getGroup()));
-                        veloPlayer.sendMessage(Component.text(PREFIX + "Default: "+ pg.getIsDefault()));
-                        veloPlayer.sendMessage(Component.text(PREFIX + "Tag-Power: "+ pg.getTagPower()));
-                        veloPlayer.sendMessage(Component.text(PREFIX + "Prefix: "+ pg.getPrefix()));
-                        veloPlayer.sendMessage(Component.text(PREFIX + "Suffix: "+ pg.getSuffix()));
-                        veloPlayer.sendMessage(Component.text(PREFIX + "Able groups: "));
-                        pg.getIncluded().forEach(includedAble ->  veloPlayer.sendMessage(Component.text(PREFIX + "- " +includedAble.getGroup() + " ~ " + includedAble.getTime() )));
-                        veloPlayer.sendMessage(Component.text(PREFIX + "Able permissions: "));
-                        pg.getPermissions().forEach(permissionAble ->        veloPlayer.sendMessage(Component.text(PREFIX + "- " + permissionAble.getPermission() + " ~ " + permissionAble.getAble() + " ~ " + permissionAble.getTime())));
+                        veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "Group name: "+ pg.getGroup())));
+                        veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "Default: "+ pg.getIsDefault())));
+                        veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "Tag-Power: "+ pg.getTagPower())));
+                        veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "Prefix: "+ pg.getPrefix())));
+                        veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "Suffix: "+ pg.getSuffix())));
+                        veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "Able groups: ")));
+                        pg.getIncluded().forEach(includedAble ->  veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "- " +includedAble.getGroup() + " ~ " + includedAble.getTime() ))));
+                        veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "Able permissions: ")));
+                        pg.getPermissions().forEach(permissionAble ->        veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "- " + permissionAble.getPermission() + " ~ " + permissionAble.getAble() + " ~ " + permissionAble.getTime()))));
 
                     }else {
-                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "Group name: "+ pg.getGroup())));
-                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "Default: "+ pg.getIsDefault())));
-                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "Tag-Power: "+ pg.getTagPower())));
-                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "Prefix: "+ pg.getPrefix())));
-                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "Suffix: "+ pg.getSuffix())));
-                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "Able groups: ")));
-                        pg.getIncluded().forEach(includedAble ->   BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "- " +includedAble.getGroup() + " ~ " + includedAble.getTime() ))));
-                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "Able permissions: ")));
-                        pg.getPermissions().forEach(permissionAble ->         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "- " + permissionAble.getPermission() + " ~ " + permissionAble.getAble() + " ~ " + permissionAble.getTime()))));
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "Group name: "+ pg.getGroup())));
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "Default: "+ pg.getIsDefault())));
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "Tag-Power: "+ pg.getTagPower())));
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "Prefix: "+ pg.getPrefix())));
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "Suffix: "+ pg.getSuffix())));
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "Able groups: ")));
+                        pg.getIncluded().forEach(includedAble ->   BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "- " +includedAble.getGroup() + " ~ " + includedAble.getTime() ))));
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "Able permissions: ")));
+                        pg.getPermissions().forEach(permissionAble ->         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "- " + permissionAble.getPermission() + " ~ " + permissionAble.getAble() + " ~ " + permissionAble.getTime()))));
 
                     }
                   } else if (args.length == 3 && args[2].equalsIgnoreCase("create")) {
@@ -255,22 +257,22 @@ public class PermissionCommand extends PluginCommand {
                     if (!CloudPermissionAPI.getInstance().isGroupExists(groupName)){
                         CloudPermissionAPI.getInstance().createGroup(new PermissionGroup(groupName, false, 99,"§b" +groupName + " §8| §7" ,"", "", "",new ArrayList<>(), new ArrayList<>()));
                         if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX +  "The group '§f" + groupName + "§7' has been successfully created."));
+                            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX +  "The group '§f" + groupName + "§7' has been successfully created.")));
                         else
-                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +   "The group '§f" + groupName + "§7' has been successfully created.")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX +   "The group '§f" + groupName + "§7' has been successfully created.")));
                     }else {
                         if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX + "The group '§f" + groupName + "§7' is already exists"));
+                            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The group '§f" + groupName + "§7' is already exists")));
                         else
-                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "The group '§f" + groupName + "§7' is already exists")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX +  "The group '§f" + groupName + "§7' is already exists")));
                     }
                 } else if (args.length == 3 && args[2].equalsIgnoreCase("delete")) {
                     // Implementiere Logik für "/permission group [group] delete"
                     CloudPermissionAPI.getInstance().deleteGroup(groupName);
                     if (veloPlayer != null)
-                        veloPlayer.sendMessage(Component.text(PREFIX + "The group '§f" + groupName + "§7' has been successfully deleted."));
+                        veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The group '§f" + groupName + "§7' has been successfully deleted.")));
                     else
-                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The group '§f" + groupName + "§7' has been successfully deleted.")));
+                         BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The group '§f" + groupName + "§7' has been successfully deleted.")));
                 } else if (args.length == 5 && args[2].equalsIgnoreCase("edit")) {
                     String type = args[3];
                     String value = args[4];
@@ -280,22 +282,22 @@ public class PermissionCommand extends PluginCommand {
                         pg.setIsDefault(recover);
                         CloudPermissionAPI.getInstance().updateGroup(pg);
                         if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX +  "The group '§f" + groupName + "§7' has now been set default to '§f"+recover+"§7'."));
+                            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX +  "The group '§f" + groupName + "§7' has now been set default to '§f"+recover+"§7'.")));
                         else
-                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "The group '§f" + groupName + "§7' has now been set default to '§f"+recover+"§7'.")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX +  "The group '§f" + groupName + "§7' has now been set default to '§f"+recover+"§7'.")));
                     }else if (type.equalsIgnoreCase("tagpower")){
                         int integer = Integer.parseInt(value);
                         pg.setTagPower(integer);
                         CloudPermissionAPI.getInstance().updateGroup(pg);
                         if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX + "The tag power of the group '§f" + groupName + "§7' has been changed to '§f" + integer + "§7'."));
+                            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The tag power of the group '§f" + groupName + "§7' has been changed to '§f" + integer + "§7'.")));
                         else
-                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The tag power of the group '§f" + groupName + "§7' has been changed to '§f" + integer + "§7'.")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The tag power of the group '§f" + groupName + "§7' has been changed to '§f" + integer + "§7'.")));
                     }else {
                         if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX + "pleas use: §fdefault, tagpower"));
+                            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "pleas use: §fdefault, tagpower")));
                         else
-                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +"pleas use: §fdefault, tagpower")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX +"pleas use: §fdefault, tagpower")));
                     }
 
                 }
@@ -303,8 +305,8 @@ public class PermissionCommand extends PluginCommand {
                 else if (args.length >= 6 && args.length < 8 && args[2].equalsIgnoreCase("perms") && args[3].equalsIgnoreCase("add")) {
 
                     // Implementiere Logik für "/permission group [group] perm add [permission] [true/false] [time]"
-                    String permission = args[4];
-                    boolean value = parseBoolean(args[5]);
+                  final   String permission = args[4];
+                  final   boolean value = parseBoolean(args[5]);
                     String time = args.length == 7 ? args[6] : "LIFETIME";
 
                     if (!time.equalsIgnoreCase("LIFETIME")){
@@ -320,16 +322,16 @@ public class PermissionCommand extends PluginCommand {
                         CloudPermissionAPI.getInstance().updateGroup(pg);
 
                         if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX + "The group '§f" + groupName + "§7' now has the permission '§f" + permission + "§7@§f"+time+"§7'."));
+                            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The group '§f" + groupName + "§7' now has the permission '§f" + permission + "§7@§f"+time+"§7'.")));
                         else
-                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The group '§f" + groupName + "§7' now has the permission '§f" + permission + "§7@§f"+time+"§7'.")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The group '§f" + groupName + "§7' now has the permission '§f" + permission + "§7@§f"+time+"§7'.")));
 
                     }else {
 
                         if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX +"The group '§f" + groupName + "§7' has alreasy the permission '§f" + permission + "§7'."));
+                            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX +"The group '§f" + groupName + "§7' has alreasy the permission '§f" + permission + "§7'.")));
                         else
-                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The group '§f" + groupName + "§7' has alreasy the permission '§f" + permission + "§7'.")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The group '§f" + groupName + "§7' has alreasy the permission '§f" + permission + "§7'.")));
 
                     }
                 } else if (args.length == 5 && args[2].equalsIgnoreCase("perms") && args[3].equalsIgnoreCase("remove")) {
@@ -341,29 +343,29 @@ public class PermissionCommand extends PluginCommand {
                         CloudPermissionAPI.getInstance().updateGroup(pg);
 
                         if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX + "The group '§f" + groupName + "§7' no longer has the permission '§f" + permission + "§7'."));
+                            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The group '§f" + groupName + "§7' no longer has the permission '§f" + permission + "§7'.")));
                         else
-                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The group '§f" + groupName + "§7' no longer has the permission '§f" + permission + "§7'.")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The group '§f" + groupName + "§7' no longer has the permission '§f" + permission + "§7'.")));
 
                     }else {
 
                         if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX + "The group '§f" + groupName + "§7' does not have the permission '§f" + permission + "§7'."));
+                            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The group '§f" + groupName + "§7' does not have the permission '§f" + permission + "§7'.")));
                         else
-                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The group '§f" + groupName + "§7' does not have the permission '§f" + permission + "§7'.")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The group '§f" + groupName + "§7' does not have the permission '§f" + permission + "§7'.")));
 
                     }
                 } else if (args.length >= 4 && args[2].equalsIgnoreCase("include")) {
                     // Implementiere Logik für "/permission group [group] include [group] [time]"
-                    String includedGroup = args[3];
+                  final   String includedGroup = args[3];
                     String time = args.length >= 5 ? args[4] : "LIFETIME";
                     if (pg.getIncluded().stream().noneMatch(includedAble -> includedAble.getGroup().equalsIgnoreCase(includedGroup))) {
                         if (CloudPermissionAPI.getInstance().getGroups().stream().noneMatch(permissionGroup -> permissionGroup.getGroup().equalsIgnoreCase(includedGroup))) {
 
                             if (veloPlayer != null)
-                                veloPlayer.sendMessage(Component.text(PREFIX + "The specified group '§f" + includedGroup + "§7' was not found."));
+                                veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The specified group '§f" + includedGroup + "§7' was not found.")));
                             else
-                                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The specified group '§f" + includedGroup + "§7' was not found.")));
+                                 BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The specified group '§f" + includedGroup + "§7' was not found.")));
                             return;
                         }
                         if (!time.equalsIgnoreCase("LIFETIME")){
@@ -378,33 +380,33 @@ public class PermissionCommand extends PluginCommand {
                         pg.getIncluded().add(new IncludedAble(includedGroup, time));
                         CloudPermissionAPI.getInstance().updateGroup(pg);
                         if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX + "The group '§f" + groupName + "§7' now inherits from the group '§f"+includedGroup+"§7@§f"+time+"§7'."));
+                            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The group '§f" + groupName + "§7' now inherits from the group '§f"+includedGroup+"§7@§f"+time+"§7'.")));
                         else
-                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The group '§f" + groupName + "§7' now inherits from the group '§f"+includedGroup+"§7@§f"+time+"§7'.")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The group '§f" + groupName + "§7' now inherits from the group '§f"+includedGroup+"§7@§f"+time+"§7'.")));
 
                     }else {
                         if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX + "The group '§f" + groupName + "§7' does already inherit from the group '§f" + includedGroup + "§7'."));
+                            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The group '§f" + groupName + "§7' does already inherit from the group '§f" + includedGroup + "§7'.")));
                         else
-                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The group '§f" + groupName + "§7' does already inherit from the group '§f" + includedGroup + "§7'.")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The group '§f" + groupName + "§7' does already inherit from the group '§f" + includedGroup + "§7'.")));
                     }
 
 
                 } else if (args.length >= 4 && args[2].equalsIgnoreCase("exclude")) {
-                    String excludedGroup = args[3];
+                   final String excludedGroup = args[3];
                     // Implementiere Logik für "/permission group [group] exclude [group]"
                     if (pg.getIncluded().stream().anyMatch(includedAble -> includedAble.getGroup().equalsIgnoreCase(excludedGroup))){
                         pg.getIncluded().removeIf(includedAble -> includedAble.getGroup().equalsIgnoreCase(excludedGroup));
                         CloudPermissionAPI.getInstance().excludeGroup(groupName, excludedGroup );
                         if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX +  "The group '§f" + groupName + "§7' no longer inherits from the group '§f" + excludedGroup + "§7'."));
+                            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX +  "The group '§f" + groupName + "§7' no longer inherits from the group '§f" + excludedGroup + "§7'.")));
                         else
-                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +   "The group '§f" + groupName + "§7' no longer inherits from the group '§f" + excludedGroup + "§7'.")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX +   "The group '§f" + groupName + "§7' no longer inherits from the group '§f" + excludedGroup + "§7'.")));
                     }else {
                         if (veloPlayer != null)
-                            veloPlayer.sendMessage(Component.text(PREFIX + "The group '§f" + groupName + "§7' does not inherit from the group '§f" +excludedGroup + "§7'."));
+                            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The group '§f" + groupName + "§7' does not inherit from the group '§f" +excludedGroup + "§7'.")));
                         else
-                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "The group '§f" + groupName + "§7' does not inherit from the group '§f" +excludedGroup + "§7'.")));
+                             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The group '§f" + groupName + "§7' does not inherit from the group '§f" +excludedGroup + "§7'.")));
 
                     }
                 }else {
@@ -412,9 +414,9 @@ public class PermissionCommand extends PluginCommand {
                 }
             }else {
                 if (veloPlayer != null)
-                    veloPlayer.sendMessage(Component.text(PREFIX + "The group you are looking for was not found, please check that it is spelled correctly."));
+                    veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "The group you are looking for was not found, please check that it is spelled correctly.")));
                 else
-                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX +  "The group you are looking for was not found, please check that it is spelled correctly.")));
+                     BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX +  "The group you are looking for was not found, please check that it is spelled correctly.")));
             }
         } else {
             sendMessage(proxiedPlayer, veloPlayer);
@@ -424,42 +426,43 @@ public class PermissionCommand extends PluginCommand {
 
 
     private void sendMessage(ProxiedPlayer proxiedPlayer, Player veloPlayer){
-        Messages messages = CloudAPI.getInstance().getMessages();
-        String PREFIX = messages.getMessages().get("prefix").replace("&", "§");
+        final Messages messages = CloudAPI.getInstance().getMessages();
+        final String PREFIX = messages.getMessages().get("prefix").replace("&", "§");
+        final Translator translator = new Translator();
         if (proxiedPlayer == null){
-            veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission user [user] info"));
-            veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission user [user] perms add [permission] [true/false] ([time])"));
-            veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission user [user] perms remove [permission] "));
-            veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission user [user] group add [group] ([time])"));
-            veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission user [user] group set [group] ([time])"));
-            veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission user [user] group remove [group]"));
-            veloPlayer.sendMessage(Component.text(PREFIX + " "));
-            veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission groups"));
-            veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission group [group] info"));
-            veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission group [group] create"));
-            veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission group [group] delete"));
-            veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission group [group] edit [type] [value]"));
-            veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission group [group] perm add [permission] [true/false] ([time])"));
-            veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission group [group] perm remove [permission]"));
-            veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission group [group] include [group] [time]"));
-            veloPlayer.sendMessage(Component.text(PREFIX + "/cloud permission group [group] exclude [group]"));
+            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission user [user] info")));
+            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission user [user] perms add [permission] [true/false] ([time])")));
+            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission user [user] perms remove [permission] ")));
+            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission user [user] group add [group] ([time])")));
+            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission user [user] group set [group] ([time])")));
+            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission user [user] group remove [group]")));
+            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + " ")));
+            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission groups")));
+            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission group [group] info")));
+            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission group [group] create")));
+            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission group [group] delete")));
+            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission group [group] edit [type] [value]")));
+            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission group [group] perm add [permission] [true/false] ([time])")));
+            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission group [group] perm remove [permission]")));
+            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission group [group] include [group] [time]")));
+            veloPlayer.sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission group [group] exclude [group]")));
         }else {
-             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud permission user [user] info")));
-             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud permission user [user] perm add [permission] [true/false] ([time])")));
-             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud permission user [user] perm remove [permission] ")));
-             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud permission user [user] group add [group] ([time])")));
-             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud permission user [user] group set [group] ([time])")));
-             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud permission user [user] group remove [group]")));
-             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + " ")));
-             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud permission groups")));
-             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud permission group [group] info")));
-             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud permission group [group] create")));
-             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud permission group [group] delete")));
-             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud permission group [group] edit [type] [value]")));
-             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud permission group [group] perms add [permission] [true/false] ([time])")));
-             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud permission group [group] perms remove [permission]")));
-             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud permission group [group] include [group] ([time])")));
-             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(Component.text(new Translator().translate(PREFIX + "/cloud permission group [group] exclude [group]")));
+             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission user [user] info")));
+             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission user [user] perm add [permission] [true/false] ([time])")));
+             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission user [user] perm remove [permission] ")));
+             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission user [user] group add [group] ([time])")));
+             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission user [user] group set [group] ([time])")));
+             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission user [user] group remove [group]")));
+             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + " ")));
+             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission groups")));
+             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission group [group] info")));
+             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission group [group] create")));
+             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission group [group] delete")));
+             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission group [group] edit [type] [value]")));
+             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission group [group] perms add [permission] [true/false] ([time])")));
+             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission group [group] perms remove [permission]")));
+             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission group [group] include [group] ([time])")));
+             BungeeBootstrap.getInstance().audiences.player(proxiedPlayer).sendMessage(MiniMessage.miniMessage().deserialize(translator.translate(PREFIX + "/cloud permission group [group] exclude [group]")));
         }
     }
 

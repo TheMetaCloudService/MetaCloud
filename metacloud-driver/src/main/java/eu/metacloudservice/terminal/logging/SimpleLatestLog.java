@@ -5,57 +5,64 @@
 package eu.metacloudservice.terminal.logging;
 
 
+import lombok.SneakyThrows;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SimpleLatestLog {
 
-    private static final String LOG_DIRECTORY = "./local/logs/";
-    private static final String LATEST_LOG_FILENAME = "latest.log";
     private final File latestLog;
 
-    public SimpleLatestLog() throws IOException {
-        File logsDir = new File(LOG_DIRECTORY);
+    @SneakyThrows
+    public SimpleLatestLog() {
+
+        File logsDir = new File("./local/logs/");
         if (!logsDir.exists()) {
             logsDir.mkdirs();
         }
 
-        cleanupOldLogs(logsDir);
+        if (new File(logsDir, "latest.log").exists()) {
+            getAllLogs().stream()
+                    .filter(s -> !s.equalsIgnoreCase("latest.log"))
+                    .map(s -> new File(logsDir, s))
+                    .forEach(File::delete);
 
-        this.latestLog = new File(logsDir, LATEST_LOG_FILENAME);
-        latestLog.createNewFile();  // Handle potential IOException here
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            File oldLog = new File(logsDir, "latest.log");
+            File newLog = new File(logsDir, "Log_" + dtf.format(LocalDateTime.now()) + ".log");
+            Files.copy(oldLog.toPath(), newLog.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            oldLog.delete();
+        }
+
+        this.latestLog = new File(logsDir, "latest.log");
+        try {
+            this.latestLog.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void log(String line) throws IOException {
-        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(latestLog, true)))) {
+    public void log(String line) {
+        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(this.latestLog, true)))) {
             writer.println(line);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    private void cleanupOldLogs(File logsDir) throws IOException {
-        if (!logsDir.isDirectory()) {
-            throw new IOException("Logs directory is not a directory");
+    private List<String> getAllLogs() {
+        File file = new File("./local/logs/");
+        File[] files = file.listFiles();
+        List<String> logs = new ArrayList<>();
+        for (File value : files != null ? files : new File[0]) {
+            logs.add(value.getName());
         }
-
-        File[] files = logsDir.listFiles();
-        if (files == null) {
-            return;  // No files to process
-        }
-
-        for (File file : files) {
-            if (file.getName().equalsIgnoreCase(LATEST_LOG_FILENAME)) {
-                continue;  // Skip "latest.log" file
-            }
-            file.delete();
-        }
-
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        File oldLog = new File(logsDir, LATEST_LOG_FILENAME);
-        File newLog = new File(logsDir, "Log_" + dtf.format(LocalDateTime.now()) + ".log");
-        Files.copy(oldLog.toPath(), newLog.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        oldLog.delete();
+        return logs;
     }
 }

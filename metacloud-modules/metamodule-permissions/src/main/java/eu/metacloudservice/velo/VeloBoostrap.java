@@ -10,15 +10,15 @@ import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
+import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.api.CloudPermissionAPI;
-import eu.metacloudservice.api.PluginDriver;
 import eu.metacloudservice.subcommand.PermissionCommand;
 import eu.metacloudservice.velo.listener.PermissionListener;
 import lombok.NonNull;
 
 
 
-@Plugin(id = "permissions", name = "metacloud-permissions", version = "1.1.1-RELEASE", authors = "RauchigesEtwas", dependencies = {@Dependency(id = "metacloudapi"), @Dependency(id = "metacloudplugin")})
+@Plugin(id = "permissions", name = "metacloud-permissions", version = "1.1.3-RELEASE", authors = "RauchigesEtwas", dependencies = {@Dependency(id = "metacloudapi"), @Dependency(id = "metacloudplugin")})
 public class VeloBoostrap {
 
     private static ProxyServer proxyServer;
@@ -36,7 +36,7 @@ public class VeloBoostrap {
     @Subscribe
     public void handelInject(ProxyInitializeEvent event){
         proxyServer.getEventManager().register(this, new PermissionListener(new PermissionBaseVelocity()));
-        PluginDriver.getInstance().register(new PermissionCommand());
+        CloudAPI.getInstance().getPluginCommandDriver().register(new PermissionCommand());
     }
 
 }

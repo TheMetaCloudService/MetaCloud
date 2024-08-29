@@ -1,5 +1,6 @@
 package eu.metacloudservice;
 
+import eu.metacloudservice.commands.PluginCommandDriver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
@@ -46,6 +47,7 @@ public class CloudAPI {
     private AsyncPlayerPool asyncPlayerPool;
     private AsyncServicePool asyncServicePool;
     private AsyncGroupPool asyncGroupPool;
+    private PluginCommandDriver pluginCommandDriver;
 
     public CloudAPI() {
         if (instance == null)
@@ -67,6 +69,9 @@ public class CloudAPI {
     }
 
     private synchronized void initializeLazyComponents() {
+        if (pluginCommandDriver == null){
+            pluginCommandDriver = new PluginCommandDriver();
+        }
         if (offlinePlayerPool == null) {
             offlinePlayerPool = new OfflinePlayerPool();
         }

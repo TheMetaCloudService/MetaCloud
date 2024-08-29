@@ -47,24 +47,26 @@ public class CloudBoot {
 
     public static void main(String[] args) {
 
+
         new Driver();
 
+
+
+
         String language = determineLanguageFromConfig();
+
         Driver.getInstance().getMessageStorage().language = language;
         Driver.getInstance().setLanguageDriver(new LanguageDriver());
         Driver.getInstance().getMessageStorage().eventDriver = new EventDriver();
         Driver.getInstance().setTerminalDriver(new TerminalDriver());
-
         Driver.getInstance().getTerminalDriver().clearScreen();
         Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
-
 
         validateJavaVersion();
 
         if (isRootUser()) {
             Driver.getInstance().getTerminalDriver().log(Type.INFO, Driver.getInstance().getLanguageDriver().getLang().getMessage("no-root-running"));
         }
-
         Driver.getInstance().getTerminalDriver().log(Type.INFO, Driver.getInstance().getLanguageDriver().getLang().getMessage("setup-first-starting-cloud"));
 
 
@@ -100,7 +102,7 @@ public class CloudBoot {
     }
 
     private static String determineLanguageFromConfig() {
-        if (isNewFile(SERVICE_CONFIG_FILE)) {
+        if (isNewFile(SERVICE_CONFIG_FILE) && isNewFile(NODE_SERVICE_CONFIG_FILE)) {
             return "ENGLISH";
         } else if (!isNewFile(NODE_SERVICE_CONFIG_FILE)) {
             NodeConfig config = (NodeConfig) new ConfigDriver(NODE_SERVICE_CONFIG_FILE).read(NodeConfig.class);

@@ -2,7 +2,6 @@ package eu.metacloudservice.velocity.listeners;
 
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
-import com.velocitypowered.api.event.command.CommandExecuteEvent;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
 import com.velocitypowered.api.event.player.KickedFromServerEvent;
@@ -11,7 +10,7 @@ import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
 import eu.metacloudservice.CloudAPI;
-import eu.metacloudservice.api.translate.Translator;
+import eu.metacloudservice.commands.translate.Translator;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.groups.dummy.Group;
@@ -20,7 +19,8 @@ import eu.metacloudservice.networking.packet.packets.in.service.playerbased.Pack
 import eu.metacloudservice.networking.packet.packets.in.service.playerbased.PacketInPlayerSwitchService;
 import eu.metacloudservice.service.entrys.CloudService;
 import eu.metacloudservice.velocity.VelocityBootstrap;
-import net.kyori.adventure.text.Component;
+import lombok.SneakyThrows;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -40,10 +40,15 @@ public class CloudConnectListener {
     @Subscribe(order = PostOrder.FIRST)
     public void handel(ServerPreConnectEvent event){
         if (event.getOriginalServer().getServerInfo().getName().equalsIgnoreCase("lobby")){
-            target = server.getServer(VelocityBootstrap.getLobby(event.getPlayer()).getName()).get().getServerInfo();
-            if (target != null){
-                event.setResult(ServerPreConnectEvent.ServerResult.allowed(server.getServer(target.getName()).get()));
-            }else event.setResult(ServerPreConnectEvent.ServerResult.denied());
+
+           CloudService service = VelocityBootstrap.getLobby(event.getPlayer());
+
+           if (service != null) {
+               target = server.getServer(service.getName()).get().getServerInfo();
+               if (target != null){
+                   event.setResult(ServerPreConnectEvent.ServerResult.allowed(server.getServer(target.getName()).get()));
+               }else event.setResult(ServerPreConnectEvent.ServerResult.denied());
+           }else event.setResult(ServerPreConnectEvent.ServerResult.denied());
         }else if (event.getOriginalServer() == null){
             target = server.getServer(VelocityBootstrap.getLobby(event.getPlayer()).getName()).get().getServerInfo();
             if (target != null){
@@ -58,6 +63,7 @@ public class CloudConnectListener {
     public void handle(PostLoginEvent event){
         LiveService service = (LiveService)(new ConfigDriver("./CLOUDSERVICE.json")).read(LiveService.class);
         Group group = CloudAPI.getInstance().getGroupPool().getGroup(service.getGroup());
+
 
         if (CloudAPI.getInstance().getPlayerPool().getPlayers().stream().anyMatch(cloudPlayer -> cloudPlayer.getUsername().equalsIgnoreCase(event.getPlayer().getUsername()))){
             event.getPlayer().disconnect(VelocityBootstrap.message.deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickAlreadyOnNetwork"))));
@@ -112,16 +118,47 @@ public class CloudConnectListener {
         CloudAPI.getInstance().sendPacketSynchronized(new PacketInPlayerSwitchService(event.getPlayer().getUsername(), event.getServer().getServerInfo().getName()));
     }
 
+    @SneakyThrows
     @Subscribe
     public void handle(KickedFromServerEvent event){
         if (event.getPlayer().isActive()) {
-            CloudService target = VelocityBootstrap.getLobby(event.getPlayer(), event.getServer().getServerInfo().getName());
-            if (target != null) {
-                event.setResult(KickedFromServerEvent.RedirectPlayer.create(server.getServer(target.getName()).get()));
-            } else {
-                event.setResult(KickedFromServerEvent.DisconnectPlayer.create(VelocityBootstrap.message.deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback")))));
 
+            if (CloudAPI.getInstance().getGroupPool().getGroup(CloudAPI.getInstance().getService().getGroup()).isMaintenance() &&!server.getPlayer(event.getPlayer().getUniqueId()).get().hasPermission("metacloud.connection.maintenance")
+                    && !CloudAPI.getInstance().getWhitelist().contains(server.getPlayer(event.getPlayer().getUniqueId()).get().getUsername())){
+                event.getPlayer().disconnect(VelocityBootstrap.message.deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNetworkIsMaintenance"))));
+            }else {
+                CloudService target = VelocityBootstrap.getLobby(event.getPlayer(), event.getServer().getServerInfo().getName());
+                if (target == null) {
+                    event.setResult(KickedFromServerEvent.DisconnectPlayer.create(VelocityBootstrap.message.deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback")))));
+                } else {
+                    if (event.getServerKickReason().isPresent()){
+                        String  reason = PlainTextComponentSerializer.plainText().serialize(event.getServerKickReason().get());
+                        if (reason.startsWith("Outdated server! I'm still on") || reason.startsWith("Outdated client! Please use ")){
+                            if (event.getServer().getServerInfo().getName().equalsIgnoreCase("LOBBY")){
+                                event.setResult(KickedFromServerEvent.DisconnectPlayer.create(VelocityBootstrap.message.deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("notTheRightVersion")
+                                        .replace("%current_service_version%", reason
+                                                .replace("Outdated server! I'm still on ", "")
+                                                .replace("Outdated client! Please use ", ""))))));
+                            }
+                        }else {
+                            if (server.getServer(target.getName()).isPresent()){
+                                event.setResult(KickedFromServerEvent.RedirectPlayer.create(server.getServer(target.getName()).get()));
+                            }else {
+                                event.setResult(KickedFromServerEvent.DisconnectPlayer.create(VelocityBootstrap.message.deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback")))));
+                            }
+                        }
+                    }else {
+                        if (server.getServer(target.getName()).isPresent()){
+                            event.setResult(KickedFromServerEvent.RedirectPlayer.create(server.getServer(target.getName()).get()));
+                        }else {
+                            event.setResult(KickedFromServerEvent.DisconnectPlayer.create(VelocityBootstrap.message.deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback")))));
+
+                        }
+                    }
+                }
             }
+
+
         }
     }
 

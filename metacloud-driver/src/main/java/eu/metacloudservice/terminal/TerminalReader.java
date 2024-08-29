@@ -15,8 +15,8 @@ import org.jline.reader.EndOfFileException;
 import org.jline.reader.UserInterruptException;
 
 public final class TerminalReader extends Thread {
-    private final TerminalDriver consoleDriver;
-    private final CommandDriver commandDriver;
+    private TerminalDriver consoleDriver;
+    private CommandDriver commandDriver;
 
     public TerminalReader(TerminalDriver consoleDriver) {
         this.consoleDriver = consoleDriver;

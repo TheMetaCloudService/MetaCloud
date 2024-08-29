@@ -3,6 +3,8 @@ package eu.metacloudservice;
 import eu.metacloudservice.bootstrap.bungee.listener.CloudEvents;
 import eu.metacloudservice.bootstrap.bungee.networking.*;
 import eu.metacloudservice.configuration.ConfigDriver;
+import eu.metacloudservice.events.listeners.services.CloudProxyConnectedEvent;
+import eu.metacloudservice.events.listeners.services.CloudServiceConnectedEvent;
 import eu.metacloudservice.networking.*;
 import eu.metacloudservice.networking.client.NettyClient;
 import eu.metacloudservice.networking.packet.packets.in.service.PacketInServiceConnect;
@@ -17,6 +19,7 @@ import eu.metacloudservice.networking.packet.packets.out.service.playerbased.Pac
 import eu.metacloudservice.networking.packet.packets.out.service.playerbased.apibased.*;
 import eu.metacloudservice.player.async.entrys.AsyncCloudPlayer;
 import eu.metacloudservice.player.entrys.CloudPlayer;
+import eu.metacloudservice.service.async.entrys.AsyncCloudService;
 import eu.metacloudservice.service.entrys.CloudService;
 import eu.metacloudservice.storage.UUIDDriver;
 import eu.metacloudservice.timebaser.TimerBase;
@@ -53,6 +56,10 @@ public class CloudAPIEnvironment {
         new TimerBase().scheduleAsync(new TimerTask() {
             @Override
             public void run() {
+                if (!NettyDriver.getInstance().nettyClient.getChannel().isOpen()){
+                    System.exit(0);
+                }
+
                 final CloudService service = CloudAPI.getInstance().getServicePool().getService(CloudAPI.getInstance().getCurrentService().getService());
                 final LiveServiceList list = (LiveServiceList) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/general"), LiveServiceList.class);
                 final PlayerGeneral general = (PlayerGeneral) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/genernal"), PlayerGeneral.class);
@@ -70,15 +77,13 @@ public class CloudAPIEnvironment {
                     CloudAPI.getInstance().getServicePool().unregisterService(cloudService.getName());
                     CloudAPI.getInstance().getAsyncServicePool().unregisterService(cloudService.getName());
                 });
-                if (!NettyDriver.getInstance().nettyClient.getChannel().isOpen()){
-                    System.exit(0);
-                }
+
                final LiveServices liveServices = (LiveServices) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudservice/" + service.getName().replace(list.getCloudServiceSplitter(), "~")), LiveServices.class);
                 liveServices.setLastReaction(System.currentTimeMillis());
                 CloudAPI.getInstance().getRestDriver().update("/cloudservice/" + service.getName().replace(list.getCloudServiceSplitter(), "~"), new ConfigDriver().convert(liveServices));
 
             }
-        }, 30, 30, TimeUtil.SECONDS);
+        }, 60, 60, TimeUtil.SECONDS);
     }
 
     public void  registerHandlers(){

@@ -15,7 +15,7 @@ public class RouteEntry implements IRouteEntry {
 
     public RouteEntry() {}
 
-    public RouteEntry(@NonNull final String route, @NonNull final String json_option) {
+    public RouteEntry( final String route, final String json_option) {
         this.route = route;
         this.json_option = json_option;
         NettyDriver.getInstance().nettyServer.sendToAllSynchronized(new PacketOutCloudRestAPICreateEvent(route, json_option));

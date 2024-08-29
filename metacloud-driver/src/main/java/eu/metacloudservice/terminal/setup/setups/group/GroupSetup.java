@@ -189,7 +189,7 @@ public class GroupSetup extends SetupClass {
             if(line.matches("[0-9]+")){
                 Driver.getInstance().getTerminalDriver().clearScreen();
                 addStep();
-                getAnswers().put("ninonline", line);
+                getAnswers().put("minonline", line);
                 Driver.getInstance().getTerminalDriver().log(Type.EMPTY, Driver.getInstance().getMessageStorage().getAsciiArt());
                 Driver.getInstance().getTerminalDriver().log(Type.INSTALLATION, Driver.getInstance().getLanguageDriver().getLang().getMessage("setup-group-question-7"));
 
@@ -341,7 +341,11 @@ public class GroupSetup extends SetupClass {
             if (templates.contains(line) || line.equalsIgnoreCase("CREATE") || line.equals("CREATE ")){
                 Driver.getInstance().getTerminalDriver().clearScreen();
                 addStep();
-                getAnswers().put("template", line.replace(" ", "").replace("CREATE", getAnswers().get("group").toString()));
+                if (line.equalsIgnoreCase("CREATE") || line.equals("CREATE ")){
+                    getAnswers().put("template", getAnswers().get("group").toString());
+                }else {
+                    getAnswers().put("template", line.replace(" ", ""));
+                }
                 ManagerConfig config = (ManagerConfig) new ConfigDriver("./service.json").read(ManagerConfig.class);
                 ArrayList<ManagerConfigNodes> configNodes = config.getNodes();
                 StringBuilder templateListBuilder = new StringBuilder();
@@ -404,11 +408,12 @@ public class GroupSetup extends SetupClass {
                     Driver.getInstance().getGroupDriver().create(new Group(getAnswers().get("group").toString(),
                             getAnswers().get("groupType").toString(),
                             Integer.valueOf( getAnswers().get("memory").toString()),
-                            true, Boolean.parseBoolean(getAnswers().get("static").toString()),
+                            true,
+                            Boolean.parseBoolean(getAnswers().get("static").toString()),
                             0,
                             "",
                             Integer.valueOf(getAnswers().get("players").toString()),
-                            Integer.valueOf(getAnswers().get("ninonline").toString()),
+                            Integer.valueOf(getAnswers().get("minonline").toString()),
                             Integer.valueOf(getAnswers().get("maxoneline").toString()),
                             Integer.valueOf(getAnswers().get("startnew").toString()),
                             Integer.valueOf(getAnswers().get("group100").toString()),

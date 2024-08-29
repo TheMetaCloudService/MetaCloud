@@ -15,6 +15,8 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.NonNull;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class NettyClient extends ChannelInitializer<Channel> implements AutoCloseable {
     private int port;
@@ -93,9 +95,11 @@ public class NettyClient extends ChannelInitializer<Channel> implements AutoClos
     }
 
     public void sendPacketAsynchronous(@NonNull final Packet packet){
-        new Thread(() -> {
+        ExecutorService service = Executors.newSingleThreadExecutor();
+        service.submit(() -> {
             channel.writeAndFlush(packet);
-            Thread.currentThread().stop();
-        }).start();
+            service.shutdown();
+        });
+
     }
 }

@@ -71,6 +71,10 @@
           <groupId>net.kyori</groupId>
         </exclusion>
         <exclusion>
+          <artifactId>adventure-text-minimessage</artifactId>
+          <groupId>net.kyori</groupId>
+        </exclusion>
+        <exclusion>
           <artifactId>adventure-platform-bungeecord</artifactId>
           <groupId>net.kyori</groupId>
         </exclusion>

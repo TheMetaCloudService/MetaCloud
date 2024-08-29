@@ -1,0 +1,5 @@
+eu\metacloudservice\config\ActivityConfiguration.class
+eu\metacloudservice\events\CloudEvents.class
+eu\metacloudservice\config\Configuration.class
+eu\metacloudservice\DiscordModule.class
+eu\metacloudservice\config\Activity.class

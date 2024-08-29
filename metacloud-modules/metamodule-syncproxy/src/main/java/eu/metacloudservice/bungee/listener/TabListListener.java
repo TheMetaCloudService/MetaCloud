@@ -4,30 +4,21 @@ import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
 import eu.metacloudservice.bungee.BungeeBootstrap;
 import eu.metacloudservice.config.Tablist;
-import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-import org.checkerframework.checker.units.qual.C;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class TabListListener implements Listener {
     
@@ -71,8 +62,7 @@ public class TabListListener implements Listener {
             } else {
                     Tablist tab = BungeeBootstrap.getInstance().configuration.getTablist().get(BungeeBootstrap.getInstance().tabCount);
                     String[] config = readConfigs(tab, player);
-                    BungeeBootstrap.getInstance().bungeeAudiences.player(player).sendPlayerListHeaderAndFooter(
-                            MiniMessage.miniMessage().deserialize(BungeeBootstrap.getInstance().translator.translate(config[0])), MiniMessage.miniMessage().deserialize(BungeeBootstrap.getInstance().translator.translate(config[1])));
+                    BungeeBootstrap.getInstance().bungeeAudiences.player(player).sendPlayerListHeaderAndFooter(MiniMessage.miniMessage().deserialize(BungeeBootstrap.getInstance().translator.translate(config[0])), MiniMessage.miniMessage().deserialize(BungeeBootstrap.getInstance().translator.translate(config[1])));
             }
         }
     }

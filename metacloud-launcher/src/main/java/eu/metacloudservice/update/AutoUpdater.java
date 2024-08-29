@@ -8,6 +8,7 @@ import eu.metacloudservice.Driver;
 import eu.metacloudservice.storage.ModuleLoader;
 import eu.metacloudservice.terminal.animation.AnimationDriver;
 import eu.metacloudservice.terminal.enums.Type;
+import lombok.SneakyThrows;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +16,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class AutoUpdater {
     private static final String UPDATE_URL = "https://metacloudservice.eu/download/";
@@ -23,10 +27,16 @@ public class AutoUpdater {
     private static final String METACLOUD_PLUGIN_JAR = "metacloud-plugin.jar";
     private static final String METACLOUD_API_JAR = "metacloud-api.jar";
     private static final String LOCAL_EVERY_PLUGINS_PATH = "./local/GLOBAL/EVERY/plugins/";
+    private static final String MODULE_PATH = "./modules/";
     private static final String DEPENDENCY_PATH = "./dependency/";
     private static final String LAUNCHER_JAR = "./Launcher.jar";
     private static final String OLD_JAR = "./OLD.jar";
     private static final String STORAGE_MESSAGES = "./local/storage/messages.storage";
+
+    @SneakyThrows
+    public AutoUpdater() {
+        checkForUpdate();
+    }
 
     public static void checkForUpdate() throws IOException {
 
@@ -48,12 +58,29 @@ public class AutoUpdater {
             deleteOnExit(DEPENDENCY_PATH + "runnable-node.jar");
 
             logInfo("Update §f" + METACLOUD_PLUGIN_JAR + "...");
-            downloadFile(UPDATE_URL + METACLOUD_PLUGIN_JAR, LOCAL_EVERY_PLUGINS_PATH + METACLOUD_PLUGIN_JAR);
+            downloadFile(Driver.getInstance().getMessageStorage().getGeneralConfigFromWeb().getConfig().get("cloud-plugin"), LOCAL_EVERY_PLUGINS_PATH + METACLOUD_PLUGIN_JAR);
             new AnimationDriver().play();
 
             logInfo("Update §f" + METACLOUD_API_JAR + "...");
-            downloadFile(UPDATE_URL + METACLOUD_API_JAR, LOCAL_EVERY_PLUGINS_PATH + METACLOUD_API_JAR);
+            downloadFile(Driver.getInstance().getMessageStorage().getGeneralConfigFromWeb().getConfig().get("cloud-api"), LOCAL_EVERY_PLUGINS_PATH + METACLOUD_API_JAR);
             new AnimationDriver().play();
+
+            //MODULE UPDATER
+            List<String> foundedOnlineModule = new ArrayList<>();
+            new ModuleLoader().getModules().getModules().forEach((s, s2) -> foundedOnlineModule.add(s2.replace("https://metacloudservice.eu/download/modules/", "")));
+            getModules().forEach(s -> {
+                if (foundedOnlineModule.contains(s)) {
+                    logInfo("Update §f" + s + "...");
+                    deleteOnExit(MODULE_PATH + s);
+                    try {
+                        downloadFile(UPDATE_URL +"modules/"+  s, MODULE_PATH + s);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    new AnimationDriver().play();
+                }
+
+            });
 
             renameFile(LAUNCHER_JAR, OLD_JAR);
             renameFile(UPDATE_JAR_NAME, LAUNCHER_JAR);
@@ -74,7 +101,7 @@ public class AutoUpdater {
     }
 
     private static void deleteOnExit(String path) {
-        new File(path).deleteOnExit();
+        new File(path).delete();
     }
 
     private static void renameFile(String source, String target) throws IOException {
@@ -85,4 +112,20 @@ public class AutoUpdater {
         Driver.getInstance().getTerminalDriver().log(Type.INFO, message);
     }
 
+
+    private static ArrayList<String> getModules() {
+        final File file = new File("./modules/");
+        final File[] files = file.listFiles();
+        final ArrayList<String> modules = new ArrayList<>();
+        for (int i = 0; i != Objects.requireNonNull(files).length; i++) {
+            final String FirstFilter = files[i].getName();
+            if (FirstFilter.contains(".jar")) {
+                modules.add(FirstFilter);
+            }
+
+        }
+        return modules;
+    }
 }
+
+

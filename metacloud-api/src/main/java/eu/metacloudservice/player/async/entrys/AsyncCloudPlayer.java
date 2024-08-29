@@ -32,7 +32,6 @@ public class AsyncCloudPlayer {
     private final String username;
     private final UUID uniqueId;
 
-
     private CloudPlayerRestCache geCache(){
         return (CloudPlayerRestCache) new ConfigDriver().convert(CloudAPI.getInstance().getRestDriver().get("/cloudplayer/" + getUniqueId()), CloudPlayerRestCache.class);
     }

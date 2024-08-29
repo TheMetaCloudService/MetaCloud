@@ -1,6 +1,7 @@
 package eu.metacloudservice.bukkit.listener;
 
 
+import eu.metacloudservice.CloudAPI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,6 +25,10 @@ public class ReloadBlocker implements Listener {
            }else {
                player.sendMessage("§cno permission to do that!");
            }
+       }
+       if (message.equalsIgnoreCase("/stop")){
+           event.setCancelled(true);
+           CloudAPI.getInstance().getThisService().shutdown();
        }
     }
 }

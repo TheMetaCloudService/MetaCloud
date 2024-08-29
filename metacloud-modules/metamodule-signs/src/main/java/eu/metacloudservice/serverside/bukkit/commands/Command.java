@@ -5,17 +5,12 @@
 package eu.metacloudservice.serverside.bukkit.commands;
 
 import eu.metacloudservice.CloudAPI;
-import eu.metacloudservice.Driver;
-import eu.metacloudservice.api.PluginCommand;
-import eu.metacloudservice.api.PluginCommandInfo;
-import eu.metacloudservice.config.Locations;
+import eu.metacloudservice.commands.PluginCommand;
+import eu.metacloudservice.commands.PluginCommandInfo;
 import eu.metacloudservice.config.SignLocation;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.serverside.bukkit.SignBootstrap;
-import eu.metacloudservice.serverside.bukkit.entry.CloudSign;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;

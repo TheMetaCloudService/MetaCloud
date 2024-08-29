@@ -1,7 +1,7 @@
 package eu.metacloudservice.bungee.listener;
 
 import eu.metacloudservice.CloudAPI;
-import eu.metacloudservice.api.translate.Translator;
+import eu.metacloudservice.commands.translate.Translator;
 import eu.metacloudservice.bungee.BungeeBootstrap;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
@@ -102,27 +102,44 @@ public class CloudConnectListener implements Listener {
 
     @EventHandler(priority = - 127)
     public void handle(final ServerKickEvent event) {
-        if (this.connected.contains(event.getPlayer().getUniqueId())) {
-            CloudService service = BungeeBootstrap.getInstance().getLobby(event.getPlayer(), event.getKickedFrom().getName());
 
-            if (service == null){
+        if (CloudAPI.getInstance().getGroupPool().getGroup(CloudAPI.getInstance().getService().getGroup()).isMaintenance() && ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()) != null && !ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()).hasPermission("metacloud.bypass.connection.maintenance")
+                    && !CloudAPI.getInstance().getWhitelist().contains(ProxyServer.getInstance().getPlayer(event.getPlayer().getUniqueId()).getName())){
+                event.getPlayer().disconnect(BungeeComponentSerializer.get().serialize(MiniMessage.miniMessage().deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNetworkIsMaintenance"))))[0]);
+
+        }else {
+            CloudService service = BungeeBootstrap.getInstance().getLobby(event.getPlayer(), event.getKickedFrom().getName());
+            if (service == null) {
                 event.setCancelled(false);
                 event.setCancelServer(null);
                 event.getPlayer().disconnect(BungeeComponentSerializer.get().serialize(MiniMessage.miniMessage().deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback"))))[0]);
-            }else {
-                target  = ProxyServer.getInstance().getServerInfo(service.getName());
-                if (target != null) {
-                    event.setCancelServer(target);
-                    event.setCancelled(true);
-                } else {
-                    event.setCancelled(false);
-                    event.setCancelServer(null);
-                    event.getPlayer().disconnect(BungeeComponentSerializer.get().serialize(MiniMessage.miniMessage().deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback"))))[0]);
+            } else {
 
+                if ((event.getKickReasonComponent()[0].toPlainText().startsWith("Outdated server! I'm still on") || event.getKickReasonComponent()[0].toPlainText().startsWith("Outdated client! Please use "))) {
+                    if (CloudAPI.getInstance().getServicePool().getService(event.getKickedFrom().getName()).isTypeLobby()){
+                        event.setCancelled(false);
+                        event.setCancelServer(null);
+                        event.getPlayer().disconnect(BungeeComponentSerializer.get().serialize(MiniMessage.miniMessage().deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("notTheRightVersion")
+                                .replace("%current_service_version%", event.getKickReason().replace("Outdated server! I'm still on ", "").replace("Outdated client! Please use ", "")))))[0]);
+
+                    }
+                }else {
+
+                    target = ProxyServer.getInstance().getServerInfo(service.getName());
+                    if (target != null) {
+                        event.setCancelServer(target);
+                        event.setCancelled(true);
+                    } else {
+                        event.setCancelled(false);
+                        event.setCancelServer(null);
+                        event.getPlayer().disconnect(BungeeComponentSerializer.get().serialize(MiniMessage.miniMessage().deserialize(new Translator().translate(CloudAPI.getInstance().getMessages().getMessages().get("kickNoFallback"))))[0]);
+
+                    }
                 }
             }
-
         }
-    }
 
+
+
+    }
 }

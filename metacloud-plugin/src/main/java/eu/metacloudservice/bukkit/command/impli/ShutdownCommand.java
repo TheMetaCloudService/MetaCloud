@@ -10,8 +10,8 @@ package eu.metacloudservice.bukkit.command.impli;
 
 import com.velocitypowered.api.proxy.Player;
 import eu.metacloudservice.CloudAPI;
-import eu.metacloudservice.api.PluginCommand;
-import eu.metacloudservice.api.PluginCommandInfo;
+import eu.metacloudservice.commands.PluginCommand;
+import eu.metacloudservice.commands.PluginCommandInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.ArrayList;

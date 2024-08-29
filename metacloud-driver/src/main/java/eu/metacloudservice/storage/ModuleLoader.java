@@ -18,7 +18,7 @@ public class ModuleLoader {
     public ModuleLoader() {}
 
     @SneakyThrows
-    private ModuleConfig getModules(){
+    public  ModuleConfig getModules(){
         try (final InputStream inputStream = new URL("https://metacloudservice.eu/rest/?type=modules").openStream()) {
             final StringBuilder builder = new StringBuilder();
             final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));

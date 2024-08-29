@@ -130,8 +130,15 @@ public class CloudManager implements IRunAble {
             messages.put("kickOnlyProxyJoin", "§8▷ §cpleas connect over the main proxy");
             messages.put("kickAlreadyOnNetwork", "§8▷ §cYou are already on the Network");
             messages.put("noPermsToJoinTheService", "§8▷ §cno perms to join the service");
+            messages.put("notTheRightVersion", "§8▷ §cThe network is in the §4%current_service_version%");
             new ConfigDriver("./local/messages.json").save(new Messages(messages));
         }
+        if (!((Messages)new ConfigDriver("./local/messages.json").read(Messages.class)).getMessages().containsKey("notTheRightVersion")){
+            Messages messages =((Messages)new ConfigDriver("./local/messages.json").read(Messages.class));
+            messages.getMessages().put("notTheRightVersion", "§8▷ §cThe network is in the §4%current_service_version%");
+            new ConfigDriver("./local/messages.json").save(messages);
+        }
+
 
         if (!new File("./local/GLOBAL/EVERY/plugins/metacloud-api.jar").exists()){
             Driver.getInstance().getTerminalDriver().log(Type.INFO,Driver.getInstance().getLanguageDriver().getLang().getMessage("try-to-download-cloudapi"));

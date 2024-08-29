@@ -10,7 +10,6 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.Driver;
-import eu.metacloudservice.api.PluginDriver;
 import eu.metacloudservice.configuration.ConfigDriver;
 import eu.metacloudservice.configuration.dummys.message.Messages;
 import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
@@ -30,7 +29,7 @@ import org.slf4j.Logger;
 
 import java.util.*;
 
-@Plugin(id = "metacloudplugin", name = "metacloud-plugin", version = "1.1.1-RELEASE", authors = "RauchigesEtwas", dependencies = {@Dependency(id = "metacloudapi")})
+@Plugin(id = "metacloudplugin", name = "metacloud-plugin", version = "1.1.3-RELEASE", authors = "RauchigesEtwas", dependencies = {@Dependency(id = "metacloudapi")})
 public class VelocityBootstrap {
 
     public static ProxyServer proxyServer;
@@ -41,7 +40,6 @@ public class VelocityBootstrap {
     public VelocityBootstrap(ProxyServer proxyServer, Logger logger) {
         VelocityBootstrap.proxyServer = proxyServer;
         new Driver();
-        new PluginDriver();
         this.logger = logger;
         message = MiniMessage.builder().build();
 
@@ -55,11 +53,11 @@ public class VelocityBootstrap {
         CloudAPI.getInstance().setState(ServiceState.LOBBY, service.getService());
         proxyServer.getCommandManager().register("cloud", new CloudCommand(), "metacloud", "mc");
         proxyServer.getCommandManager().register("end", new EndCommand());
-        PluginDriver.getInstance().register(new VersionCommand());
-        PluginDriver.getInstance().register(new ReloadCommand());
-        PluginDriver.getInstance().register(new ServiceCommand());
-        PluginDriver.getInstance().register(new GroupCommand());
-        PluginDriver.getInstance().register(new PlayerCommand());
+        CloudAPI.getInstance().getPluginCommandDriver().register(new VersionCommand());
+        CloudAPI.getInstance().getPluginCommandDriver().register(new ReloadCommand());
+        CloudAPI.getInstance().getPluginCommandDriver().register(new ServiceCommand());
+        CloudAPI.getInstance().getPluginCommandDriver().register(new GroupCommand());
+        CloudAPI.getInstance().getPluginCommandDriver().register(new PlayerCommand());
         proxyServer.getEventManager().register(this, new CloudConnectListener(proxyServer));
 
 

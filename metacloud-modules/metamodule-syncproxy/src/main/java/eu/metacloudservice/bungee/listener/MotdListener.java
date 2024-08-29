@@ -4,7 +4,6 @@ import eu.metacloudservice.CloudAPI;
 import eu.metacloudservice.bungee.BungeeBootstrap;
 import eu.metacloudservice.config.Motd;
 import eu.metacloudservice.moduleside.converter.IconConverter;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.Favicon;

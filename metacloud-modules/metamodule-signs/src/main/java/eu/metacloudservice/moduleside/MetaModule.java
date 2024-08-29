@@ -93,16 +93,24 @@ public class MetaModule implements IModule {
             });
 
             Configuration configuration = new Configuration(configs);
-            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/signs/configuration", new ConfigDriver().convert(configuration)));
+
 
             new ConfigDriver("./modules/signs/config.json").save(configuration);
+            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/signs/configuration", new ConfigDriver().convert(configuration)));
+
 
 
         }
         if (!new File("./modules/signs/locations.json").exists()){
             Locations locations = new Locations(new ArrayList<>());
             new ConfigDriver("./modules/signs/locations.json").save(locations);
-            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/signs/locations", new ConfigDriver().convert(new ConfigDriver("./modules/signs/locations.json").read(Locations.class))));        }
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            Driver.getInstance().getWebServer().addRoute(new RouteEntry("/module/signs/locations", new ConfigDriver().convert(locations)));
+        }
         set();
         update();
     }

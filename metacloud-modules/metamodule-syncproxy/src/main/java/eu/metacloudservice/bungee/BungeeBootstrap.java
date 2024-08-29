@@ -13,9 +13,7 @@ import eu.metacloudservice.configuration.dummys.serviceconfig.LiveService;
 import eu.metacloudservice.groups.dummy.Group;
 import eu.metacloudservice.moduleside.translate.Translator;
 import eu.metacloudservice.webserver.RestDriver;
-import lombok.Getter;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -48,14 +46,17 @@ public class BungeeBootstrap extends Plugin {
         motdCount = 0;
         instance = this;
 
+
+        bungeeAudiences = BungeeAudiences.create(this);
+        translator = new Translator();
+
         liveService = (LiveService) new ConfigDriver("./CLOUDSERVICE.json").read(LiveService.class);
         restDriver = new RestDriver(liveService.getManagerAddress(), liveService.getRestPort());
 
         CloudAPI.getInstance().getEventDriver().registerListener(new CloudEventHandler());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new MotdListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new TabListListener());
-        translator = new Translator();
-        bungeeAudiences = BungeeAudiences.create(this);
+
 
         updater();
 

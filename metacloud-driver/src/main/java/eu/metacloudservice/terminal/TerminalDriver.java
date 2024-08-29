@@ -43,15 +43,15 @@ public final class TerminalDriver {
 
 
     private boolean isInSetup;
-    private final LinkedList<TerminalStorage> mainScreenStorage;
-    private final Queue<TerminalStorageLine> inputs;
+    private  LinkedList<TerminalStorage> mainScreenStorage;
+    private  Queue<TerminalStorageLine> inputs;
 
-    private final SetupDriver setupDriver;
+    private  SetupDriver setupDriver;
 
-    private final Terminal terminal;
-    private final LineReader lineReader;
-    private final SimpleLatestLog simpleLatestLog;
-    private final CommandDriver commandDriver;
+    private  Terminal terminal;
+    private  LineReader lineReader;
+    private  SimpleLatestLog simpleLatestLog;
+    private  CommandDriver commandDriver;
 
     public boolean isInSetup(){
         return isInSetup;
