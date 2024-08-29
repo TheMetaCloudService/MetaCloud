@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
+import java.util.logging.Level;
 
 public class BukkitBootstrap extends JavaPlugin  implements Listener {
 
