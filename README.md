@@ -49,15 +49,15 @@ chmod u+x start.sh
 ## Features
 
 - Plug & Play with an **very easy** setup
-- Autoupdate funktion with inbuild downloader
+- Autoupdate function with built-in downloader
 - Language-System (*German & English*)
 - **dynamic** and **static** launch of Services
-- Group System with Templats and **autoinstall** form Server software
-- Greate **Event mangement** with a lot of greate events
+- Group System with Templats and **autoinstall** from Server software
+- Greate **Event mangement** with a lot of great events
 - Powerful **API** with **async** & **sync** support based on **real-time results**, but easy to Learn
-- Powerful **REST-API** with some funktions
+- Powerful **REST-API** with some functions
 - **CPU-Overload protaction** with **Queuesystem** and more
-- **Service-Crash detection** to check if an Service ist crashed 
+- **Service-Crash detection** to check if an Service is crashed 
 - Modular system with **comprehensive modules** like (*Syncproxy, Notify, Cloudflare, Hub, Discord, NPC, Sign & Permission*)
 - Great scalability, thanks to the **multi-proxy** and **multi-root** function
 - **Multiversion** support for bungeecord's (*Bungeecod, Waterfall, Velocity*) and Spigot's (*Spigot, Paperspigot, Foliaspigot, Bukkit, Purpurspigot*)
