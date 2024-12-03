@@ -31,7 +31,7 @@ minimal requirements:
 ```bash
   apt-get update && apt-get upgrade -y
 ```
-+ Download the zip data
++ Download the zip file
 ```bash
   wget https://metacloudservice.eu/download/metacloud-latest.zip
 ```
@@ -39,7 +39,7 @@ minimal requirements:
 ```bash
 unzip metacloud-latest.zip
 ```
- + give the **start.sh** permission and start them
+ + Give permissions to **start.sh** and run it
 ```bash
 chmod u+x start.sh
 ./start.sh
@@ -48,16 +48,16 @@ chmod u+x start.sh
 
 ## Features
 
-- Plug & Play with an **very easy** setup
-- Autoupdate function with built-in downloader
-- Language-System (*German & English*)
-- **dynamic** and **static** launch of Services
-- Group System with Templats and **autoinstall** from Server software
-- Greate **Event mangement** with a lot of great events
-- Powerful **API** with **async** & **sync** support based on **real-time results**, but easy to Learn
-- Powerful **REST-API** with some functions
-- **CPU-Overload protaction** with **Queuesystem** and more
-- **Service-Crash detection** to check if an Service is crashed 
-- Modular system with **comprehensive modules** like (*Syncproxy, Notify, Cloudflare, Hub, Discord, NPC, Sign & Permission*)
-- Great scalability, thanks to the **multi-proxy** and **multi-root** function
-- **Multiversion** support for bungeecord's (*Bungeecod, Waterfall, Velocity*) and Spigot's (*Spigot, Paperspigot, Foliaspigot, Bukkit, Purpurspigot*)
+- Plug & Play with a **very easy** setup
+- Auto-update function with built-in downloader
+- Language System (*German & English*)
+- **Dynamic** and **static** launch of services
+- Group System with templates and **auto-install** of server software
+- Enhanced **Event Management** with numerous events
+- Powerful **API** with **async** & **sync** support based on **real-time results**, yet easy to learn
+- Powerful **REST API** with various functions
+- **CPU-Overload protection** with **Queue System** and more
+- **Service-Crash detection** to monitor service status
+- Modular system with **comprehensive modules** including (*SyncProxy, Notify, Cloudflare, Hub, Discord, NPC, Sign & Permission*)
+- Great scalability through **multi-proxy** and **multi-root** functionality
+- **Multiversion** support for BungeeCord (*BungeeCord, Waterfall, Velocity*) and Spigot (*Spigot, PaperSpigot, FoliaSpigot, Bukkit, PurpurSpigot*)
